@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ale="urn:epcglobal:ale:xsd:1" xmlns:epcglobal="urn:epcglobal:xsd:1" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:epcglobal:ale:xsd:1" version="1.0">
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+            <epcglobal:copyright> Copyright (C) 2005, 2004 Epcglobal Inc., All Rights Reserved. </epcglobal:copyright>
+            <epcglobal:disclaimer> EPCglobal Inc., its members, officers, directors, employees, or
+                agents shall not be liable for any injury, loss, damages, financial or otherwise,
+                arising from, related to, or caused by the use of this document. The use of said
+                document shall constitute your express consent to the foregoing exculpation. </epcglobal:disclaimer>
+            <epcglobal:specification> Application Level Events (ALE) version 1.0
+            </epcglobal:specification>
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:import namespace="urn:epcglobal:xsd:1" schemaLocation="./EpcGlobal.xsd"/>
+
+    <!-- ALE ELEMENTS -->
+    <xsd:element name="ECSpec" type="ale:ECSpec"/>
+    <xsd:element name="ECReports" type="ale:ECReports"/>
+    <!-- ALE TYPES -->
+    <!-- items listed alphabetically by name -->
+    <!-- Some element types accommodate extensibility in the manner of 
+"Versioning XML Vocabularies" by David Orchard (see 
+http://www.xml.com/pub/a/2003/12/03/versioning.html). 
+
+In this approach, an optional <extension> element is defined 
+for each extensible element type, where an <extension> element 
+may contain future elements defined in the target namespace. 
+
+In addition to the optional <extension> element, extensible element 
+types are declared with a final xsd:any wildcard to accommodate 
+future elements defined by third parties (as denoted by the ##other 
+namespace). 
+
+Finally, the xsd:anyAttribute facility is used to allow arbitrary 
+attributes to be added to extensible element types. -->
+    <xsd:complexType name="ECBoundarySpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> A ECBoundarySpec specifies how the beginning and end
+                of event cycles are to be determined. The startTrigger and repeatPeriod elements are
+                mutually exclusive. One may, however, specify a ECBoundarySpec with neither event
+                cycle start condition (i.e., startTrigger nor repeatPeriod) present. At least one
+                event cycle stopping condition (stopTrigger, duration, and/or stableSetInterval)
+                must be present.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="startTrigger" type="ale:ECTrigger"/>
+            <xsd:element minOccurs="0" name="repeatPeriod" type="ale:ECTime"/>
+            <xsd:element minOccurs="0" name="stopTrigger" type="ale:ECTrigger"/>
+            <xsd:element minOccurs="0" name="duration" type="ale:ECTime"/>
+            <xsd:element minOccurs="0" name="stableSetInterval" type="ale:ECTime"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECBoundarySpecExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECBoundarySpecExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+            <xsd:anyAttribute processContents="lax"/>
+        </xsd:complexType>
+    <xsd:complexType name="ECExcludePatterns">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="excludePattern" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECFilterSpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> A ECFilterSpec specifies what EPCs are to be included
+                in the final report. The ECFilterSpec implements a flexible filtering scheme based
+                on pattern lists for inclusion and exclusion.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="includePatterns" type="ale:ECIncludePatterns"/>
+            <xsd:element minOccurs="0" name="excludePatterns" type="ale:ECExcludePatterns"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECFilterSpecExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECFilterSpecExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECGroupSpec">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="pattern" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECIncludePatterns">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="includePattern" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECLogicalReaders">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="logicalReader" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECReport">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="group" type="ale:ECReportGroup"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:attribute name="reportName" type="xsd:string" use="required"/>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportList">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="report" type="ale:ECReport"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroup">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="groupList" type="ale:ECReportGroupList"/>
+            <xsd:element minOccurs="0" name="groupCount" type="ale:ECReportGroupCount"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportGroupExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <!-- The groupName attribute SHALL be omitted to indicate the default group. -->
+        <xsd:attribute name="groupName" type="xsd:string" use="optional"/>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupList">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="member" type="ale:ECReportGroupListMember"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportGroupListExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupListExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupListMember">
+        <xsd:sequence>
+            <!-- Each of the following four elements SHALL be omitted if null. -->
+            <xsd:element minOccurs="0" name="epc" type="epcglobal:EPC"/>
+            <xsd:element minOccurs="0" name="tag" type="epcglobal:EPC"/>
+            <xsd:element minOccurs="0" name="rawHex" type="epcglobal:EPC"/>
+            <xsd:element minOccurs="0" name="rawDecimal" type="epcglobal:EPC"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportGroupListMemberExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupListMemberExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupCount">
+        <xsd:sequence>
+            <xsd:element name="count" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportGroupCountExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportGroupCountExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportOutputSpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> ECReportOutputSpec specifies how the final set of EPCs
+                is to be reported with respect to type.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportOutputSpecExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:attribute default="false" name="includeEPC" type="xsd:boolean"/>
+        <xsd:attribute default="false" name="includeTag" type="xsd:boolean"/>
+        <xsd:attribute default="false" name="includeRawHex" type="xsd:boolean"/>
+        <xsd:attribute default="false" name="includeRawDecimal" type="xsd:boolean"/>
+        <xsd:attribute default="false" name="includeCount" type="xsd:boolean"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportOutputSpecExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReports">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> ECReports is the output from an event cycle. The
+                "meat" of an ECReports instance is the lists of count report instances and list
+                report instances, each corresponding to an ECReportSpec instance in the event
+                cycle's ECSpec. In addition to the reports themselves, ECReports contains a number
+                of "header" fields that provide useful information about the event
+            cycle.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="epcglobal:Document">
+                <xsd:sequence>
+                    <xsd:element name="reports" type="ale:ECReportList"/>
+                    <xsd:element minOccurs="0" name="extension" type="ale:ECReportsExtension"/>
+                    <xsd:element minOccurs="0" name="ECSpec" type="ale:ECSpec"/>
+                    <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+                </xsd:sequence>
+                <xsd:attribute name="specName" type="xsd:string" use="required"/>
+                <xsd:attribute name="date" type="xsd:dateTime" use="required"/>
+                <xsd:attribute name="ALEID" type="xsd:string" use="required"/>
+                <xsd:attribute name="totalMilliseconds" type="xsd:long" use="required"/>
+                <xsd:attribute name="terminationCondition" type="ale:ECTerminationCondition" use="required"/>
+                <xsd:attribute name="schemaURL" type="xsd:string" use="optional"/>
+                <xsd:anyAttribute processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportsExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportSetSpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> ECReportSetSpec specifies which set of EPCs is to be
+                considered for filtering and output.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="set" type="ale:ECReportSetEnum"/>
+    </xsd:complexType>
+    <xsd:simpleType name="ECReportSetEnum">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> ECReportSetEnum is an enumerated type denoting what
+                set of EPCs is to be considered for filtering and output: all EPCs read in the
+                current event cycle, additions from the previous event cycle, or deletions from the
+                previous event cycle.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:NCName">
+            <xsd:enumeration value="CURRENT"/>
+            <xsd:enumeration value="ADDITIONS"/>
+            <xsd:enumeration value="DELETIONS"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="ECReportSpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> A ReportSpec specifies one report to be returned from
+                executing an event cycle. An ECSpec may contain one or more ECReportSpec
+            instances.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="reportSet" type="ale:ECReportSetSpec"/>
+            <xsd:element minOccurs="0" name="filterSpec" type="ale:ECFilterSpec"/>
+            <xsd:element minOccurs="0" name="groupSpec" type="ale:ECGroupSpec"/>
+            <xsd:element name="output" type="ale:ECReportOutputSpec"/>
+            <xsd:element minOccurs="0" name="extension" type="ale:ECReportSpecExtension"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:attribute name="reportName" type="xsd:string" use="required"/>
+        <xsd:attribute default="false" name="reportIfEmpty" type="xsd:boolean"/>
+        <xsd:attribute default="false" name="reportOnlyOnChange" type="xsd:boolean"/>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportSpecExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="ECReportSpecs">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="reportSpec" type="ale:ECReportSpec"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ECSpec">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> An ECSpec describes an event cycle and one or more
+                reports that are to be generated from it. It contains a list of logical readers
+                whose reader cycles are to be included in the event cycle, a specification of read
+                cycle timing, a specification of how the boundaries of event cycles are to be
+                determined, and list of specifications each of which describes a report to be
+                generated from this event cycle.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="epcglobal:Document">
+                <xsd:sequence>
+                    <xsd:element name="logicalReaders" type="ale:ECLogicalReaders"/>
+                    <xsd:element name="boundarySpec" type="ale:ECBoundarySpec"/>
+                    <xsd:element name="reportSpecs" type="ale:ECReportSpecs"/>
+                    <xsd:element minOccurs="0" name="extension" type="ale:ECSpecExtension"/>
+                    <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+                </xsd:sequence>
+                <xsd:attribute default="false" name="includeSpecInReports" type="xsd:boolean"/>
+                <xsd:anyAttribute processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="ECSpecExtension">
+        <xsd:sequence>
+            <xsd:any maxOccurs="unbounded" minOccurs="1" namespace="##local" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax"/>
+    </xsd:complexType>
+    <xsd:simpleType name="ECTerminationCondition">
+        <xsd:restriction base="xsd:NCName">
+            <xsd:enumeration value="TRIGGER"/>
+            <xsd:enumeration value="DURATION"/>
+            <xsd:enumeration value="STABLE_SET"/>
+            <xsd:enumeration value="UNREQUEST"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="ECTime">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> An ECTime specifies a time duration in physical
+            units.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:long">
+                <xsd:attribute name="unit" type="ale:ECTimeUnit"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:simpleType name="ECTimeUnit">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> ECTimeUnit represents the supported physical time
+                unit: millisecond</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:NCName">
+            <xsd:enumeration value="MS"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="ECTrigger">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en"> A trigger is a URI that is used to specify a start or
+                stop trigger for an event cycle.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+</xsd:schema>
