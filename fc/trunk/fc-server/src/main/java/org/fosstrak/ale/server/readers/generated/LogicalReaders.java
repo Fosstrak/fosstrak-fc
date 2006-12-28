@@ -40,7 +40,7 @@ package org.accada.ale.server.readers.generated;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.AccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -72,7 +72,7 @@ import org.accada.ale.server.readers.generated.LogicalReader;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(AccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "logicalReader"
 })
