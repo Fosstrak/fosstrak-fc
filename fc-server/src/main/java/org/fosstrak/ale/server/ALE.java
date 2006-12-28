@@ -95,7 +95,7 @@ public class ALE {
 		Properties props = new Properties();
 		try {
 			props.load(ALE.class.getResourceAsStream(propertiesFilePath));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new ImplementationException("Error loading properties from ALE properties file '" + propertiesFilePath + "'",
 					ImplementationExceptionSeverity.ERROR);
 		}
