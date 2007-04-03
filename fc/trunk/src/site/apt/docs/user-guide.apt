@@ -1,0 +1,118 @@
+              -------------------
+              User Guide
+              -------------------
+              Alain Remund
+              -------------------
+              02/04/2007
+              -------------------
+
+User Guide
+
+* Contents
+
+   [[1]] {{{#About}About this Guide}}
+
+   [[2]] {{{#Server}Server}}
+
+   [[3]] {{{#Clients}Clients}}
+
+
+
+
+* {About} this Guide
+
+  This User Guide is intended to help those who wish to use the Accada Filtering&Collection.
+  In this section we dont't explain any system designs or internal workflows.
+
+  This User Guide is divided into two sections. The first section explains, how to install
+  the Filtering&Collection Server as an Apache Tomcat WebServices. In the second section
+  we look, how this Server can be tested. For this reason, we have developped two clients which 
+  can be used independently. On the one hand we have a Client also running as a WebService on Tomcat
+  accessed easily by a Browser. On the other hand, there is a client written as standalone 
+  Java-Application.
+  
+* {Server}
+
+  The <<Filtering&Collection Server>> is running as a WebService on a
+  {{{http://tomcat.apache.org/}Apache Tomcat Server}}.
+  In order to setup the Filtering&Collection Server you need to
+  get the Filtering&Collection WAR file from our {{{../download.html}download page}}
+  and simply place it into your Tomcat's webapp directory. After restarting
+  Tomcat, the WAR file will be exploded and the Server is ready for use (for
+  more information about the deployment process visit this 
+  {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
+  A new folder is created in <<<$TOMCAT_HOME\webapps\ >>>and all the configuration can be done
+  in the <<<WEB-INF\classes\InputGenerators.properties >>>file of the new folder.
+
+  * command-channel-host: Host of the Reader Device.
+
+  * command-channel-port: Port of the Reader Device to communicate with.
+
+  * notification-channel-host: Host, where the Notification Messages can be sent to.
+
+  * notification-channel-port: Port, where the Notification Messages can be received.
+
+  * read-time-intervall: Time in miliseconds, which is allowed to pass between two ReadCycle on the Reader Device.
+
+  []
+  
+  All this Variables need the Suffix<<< <-ReaderNumber> >>> attached, whereby the numbering starts with
+  zero. As an example, the host of the third Reader Device as the key <<<command-channel-host-2>>>.
+
+  If everything is correctly configured, the Server can be restarted and is now reachable under the 
+  endpoint <<<http://<hostname>:8080/<WAR-File Name>/services/ALEServicePort>>>. 
+
+  []	
+
+* {Clients}
+
+** WebClient
+
+  The <<Filtering&Collection WebClient>> is based on Java Server Pages (JSP). To set it up, you have to get
+  the WebClient WAR file from our {{{../download.html}download page}} and simply place it into your 
+  Tomcat's webapp directory. After restarting Tomcat, the WAR file will be exploded and the WebClient is ready 
+  to use without any need of configuration (for more information about the deployment process visit this
+  {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
+  To access the WebClient visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebCLient.jsp>>>.
+  The shown Website is divided into three frames. In the left frame all methods are listed, top right one can write
+  the inputs and bottom right the result will apear.
+
+[../images/WebClient.png]
+
+  First of all, the Endpoint of the Filtering&Collection Server has to be set. For this purpose, you have to  chooses 
+  on the left hand frame the method <<<setEndpoint() >>> and inserts the correct URL in the Input-frame (top right). 
+  After hitting the <<<Invoke >>> Button, the address is set and can be checked for example with the 
+  <<<getVendorVersion() >>> Method.
+
+  []
+
+** GUI Client
+
+  As already said, the <<Filtering&Collection GUI Client>> is a pure Java-Application. On our {{{../download.html}download page}}
+  we provide a zip-File with all the necessary libraries included. To compare it with the WebClient,
+  the GUI Client has absolutely the same functionality. Furthermore, it checkes if all the necessary input fields 
+  are set and interprets the return values. They are formatted in a user-friendly way and errors are displayed with 
+  additional information. 
+
+  All the configuration can be changed in the <<<ALEClient.properties>>> file. Actually, there is only one important 
+  parameter which is the <<<EndPoint>>> and defines the location of the server. After the configuration, the Client 
+  is started with the command <<<java -jar fc-client<Version>.jar>>> and appears like the following picture.
+
+[../images/GUIClientBasic.png]
+
+  If the endpoint is not correctly configured an Error-Dialog pops up which informs you that the Client couldn't connect
+  to the server:
+
+[../images/GUIClientFailureDialog.png]
+
+  Again, we have three sections. Commands can be choosen from a Dropdown-box in the top section. In the middle, parameters
+  for the selected commando can be typed in (not all commands need parameters!) and executed with the <<<execute>>> Button. 
+  
+[../images/GUIClientCommando.png]
+
+  Of course, if everything goes fine, the corresponding result will appear in the last section.
+
+  []
+
+  []
+
