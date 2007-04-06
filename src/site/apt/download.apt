@@ -1,9 +1,67 @@
-       ------
-                                    Filtering&Collection Download
-                                    ------
-                                    ------
+              -------------------
+              Download
+              -------------------
+              Christof Roduner
+              -------------------
+              04/06/2007
+              -------------------
+
 
 Download
 
-  The Accada Filtering&Collection implementation is complete and will be 
-  available for download as soon as possible.
+  The current version of Accada Filtering and Collection is 0.2.0-SNAPSHOT.
+
+* Accada Filtering and Collection Server
+
+*--------+----------+--------+
+         | Binaries | Sources
+*--------+----------+--------+
+ Filtering and Collection Server 0.2.0-SNAPSHOT (WAR file) | {{{../releases/fc-server-0.2.0-SNAPSHOT.war}fc-server-0.2.0-SNAPSHOT.war}} | 
+*--------+----------+--------+
+
+
+* Accada Filtering and Collection Testclient (Swing)
+
+*--------+----------+--------+
+         | Binaries | Sources
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (zip) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.zip}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.zip}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.zip}fc-client-0.2.0-SNAPSHOT-src.zip}}
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.gz) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.tar.gz}fc-client-0.2.0-SNAPSHOT-src.tar.gz}}
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.bz2) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.tar.bz2}fc-client-0.2.0-SNAPSHOT-src.tar.bz2}}
+*--------+----------+--------+
+
+
+* Accada Filtering and Collection Testclient (Webapp)
+
+*--------+----------+--------+
+         | Binaries | Source
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (zip) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.zip}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.zip}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.zip}fc-webclient-0.2.0-SNAPSHOT-src.zip}}
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.gz) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.tar.gz}fc-webclient-0.2.0-SNAPSHOT-src.tar.gz}}
+*--------+----------+--------+
+ Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.bz2) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.tar.bz2}fc-webclient-0.2.0-SNAPSHOT-src.tar.bz2}}
+*--------+----------+--------+
+
+
+* Previous Releases
+
+  All previous releases of Accada Filtering and Collection can be found in the {{{http://www.accada.org/repository/}distribution repository}}.
+
+
+* System Requirements
+
+*---------------------+---------+
+ <<JDK>>              | 1.5.x
+*---------------------+---------+
+ <<Memory>>           | No minimum requirements.
+*---------------------+---------+
+ <<Operating System>> | No minimum requirements. Tested on Windows XP. 
+*---------------------+---------+
+
+
+* Installation and Usage Instructions
+
+  Please consult the {{{docs/user-guide.html} User Guide}} for installation and Usage instructions.
