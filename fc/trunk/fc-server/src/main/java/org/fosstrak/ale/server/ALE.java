@@ -98,7 +98,7 @@ public class ALE {
 			int commandChannelPort;
 			String notificationChannelHost;
 			int notificationChannelPort;
-			int readTimeIntervall;
+			int readTimeInterval;
 			
 			try {
 				// get properties for input generator i
@@ -106,7 +106,7 @@ public class ALE {
 				commandChannelPort = Integer.parseInt(props.getProperty("command-channel-port-" + i));
 				notificationChannelHost = props.getProperty("notification-channel-host-" + i);
 				notificationChannelPort = Integer.parseInt(props.getProperty("notification-channel-port-" + i));
-				readTimeIntervall = Integer.parseInt(props.getProperty("read-time-intervall-" + i));
+				readTimeInterval = Integer.parseInt(props.getProperty("read-time-interval-" + i));
 			} catch (NumberFormatException e) {
 				throw new ImplementationException("Error loading properties for " + (i + 1) + ". input generator " +
 						"from ALE properties file '" + propertiesFilePath + "'", ImplementationExceptionSeverity.ERROR);
@@ -114,7 +114,7 @@ public class ALE {
 			
 			// create and start InputGenerator
 			InputGenerator inputGenerator = new InputGenerator(commandChannelHost, commandChannelPort, notificationChannelHost,
-					notificationChannelPort, readTimeIntervall);
+					notificationChannelPort, readTimeInterval);
 			
 			// wait until InputGenerator is ready
 			LOG.info("Wait until InputGenerator is ready.");
