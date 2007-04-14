@@ -38,8 +38,8 @@ import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTerminationCondition;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
 import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.reader.msg.notification.TagType;
-import org.accada.reader.proxy.RPProxyException;
+import org.accada.reader.rprm.core.msg.notification.TagType;
+import org.accada.reader.rp.proxy.RPProxyException;
 import org.apache.log4j.Logger;
 
 

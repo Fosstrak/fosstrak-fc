@@ -27,8 +27,8 @@ import org.apache.log4j.Logger;
 import org.accada.ale.server.EventCycle;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.reader.msg.notification.TagType;
-import org.accada.reader.proxy.RPProxyException;
+import org.accada.reader.rprm.core.msg.notification.TagType;
+import org.accada.reader.rp.proxy.RPProxyException;
 
 /**
  * This class represents a logical reader. It contains the corresponding physical source stubs and
