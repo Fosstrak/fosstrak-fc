@@ -26,18 +26,18 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.accada.reader.msg.notification.EventTimeType;
-import org.accada.reader.msg.notification.TagEventType;
-import org.accada.reader.msg.notification.TagFieldValueParamType;
-import org.accada.reader.msg.notification.TagType;
-import org.accada.reader.msg.notification.TagEventType.EventTriggers;
-import org.accada.reader.msg.reply.ReadReportType;
-import org.accada.reader.msg.reply.ReadReportType.SourceReport;
-import org.accada.reader.proxy.DataSelector;
-import org.accada.reader.proxy.RPProxyException;
-import org.accada.reader.proxy.ReadReport;
-import org.accada.reader.proxy.Source;
-import org.accada.reader.proxy.Trigger;
+import org.accada.reader.rprm.core.msg.notification.EventTimeType;
+import org.accada.reader.rprm.core.msg.notification.TagEventType;
+import org.accada.reader.rprm.core.msg.notification.TagFieldValueParamType;
+import org.accada.reader.rprm.core.msg.notification.TagType;
+import org.accada.reader.rprm.core.msg.notification.TagEventType.EventTriggers;
+import org.accada.reader.rprm.core.msg.reply.ReadReportType;
+import org.accada.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
+import org.accada.reader.rp.proxy.DataSelector;
+import org.accada.reader.rp.proxy.RPProxyException;
+import org.accada.reader.rp.proxy.ReadReport;
+import org.accada.reader.rp.proxy.Source;
+import org.accada.reader.rp.proxy.Trigger;
 
 /**
  * This class represents a physical source. It saves the state of the corresponding physical source.
@@ -131,7 +131,7 @@ public class PhysicalSourceStub {
 			if (reports != null) {
 				List<SourceReport> sourceReports = reports.getSourceReport();
 				if (sourceReports != null && sourceReports.size() == 1) {
-					List<org.accada.reader.msg.reply.TagType> tags = sourceReports.get(0).getTag();
+					List<org.accada.reader.rprm.core.msg.reply.TagType> tags = sourceReports.get(0).getTag();
 					return new HashSet<TagType>(convertReplyTagTypeList2NotificationTagTypeList(tags));
 				}
 			}
@@ -177,10 +177,10 @@ public class PhysicalSourceStub {
 	 * @param tags as list in reply tag format
 	 * @return tags as list in notification tag format
 	 */
-	private List<TagType> convertReplyTagTypeList2NotificationTagTypeList(List<org.accada.reader.msg.reply.TagType> tags) {
+	private List<TagType> convertReplyTagTypeList2NotificationTagTypeList(List<org.accada.reader.rprm.core.msg.reply.TagType> tags) {
 		
 		List<TagType> newList = new Vector<TagType>(); 
-		for (org.accada.reader.msg.reply.TagType oldTag : tags) {
+		for (org.accada.reader.rprm.core.msg.reply.TagType oldTag : tags) {
 			
 			// create new tag
 			TagType newTag = new TagType();
@@ -194,7 +194,7 @@ public class PhysicalSourceStub {
 			newTag.setTagType(oldTag.getTagType());
 			
 			// set tag event types
-			for (org.accada.reader.msg.reply.TagEventType oldType : oldTag.getTagEvent()) {
+			for (org.accada.reader.rprm.core.msg.reply.TagEventType oldType : oldTag.getTagEvent()) {
 				
 				// create new type
 				TagEventType newType = new TagEventType();
@@ -221,7 +221,7 @@ public class PhysicalSourceStub {
 			}
 			
 			// set tag fields
-			for (org.accada.reader.msg.reply.TagFieldValueParamType oldField : oldTag.getTagFields()) {
+			for (org.accada.reader.rprm.core.msg.reply.TagFieldValueParamType oldField : oldTag.getTagFields()) {
 				
 				// create new field
 				TagFieldValueParamType newField = new TagFieldValueParamType();

@@ -38,7 +38,7 @@ import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSetEnum;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.epcglobal.EPC;
-import org.accada.reader.msg.notification.TagType;
+import org.accada.reader.rprm.core.msg.notification.TagType;
 
 /**
  * This class represents a report.
