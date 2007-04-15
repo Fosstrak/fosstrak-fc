@@ -31,8 +31,8 @@
     </dependency>
     <dependency>
       <groupId>org.accada.reader</groupId>
-      <artifactId>reader-proxy</artifactId>
-      <version>0.2.0</version>
+      <artifactId>reader-rp-proxy</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
