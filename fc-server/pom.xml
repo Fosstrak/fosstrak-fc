@@ -31,14 +31,14 @@
     </dependency>
     <dependency>
       <groupId>org.accada.reader</groupId>
-      <artifactId>reader-core</artifactId>
-      <version>0.2.0</version>
+      <artifactId>reader-rprm-core</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.accada.reader</groupId>
-      <artifactId>reader-proxy</artifactId>
-      <version>0.2.0</version>
+      <artifactId>reader-rp-proxy</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
