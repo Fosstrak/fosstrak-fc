@@ -34,7 +34,7 @@ import org.accada.ale.util.DeserializerUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.reader.proxy.RPProxyException;
+import org.accada.reader.rp.proxy.RPProxyException;
 import org.apache.log4j.Logger;
 
 /**
