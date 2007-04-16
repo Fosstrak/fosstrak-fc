@@ -22,14 +22,14 @@ package util;
 
 import java.util.Hashtable;
 
-import org.accada.reader.proxy.DataSelector;
-import org.accada.reader.proxy.RPProxyException;
-import org.accada.reader.proxy.ReadPoint;
-import org.accada.reader.proxy.ReadReport;
-import org.accada.reader.proxy.Source;
-import org.accada.reader.proxy.TagFieldValue;
-import org.accada.reader.proxy.TagSelector;
-import org.accada.reader.proxy.Trigger;
+import org.accada.reader.rp.proxy.DataSelector;
+import org.accada.reader.rp.proxy.RPProxyException;
+import org.accada.reader.rp.proxy.ReadPoint;
+import org.accada.reader.rp.proxy.ReadReport;
+import org.accada.reader.rp.proxy.Source;
+import org.accada.reader.rp.proxy.TagFieldValue;
+import org.accada.reader.rp.proxy.TagSelector;
+import org.accada.reader.rp.proxy.Trigger;
 
 public class SourceMock implements Source {
 
