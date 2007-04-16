@@ -42,7 +42,7 @@ import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
 import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.reader.msg.notification.TagType;
+import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
