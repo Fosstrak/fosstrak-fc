@@ -28,12 +28,10 @@
 
 package org.accada.ale.server.readers.generated;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-
-import org.accada.ale.server.readers.generated.Source;
 
 
 
@@ -58,7 +56,7 @@ import org.accada.ale.server.readers.generated.Source;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PhysicalReader", propOrder = {
     "include",
     "exclude"
