@@ -16,9 +16,9 @@ Download
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Server 0.2.0 (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0.zip}fc-server-0.2.0.zip}}
+ Filtering and Collection Server 0.2.0 with dependencies (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0-bin-with-dependencies.zip}fc-server-0.2.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Server 0.2.0 (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0.tar.gz}fc-server-0.2.0.tar.gz}}
+ Filtering and Collection Server 0.2.0 with dependencies (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0-bin-with-dependencies.tar.gz}fc-server-0.2.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
 
 
