@@ -13,42 +13,51 @@ Download
 
 * Accada Filtering and Collection Server
 
-*--------+----------+--------+
-         | Binaries | Sources
-*--------+----------+--------+
- Filtering and Collection Server 0.2.0-SNAPSHOT (WAR file) | {{{../releases/fc-server-0.2.0-SNAPSHOT.war}fc-server-0.2.0-SNAPSHOT.war}} | 
-*--------+----------+--------+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Filtering and Collection Server 0.2.0 (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0.zip}fc-server-0.2.0.zip}}
+*--------+----------+
+ Filtering and Collection Server 0.2.0 (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.2.0/fc-server-0.2.0.tar.gz}fc-server-0.2.0.tar.gz}}
+*--------+----------+
 
 
 * Accada Filtering and Collection Testclient (Swing)
 
-*--------+----------+--------+
-         | Binaries | Sources
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (zip) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.zip}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.zip}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.zip}fc-client-0.2.0-SNAPSHOT-src.zip}}
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.gz) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.tar.gz}fc-client-0.2.0-SNAPSHOT-src.tar.gz}}
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.bz2) | {{{../releases/fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}fc-client-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}} | {{{../releases/fc-client-0.2.0-SNAPSHOT-src.tar.bz2}fc-client-0.2.0-SNAPSHOT-src.tar.bz2}}
-*--------+----------+--------+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Filtering and Collection Testclient 0.2.0 with dependencies (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-client/fc-client-0.2.0-bin-with-dependencies.zip}fc-client-0.2.0-bin-with-dependencies.zip}}
+*--------+----------+
+ Filtering and Collection Testclient 0.2.0 with dependencies (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-client/fc-client-0.2.0-bin-with-dependencies.tar.gz}fc-client-0.2.0-bin-with-dependencies.tar.gz}}
+*--------+----------+
 
 
 * Accada Filtering and Collection Testclient (Webapp)
 
-*--------+----------+--------+
-         | Binaries | Source
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (zip) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.zip}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.zip}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.zip}fc-webclient-0.2.0-SNAPSHOT-src.zip}}
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.gz) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.gz}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.tar.gz}fc-webclient-0.2.0-SNAPSHOT-src.tar.gz}}
-*--------+----------+--------+
- Filtering and Collection Testclient 0.2.0-SNAPSHOT with dependencies (tar.bz2) | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}fc-webclient-0.2.0-SNAPSHOT-bin-with-dependencies.tar.bz2}} | {{{../releases/fc-webclient-0.2.0-SNAPSHOT-src.tar.bz2}fc-webclient-0.2.0-SNAPSHOT-src.tar.bz2}}
-*--------+----------+--------+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Filtering and Collection Testclient 0.2.0 with dependencies (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-webclient/fc-webclient-0.2.0-bin-with-dependencies.zip}fc-webclient-0.2.0-bin-with-dependencies.zip}}
+*--------+----------+
+ Filtering and Collection Testclient 0.2.0 with dependencies (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-webclient/fc-webclient-0.2.0-bin-with-dependencies.tar.gz}fc-webclient-0.2.0-bin-with-dependencies.tar.gz}}
+*--------+----------+
+
+
+* Source Distribution (including all submodules)
+
+*--------+----------+
+         | Sources  |
+*--------+----------+
+ Filtering and Collection Source 0.2.0 (zip) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc/fc-0.2.0-src.zip}fc-0.2.0-src.zip}}
+*--------+----------+
+ Filtering and Collection Source 0.2.0 (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc/fc-0.2.0-src.tar.gz}fc-0.2.0-src.tar.gz}}
+*--------+----------+
 
 
 * Previous Releases
 
-  All previous releases of Accada Filtering and Collection can be found in the {{{http://www.accada.org/repository/}distribution repository}}.
+  All previous releases of Accada Filtering and Collection can be found in the {{{http://maven-repository.accada.org/releases}distribution repository}}.
 
 
 * System Requirements
@@ -64,4 +73,4 @@ Download
 
 * Installation and Usage Instructions
 
-  Please consult the {{{docs/user-guide.html} User Guide}} for installation and Usage instructions.
+  Please consult the {{{docs/user-guide.html} User Guide}} for installation and usage instructions.
