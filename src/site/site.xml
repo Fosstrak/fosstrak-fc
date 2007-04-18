@@ -47,6 +47,7 @@
       <item name="Source Repository" href="source-repository.html"/>      
     </menu>
 
+<!--
     <menu name="Module Reports" inherit="none">
       <item name="FC Server" href="fc-server/index.html" collapse="true">
         <item name="dummy"/>
@@ -61,6 +62,7 @@
         <item name="dummy"/>
       </item>
     </menu>
+-->
 
     <breadcrumbs>
       <item href="../index.html" name="Accada" />
