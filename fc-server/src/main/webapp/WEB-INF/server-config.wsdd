@@ -4,7 +4,7 @@
   <parameter name="sendMultiRefs" value="true"/>
   <parameter name="disablePrettyXML" value="true"/>
   <parameter name="adminPassword" value="admin"/>
-  <parameter name="attachments.Directory" value="C:\regli\workspace_wtp\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\webapps\ALEWebService\WEB-INF\attachments"/>
+  <parameter name="attachments.Directory" value="attachments"/>
   <parameter name="dotNetSoapEncFix" value="true"/>
   <parameter name="enableNamespacePrefixOptimization" value="false"/>
   <parameter name="sendXMLDeclaration" value="true"/>

@@ -343,6 +343,10 @@ public class InputGenerator implements NotificationChannelListener {
 		 */
 		private void initialize() throws RPProxyException {
 			
+			LOG.debug("-----------------------------------------------------------");
+			LOG.debug("Start initializing InputGenerator...");
+			LOG.info("Try connecting to reader devices...");
+			
 			// create ReaderDevice
 			LOG.debug("Create ReaderDevice Proxy");
 			Handshake handshake = new Handshake();
@@ -353,19 +357,20 @@ public class InputGenerator implements NotificationChannelListener {
 			readerName = readerDevice.getName();
 			
 			// create notification channel endpoint and add listener
-			LOG.debug("Try to create NotificationChannelEndpoint at port '" + notificationChannelPort + "'");
-			
+			LOG.debug("Try to create NotificationChannelEndpoint at port '" + notificationChannelPort + "'...");
 			notificationChannelEndPoint = new NotificationChannelEndPoint(notificationChannelPort);
 			notificationChannelEndPoint.addListener(generator);
+			LOG.debug("NotificationChannelEndpoint at port '" + notificationChannelPort + "' created.");
 			
 			// create read trigger
 			readTrigger = null;
 			int i = 0;
 			do {
-				LOG.debug("Try to create ReadTrigger '" + readTriggerName + "'.");
+				LOG.debug("Try to create ReadTrigger '" + readTriggerName + "'...");
 				try {
 					readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER,
 							"ms=" + readTimeInterval, readerDevice);
+					LOG.debug("ReadTrigger '" + readTriggerName + "' created.");
 				} catch (RPProxyException e) {
 					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
 						LOG.debug("Trigger '" + readTriggerName + "' already exists.");
@@ -382,10 +387,11 @@ public class InputGenerator implements NotificationChannelListener {
 			String notificationAddress = "tcp://" + notificationChannelHost + ":" + notificationChannelPort +
 					"?mode=" + NOTIFICATION_CHANNEL_MODE;
 			do {
-				LOG.debug("Try to create NotificationChannel '" + notificationChannelName + "'.");
+				LOG.debug("Try to create NotificationChannel '" + notificationChannelName + "'...");
 				try {
 					notificationChannel = NotificationChannelFactory.
 							createNotificationChannel(notificationChannelName, notificationAddress, readerDevice);
+					LOG.debug("NotificationChannel '" + notificationChannelName + "' created.");
 				} catch (RPProxyException e) {
 					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
 						LOG.debug("NotificationChannel '" + notificationChannelName + "' already exists.");
@@ -400,9 +406,10 @@ public class InputGenerator implements NotificationChannelListener {
 			dataSelector = null;
 			i = 0;
 			do {
-				LOG.debug("Try to create DataSelector '" + dataSelectorName + "'.");
+				LOG.debug("Try to create DataSelector '" + dataSelectorName + "'...");
 				try {
 					dataSelector = DataSelectorFactory.createDataSelector(dataSelectorName, readerDevice);
+					LOG.debug("DataSelector '" + dataSelectorName + "'. created");
 				} catch (RPProxyException e) {
 					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
 						LOG.debug("DataSelector '" + dataSelectorName + "' already exists.");
@@ -418,9 +425,10 @@ public class InputGenerator implements NotificationChannelListener {
 			notificationChannel.setDataSelector(dataSelector);
 			
 			// add sources to notification channel
-			LOG.debug("Add Sources to NotificationChannel");
+			LOG.debug("Add Sources to NotificationChannel...");
 			Source[] sources = readerDevice.getAllSources();
 			notificationChannel.addSources(sources);
+			LOG.debug("Sources were added to NotificationChannel.");
 			
 			// create notification trigger and add it to notification channel
 			notificationTrigger = null;
@@ -439,23 +447,28 @@ public class InputGenerator implements NotificationChannelListener {
 					}
 				}
 			} while (notificationTrigger == null);
-			LOG.debug("Add NotificationTrigger to NotificationChannel");
+			LOG.debug("Try to add NotificationTrigger to NotificationChannel...");
 			notificationChannel.addNotificationTriggers(new Trigger[] {notificationTrigger});
+			LOG.debug("NotificationTrigger added to NotificationChannel.");
 			
 			// create physical reader stub
-			LOG.debug("Create PhysicalReaderStub '" + readerName + "'.");
+			LOG.debug("Try to create PhysicalReaderStub '" + readerName + "'...");
 			PhysicalReaderStub physicalReaderStub = new PhysicalReaderStub(readerName);
+			LOG.debug("PhysicalReaderStub '" + readerName + "' created.");
 			
 			// create a physical source stub for each source
-			LOG.debug("Create a PhysicalSourceStub for each source.");
+			LOG.debug("Try to create a PhysicalSourceStub for each source...");
 			sources = readerDevice.getAllSources();
 			for (Source source : sources) {
+				LOG.debug("Create PhysicalSourceStub for source '" + source.getName() + "'...");
 				physicalReaderStub.addSourceStub(new PhysicalSourceStub(source, readTrigger, dataSelector));
 			}
+			LOG.debug("PhysicalSourceStub for each source created.");
 			
 			// add physical reader stub to logical reader manager
-			LOG.debug("Add PhysicalReaderStub '" + readerName + "' to LogicalReaderManager.");
+			LOG.debug("Add PhysicalReaderStub '" + readerName + "' to LogicalReaderManager...");
 			LogicalReaderManager.addPhysicalReaderStub(physicalReaderStub);
+			LOG.debug("PhysicalReaderStub '" + readerName + "' added to LogicalReaderManager.");
 			
 			// set isReady
 			isReady = true;
@@ -464,8 +477,10 @@ public class InputGenerator implements NotificationChannelListener {
 			synchronized (generator) {
 				generator.notifyAll();
 			}
-			
-			LOG.info("Input Generator ready !");
+
+			LOG.debug("InputGenerator initialized.");
+			LOG.info("Connection to reader devices established.");
+			LOG.debug("-----------------------------------------------------------");
 			
 		}
 
