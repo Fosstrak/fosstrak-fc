@@ -102,7 +102,7 @@ public class ALEClient extends JFrame {
 	private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 	
 	/** properties file path */
-	private static final String PROPERTIES_FILE_LOCATION = "/ALEClient.properties";
+	private static final String PROPERTIES_FILE_LOCATION = "/props/ALEClient.properties";
 	/** properties */
 	private final Properties props = new Properties();
 	/** resource bundle containing all user visible texts in specified language */
@@ -149,17 +149,17 @@ public class ALEClient extends JFrame {
 		
 		// try to get language form property file
 		if (props.containsKey("Language")) {
-			languageStream = this.getClass().getResourceAsStream("/ALEClient_" + props.getProperty("Language") + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + props.getProperty("Language") + ".lang");
 		}
 		
 		// try system default language
 		if (languageStream == null) {
-			languageStream = this.getClass().getResourceAsStream("/ALEClient_" + SYSTEM_DEFAULT_LOCALE.getLanguage() + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + SYSTEM_DEFAULT_LOCALE.getLanguage() + ".lang");
 		}
 		
 		// try default language
 		if (languageStream == null) {
-			languageStream = this.getClass().getResourceAsStream("/ALEClient_" + DEFAULT_LOCALE.getLanguage() + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + DEFAULT_LOCALE.getLanguage() + ".lang");
 		}
 		
 		if (languageStream == null) {
@@ -812,7 +812,7 @@ public class ALEClient extends JFrame {
 	public static void main(String[] args) throws IOException {
 		
 		// configure Logger with properties file
-		PropertyConfigurator.configure(ALEClient.class.getResource("/log4j.properties"));
+		PropertyConfigurator.configure(ALEClient.class.getResource("/props/log4j.properties"));
 		
 		ALEClient client = new ALEClient();
 		client.initialize();
