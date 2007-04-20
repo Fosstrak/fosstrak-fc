@@ -27,12 +27,14 @@ import java.io.InputStream;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 
+import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.axis.MessageContext;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.DeserializationContext;
+import org.apache.axis.encoding.TypeMapping;
 import org.apache.axis.message.PrefixedQName;
 import org.apache.axis.message.RPCElement;
 import org.apache.log4j.Logger;
@@ -130,9 +132,10 @@ public class DeserializerUtil {
 		InputSource inputSource = new InputSource(EnveloperUtil.envelope(inputStream));
 		DeserializationContext context = new DeserializationContext(inputSource, msgContext, "");
 		
-		//TODO: add type mapping for ECTimeUnit remove class org.apache.axis.encoding.ser.SimpleSerializer
+		//TODO: [regli] add type mapping for ECTimeUnit remove class org.apache.axis.encoding.ser.SimpleSerializer
 		
 		// add type mapping for ECTimeUnit
+		//TODO: [mlampe] check code below since it was commented by Remo Egli before
 //		QName timeUnitQName = new QName("urn:epcglobal:ale:xsd:1", "ECTimeUnit");
 //		TypeMapping typeMapping = context.getTypeMapping();
 //		typeMapping.register(ECTimeUnit.class, timeUnitQName, null, new ECTimeUnitDeserializerFactory(ECTimeUnit.class, timeUnitQName));
