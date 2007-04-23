@@ -1,3 +1,19 @@
+Accada Filtering and Collection Project
+=======================================
+
+This directory contains the modules of the Accada Filtering and Collection project. The objective of the
+project is to implement the Application Level Event (ALE) specification and to develop the appropriate
+tools that facilitate communication with the filtering and collection instance.
+
+This version of the Accada Filtering and Collection implements the EPCglobal ALE Specification 1.0 and
+provides a Java Swing-based and a Web-based test client.
+
+The Accada Filtering and Collection is part of the Accada Open Source RFID prototyping platform that 
+implements the EPC Network specifications. At www.accada.org, there is also software available that 
+implements the ALE, TDT, and EPCIS specification of EPCglobal.
+
+For more information,  please see the README.txt in the subdirectories of the modules and the information at http://www.accada.org/fc/
+
 
 Development using Eclipse
 =========================
@@ -24,6 +40,3 @@ using Eclipse, please follow these instructions:
 
 3. Import the four modules fc-commons, fc-server, fc-client, fc-webclient in
    Eclipse (from the menu bar, select File > Import > Existing Projects into Workspace).
-
-
-   

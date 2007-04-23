@@ -1,10 +1,6 @@
 This product includes software developed by ETH Zurich.
 
-This product includes software developed by Cambridge University.
-
 This product includes software developed by The Apache Software Foundation (http://www.apache.org/).
-
-This product includes software developed by SNMP4J.org (http://www.snmp4j.org/).
 
 This product includes redistributable components of the JAVA TM Web Services Developer Pack.
 
