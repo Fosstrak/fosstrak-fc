@@ -1,6 +1,6 @@
 This product includes software developed by ETH Zurich.
 
-This product includes software developed by Cambridge University.
+This product includes software developed by University of Cambridge.
 
 This product includes software developed by The Apache Software Foundation (http://www.apache.org/).
 
