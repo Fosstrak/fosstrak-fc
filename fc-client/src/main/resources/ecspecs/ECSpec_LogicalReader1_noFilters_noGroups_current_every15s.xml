@@ -5,7 +5,7 @@
 	</logicalReaders>
 	<boundarySpec xsi:type="ns1:ECBoundarySpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<startTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
-		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">5000</repeatPeriod>
+		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">15000</repeatPeriod>
 		<stopTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
 		<duration unit="MS" xsi:type="ns1:ECTime">1000</duration>
 		<stableSetInterval unit="MS" xsi:type="ns1:ECTime">0</stableSetInterval>
