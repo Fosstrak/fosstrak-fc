@@ -1,10 +1,6 @@
               -------------------
               User Guide
               -------------------
-              Alain Remund
-              -------------------
-              02/04/2007
-              -------------------
 
 User Guide
 
@@ -17,16 +13,14 @@ User Guide
    [[3]] {{{#Clients}Clients}}
 
 
-
-
 * {About} this Guide
 
-  This User Guide is intended to help those who wish to use the Accada Filtering and Collection.
+  The user guide is intended to help those who wish to use the Accada Filtering and Collection modules.
   Architectural decisions and the system's design are not addressed here.
 
-  This User Guide is divided into two sections. The first section explains how to install
+  The guide is divided into two sections. The first section explains how to install
   the Filtering and Collection Server as web application in Apache Tomcat. The second section
-  describes how this server (or any ALE-compliant middleware) can be accessed using our testclients.
+  describes how the server (or any ALE-compliant middleware) can be accessed using our testclients.
   
 * {Server}
 
@@ -40,8 +34,10 @@ User Guide
   more information about the deployment process visit this 
   {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
   A new folder is created in <<<$TOMCAT_HOME\webapps\ >>>. This folder contains the file
-  <<<WEB-INF\classes\InputGenerators.properties >>>, where all configuration options for the Filtering and
-  Collection server can be set. These include the following:
+  <<<WEB-INF\classes\InputGenerators.properties >>> 
+  ({{{../example/InputGenerators.properties} see example InputGenerators.properties}}),
+  where all configuration options for the Filtering and Collection server can be set. 
+  These include the following:
 
   * command-channel-host: Host of the Reader Device to communicate with.
 
@@ -58,14 +54,66 @@ User Guide
   Please note that you need to append the reader number as a suffix to all these directives. Number starts
   with zero, so to specify the host of the third reader device, you would use the key <<<command-channel-host-2>>>.
 
-  If everything is configured correctly, the server can be restarted and is now reachable at the 
++---
+
+## Input generators
+number-of-inputgenerators = 1
+
+## Connection port to access FC Server
+command-channel-host-0 = localhost
+command-channel-port-0 = 8000
+
+## Connection Port for incomding notifications from a physical reader
+notification-channel-host-0 = localhost
+notification-channel-port-0 = 9000
+read-time-interval-0 = 10000
+
++---
+
+  The logical readers of the <<Filtering and Collection Server>> are specified in the XML file
+  <<<WEB-INF\classes\LogicalReaders.xml >>> 
+  ({{{../example/LogicalReaders.xml} see example LogicalReaders.xml}}).
+  For all logical readers a name has to be given and the
+  physical reader and its sources that comprise the logical reader.
+
+  If everything is configured correctly, the server can be restarted and is for our configuration reachable at the 
   endpoint <<<http://<hostname>:8080/<WAR-File Name>/services/ALEServicePort>>>. 
+
++---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<logicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="LogicalReaders.xsd">
+	<logicalReader name="LogicalReader1">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf1</source>
+				<source>Shelf2</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+	<logicalReader name="LogicalReader2">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf3</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+	<logicalReader name="LogicalReader3">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf4</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+</logicalReaders>
+
++---
 
   []	
 
 * {Clients}
 
-  Accada comes with two different testclients that allow you to interactively use a Filtering and
+  Accada comes with two different testclients that allow to interactively use a Filtering and
   Collection Server instance. While the first client is a standalone Java application with a
   Swing GUI, the second client is a web application that can be accessed with any web browser.
   
@@ -100,7 +148,7 @@ User Guide
 
   The <<Filtering and Collection Web Client>> is based on Java Server Pages (JSP). To set it up, you have to get
   the Web Client WAR file from our {{{../download.html}download page}} and simply place it into 
-  Tomcat's webapp directory. After restarting Tomcat, the WAR file will be exploded and the Web Client is ready 
+  Tomcat's webapp directory. After restarting Tomcat, the WAR file will be deployed and the Web Client is ready 
   without any need for configuration (for more information about the deployment process, visit this
   {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
   To access the Web Client, visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebCLient.jsp>>>.
@@ -109,13 +157,53 @@ User Guide
 
 [../images/WebClient.png]
 
-  Before invoking any other methods, you will hve to set the endpoint (i.e., the Filtering and Collection Server
+  Before invoking any other methods, you will have to set the endpoint (i.e., the Filtering and Collection Server
   to communicate with) by choosing the <<<setEndpoint() >>> method in left frame and inserts the URL of your
   Filtering and Collection Server in the text field (top right frame). After hitting the <<<Invoke >>> button,
   the endpoint is set. You can use the <<<getVendorVersion() >>> method, to check if communication between the
   Web Client and the server works.
 
   []
+
+** ECSpecifications
+
+   The ECSpecs, i.e. the specifications for the Filtering and Collection Server on how to generate reports,
+   can be transfered to the server using one of the two client applications. The define command gives a
+   specification a name for later reference and a file path with the ECSpec XML file. The
+   ({{{../example/ECSpec_LogicalReader1_noFilters_noGroups_current_every30s.xml} example ECSpec_LogicalReader1_noFilters_noGroups_current_every30s.xml}}) is shown below. A specification becomes active after subscribing for
+   it using the subscribe command.
+
++---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:ECSpec includeSpecInReports="false" xmlns:ns1="urn:epcglobal:ale:xsd:1">
+	<logicalReaders soapenc:arrayType="xsd:string[1]" xsi:type="soapenc:Array" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<logicalReader xsi:type="xsd:string">LogicalReader1</logicalReader>
+	</logicalReaders>
+	<boundarySpec xsi:type="ns1:ECBoundarySpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<startTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">30000</repeatPeriod>
+		<stopTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<duration unit="MS" xsi:type="ns1:ECTime">1000</duration>
+		<stableSetInterval unit="MS" xsi:type="ns1:ECTime">0</stableSetInterval>
+		<extension xsi:type="ns1:ECBoundarySpecExtension" xsi:nil="true"/>
+	</boundarySpec>
+	<reportSpecs soapenc:arrayType="ns1:ECReportSpec[1]" xsi:type="soapenc:Array" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<reportSpec reportIfEmpty="true" reportName="Current" reportOnlyOnChange="false" xsi:type="ns1:ECReportSpec">
+			<reportSet set="CURRENT" xsi:type="ns1:ECReportSetSpec"/>
+			<filterSpec xsi:type="ns1:ECFilterSpec" xsi:nil="true"/>
+			<groupSpec xsi:type="soapenc:Array" xsi:nil="true"/>
+			<output includeCount="true" includeEPC="true" includeRawDecimal="true" includeRawHex="true" includeTag="true" xsi:type="ns1:ECReportOutputSpec">
+				<extension xsi:type="ns1:ECReportOutputSpecExtension" xsi:nil="true"/>
+			</output>
+			<extension xsi:type="ns1:ECReportSpecExtension" xsi:nil="true"/>
+		</reportSpec>
+	</reportSpecs>
+	<extension xsi:type="ns1:ECSpecExtension" xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+</ns1:ECSpec>
+
++---
+
 
 ** Displaying Reports
 
