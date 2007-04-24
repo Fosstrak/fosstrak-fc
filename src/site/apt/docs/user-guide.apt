@@ -117,5 +117,24 @@ User Guide
 
   []
 
-  []
+** Displaying Reports
 
+   For testing purposes, the class org.accada.reader.rp.client.EventSinkUI from the Accada Reader Client module
+   can be used to receive and display reports.
+
+   The following steps show how to install and execute the EventSinkUI class:
+
+   * Download the Reader RP Client binaries with the dependencies included from the {{{../download.html}download}} section of the website.
+  
+   * Unzip the downloaded file
+   
+   * Make sure a JRE 1.5 or higher is installed and it is added to the path variable.
+   
+   * Start the class in the jar file with the following command:
+     java -cp reader-rp-client-VERSION.jar org.accada.reader.rp.client.EventSinkUI [port]
+
+   * As the port use the TCP port to which the filtering and collection module is sending the reports.
+     The port is specified when subscribing for a specification in the notification URI.
+     (e.g. tcp://localhost:9999 as the notification URI). 
+
+  []
