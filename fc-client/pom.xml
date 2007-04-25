@@ -89,7 +89,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
-            <descriptor>src/assembly/bin-with-deps.xml</descriptor>
+            <descriptor>src/assembly/bin-with-dependencies.xml</descriptor>
           </descriptors>
         </configuration>
         <executions>
