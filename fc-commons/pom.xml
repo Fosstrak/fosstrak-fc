@@ -7,11 +7,11 @@
 
   <groupId>org.accada.fc</groupId>
   <artifactId>fc-commons</artifactId>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
     <groupId>org.accada.fc</groupId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
   <modelVersion>4.0.0</modelVersion>
