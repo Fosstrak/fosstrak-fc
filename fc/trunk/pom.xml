@@ -145,14 +145,14 @@
       <subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</subscribe>
       <unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</unsubscribe>
       <post>accada-ale-user@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=accada-ale-user</archive>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-user</archive>
     </mailingList>
     <mailingList>
       <name>Filtering and Collection developer mailing list</name>
       <subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-developer</subscribe>
       <unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-developer</unsubscribe>
       <post>accada-ale-developer@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=accada-ale-developer</archive>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-developer</archive>
     </mailingList>
   </mailingLists>
 
