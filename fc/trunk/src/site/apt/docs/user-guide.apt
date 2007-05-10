@@ -151,7 +151,7 @@ read-time-interval-0 = 10000
   Tomcat's webapp directory. After restarting Tomcat, the WAR file will be deployed and the Web Client is ready 
   without any need for configuration (for more information about the deployment process, visit this
   {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
-  To access the Web Client, visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebCLient.jsp>>>.
+  To access the Web Client, visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebClient.jsp>>>.
   Again, you will see a user interface that is divided into three frames. In the left frame, all methods are listed,
   while the top right one accepts the method arguments and the bottom right frame displays server responses.
 
