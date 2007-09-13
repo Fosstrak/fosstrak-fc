@@ -65,8 +65,10 @@ public class ReportsGenerator implements Runnable {
 	private final ECSpec spec;
 	/** map of subscribers of this report generator */
 	private final Map<String, Subscriber> subscribers = new HashMap<String, Subscriber>();
+	
+
 	/** set of currently running event cycles of this report generator */
-	private final Set<EventCycle> runningEventCycles = new HashSet<EventCycle>();
+//	private final Set<EventCycle> runningEventCycles = new HashSet<EventCycle>();
 	
 	// boundary spec values
 	/** start trigger */
@@ -92,9 +94,9 @@ public class ReportsGenerator implements Runnable {
 	private boolean isPolling = false;
 	/** ec report for the poller */
 	private ECReports pollReport = null;
-
-	/** event cycle before the current */
-	private EventCycle lastEventCycle = null;
+	
+	
+	private EventCycle eventCycle = null;
 	
 	/**
 	 * Constructor validates the ec specification and sets some parameters.
@@ -312,19 +314,20 @@ public class ReportsGenerator implements Runnable {
 		thread = new Thread(this, name);
 		thread.start();
 		isRunning = true;
-		LOG.debug("Thread of spec '" + name + "' started.");
-		
+		LOG.debug("Thread of spec '" + name + "' started.");		
 	}
 	
 	/**
 	 * This method stops the main loop of the report generator.
 	 */
 	public void stop() {
-		
+		/*
 		// stop running EventCycles
 		for (EventCycle eventCycle : runningEventCycles) {
 			eventCycle.stop();
 		}
+		*/
+		eventCycle.stop();
 		
 		// stop Thread
 		if (thread.isAlive()) {
@@ -334,32 +337,6 @@ public class ReportsGenerator implements Runnable {
 		isRunning = false;
 		
 		LOG.debug("Thread of spec '" + name + "' stopped.");
-		
-	}
-	
-	/**
-	 * This method adds an event cycle to the set of running event cycles.
-	 * 
-	 * @param eventCycle to add
-	 */
-	public void addRunningEventCycle(EventCycle eventCycle) {
-		
-		runningEventCycles.add(eventCycle);
-		
-		LOG.debug("EventCycle '" + eventCycle.getName() + "' added to running EventCycles");
-		
-	}
-	
-	/**
-	 * This method removes an event cycle from the set of running event cycles.
-	 * 
-	 * @param eventCycle to remove
-	 */
-	public void removeRunningEventCycle(EventCycle eventCycle) {
-		
-		runningEventCycles.remove(eventCycle);
-		
-		LOG.debug("EventCycle '" + eventCycle.getName() + "' removed from running EventCycles");
 		
 	}
 	
@@ -380,6 +357,13 @@ public class ReportsGenerator implements Runnable {
 	 */
 	public void run() {
 		
+		try {
+			eventCycle = new EventCycle(this);
+		} catch (ImplementationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		if (startTriggerValue != null) {
 			if (repeatPeriodValue == -1) {
 				// startTrigger is specified and repeatPeriod is not specified
@@ -389,7 +373,7 @@ public class ReportsGenerator implements Runnable {
 			}
 		} else {
 			if (repeatPeriodValue != -1) {
-				
+						
 				// startTrigger is not specified and repeatPeriod is specified
 				// eventCycle is started when:
 				// state transitions from UNREQUESTED to REQUESTED or
@@ -410,11 +394,13 @@ public class ReportsGenerator implements Runnable {
 					
 					// while state is REQUESTED start every repeatPeriod a new EventCycle
 					while (state == ReportsGeneratorState.REQUESTED) {
-						try {
-							lastEventCycle = new EventCycle(this, lastEventCycle);
-						} catch (ImplementationException e) {
-							e.printStackTrace();
+						
+						if (eventCycle == null) {
+							LOG.error("eventCycle is null");
+						} else {
+							eventCycle.launch();
 						}
+
 						try {
 							synchronized (state) {
 								state.wait(repeatPeriodValue);
@@ -446,15 +432,12 @@ public class ReportsGenerator implements Runnable {
 					
 					// while state is REQUESTED start one EventCycle after the other
 					while (state == ReportsGeneratorState.REQUESTED) {
-						try {
-							lastEventCycle = new EventCycle(this, lastEventCycle);
-						} catch (ImplementationException e) {
-							e.printStackTrace();
-						}
-						while (!lastEventCycle.isTerminated()) {
+						eventCycle.launch();
+						
+						while (!eventCycle.isTerminated()) {
 							try {
-								synchronized (lastEventCycle) {
-									lastEventCycle.wait();
+								synchronized (eventCycle) {
+									eventCycle.wait();
 								}
 							} catch (InterruptedException e) {
 								return;
