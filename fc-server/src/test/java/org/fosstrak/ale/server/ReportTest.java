@@ -437,7 +437,7 @@ public class ReportTest extends TestCase {
 	private EventCycle createEventCycle() throws ImplementationException, ECSpecValidationException {
 	
 		// create EventCycle
-		EventCycle eventCycle = new EventCycle(createReportsGenerator(), createLastEventCycle());
+		EventCycle eventCycle = new EventCycle(createReportsGenerator());
 		
 		return eventCycle;
 		
@@ -446,7 +446,7 @@ public class ReportTest extends TestCase {
 	private EventCycle createLastEventCycle() throws ImplementationException, ECSpecValidationException {
 		
 		// create EventCycle
-		EventCycle eventCycle = new EventCycle(createReportsGenerator(), null);
+		EventCycle eventCycle = new EventCycle(createReportsGenerator());
 		eventCycle.addTag(createTag(LAST_CYCLE_TAG_ID, LAST_CYCLE_TAG_PURE_URI, LAST_CYCLE_TAG_TAG_URI));
 		eventCycle.addTag(createTag(LAST_CYCLE_DEFAULT_GROUP_TAG_ID, LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI,
 				LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI));
