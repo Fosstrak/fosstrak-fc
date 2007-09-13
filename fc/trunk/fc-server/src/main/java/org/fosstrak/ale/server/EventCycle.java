@@ -21,13 +21,18 @@
 package org.accada.ale.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import java.util.Set;
 
+import org.accada.ale.server.readers.LogicalReader;
 import org.accada.ale.server.readers.LogicalReaderManager;
-import org.accada.ale.server.readers.LogicalReaderStub;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
@@ -38,8 +43,8 @@ import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTerminationCondition;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
 import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.accada.reader.rp.proxy.RPProxyException;
+import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.Logger;
 
 
@@ -47,64 +52,72 @@ import org.apache.log4j.Logger;
  * This class represents an event cycle. It collects the tags and manages the reports.
  * 
  * @author regli
+ * @author sawielan
  */
-public class EventCycle implements Runnable {
+public class EventCycle implements Runnable, Observer {
 
-	/** logger */
+	/** logger. */
 	private static final Logger LOG = Logger.getLogger(EventCycle.class);
 
-	/** random numbers generator */
+	/** random numbers generator. */
 	private static final Random rand = new Random(System.currentTimeMillis());
-	/** ale id */
+	/** ale id. */
 	private static final String ALEID = "ETHZ-ALE" + rand.nextInt();
-	/** number of this event cycle */
+	/** number of this event cycle. */
 	private static int number = 0;
 	
-	/** name of this event cycle */
+	/** name of this event cycle. */
 	private final String name;
-	/** report generator which contains this event cycle */
+	/** report generator which contains this event cycle. */
 	private final ReportsGenerator generator;
-	/** last event cycle of the same ec specification */
-	private final EventCycle lastEventCycle;
-	/** thread */
+	/** last event cycle of the same ec specification. */
+	//private final EventCycle lastEventCycle;
+	/** thread. */
 	private final Thread thread;
-	/** ec specfication for this event cycle */
+	
+	/** ec specfication for this event cycle. */
 	private final ECSpec spec;
 	
-	/** set of logical reader stubs which deliver tags for this event cycle */
-	private final Set<LogicalReaderStub> logicalReaderStubs = new HashSet<LogicalReaderStub>();
+	/** set of logical readers which deliver tags for this event cycle. */
+	private final Set<LogicalReader> logicalReaders = new HashSet<LogicalReader>();
 	
-	/** set of reports for this event cycle */
+	/** set of reports for this event cycle. */
 	private final Set<Report> reports = new HashSet<Report>();
-	/** set of tags for this event cycle */
-	private final Set<TagType> tags = new HashSet<TagType>();
 	
-	/** indicates if this event cycle is terminated or not */
+	/** set of tags for this event cycle. */
+	private  Set<Tag> tags = new HashSet<Tag>();
+	
+	/** this set stores the tags from the previous EventCycle run. */
+	private Set<Tag> lastEventCycleTags = null;
+	
+	/** indicates if this event cycle is terminated or not .*/
 	private boolean isTerminated = false;
-	/** the duration of collecting tags for this event cycle in milliseconds */
+	/** the duration of collecting tags for this event cycle in milliseconds. */
 	private long durationValue;
-	/** the total time this event cycle runs in milliseconds */
+	/** the total time this event cycle runs in milliseconds. */
 	private long totalTime;
-	/** the termination condition of this event cycle */
+	/** the termination condition of this event cycle. */
 	private ECTerminationCondition terminationCondition = null;
 
+	/** flags the eventCycle whether it shall run several times or not.	 */
+	private boolean running = false;
+	
+	/** flags whether the EventCycle is currently not accepting tags. */
+	private boolean acceptTags = false;
+	
 	/**
 	 * Constructor sets parameter and starts thread.
 	 * 
 	 * @param generator to which this event cycle belongs to
-	 * @param lastEventCycle with the same ec specification
-	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public EventCycle(ReportsGenerator generator, EventCycle lastEventCycle) throws ImplementationException {
+	public EventCycle(ReportsGenerator generator) throws ImplementationException {
 		
 		// set name
 		name = generator.getName() + "_" + number++;
 		
 		// set ReportGenerator
 		this.generator = generator;
-		
-		// set last event Cycle
-		this.lastEventCycle = lastEventCycle;
 		
 		// set spec
 		spec = generator.getSpec();
@@ -120,25 +133,31 @@ public class EventCycle implements Runnable {
 		// init BoundarySpec values
 		durationValue = getDurationValue();
 		
+		setAcceptTags(false);
+		
 		// get LogicalReaderStubs
 		if (spec.getLogicalReaders() != null) {
 			String[] logicalReaderNames = spec.getLogicalReaders();
 			for (String logicalReaderName : logicalReaderNames) {
-				LogicalReaderStub logicalReader = LogicalReaderManager.getLogicalReaderStub(logicalReaderName);
+				LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(logicalReaderName);
+				
 				if (logicalReader != null) {
-					logicalReaderStubs.add(logicalReader);
+					logicalReaders.add(logicalReader);
 				}
 			}
 		}
-
-		// add this EventCycle to runningEventCycles of the corresponding ReportGenerator
-		generator.addRunningEventCycle(this);
+		
+		for (LogicalReader logicalReader : logicalReaders) {
+			
+			// subscribe this event cycle to the logical readers
+			logicalReader.addObserver(this);
+		}
 		
 		// create and start Thread
 		thread = new Thread(this);
 		thread.start();
 		
-		LOG.debug("New EventCycle '" + name + "' started.");
+		LOG.debug("New EventCycle  '" + name + "' created.");
 
 	}
 	
@@ -179,14 +198,14 @@ public class EventCycle implements Runnable {
 		
 		return reports;
 		
-	}
+	}	
 
 	/**
 	 * This method return all tags of this event cylce.
 	 * 
 	 * @return set of tags
 	 */
-	public Set<TagType> getTags() {
+	public synchronized Set<Tag> getTags() {
 
 		return tags;
 		
@@ -199,11 +218,21 @@ public class EventCycle implements Runnable {
 	 * @throws ImplementationException if an implementation exception occures
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public void addTag(TagType tag) throws ImplementationException, ECSpecValidationException {
+	public synchronized void addTag(Tag tag) throws ImplementationException, ECSpecValidationException {
+		if (!isAcceptingTags()) {
+			return;
+		}
 		
 		// add event only if EventCycle is still running
 		if (thread.isAlive()) {
-			LOG.debug("EventCycle '" + name + "' add Tag '" + tag.getTagIDAsPureURI() + "'.");
+			LOG.debug("EventCycle '" + name + "' add Tag '" + tag.getTagID() + "'.");
+			
+			for (Tag atag : tags) {
+				// do not add the tag it is already in the list
+				if (atag.equals(tag)) {
+					return;
+				}
+			}
 			
 			// add tag to tags
 			tags.add(tag);
@@ -214,22 +243,66 @@ public class EventCycle implements Runnable {
 			}
 			
 		}
+	}
+	
+	/**
+	 * compatibility reasons.
+	 * @param tag to add
+	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ECSpecValidationException if the tag is not valid
+	 */
+	public void addTag(TagType tag) throws ImplementationException, ECSpecValidationException {
+		if (!isAcceptingTags()) {
+			return;
+		}
 		
+		Tag newTag = new Tag();
+		newTag.setTagID(tag.getTagIDAsPureURI());
+		addTag(newTag);
+	}
+
+
+	/**
+	 * implementation of the observer interface for tags.
+	 * @param o an observable object that triggered the update
+	 * @param arg the arguments passed by the observable
+	 */
+	public synchronized void update(Observable o, Object arg) {
+		if (!isAcceptingTags()) {
+			return;
+		}
+		
+		if (arg instanceof Tag) {
+			Tag tag = (Tag) arg;
+			LOG.debug("EventCycle: received tag :");
+			//tag.prettyPrint(LOG);
+			try {
+				addTag(tag);
+			} catch (ImplementationException ie) {
+				ie.printStackTrace();
+			} catch (ECSpecValidationException ive) {
+				ive.printStackTrace();
+			}
+		}
 	}
 	
 	/**
 	 * This method stops the thread.
 	 */
 	public void stop() {
+
+		// unsubscribe this event cycle from logical readers
+		for (LogicalReader logicalReader : logicalReaders) {
+			//logicalReader.unsubscribeEventCycle(this);
+			logicalReader.deleteObserver(this);
+		}
+
 		
 		if (thread.isAlive()) {
 			thread.interrupt();
 			
 			// stop EventCycle
 			LOG.debug("EventCycle '" + name + "' stopped.");
-			
-			// remove EventCycle from runningEventCycles of the corresponding ReportGenerator
-			generator.removeRunningEventCycle(this);
 		}
 		
 		isTerminated = true;
@@ -268,86 +341,103 @@ public class EventCycle implements Runnable {
 	 */
 	public void run() {
 		
-		// set start time
-		long startTime = System.currentTimeMillis();
-		
-		try {
-			
-			for (LogicalReaderStub logicalReader : logicalReaderStubs) {
-				
-				// subscribe this event cycle to the logical readers
-				logicalReader.subscribeEventCycle(this);
-				
-				// get all tags from logical readers at this moment
-				for (TagType tag : logicalReader.getAllTags()) {
-					addTag(tag);
+		// wait for the start
+		// running will be set by the ReportsGenerator when the EventCycle
+		// has a subscriber
+		if (!running) {
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
+		}
+		
+		while (running) {
+			LOG.debug("starting EventCycle");
 			
-			if (durationValue > 0) {
+			// set start time
+			long startTime = System.currentTimeMillis();
+	
+			// accept tags
+			setAcceptTags(true);
+			
+			//------------------------------ run for the specified time
+			try {
 				
-				// if durationValue is specified and larger than zero, wait for notify or durationValue elapsed.
-				synchronized (this) {
-					this.wait(Math.max(1, durationValue - (System.currentTimeMillis() - startTime)));
-					terminationCondition = ECTerminationCondition.DURATION;
+				if (durationValue > 0) {
+					
+					// if durationValue is specified and larger than zero, wait for notify or durationValue elapsed.
+					synchronized (this) {
+						this.wait(Math.max(1, durationValue - (System.currentTimeMillis() - startTime)));
+						terminationCondition = ECTerminationCondition.DURATION;
+					}
+				} else {
+					
+					// if durationValue is not specified or smaller than zero, wait for notify.
+					synchronized (this) {
+						this.wait();
+					}
 				}
-			} else {
+			
+			} catch (InterruptedException e) {
 				
-				// if durationValue is not specified or smaller than zero, wait for notify.
+				// if Thread is stopped with method stop(), then return without notify subscribers.
+				return;
+				
+			}
+			
+			// dont accept tags anymore
+			setAcceptTags(false);
+			//-------------------------------------------------- generate the reports
+			
+			// get reports
+			try {
+				
+				ECReports ecReports = getECReports();
+				
+				// notifySubscribers
+				generator.notifySubscribers(ecReports);
+				
+				// store the current tags into the old tags
+				lastEventCycleTags = tags;
+				tags = new HashSet<Tag>();
+				
+			} catch (ECSpecValidationException e) {
+				LOG.error("Could not create ECReports (" + e.getMessage() + ")");
+			} catch (ImplementationException e) {
+				LOG.error("Could not create ECReports (" + e.getMessage() + ")");
+			}
+			
+			// compute total time
+			totalTime = System.currentTimeMillis() - startTime;
+		
+			LOG.debug("EventCycle finished");
+			try {
 				synchronized (this) {
 					this.wait();
 				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			// unsubscribe this event cycle from logical readers
-			for (LogicalReaderStub logicalReader : logicalReaderStubs) {
-				logicalReader.unsubscribeEventCycle(this);
-			}
-			
-		} catch (InterruptedException e) {
-			
-			// if Thread is stopped with method stop(), then return without notify subscribers.
-			return;
-			
-		} catch (ImplementationException e) {
-			e.printStackTrace();
-		} catch (ECSpecValidationException e) {
-			e.printStackTrace();
-		} catch (RPProxyException e) {
-			e.printStackTrace();
 		}
-		
-		// get reports
-		try {
 			
-			ECReports ecReports = getECReports();
 			
-			// notifySubscribers
-			generator.notifySubscribers(ecReports);
-			
-		} catch (ECSpecValidationException e) {
-			LOG.error("Could not create ECReports (" + e.getMessage() + ")");
-		} catch (ImplementationException e) {
-			LOG.error("Could not create ECReports (" + e.getMessage() + ")");
-		}
-		
-		// compute total time
-		totalTime = System.currentTimeMillis() - startTime;
-		
 		// stop EventCycle
 		stop();
 		
 	}
-
+	
 	/**
-	 * This method returns the last event cycle.
-	 * 
-	 * @return last event cycle
+	 * starts this EventCycle.
 	 */
-	public EventCycle getLastEventCycle() {
-		
-		return lastEventCycle;
-		
+	public void launch() {
+		this.running = true;
+		synchronized (this) {
+			this.notifyAll();
+		}
 	}
 	
 	//
@@ -375,7 +465,7 @@ public class EventCycle implements Runnable {
 	 * This method returns the duration value extracted from the ec specification.
 	 * 
 	 * @return duration value in milliseconds
-	 * @throws ImplementationException if an implementation excpetion occures
+	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	private long getDurationValue() throws ImplementationException {
 		
@@ -390,6 +480,30 @@ public class EventCycle implements Runnable {
 		}
 		return -1;
 		
+	}
+
+	/**
+	 * returns the set of tags from the previous EventCycle run.
+	 * @return a set of tags from the previous EventCycle run
+	 */
+	public Set<Tag> getLastEventCycleTags() {
+		return lastEventCycleTags;
+	}
+
+	/** 
+	 * tells whether the ec accepts tags.
+	 * @return boolean telling whether the ec accepts tags
+	 */
+	private boolean isAcceptingTags() {
+		return acceptTags;
+	}
+
+	/**
+	 * sets the flag acceptTags to the passed boolean value. 
+	 * @param acceptTags sets the flag acceptTags to the passed boolean value.
+	 */
+	private void setAcceptTags(boolean acceptTags) {
+		this.acceptTags = acceptTags;
 	}
 
 }
