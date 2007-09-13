@@ -1,0 +1,7 @@
+ 10000; EN; Shelf1; 28 97 0B 01 00 00 00 01; null
+ 500; EN; Shelf1; 3A 90 C0 01 00 00 00 01; null
+ 1000; EX; Shelf1; 28 97 0B 01 00 00 00 01; null
+ 100; EN; Shelf1; 20 01 D0 01 00 00 00 01; null
+ 200; EN; Shelf1; 1B 65 0C 01 00 00 00 01; null
+ 1500; EX; Shelf1; 1B 65 0C 01 00 00 00 01; null
+ 500; EX; Shelf1; 20 01 D0 01 00 00 00 01; null
