@@ -20,12 +20,13 @@
 
 package org.accada.ale.server;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.accada.ale.server.readers.LogicalReaderManager;
+import org.accada.ale.server.readers.rp.InputGenerator;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
@@ -34,42 +35,46 @@ import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.ale.wsdl.ale.epcglobal.InvalidURIException;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
+import org.accada.ale.wsdl.ale.epcglobal.SecurityException;
+import org.accada.ale.wsdl.ale.epcglobal.ValidationException;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
- * This class represents the application level envents interface.
+ * This class represents the application level events interface.
  * All ale operations are executed by this class.
  * 
  * @author regli
+ * @author sawielan
+ * @author haennimi
  */
 public class ALE {
 
-	/** logger */
+	/** logger. */
 	private static final Logger LOG = Logger.getLogger(ALE.class);
 
-	/** path to default property file */
+	/** path to default property file. */
 	private static final String DEFAULT_PROPERTIES_PATH = "/InputGenerators.properties";
 	
-	/** map of report generators which create the ec reports */
+	/** map of report generators which create the ec reports. */
 	private static final HashMap<String, ReportsGenerator> reportGenerators = new HashMap<String, ReportsGenerator>();
-	/** set of input generators which deliver the tag event inputs */
+	/** set of input generators which deliver the tag event inputs. */
 	private static Set<InputGenerator> inputGenerators = new HashSet<InputGenerator>();
 	
-	/** indicates if the ale is ready or not */
+	/** indicates if the ale is ready or not. */
 	private static boolean isReady;
 	
-	/** prefix for name of report generators which are created by immediate command */
+	/** prefix for name of report generators which are created by immediate command. */
 	private static final String REPORT_GENERATOR_NAME_PREFIX = "ReportGenerator_";
-	/** index for name of report generaator which are created by immediate command */
+	/** index for name of report generaator which are created by immediate command. */
 	private static long nameCounter = 0;
 	
 	/**
 	 * This method initalizes the ALE by loading properties from file and creating input generators.
 	 * 
-	 * @param propertiesFilePath
+	 * @param propertiesFilePath the filepath to the properties file
 	 * @throws ImplementationException if properties could not be loaded or input generator could not be created
 	 */
 	public static void initialize(String propertiesFilePath) throws ImplementationException {
@@ -90,56 +95,31 @@ public class ALE {
 					ImplementationExceptionSeverity.ERROR);
 		}
 		
-		int nbrOfInputGenerators = Integer.parseInt(props.getProperty("number-of-inputgenerators"));
-		
-		for (int i = 0; i < nbrOfInputGenerators; i++) {
+		// we need to initialize the LogicalReaderManager
+		String configFile = props.getProperty("readerAPI");
+		try {
+			LogicalReaderManager.initializeFromFile(configFile);
 			
-			String commandChannelHost;
-			int commandChannelPort;
-			String notificationChannelHost;
-			int notificationChannelPort;
-			int readTimeInterval;
-			
-			try {
-				// get properties for input generator i
-				commandChannelHost = props.getProperty("command-channel-host-" + i);
-				commandChannelPort = Integer.parseInt(props.getProperty("command-channel-port-" + i));
-				notificationChannelHost = props.getProperty("notification-channel-host-" + i);
-				notificationChannelPort = Integer.parseInt(props.getProperty("notification-channel-port-" + i));
-				readTimeInterval = Integer.parseInt(props.getProperty("read-time-interval-" + i));
-			} catch (NumberFormatException e) {
-				throw new ImplementationException("Error loading properties for " + (i + 1) + ". input generator " +
-						"from ALE properties file '" + propertiesFilePath + "'", ImplementationExceptionSeverity.ERROR);
-			}
-			
-			// create and start InputGenerator
-			InputGenerator inputGenerator = new InputGenerator(commandChannelHost, commandChannelPort, notificationChannelHost,
-					notificationChannelPort, readTimeInterval);
-			
-			// wait until InputGenerator is ready
-			LOG.info("Wait until InputGenerator is ready.");
-			try {
-				synchronized (inputGenerator) {
-					while (!inputGenerator.isReady() && !inputGenerator.isFailed()) {
-						inputGenerator.wait();
-					}
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (inputGenerator.isFailed()) {
+		} catch (Exception e) {
+			if (e instanceof ImplementationException) {
+				LOG.error("ImplementationException thrown: ");
 				
-				// try to remove input generator if it is failed
-				inputGenerator.remove();
+			} else if (e instanceof DuplicateNameException) {
+				LOG.error("DuplicateNameException thrown: ");
 				
-			} else {
+			} else if (e instanceof SecurityException) {
+				LOG.error(" SecurityException thrown: ");
 				
-				// add input generator to input generators if it is ready
-				inputGenerators.add(inputGenerator);
+			} else if (e instanceof ValidationException) {
+				LOG.error("ValidationException thrown: ");
 				
 			}
-		}
-		
+			
+			e.printStackTrace();
+			throw new ImplementationException("ALE cannot be continued", 
+					ImplementationExceptionSeverity.SEVERE);
+		} 
+
 		isReady = true;
 		
 	}
