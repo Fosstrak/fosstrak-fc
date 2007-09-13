@@ -38,42 +38,45 @@ import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSetEnum;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.epcglobal.EPC;
-import org.accada.reader.rprm.core.msg.notification.TagType;
+import org.accada.reader.rprm.core.readreport.TagType;
+import org.accada.ale.server.Tag;
 
 /**
  * This class represents a report.
  * It filters and groups tags, add them to the report and build ec reports.
  * 
  * @author regli
+ * @author sawielan
  */
 public class Report {
 
-	/** logger */
+	/** logger. */
 	private static final Logger LOG = Logger.getLogger(Report.class);
 	
-	/** name of this report */
+	/** name of this report. */
 	private final String name;
-	/** current event cycle delivers tags */
+	/** current event cycle delivers tags. */
 	private final EventCycle currentEventCycle;
-	/** last event cycle is used for additions and deletions */
-	private final EventCycle lastEventCycle;
-	/** patterns of tags which are included in this report */
+	
+	
+	/** patterns of tags which are included in this report. */
 	private final Set<Pattern> includePatterns = new HashSet<Pattern>();
-	/** patterns of tags which are excluded from this report */
+	/** patterns of tags which are excluded from this report. */
 	private final Set<Pattern> excludePatterns = new HashSet<Pattern>();
-	/** patterns to group the tags of this report */
+	/** patterns to group the tags of this report. */
 	private final Set<Pattern> groupPatterns = new HashSet<Pattern>();
-	/** set of tags of the last event cycle */
+	
+	/** set of tags of the last event cycle. */
 	private final Set<String> lastEventCycleTags = new HashSet<String>();
 	
-	/** type of this report (current, additions or deletions) */
+	/** type of this report (current, additions or deletions). */
 	private ECReportSetEnum reportType;
 
-	/** ec report */
+	/** ec report. */
 	private ECReport report;
-	/** ec report specification */
+	/** ec report specification. */
 	private ECReportSpec reportSpec;
-	
+		
 	/**
 	 * This boolean indicates if the report is ready to create ec reports.
 	 * In some cases the last event cycle must be terminated before a new report can be generated.
@@ -108,25 +111,21 @@ public class Report {
 		
 		// set currentEventCycle
 		this.currentEventCycle = currentEventCycle;
-		
-		// set lastEventCycle
-		this.lastEventCycle = currentEventCycle.getLastEventCycle();
-		
+				
 		// init patterns
 		initFilterPatterns();
 		initGroupPatterns();
 		
 		// check if system is ready to create report
-		if (reportType == ECReportSetEnum.CURRENT || (reportType == ECReportSetEnum.ADDITIONS &&
-				(lastEventCycle == null || lastEventCycle.isTerminated()))) {
+		if (reportType == ECReportSetEnum.CURRENT || (reportType == ECReportSetEnum.ADDITIONS)) {
 			
 			// if report type is current or if report type is additions and last event cycle is terminated, set true
 			readyToCreateReport = true;
 			
 			// if report type is additions add tags to lastEventCycleTags
-			if (reportType == ECReportSetEnum.ADDITIONS && lastEventCycle != null) {
-				for (TagType tag : lastEventCycle.getTags()) {
-					lastEventCycleTags.add(tag.getTagIDAsPureURI());
+			if (reportType == ECReportSetEnum.ADDITIONS && currentEventCycle.getLastEventCycleTags()  != null) {
+				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
+					lastEventCycleTags.add(tag.getTagID());
 				}
 			}
 		} else {
@@ -144,12 +143,12 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public void addTag(TagType tag) throws ECSpecValidationException, ImplementationException {
+	public void addTag(Tag tag) throws ECSpecValidationException, ImplementationException {
 
 		LOG.debug("add tag '" + tag + "'");
 		
 		// get tag URI
-		String tagURI = tag.getTagIDAsPureURI();
+		String tagURI = tag.getTagID();
 		
 		if (readyToCreateReport) {
 			
@@ -164,6 +163,18 @@ public class Report {
 		}
 
 	}
+	
+	/**
+	 * this method is for compatibility reasons such that eg ReportTest is not broken.
+	 * @param tag to add
+	 * @throws ECSpecValidationException if the tag is invalid
+	 * @throws ImplementationException if an implementation exception occurs
+	 */
+	public void addTag(org.accada.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationException, ImplementationException {
+		Tag newtag = new Tag();
+		newtag.setTagID(tag.getTagIDAsPureURI());
+		addTag(newtag);
+	}
 
 	/**
 	 * This method returns the ec report.
@@ -173,7 +184,7 @@ public class Report {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
-		
+				
 		if (readyToCreateReport) {
 			if (reportSpec.isReportIfEmpty() || !isEmpty()) {
 				return report;
@@ -181,62 +192,52 @@ public class Report {
 				return null;
 			}
 		} else {
-		
-			while (lastEventCycle != null && !lastEventCycle.isTerminated()) {
-				try {
-					synchronized (lastEventCycle) {
-						lastEventCycle.wait();
-					}
-				} catch (InterruptedException e) {
-					return null;
-				}
-			}
 			
 			if (reportType == ECReportSetEnum.ADDITIONS) {
 				
 				// get additional tags
-				Map<String, TagType> reportTags = new HashMap<String, TagType>();
+				Map<String, Tag> reportTags = new HashMap<String, Tag>();
 
 				// add tags from current EventCycle 
-				for (TagType tag : currentEventCycle.getTags()) {
-					reportTags.put(tag.getTagIDAsPureURI(), tag);
+				for (Tag tag : currentEventCycle.getTags()) {
+					reportTags.put(tag.getTagID(), tag);
 				}
 				
 				// remove tags from last EventCycle
-				if (lastEventCycle != null) {
-					for (TagType tag : lastEventCycle.getTags()) {
-						reportTags.remove(tag.getTagIDAsPureURI());
+				if (currentEventCycle.getLastEventCycleTags() != null) {
+					for (Tag tag :currentEventCycle.getLastEventCycleTags()) {
+						reportTags.remove(tag.getTagID());
 					}
 				}
 				
 				// add tags to report with filtering
 				readyToCreateReport = true;
 				reportType = ECReportSetEnum.CURRENT;
-				for (TagType tag : reportTags.values()) {
+				for (Tag tag : reportTags.values()) {
 					addTag(tag);
 				}
 	
 			} else {
 				
 				// get removed tags
-				Map<String, TagType> reportTags = new HashMap<String, TagType>();
+				Map<String, Tag> reportTags = new HashMap<String, Tag>();
 				
 				// add tags from last EventCycle
-				if (lastEventCycle != null) {
-					for (TagType tag : lastEventCycle.getTags()) {
-						reportTags.put(tag.getTagIDAsPureURI(), tag);
+				if (currentEventCycle.getLastEventCycleTags() != null) {
+					for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
+						reportTags.put(tag.getTagID(), tag);
 					}
 				}
 				
 				// remove tags from current EventCycle
-				for (TagType tag : currentEventCycle.getTags()) {
-					reportTags.remove(tag.getTagIDAsPureURI());
+				for (Tag tag : currentEventCycle.getTags()) {
+					reportTags.remove(tag.getTagID());
 				}
 				
 				// add tags to report with filtering
 				readyToCreateReport = true;
 				reportType = ECReportSetEnum.CURRENT;
-				for (TagType tag : reportTags.values()) {
+				for (Tag tag : reportTags.values()) {
 					addTag(tag);
 				}
 			}
@@ -246,7 +247,6 @@ public class Report {
 				return null;
 			}
 		}
-		
 	}
 
 	//
@@ -363,10 +363,10 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private void addTagToReportGroup(TagType tag) throws ImplementationException, ECSpecValidationException {
+	private void addTagToReportGroup(Tag tag) throws ImplementationException, ECSpecValidationException {
 		
 		// get tag URI
-		String tagURI = tag.getTagIDAsPureURI();
+		String tagURI = tag.getTagID();
 		
 		// get group name (use group patterns)
 		String groupName = getGroupName(tagURI);
@@ -432,13 +432,14 @@ public class Report {
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
 		if (reportSpec.getOutput().isIncludeRawDecimal()) {
-			groupMember.setRawDecimal(new EPC(tag.getTagIDAsPureURI()));
+			groupMember.setRawDecimal(new EPC(tag.getTagID()));
 		}
 		if (reportSpec.getOutput().isIncludeTag()) {
-			groupMember.setTag(new EPC(tag.getTagIDAsTagURI()));
+			groupMember.setTag(new EPC(tag.getTagID()));
 		}
 		if (reportSpec.getOutput().isIncludeRawHex()) {
-			groupMember.setRawHex(new EPC(HexUtil.byteArrayToHexString(tag.getTagID())));
+			// FIXME: this has to be fixed
+			// groupMember.setRawHex(new EPC(HexUtil.byteArrayToHexString(tag.getTagID())));
 		}
 		
 		// add list member to group list
@@ -501,5 +502,4 @@ public class Report {
 		return true;
 		
 	}
-	
 }
