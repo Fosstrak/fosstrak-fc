@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Accada - fc-server">
+<body>
+	<links>
+		<item name="Accada" href="../index.html"/>
+		<item name="Reader" href="../reader/index.html"/>
+		<item name="Filtering and Collection" href="../fc/index.html"/>
+		<item name="EPCIS" href="../epcis/index.html"/>
+		<item name="Tag Data Translation" href="../tdt/index.html"/>
+	</links>
+	
+	<menu name="Accada">
+		<item name="Home" href="../index.html"/>
+	</menu>
+	
+	<menu name="Filtering and Collection">
+		<!-- overview over the whole LogicalReader API -->
+		<item name="Overview" href="/index.html"/>
+		<item name="Tag aggregation and filtering" href="/ale.html">
+			<item name="ReportsGenerator" href="/reports-generator.html"/>
+			<item name="EventCycle" href="/eventcycle.html"/>
+			<item name="Reports" href="/report.html"/>
+		</item>
+		<item name="Logical Reader API" href="/logical-reader-api.html">
+			<item name="LogicalReaderConcept" href="/reader-concept.html"/>
+			<item name="Implement an Adaptor" href="/adaptor.html"/>
+			<item name="LogicalReaderManager" href="logical-reader-manager.html"/>
+		</item>
+	</menu>
+</body>
+</project>
