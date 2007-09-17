@@ -94,8 +94,7 @@ public class HALAdaptor extends BaseReader {
 		if (isConnected()) {
 			if (isAutoPolling()) {
 				try {
-					// FIXME: this is broken with the new HAL-interface
-//					hal.stopAsynchronousIdentify();		
+					hal.stopAsynchronousIdentify();		
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -134,8 +133,7 @@ public class HALAdaptor extends BaseReader {
 					} else {
 						trigger = Trigger.createTimerTrigger(pollingFrequency);
 					}
-					// FIXME: this is broken with the new HAL-interface
-					//hal.startAsynchronousIdentify(hal.getReadPointNames(), trigger);		
+					hal.startAsynchronousIdentify(hal.getReadPointNames(), trigger);		
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -159,8 +157,7 @@ public class HALAdaptor extends BaseReader {
 			
 			if (isAutoPolling()) {
 				try {
-					// FIXME: this is broken with the new HAL-interface
-					//hal.stopAsynchronousIdentify();
+					hal.stopAsynchronousIdentify();
 				} catch (Exception e) {
 					LOG.info("could not stop the reader " + readerName);
 				}
