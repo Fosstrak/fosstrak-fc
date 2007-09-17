@@ -294,8 +294,8 @@ Logical Reader concept
 	subsequent call to the initialize-method on the new LogicalReader 
 	calls (through the mechanism of overloading) the correct initializer method.
 	
-	For further information on the existing adaptors refer to the chapter 
-	"Implement an Adaptor".
+	For further information on the existing adaptors and how you can write 
+	your own adaptor refer to the chapter "Implement an Adaptor".
 
 	
 	
