@@ -8,9 +8,80 @@ How to implement an Adaptor
 
 * Objective
 
-	The bla bla bla	
+	This guide is intented for developers who wish to integrate a 
+	tag reader into to the Logical Reader API of the accada ALE.
 
 
-* Status
+* HALAdaptor
+	
+	FIXME: write about the hal adaptor
 
-	blablabla
+* RPAdaptor
+
+	FIXME: write about hte rp adaptor
+
+* A new Adaptor
+
+	When you want to integrate your own reader into the logical 
+	reader API there are only few restrictions and obligations 
+	you need to obey.
+	
+	In a first step you should create a new package for your 
+	reader adaptor.
+	
+	Create a new class with the name of your adaptor and let 
+	this class extend the class BaseReader.
+	
+	You need to overwrite the following methods
+	
+	* start: start the reader (this means only to let the reader 
+		deliver tags).
+	
+	* stop: stop the reader (this means only to stop the reader from 
+		delivering tags).
+	
+	* connectReader: here you should place the connection setup 
+		between the reader and the reader adaptor.
+	
+	* disconnectReader: destroy the connection between the 
+		reader and the adaptor.
+	
+	* identify: you must implement this method, even when you 
+		do have a reader that is capable if auto-polling
+	
+	* update: here you have to place the code for an update 
+		through the logical reader API.
+	
+	* initialize: this method is used to setup your adaptor 
+		(see further below).
+	
+	[]
+	Pay attention to flag the state of your adaptor correctly 
+	through the methods (setConnected, setStarted, ...)
+	
+	Instead of a constructor with arguments we chose the 
+	approach of an default constructor and an initializer method. 
+	To ensure that you adaptor is setup correctly implement 
+	the constructor and the initizalizer method as following:
+	
+	* constructor: do not implement a constructor that needs 
+		arguments. Easiest is just to place the constructor 
+		call for the superclass ("super()") and leave 
+		the rest empty.
+	 
+	* initialize: The initializer-method takes two arguments. 
+		The first (name: String) will be the name of 
+		your reader within the logical reader API. The 
+		second (spec:LRSpec) is a valid LRSpec that contains 
+		the details how to build your reader.
+		
+		pay attention to put the call to the initializer 
+		method of the superclass ("super.initialize(name, spec)"). 
+		After that feel free to express yourself.
+	 
+	
+	[]
+	Now you are ready to use your reader in the logical reader 
+	API.
+	
+	
