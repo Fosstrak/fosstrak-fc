@@ -8,9 +8,101 @@ ALE features
 
 * Objective
 
-	FIXME FIXME
+	The following outlines the features available in Accada's ALE implementation.
 
 
-* Status
+* Accada ALE Modules
 
-	FIXME FIXME
+	The Accada ALE Project comprises three separate modules:
+	
+	* an ALE Server implementation
+	
+	* an interactive Ale Client
+	
+	* an interactive ALE WebClient
+	
+	[]
+	
+	The modules implement the ALE Specification defined by EPCglobal and its members.
+	Accada ALE Server Features
+
+
+
+
+
+	Our implementation features the ALE server as defined by EPCglobal. We provide a HTTP binding for 
+	the webclient and a SOAP for the client. Our webclient implementation requires Apachee Tomcat 5.5 or higher.
+	Accada ALE Client Features
+
+	The Accada ALE client provides an intuitive graphical user interface to define ECSpecs and Endpoints. 
+	Further one can subscribe and unsubscribe to the generated reports.
+	The Webclient is a equivalent tomcat webservice implementation. 
+	They can be used to interactively test and explore the ALE functionality supporting the HTTP binding for the webclient 
+	and the SOAP binding for the client.
+	
+	The following two screenshots show the features available in our ALE client and webclient:
+
+[images/ALE_features/GUIClientCommando.png]
+
+	The ALE standalone Client
+
+[images/ALE_features/WebClient.png]
+
+	The ALE WebClient
+
+* Detailed Feature List
+
+	Accada ALE supports all mandatory and some optional features of EPCglobal's filtering and collection interface 
+	(ALE) Specification, Version 1.1. The following table gives an overview of which features are supported and which are not.
+	Feature
+	Described in
+	ALE Specification 1.1
+	Supported in
+	Accada ALE 0.?
+Notes
+ALE reading API
+Sect. 8
+X
+[1]
+ALE writing API
+Sect. 9
+-
+
+ALE LogicalReader API
+Sect. 10
+X
+[2]
+Access Control API
+Sect. 11
+-
+
+ECSpec
+Sect. 8.2
+X
+[5]
+ECReports
+Sect. 8.3
+X
+[3]
+Event Cycles
+Sect. 5.2
+X
+[5]
+LRSpec
+Sect. 10.4
+X
+
+LRProperty
+Sect. 10.5
+X
+[4]
+Tag Smoothing
+Sect. 10.6
+-
+
+[1] - no support for "new vocabulary type" extension
+[2] - EPC syntax is not checked against Tag Data Standard 1.3
+[3] - query paramter orderBy does not support ordering for event field extensions, parameters EQATTR_fieldname_attrname and HASATTR_fieldname do not support event field extensions
+[4] - SecurityException is never thrown, QueryTooComplexException is thrown when query execution takes longer than a predefined threshold, QueryTooLargeException is thrown when a query returns more results than a predefined threshold
+[5] - optional feature
+

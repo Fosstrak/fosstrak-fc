@@ -8,9 +8,11 @@ Report
 
 * Objective
 
-	The Report generates a Report acording to the ECReportSpec.
+	The Report generates a Report according to the ECReportSpec.
 
 
-* Status
+* Organisation
 
-	blablabla
+	The Report class is invoked by the EventCycle. According to its ECReportSpec
+	it decides which of the Tags observed or lost by the current or last EventCycle 
+	are to be included in the report and which not.  
