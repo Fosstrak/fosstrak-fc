@@ -20,14 +20,11 @@
 
 package org.accada.ale.server.readers.rp;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.accada.ale.server.Tag;
-import org.accada.ale.server.readers.BaseReader;
-import org.accada.ale.server.readers.LogicalReader;
-import org.accada.ale.server.readers.LogicalReaderManager;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.reader.rprm.core.EventType;
@@ -57,8 +54,8 @@ import org.apache.log4j.Logger;
  * This class is the connector between the reader protocol and the ALE.
  * It creates the necessary objects on the reader device to get all required data.
  * 
- * @author regli
  * @author sawielan
+ * @author regli
  */
 public class InputGenerator implements NotificationChannelListener {
 
@@ -69,7 +66,7 @@ public class InputGenerator implements NotificationChannelListener {
 	private static final String PREFIX = "InputGenerator_";
 	
 	/**
-	 * the default read tigger name.
+	 * the default read trigger name.
 	 * if this name is already in use, a number will be added to the name automatically.
 	 */ 
 	private static final String DEFAULT_READ_TRIGGER_NAME = PREFIX + "ReadTrigger";
@@ -94,17 +91,17 @@ public class InputGenerator implements NotificationChannelListener {
 
 	// command channel parameters
 	/** command channel host name. */
-	private final String commandChannelHost;
+	private String commandChannelHost;
 	/** command channel port number. */
-	private final int commandChannelPort;
+	private int commandChannelPort;
 	
 	// notification parameters
 	/** notification channel host name. */
-	private final String notificationChannelHost;
+	private String notificationChannelHost;
 	/** notification channel port number. */
-	private final int notificationChannelPort;
+	private int notificationChannelPort;
 	/** notification channel read time interval. */
-	private final int readTimeInterval;
+	private int readTimeInterval;
 	/** notification channel mode. */
 	private static final String NOTIFICATION_CHANNEL_MODE = "connect";
 	
@@ -134,14 +131,17 @@ public class InputGenerator implements NotificationChannelListener {
 
 	/** indicates if this input generator is ready or not. */
 	private boolean isReady = false;
-	/** indicatates if the initialization of this input generator is failed or not. */
+	/** indicates if the initialization of this input generator is failed or not. */
 	private boolean isFailed = false;
 	
-	/** reader to which the inputgenerator belongs. */
+	/** the physical sources where tags are read (eg shelf1, shelf2). */
+	private Set<String> physicalSources = new HashSet<String>();
+	
+	/** reader to which the input generator belongs. */
 	private RPAdaptor reader = null;
 
 	/**
-	 * Contructor sets parameter and starts initializer.
+	 * Constructor sets parameter and starts initializer.
 	 * 
 	 * @param commandChannelHost the host to connect for the commandChannel 
 	 * @param commandChannelPort the port for the commandChannel
@@ -149,10 +149,17 @@ public class InputGenerator implements NotificationChannelListener {
 	 * @param notificationChannelPort the port for the notificationChannel
 	 * @param readTimeIntervall in milliseconds
 	 * @param reader the reader holding this inputGenerator
+	 * @param physicalSources the physical sources where tags are read (eg shelf1, shelf2)
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public InputGenerator(RPAdaptor reader, String commandChannelHost, int commandChannelPort, String notificationChannelHost,
-			int notificationChannelPort, int readTimeIntervall) throws ImplementationException {
+	public InputGenerator(RPAdaptor reader, 
+			String commandChannelHost, 
+			int commandChannelPort, 
+			String notificationChannelHost,
+			int notificationChannelPort, 
+			int readTimeIntervall,
+			String [] physicalSources
+			) throws ImplementationException {
 
 		this.reader = reader;
 				
@@ -165,6 +172,11 @@ public class InputGenerator implements NotificationChannelListener {
 		this.notificationChannelPort = notificationChannelPort;
 		this.readTimeInterval = readTimeIntervall;
 		
+		// add the physical sources
+		for (String source : physicalSources) {
+			this.physicalSources.add(source);
+		}
+		
 		// start Initializer Thread
 		try {
 			new Initializer(this).start();
@@ -175,7 +187,7 @@ public class InputGenerator implements NotificationChannelListener {
 	}
 	
 	/**
-	 * This method is invoked if a notification is arrived at the notification channel endpoint.
+	 * This method is invoked if a notification is arrived at the notification channel end-point.
 	 * 
 	 * @param notification from the reader device
 	 */
@@ -204,10 +216,8 @@ public class InputGenerator implements NotificationChannelListener {
 											
 											Tag newTag = new Tag(reader.getName());
 											newTag.setTagID(tag.getTagIDAsPureURI());
+											newTag.setTimestamp(System.currentTimeMillis());
 											addToReader(sourceName, newTag);
-											/*
-											addToReader(sourceName, tag);
-											*/
 										}
 									}
 								}
@@ -310,7 +320,7 @@ public class InputGenerator implements NotificationChannelListener {
 		private final InputGenerator generator;
 
 		/**
-		 * Consturctor sets the input generator.
+		 * Constructor sets the input generator.
 		 * 
 		 * @param generator the inputGenerator for this reader.
 		 */
@@ -352,123 +362,80 @@ public class InputGenerator implements NotificationChannelListener {
 			readerDevice = ReaderDeviceFactory.getReaderDevice(commandChannelHost,
 					commandChannelPort, handshake);
 			readerName = readerDevice.getName();
-			
+
 			// create notification channel endpoint and add listener
 			LOG.debug("Try to create NotificationChannelEndpoint at port '" + notificationChannelPort + "'...");
 			notificationChannelEndPoint = new NotificationChannelEndPoint(notificationChannelPort);
 			notificationChannelEndPoint.addListener(generator);
-			LOG.debug("NotificationChannelEndpoint at port '" + notificationChannelPort + "' created.");
+			LOG.debug("NotificationChannelEndpoint at port '" + notificationChannelPort + "' created.");			
+			
 			
 			// create read trigger
-			readTrigger = null;
-			int i = 0;
-			do {
-				LOG.debug("Try to create ReadTrigger '" + readTriggerName + "'...");
-				try {
-					readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER,
-							"ms=" + readTimeInterval, readerDevice);
-					LOG.debug("ReadTrigger '" + readTriggerName + "' created.");
-				} catch (RPProxyException e) {
-					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
-						LOG.debug("Trigger '" + readTriggerName + "' already exists.");
-						readTriggerName = DEFAULT_READ_TRIGGER_NAME + "_" + i++;
-					} else {
-						throw e;
-					}
-				}
-			} while (readTrigger == null);
+			readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER, 
+						String.format("ms=%d", readTimeInterval), readerDevice);
+
+			LOG.debug("created read trigger: " + readTriggerName);
+
+			// create notification trigger
+			notificationTrigger = TriggerFactory.createTrigger(notificationTriggerName, Trigger.CONTINUOUS,
+						"", readerDevice);
+			LOG.debug("created notification trigger: " + notificationTriggerName);
+
+			// create the data selector
+			LOG.debug("create DataSelector");
+			dataSelector = DataSelectorFactory.createDataSelector(dataSelectorName, readerDevice);
+			LOG.debug("adding Fieldnames to dataSelector");
+			dataSelector.addFieldNames(new String[] {FieldName.EVENT_TYPE, 
+								FieldName.READER_NAME, 
+								FieldName.TAG_ID, 
+								FieldName.TAG_ID_AS_PURE_URI, 
+								FieldName.TAG_ID_AS_TAG_URI, 
+								FieldName.SOURCE_NAME});
+			LOG.debug("adding eventFilters to dataSelector");
+			dataSelector.addEventFilters(new String[] {EventType.EV_GLIMPSED});
+			
 			
 			// create notification channel
-			notificationChannel = null;
-			i = 0;
-			String notificationAddress = "tcp://" + notificationChannelHost + ":" + notificationChannelPort 
-				+	"?mode=" + NOTIFICATION_CHANNEL_MODE;
-			do {
-				LOG.debug("Try to create NotificationChannel '" + notificationChannelName + "'...");
-				try {
-					notificationChannel = NotificationChannelFactory.
-							createNotificationChannel(notificationChannelName, notificationAddress, readerDevice);
-					LOG.debug("NotificationChannel '" + notificationChannelName + "' created.");
-				} catch (RPProxyException e) {
-					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
-						LOG.debug("NotificationChannel '" + notificationChannelName + "' already exists.");
-						notificationChannelName = DEFAULT_NOTIFICATION_CHANNEL_NAME + "_" + i++;
-					} else {
-						throw e;
-					}
-				}
-			} while(notificationChannel == null);
+			String notificationAddress = "tcp://" + notificationChannelHost + ":" + notificationChannelPort
+						+ "?mode=" + NOTIFICATION_CHANNEL_MODE;
+
+			LOG.debug("create NotificationChannel" + notificationChannelName);
+			notificationChannel = NotificationChannelFactory.createNotificationChannel(
+							notificationChannelName, 
+							notificationAddress, readerDevice);
+			LOG.debug("NotificationChannel " + notificationChannelName + " created");
 			
-			// create data selector and add it to notification channel
-			dataSelector = null;
-			i = 0;
-			do {
-				LOG.debug("Try to create DataSelector '" + dataSelectorName + "'...");
-				try {
-					dataSelector = DataSelectorFactory.createDataSelector(dataSelectorName, readerDevice);
-					LOG.debug("DataSelector '" + dataSelectorName + "'. created");
-				} catch (RPProxyException e) {
-					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
-						LOG.debug("DataSelector '" + dataSelectorName + "' already exists.");
-						dataSelectorName = DEFAULT_DATA_SELECTOR_NAME + "_" + i++;
-					} else {
-						throw e;
-					}
-				}
-			} while (dataSelector == null);
-			dataSelector.addFieldNames(new String[] {FieldName.EVENT_TYPE, FieldName.READER_NAME, FieldName.TAG_ID, 
-					FieldName.TAG_ID_AS_PURE_URI, FieldName.TAG_ID_AS_TAG_URI, FieldName.SOURCE_NAME});
-			dataSelector.addEventFilters(new String[] {EventType.EV_GLIMPSED});
+			LOG.debug("adding dataSelector to notificationChannel");
 			notificationChannel.setDataSelector(dataSelector);
-			
+			LOG.debug("adding notificationTrigger to notificationChannel");
+			notificationChannel.addNotificationTriggers(new Trigger[] {notificationTrigger});
+
+
 			// add sources to notification channel
 			LOG.debug("Add Sources to NotificationChannel...");
 			Source[] sources = readerDevice.getAllSources();
 			notificationChannel.addSources(sources);
 			LOG.debug("Sources were added to NotificationChannel.");
 			
-			// create notification trigger and add it to notification channel
-			notificationTrigger = null;
-			i = 0;
-			do {
-				LOG.debug("Try to create NotificationTrigger '" + notificationTriggerName + "'.");
-				try {
-					notificationTrigger = TriggerFactory.createTrigger(notificationTriggerName, Trigger.TIMER,
-						"ms=" + readTimeInterval, readerDevice);
-				} catch (RPProxyException e) {
-					if ("ERROR_OBJECT_EXISTS".equals(e.getMessage())) {
-						LOG.debug("Trigger '" + notificationTriggerName + "' already exists.");
-						notificationTriggerName = DEFAULT_NOTIFICATION_TRIGGER_NAME + "_" + i++;
-					} else {
-						throw e;
-					}
-				}
-			} while (notificationTrigger == null);
-			LOG.debug("Try to add NotificationTrigger to NotificationChannel...");
-			notificationChannel.addNotificationTriggers(new Trigger[] {notificationTrigger});
-			LOG.debug("NotificationTrigger added to NotificationChannel.");
-			
-			// create a physical source stub for each source
-			LOG.debug("Try to create a PhysicalSourceStub for each source...");
-			sources = readerDevice.getAllSources();
+			LOG.debug("add readTriggers to the sources");
 			for (Source source : sources) {
-				LOG.debug("Create PhysicalSourceStub for source '" + source.getName() + "'...");
-				reader.addPhysicalSourceStub(new PhysicalSourceStub(source, readTrigger, dataSelector));
+				if (physicalSources.contains(source.getName())) {
+					LOG.debug("adding physical source " + source.getName());
+					source.addReadTriggers(new Trigger[] {readTrigger});
+				}
 			}
-			LOG.debug("PhysicalSourceStub for each source created.");
-			
+
 			// set isReady
 			isReady = true;
-			
+						
 			// notify all when InputGenerator is ready
 			synchronized (generator) {
 				generator.notifyAll();
 			}
-
+		
 			LOG.debug("InputGenerator initialized.");
 			LOG.info("Connection to reader devices established.");
-			LOG.debug("-----------------------------------------------------------");
-			
+			LOG.debug("-----------------------------------------------------------");			
 		}
 
 		/**

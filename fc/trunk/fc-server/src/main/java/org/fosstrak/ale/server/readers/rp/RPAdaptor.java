@@ -20,11 +20,6 @@
 
 package org.accada.ale.server.readers.rp;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import org.accada.ale.server.Tag;
@@ -44,13 +39,13 @@ public class RPAdaptor extends BaseReader {
 	
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(RPAdaptor.class);
+	
+	/** default readTimeInterval. */
+	public static final int DEFAULT_READTIME_INTERVALL = 2000;
 		
 	/** input generator for the RP that establishes connection and receives tags. */
 	private InputGenerator inputGenerator = null;
-	
-	/** physicalSourceStub for the current reader. */
-	private Map<String, PhysicalSourceStub> physicalSourceStubs = new HashMap<String, PhysicalSourceStub>();
-	
+		
 	/** the host where commands shall be sent. */
 	private String commandChannelHost = null;
 	
@@ -63,8 +58,11 @@ public class RPAdaptor extends BaseReader {
 	/** the corresponding port. */
 	private int notificationChannelPort = -1;
 	
-	/** the intervall in which shall be read from the reader. */
-	private int readTimeIntervall = -1;
+	/** the interval in which shall be read from the reader. */
+	private int readTimeInterval = -1;
+	
+	/** the physical sources where tags are read (eg shelf1, shelf2). */
+	private String sources = null;
 	
 	/**
 	 * constructor for the RP adaptor.
@@ -106,11 +104,11 @@ public class RPAdaptor extends BaseReader {
 	private void extractConnectionSettings() throws ImplementationException {
 		String connectionPoint = logicalReaderProperties.get("ConnectionPoint");
 		String notificationPoint = logicalReaderProperties.get("NotificationPoint");
-		String intervall = logicalReaderProperties.get("ReadTimeIntervall");
-		
+		String interval = logicalReaderProperties.get("ReadTimeInterval");
+
 		String [] commandChannelParts = null;
 		try {
-			// parse the uri from the form http://localhost:8080
+			// parse the URI from the form http://localhost:8080
 			commandChannelParts = connectionPoint.split("[:]");
 		} catch (NullPointerException ne) {
 			LOG.error("could not extract connectionPoint from LRPropery");
@@ -133,17 +131,27 @@ public class RPAdaptor extends BaseReader {
 		String nnotificationChannelHost = notificationChannelParts[1].replaceAll("/", "");
 		int nnotificationChannelPort = Integer.parseInt(notificationChannelParts[2]);
 
-		int nreadTimeIntervall = -1;
+		int nreadTimeInterval = -1;
 		try {
-			nreadTimeIntervall = Integer.parseInt(intervall);
+			nreadTimeInterval = Integer.parseInt(interval);
 		} catch (Exception ne) {
 			LOG.error("could not extract readTimeIntervall from LRPropery");
 			throw new ImplementationException("could not extract notificationPoint from LRPropery", ImplementationExceptionSeverity.ERROR);
 		}
 		
-		
+		// assert that the readTimeInterval is not -1
+		if (nreadTimeInterval == -1) {
+			LOG.error("ReadTimeInterval not set - assuming 2000ms");
+			nreadTimeInterval = DEFAULT_READTIME_INTERVALL;
+		}
 		
 		boolean disconn = false;
+		
+		String nsources = logicalReaderProperties.get("PhysicalReaderSource");
+		if (!nsources.equalsIgnoreCase(sources)) {
+			disconn = true;
+		}		
+		
 		if (!ncommandChannelHost.equals(commandChannelHost)) {
 			disconn = true;
 		}
@@ -157,21 +165,25 @@ public class RPAdaptor extends BaseReader {
 			disconn = true;
 		}
 		
-		LOG.debug("readTimeIntervall " + nreadTimeIntervall);
+		LOG.debug("readTimeInterval " + nreadTimeInterval);
 		LOG.debug(String.format("commandChannelHost %s on port %d", ncommandChannelHost, ncommandChannelPort));
 		LOG.debug(String.format("notificationChannelHost %s on port %d", nnotificationChannelHost, nnotificationChannelPort));
 
-		readTimeIntervall = nreadTimeIntervall;
-		
 		if (disconn) {
 			disconnectReader();
-			
+
+			readTimeInterval = nreadTimeInterval;
 			commandChannelHost = ncommandChannelHost;
 			notificationChannelHost = nnotificationChannelHost;
 			commandChannelPort = ncommandChannelPort;
 			notificationChannelPort = nnotificationChannelPort;
+			sources = nsources;
 			
 			connectReader();
+			setConnected();
+		} else {
+			// just change the readTimeIntervall
+			readTimeInterval = nreadTimeInterval;
 		}
 	}
 	
@@ -182,9 +194,20 @@ public class RPAdaptor extends BaseReader {
 	 */
 	@Override
 	public void connectReader() throws ImplementationException {
+		if (isConnected()) {
+			return;
+		}
+		
+		String [] physicalSources = sources.split("[,]");
+		
 		try {
-			inputGenerator = new InputGenerator(this, commandChannelHost, commandChannelPort, 
-					notificationChannelHost, notificationChannelPort, readTimeIntervall);
+			inputGenerator = new InputGenerator(this, 
+												commandChannelHost, 
+												commandChannelPort, 
+												notificationChannelHost, 
+												notificationChannelPort, 
+												readTimeInterval,
+												physicalSources);
 		} catch (ImplementationException e) {
 			setDisconnected();
 			throw e;
@@ -199,15 +222,18 @@ public class RPAdaptor extends BaseReader {
 	 */
 	@Override
 	public void disconnectReader() throws ImplementationException {
-		physicalSourceStubs.clear();
 		
 		commandChannelHost = null;
 		notificationChannelHost = null;
 		commandChannelPort = -1;
 		notificationChannelPort = -1;
-		readTimeIntervall = -1;
+		readTimeInterval = -1;
 		
-		inputGenerator = null;
+		if (inputGenerator != null) {
+			inputGenerator.remove();
+			
+			inputGenerator = null;
+		}
 		
 		setDisconnected();
 		setStopped();
@@ -268,23 +294,6 @@ public class RPAdaptor extends BaseReader {
 		setLRSpec(spec);
 		extractConnectionSettings();
 		start();
-	}
-
-	/**
-	 * adds a physicalSourceStub for a source to the current reader.
-	 * @param sourceStub a valid sourceStub containing a source
-	 */
-	public void addPhysicalSourceStub(PhysicalSourceStub sourceStub) {
-		physicalSourceStubs.put(sourceStub.getName(), sourceStub);
-	}
-	
-	/**
-	 * returns one of the source-stubs from the reader.
-	 * @param name name of the sourceStub to be returned
-	 * @return PhysicalSourceStub for the requested source
-	 */
-	public PhysicalSourceStub getPhysicalSourceStub(String name) {
-		return physicalSourceStubs.get(name);
 	}
 	
 	/**
