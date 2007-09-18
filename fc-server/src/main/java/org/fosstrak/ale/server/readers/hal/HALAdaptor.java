@@ -1,5 +1,7 @@
 package org.accada.ale.server.readers.hal;
 
+import java.net.URL;
+
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
 import org.accada.ale.server.readers.IdentifyThread;
@@ -34,6 +36,9 @@ public class HALAdaptor extends BaseReader {
 	
 	/** indicates whether the hal needs a pollingThread or not . */
 	private boolean autoPolling = false;
+
+	/** the properties file for this adaptor. */
+	private String propertiesFile = null;
 	
 	/**
 	 * constructor for the HAL adaptor.
@@ -52,10 +57,13 @@ public class HALAdaptor extends BaseReader {
 	public void initialize(String name, LRSpec spec) throws ImplementationException {
 		super.initialize(name, spec);
 
-		pollingFrequency = Long.parseLong(logicalReaderProperties.get("pollingFrequency"));
-		
+		pollingFrequency = Long.parseLong(logicalReaderProperties.get("ReadTimeInterval"));
+
+		propertiesFile = logicalReaderProperties.get("PropertiesFile");
 		// create the hal device
-		hal = new SimulatorController(name, logicalReaderProperties.get("propertiesFile"));
+		hal = new SimulatorController(name, propertiesFile);
+		
+
 		
 		// now need to determine whether the HAL device supports auto-polling or 
 		// whether we need to install a polling thread
