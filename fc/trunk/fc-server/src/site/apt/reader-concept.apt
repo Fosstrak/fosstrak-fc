@@ -119,7 +119,7 @@ Logical Reader concept
 		its components accessed as LogicalReaders.
 
 	[]
-[images/readerAPI/ObserverPattern.png]	
+[images/readerAPI/ObserverPattern.png]
 	
 	As the image visualizes a LogicalReader acts in any case only as Observable 
 	where CompositeReaders or EventCycles can register. CompositeReaders 

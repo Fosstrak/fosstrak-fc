@@ -9,7 +9,7 @@ Logical Reader Manager
 * Objective
 
 	The Logical Reader Manager has the current list of all Logical Readers
-	which are part of the current setting.
+	which are present in the current setting.
 
 
 * Organisation
@@ -20,11 +20,12 @@ Logical Reader Manager
 	a .xml file, so that in case of a failure, the previous setting can be
 	retained at any time. 
 
-* Status
+* Implementation
 
 	The main functionality is contained in the two methods described below. Most of the
 	other methods are delegated using reflection to t he specializations of a Logical
-	Reader.
+	Reader. Please refer to the logical-reader-api for more information about the logical 
+	readers functionality.
 
 	* initializeFromFile(String loadFilePath): using the JAXB framework the specified .xml
 	file is parsed and Java Objects are generated. Once generated the Logical Reader Manager
@@ -37,3 +38,18 @@ Logical Reader Manager
 	Manager allows a user to change the HashMap of the Logical Readers using the methods
 	addReaders(String name, java.util.List<String> readers) and
 	removeReaders(String name, java.util.List<String> readers).
+	
+	* undefine(String name): removes the logical reader 
+	
+	* update(String name, LRSpec spec): changes the LRSpec of the given reader
+	
+	* define(String name, org.accada.ale.server.readers.gen.LRSpec spec): creates a logical 
+	reader from the loaded .xml file.
+	
+	* define(String name, LRSpec spec): creates a logical reader after initialisation.
+	
+	* setLogicalReader(LogicalReader reader): adds the logical reader to the list of logical 
+	readers.
+	
+	
+	[]
