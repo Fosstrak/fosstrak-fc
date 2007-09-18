@@ -9,8 +9,10 @@
 		<item name="Tag Data Translation" href="../tdt/index.html"/>
 	</links>
 	
-	<menu name="Accada">
-		<item name="Home" href="../index.html"/>
+	<menu name="Accada ALE">
+		<item name="Overview" href="/ALE_overview.html"/>
+		<item name="Features" href="/ALE_features.html"/>
+		<item name="Downloads" href="/ALE_download.html"/>
 	</menu>
 	
 	<menu name="Guides &amp; Documentation">

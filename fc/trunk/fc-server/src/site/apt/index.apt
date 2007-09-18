@@ -8,9 +8,19 @@ Filtering and Collection
 
 * Objective
 
-	The bla bla bla	
+	The Filtering and Collection middleware provides an interface
+	through which clients may interact with filtered, consolidated
+	EPC data and related data from a variety  of sources. Its an
+	implementation of the EPCglobal standart ALE 1.1.
 
 
-* Status
+* Organization
 
-	blablabla
+	The Filtering and Collection middleware is accessed by a single component.
+	
+	* The Ale class
+	
+	
+	
+	[]
+	For detailed information refer to those chapters

@@ -8,9 +8,32 @@ Logical Reader Manager
 
 * Objective
 
-	The bla bla bla	
+	The Logical Reader Manager has the current list of all Logical Readers
+	which are part of the current setting.
 
+
+* Organisation
+	
+	The logicalReaderManager is initialized by declaring a .xml file in the
+	resource folder. When initialized, the setting of the Logical Readers can
+	be changed any time. It is also possible to store the current setting to
+	a .xml file, so that in case of a failure, the previous setting can be
+	retained at any time. 
 
 * Status
 
-	blablabla
+	The main functionality is contained in the two methods described below. Most of the
+	other methods are delegated using reflection to t he specializations of a Logical
+	Reader.
+
+	* initializeFromFile(String loadFilePath): using the JAXB framework the specified .xml
+	file is parsed and Java Objects are generated. Once generated the Logical Reader Manager
+	has a HashMap of all Logical Readers of the current setting. 
+	
+	* storeToFile(String storeFilePath): using the JAXB framework the specified .xml file
+	is generated from the current HashMap of the LogicalReaderManager. This method allows
+	a ALE user to hold a backup configuration for recovery. Note that the configuration 
+	can be changed significantly during the operation of the ALE since the Logical Reader
+	Manager allows a user to change the HashMap of the Logical Readers using the methods
+	addReaders(String name, java.util.List<String> readers) and
+	removeReaders(String name, java.util.List<String> readers).

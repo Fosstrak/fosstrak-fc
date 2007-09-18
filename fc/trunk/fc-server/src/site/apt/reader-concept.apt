@@ -67,7 +67,7 @@ Logical Reader concept
 	initialize method "public void initialize(String name, LRSpec spec)". 
 	The factory-method extracts the reader type from the LRSpec. 
 	Through reflection and dynamic class-loading a new instance 
-	of this type is created. Thatfor the default-constructor 
+	of this type is created. That for the default-constructor 
 	is used. Once this new instance is available the factory 
 	calls the initialize-method on the new object. This makes possible 
 	that a reader can prepare itself but without the need of 
