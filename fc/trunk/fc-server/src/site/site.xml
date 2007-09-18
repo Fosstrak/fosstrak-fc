@@ -13,12 +13,11 @@
 		<item name="Home" href="../index.html"/>
 	</menu>
 	
-	<menu name="Filtering and Collection">
+	<menu name="Guides &amp; Documentation">
 		<!-- overview over the whole LogicalReader API -->
 		<item name="Overview" href="/index.html"/>
 		<item name="Tag aggregation and filtering" href="/ale.html">
-			<item name="ReportsGenerator" href="/reports-generator.html"/>
-			<item name="EventCycle" href="/eventcycle.html"/>
+			<item name="EventCycle &amp; ReportsGenerator" href="/eventcycle.html"/>
 			<item name="Reports" href="/report.html"/>
 		</item>
 		<item name="Logical Reader API" href="/logical-reader-api.html">

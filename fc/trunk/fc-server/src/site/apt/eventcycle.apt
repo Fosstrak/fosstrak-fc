@@ -8,9 +8,50 @@ Event Cycle
 
 * Objective
 
-	The bla bla bla	
+	According to the EPC Standard, an EventCycle is the smallest unit 
+	of interaction between an ALE client and an ALE implementation 
+	through the ALE reading API. An EventCycle is an intervall of time 
+	during which tags are read.
+		
+	This document shall provide an overview to the implementation 
+	of an EventCycle in the Accada ALE.
 
 
-* Status
+* Implementation
 
-	blablabla
+	An EventCycle is constructed according to an EventCycle 
+	specification (called ECSpec). The ECSpec specifies several 
+	parameters. The most important ones are the time intervall 
+	during which tags are read and the readers where tags shall 
+	be collected.
+	
+	Whenever a client defines a new EventCycle through the ALE 
+	interface, a new ReportsGenerator will be created along an 
+	EventCycle. The ReportsGenerator acts as a gateway to the 
+	EventCycle for clients. A client does not subscribe on an 
+	EventCycle but on the associated ReportsGenerator. The 
+	ReportsGenerator ensures that the EventCycle is started/stopped 
+	and that subscribers (clients) receive the resulting tags.
+	
+	Upon creation the EventCycle aquires the readers from the 
+	logical reader API and registers as an Observer. The EventCycle 
+	does not yet accept tags yet.
+	
+	As soon as a client subscribes for an EventCycle, the 
+	ReportsGenerator starts the demanded EventCycle. Tags are 
+	now accepted by the EventCycle.
+	
+	When the specified duration (EventCycle duration) is over 
+	the EventCycle is stopped and the tags are distributed to 
+	the clients by the ReportsGenerator. The tag-filtering is 
+	performed by the class Reports.
+	
+	In case where the EventCycle is not repeating (this means that 
+	one EventCycle runs multiple times) all readers are 
+	deregistered and the EventCycle is destroyed together with 
+	its ReportsGenerator. 
+
+Sequence Diagramm
+
+[images/ALE/EventCycleSequence.png]
+
