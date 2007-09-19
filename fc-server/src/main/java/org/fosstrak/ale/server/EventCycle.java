@@ -168,7 +168,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tags of the report are not valid
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	public ECReports getECReports() throws ECSpecValidationException, ImplementationException {
+	private ECReports getECReports() throws ECSpecValidationException, ImplementationException {
 		
 		// create ECReports
 		ECReports reports = new ECReports();
@@ -201,7 +201,7 @@ public class EventCycle implements Runnable, Observer {
 	}	
 
 	/**
-	 * This method return all tags of this event cylce.
+	 * This method return all tags of this event cycle.
 	 * 
 	 * @return set of tags
 	 */
