@@ -16,8 +16,8 @@
 	</menu>
 	
 	<menu name="Guides &amp; Documentation">
-		<!-- overview over the whole LogicalReader API -->
 		<item name="Overview" href="/index.html"/>
+		<item name="Users guide" href="/users-guide.html"/>
 		<item name="Tag aggregation and filtering" href="/ale.html">
 			<item name="EventCycle &amp; ReportsGenerator" href="/eventcycle.html"/>
 			<item name="Reports" href="/report.html"/>
@@ -25,7 +25,7 @@
 		<item name="Logical Reader API" href="/logical-reader-api.html">
 			<item name="LogicalReaderConcept" href="/reader-concept.html"/>
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
-			<item name="LogicalReaderManager" href="logical-reader-manager.html"/>
+			<item name="LogicalReaderManager" href="/logical-reader-manager.html"/>
 		</item>
 	</menu>
 </body>
