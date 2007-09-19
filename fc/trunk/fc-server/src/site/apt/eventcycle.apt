@@ -47,7 +47,7 @@ Event Cycle
 	performed by the class Reports.
 	
 	In case where the EventCycle is not repeating (this means that 
-	one EventCycle runs multiple times) all readers are 
+	one EventCycle does not run multiple times) all readers are 
 	deregistered and the EventCycle is destroyed together with 
 	its ReportsGenerator. 
 

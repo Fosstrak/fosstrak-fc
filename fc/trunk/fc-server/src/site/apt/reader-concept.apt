@@ -6,7 +6,25 @@
 
 Logical Reader concept
 
-* Overview
+* Contents
+
+   [[1]] {{{#Overview}Overview}}
+
+   [[2]] {{{#Composite}Composite Pattern}}
+   
+   [[3]] {{{#Observer}Observer Pattern}}
+
+   [[4]] {{{#Adaptor}Adaptor Pattern}}
+   
+   [[5]] {{{#LogicalReader}LogicalReader}}
+   
+   [[6]] {{{#CompositeReader}CompositeReader}}
+   
+   [[7]] {{{#BaseReader}BaseReader}}
+   
+
+
+* {Overview}
 
 	From the view of an ALE client it is preferable to share 
 	a common view on a reader, without having to care about 
@@ -27,7 +45,7 @@ Logical Reader concept
 	
 	
 	
-* Composite Pattern
+* {Composite} Pattern
 	
 	In the EPC Standard basically two reader types are defined
 	(according to chapter 10.2):
@@ -94,7 +112,7 @@ Logical Reader concept
 
 
 
-* Observer Pattern
+* {Observer} Pattern
 
 	To simplify the Tag propagation inside the Logical Reader API 
 	an Observer Pattern was chosen. There are two cases to consider, first 
@@ -148,7 +166,7 @@ Logical Reader concept
 	
 	
 	
-* Adaptor pattern
+* {Adaptor} pattern
 	
 	There are many different physical readers available and one might be 
 	interested in using them all in one application without the need to 
@@ -167,7 +185,7 @@ Logical Reader concept
 	
 	
 	
-* LogicalReader
+* {LogicalReader}
 	
 	As motivated by the CompositePattern LogicalReader declares the interface 
 	to a reader. In following the methods contained in LogicalReader are 
@@ -212,7 +230,7 @@ Logical Reader concept
 		
 		
 	
-* CompositeReader
+* {CompositeReader}
 
 	The class CompositeReader models a composite in the composite pattern that 
 	can be composed by different other components. The components are in 
@@ -252,7 +270,7 @@ Logical Reader concept
 	
 	
 	
-* BaseReader
+* {BaseReader}
 
 	BaseReader models the leaf of the composite pattern. BaseReader provides more 
 	methods that can be used to communicate directly with a physical reader. 
