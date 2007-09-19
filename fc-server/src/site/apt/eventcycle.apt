@@ -6,7 +6,20 @@
 
 Event Cycle
 
-* Objective
+* Contents
+
+   [[1]] {{{#Objective}Objective}}
+
+   [[2]] {{{#Implementation}Implementation}}
+   
+   [[3]] {{{#Creation}Creation and Flow}}
+   
+   [[4]] {{{#Sequence}Sequence Diagram}}
+
+   [[5]] {{{#Interface}Interface}}
+
+
+* {Objective}
 
 	According to the EPC Standard, an EventCycle is the smallest unit 
 	of interaction between an ALE client and an ALE implementation 
@@ -17,7 +30,57 @@ Event Cycle
 	of an EventCycle in the Accada ALE.
 
 
-* Implementation
+* {Implementation}
+	
+	The EventCycle is implemented as a thread. After creation 
+	the thread waits on the EventCycles monitor.
+	
++-------------------------------------------------+
+synchronized (this) {
+	try {
+		this.wait();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+}
++-------------------------------------------------+
+
+	When there are subscribers for the EventCycle the ReportsGenerator 
+	launches the EventCycle through the launch method.
+	
++-------------------------------------------------+
+// Code fragment from ReportsGenerator
+eventCycle.launch();
++-------------------------------------------------+
+
+	This call will set the EventCycle to the running state
+	
++-------------------------------------------------+
+this.running = true;
+synchronized (this) {
+	this.notifyAll();
+}
++-------------------------------------------------+
+
+	The EventCycle runs as long as specified by the duration 
+	value. The reports are generated and sent through the 
+	ReportsGenerator to the subscribers.
+	
+	After some cleanup and preparations for the next 
+	EventCycle the EventCycle sets itself sleeping and 
+	waits for the next launch call.
+	
++-------------------------------------------------+
+try {
+	synchronized (this) {
+		this.wait();
+	}
+} catch (InterruptedException e) {
+	e.printStackTrace();
+}
++-------------------------------------------------+
+
+* {Creation} and Flow
 
 	An EventCycle is constructed according to an EventCycle 
 	specification (called ECSpec). The ECSpec specifies several 
@@ -51,7 +114,97 @@ Event Cycle
 	deregistered and the EventCycle is destroyed together with 
 	its ReportsGenerator. 
 
-Sequence Diagramm
+* {Sequence} Diagramm
 
 [images/ALE/EventCycleSequence.png]
+
+* {Interface}
+
+	The following class interface gives an overview to the methods 
+	available from the EventCycle.
+
+[images/ALE/EventCycle.png]
+
+	* EventCycle: The constructor takes a ReportsGenerator as an 
+		argument. The constructor performs:
+	  
+		* Create the EventCycle-thread
+		
+		* Register the Reports for the reports notification
+		
+		* Register the logical readers from the logical reader 
+			API.
+	
+	* getECReports: this method prepares the ECReports and returns 
+		an ECReports-object
+	
+	* getTags: Returns a Set of tags that are currently available 
+		on the EventCycle
+	
+	* addTag: Adds a Tag to the set of Tags
+	
+	* update: Whenever a new Tag is read on one of the LogicalReaders 
+		this update-method will be called. The EventCycle 
+		processes these Tags inside this method.
+	
+	* stop: When this method is called, the thread is destroyed and 
+		as a consequence the EventCycle will be destroyed.
+	
+	* getName: Returns the associated Name of the EventCycle
+	
+	* launch: The ReportsGenerator triggers this method when the 
+		EventCycle shall be started.
+	
+	* getLastEventCycleTags: To allow a Report to create 
+		ADDITION/DELETION reports the tags from the 
+		previous EventCycle need to be known.
+	
+	* getReportList: Returns the list of all the Reports
+	
+	* getDurationValue: Returns the duration of the EventCycle. 
+		(Set through ECSpec)
+	
+	* isAcceptingTags: The EventCycle only accepts tags when 
+		it is running. 
+	
+	* setAcceptTags: This method allows to flag whether the 
+		EventCycle accepts Tags or not.
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

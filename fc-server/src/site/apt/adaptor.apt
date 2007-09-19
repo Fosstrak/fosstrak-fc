@@ -90,13 +90,14 @@ How to implement an Adaptor
 	[]
 	Currently the HALAdaptor creates a SimulatorController object. This object 
 	in turn then sets up the HAL device as requested by the properties file. 
-	
+
+[images/readerAPI/HALAdaptor.png]
+
 	For example properties files refer to:
 	 
 	* BatchSimulator.xml for a batch simulator
 	
 	* GraphicSimulator.xml for a graphical simulator
-	
 
 
 
@@ -206,7 +207,7 @@ How to implement an Adaptor
 	tag events that are then processed by the InputGenerator and sent through the 
 	RPAdaptor to the observers (CompositeReader or EventCycle).
 	
-	
+[images/readerAPI/RPAdaptor.png]
 	
 	
 	
