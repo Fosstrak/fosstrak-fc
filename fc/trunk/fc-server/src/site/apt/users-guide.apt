@@ -6,8 +6,176 @@
 
 Users guide
 
-* Objective
+* Content
+	
+	[[1]] {{{#Overview}Overview}}
+	
+	[[2]] {{{#Requirements}Requirements}}
+	
+	[[3]] {{{#Configuration}Configuration}}
+	
+	[[4]] {{{#LogicalReaders}LogicalReaders Schema}}
+
+* {Objective}
 
 	This guide shall give a short introduction to the ALE for people that 
 	want to try out the Accada ALE.
+
+
+
+
+* {Requirements}
+
+	* {{{http://java.com}Java 1.6}}
+	
+	* {{{http://tomcat.apache.org}Tomcat 5.5 or higher}}
+	
+	* {{{http://maven.apache.org}Apache Maven Project}}
+	
+	
+	
+	
+* {Installation}
+
+	In order to use the filtering and collection, you need to checkout a 
+	running copy of fc from the accada repository. You need to compile 
+	and package the module fc-server.
+	
++-------------------------------------------------------------------+
+mvn compile
+mvn package
++-------------------------------------------------------------------+
+
+	When everything went fine you should have a new folder target 
+	in the fc-server folder that contains the war-file for 
+	{{{http://tomcat.apache.org}Apache tomcat}}.
+
++-------------------------------------------------------------------+
+example: fc-server-0.3.0-SNAPSHOT.war
++-------------------------------------------------------------------+
+
+	Copy this war-file into the tomcat-webapps folder and start 
+	tomcat. The war-file will be deployed into a new folder.
+
++-------------------------------------------------------------------+
+example: fc-server-0.3.0-SNAPSHOT
++-------------------------------------------------------------------+
+
+	The fc-server is now ready to be configured at your needs.
+
+
+
+
+* {Configuration}
+
+	This chapter will give a short overview to the configuration 
+	files available. These files allow you to adapt the fc-server 
+	to your needs.
+		
+	* InputGenerators.properties: This propertie-file is the main 
+		config for the Accada ALE. You will find it in the 
+		Folder WEB-INF/classes.
+		
+		It allows only one parameter to be changed, namely 
+		the xml-file that provides the logical reader API 
+		with the initial readers available at startup.
+		
+		Sample InputGenerators.properties:
+		
++-------------------------------------------------------------------+
+# you can specify your initial readers file here
+# eg
+readerAPI = /LogicalReaders.xml
++-------------------------------------------------------------------+
+
+		Make sure that the specified file is placed into 
+		the same folder as InputGenerators.properties. 
+		Otherwise your ALE will not startup correctly.
+	
+	* LogicalReaders.xml: This file specifies the readers that 
+		are loaded during startup of the ALE.
+		
+		Specify your readers according 
+		{{{#LogicalReaders}LogicalReaders.xsd}}.
+		
+	[]
+	
+	After a restart of the webserver the Accada ALE is available 
+	and ready to accept clients.
+	
+	
+	
+	
+	
+
+* {LogicalReaders} Schema
+
+	All logical readers in the logical reader API have to conform the 
+	following xd schema.
+
++-------------------------------------------------------------------+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+        <xs:element name="LogicalReaders">
+                <xs:annotation>
+                        <xs:documentation>List of logical readers</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="LogicalReader" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="LogicalReader">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="LRSpec"/>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string"/>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="LRSpec">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="LRProperty" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element name="readers" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="isComposite" type="xs:boolean" use="required"/>
+                        <xs:attribute name="readerType" type="xs:string"/>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="LRProperty">
+                <xs:complexType>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                </xs:complexType>
+        </xs:element>
+</xs:schema>
++-------------------------------------------------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
