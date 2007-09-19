@@ -20,11 +20,13 @@
 
 package org.accada.ale.server.readers.rp;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.accada.ale.server.Tag;
+import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.reader.rprm.core.EventType;
@@ -209,13 +211,14 @@ public class InputGenerator implements NotificationChannelListener {
 								if (tagEvents != null) {
 									for (TagEventType tagEvent : tagEvents) {
 										String eventType = tagEvent.getEventType();
-										LOG.debug("Tag '" + tag.getTagIDAsPureURI() + "' fired Event of type '" + eventType + "'");
+										String tagID = HexUtil.byteArrayToHexString(tag.getTagID());
+										LOG.debug("Tag '" + tagID + "' fired Event of type '" + eventType + "'");
 										if (EventType.EV_GLIMPSED.equals(eventType)) {
-											LOG.debug("Tag '" + tag.getTagIDAsPureURI() + "' entered the range of source '" 
+											LOG.debug("Tag '" + tagID + "' entered the range of source '" 
 													+	sourceName + "' of reader '" +  readerName + "'.");
 											
 											Tag newTag = new Tag(reader.getName());
-											newTag.setTagID(tag.getTagIDAsPureURI());
+											newTag.setTagID(tagID);
 											newTag.setTimestamp(System.currentTimeMillis());
 											addToReader(sourceName, newTag);
 										}
