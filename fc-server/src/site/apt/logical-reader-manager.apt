@@ -8,22 +8,26 @@ Logical Reader Manager
 
 * Objective
 
-	The Logical Reader Manager has the current list of all Logical Readers
-	which are present in the current setting.
+	This guide should give you a brief overview of the Logical Reader Manager which 
+	manages the list of Logical Readers which are part of a current setting.
 
 
 * Organisation
 	
-	The logicalReaderManager is initialized by declaring a .xml file in the
-	resource folder. When initialized, the setting of the Logical Readers can
-	be changed any time. It is also possible to store the current setting to
-	a .xml file, so that in case of a failure, the previous setting can be
-	retained at any time. 
+	The Logical Reader Manager has the current list of all Logical Readers
+	which are present in the current setting.
+	The Logical Reader Manager is initialized by placing a .xml file in the
+	/resource folder. There are some default .xml files already in the /resource 
+	folder which you can use to gain experience with this implementation. 
+	When initialized, the setting of a Logical Reader can
+	be changed at any time. Logical Readers can be added and deleted. It is also 
+	possible to store the current setting to a .xml file, so that in case of a 
+	failure, the previous setting can be retained at any time. 
 
 * Implementation
 
-	The main functionality is contained in the two methods described below. Most of the
-	other methods are delegated using reflection to t he specializations of a Logical
+	The main functionality is contained in the methods described below. Most of the
+	other methods are delegated using reflection to the specializations of a Logical
 	Reader. Please refer to the logical-reader-api for more information about the logical 
 	readers functionality.
 
