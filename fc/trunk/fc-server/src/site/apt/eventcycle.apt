@@ -114,7 +114,49 @@ try {
 	deregistered and the EventCycle is destroyed together with 
 	its ReportsGenerator. 
 
-* {Sequence} Diagramm
+* {Sequence} Diagram
+
+	The following sequence diagram shall visualize the behaviour 
+	of an EventCycle. The dashed lines are asynchronous calls whereas 
+	the solid lines denote synchronous calls.
+	
+	1: A client defines a new EventCycle through the ALE.
+	
+	1.1: The ALE checks if this EventCycle already exists. In 
+			the present case there is no such EventCycle an therefor the 
+			ALE creates a new ReportsGenerator.
+		
+	1.1.1: The ReportsGenerator creates a new EventCycle.
+	
+	1.1.1.1/2/3: The EventCycle retrieves the readers specified in the 
+		ECSpec from the LogicalReaderManager.
+		
+		
+	2: The Client subscribes for an EventCycle.
+	
+	2.1: The ALE subscribes the Client on the ReportsGenerator.
+	
+	2.1.1: The ReportsGenerator starts the EventCycle. The 
+		EventCycle now processes tags from the readers.
+	
+	3/4/5: The LogicalReader(s) add Tags to the EventCycle.
+	
+	6: When the EventCycle reaches its boundaries the reports are 
+		generated and sent back to the Client (through the 
+		ReportsGenerator).
+		
+	7: The Client wants to unsubscribe from an EventCycle.
+	
+	7.1: The ALE calls the unsubscribe-method on the corresponding 
+		ReportsGenerator.
+		
+	8: The Client undefines an EventCycle.
+	
+	8.1: The ALE stops the corresponding ReportsGenerator
+	
+	8.2: The ReportsGenerator stops the EventCycle
+	
+[]
 
 [images/ALE/EventCycleSequence.png]
 
