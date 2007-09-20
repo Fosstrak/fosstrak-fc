@@ -9,23 +9,24 @@
 		<item name="Tag Data Translation" href="../tdt/index.html"/>
 	</links>
 	
-	<menu name="Accada ALE">
-		<item name="Overview" href="/ALE_overview.html"/>
+	<menu name="Accada Filtering &amp; Collection">
+		<item name="Overview" href="/index.html"/>
 		<item name="Features" href="/ALE_features.html"/>
 		<item name="Downloads" href="/ALE_download.html"/>
 	</menu>
 	
 	<menu name="Guides &amp; Documentation">
-		<item name="Overview" href="/index.html"/>
+		
 		<item name="Users guide" href="/users-guide.html"/>
-		<item name="Tag aggregation and filtering" href="/ale.html">
-			<item name="EventCycle &amp; ReportsGenerator" href="/eventcycle.html"/>
-			<item name="Reports" href="/report.html"/>
-		</item>
-		<item name="Logical Reader API" href="/logical-reader-api.html">
-			<item name="LogicalReaderConcept" href="/reader-concept.html"/>
+		
+		<item name="Developers guide" href="/devguide-overview.html">
+			<item name="ALE" href="/ale.html"/>
+			<item name="EventCycle" href="/eventcycle.html"/>
+			<item name="Reports generation" href="/reports-generator.html"/>
+			<item name="Reports notification" href="/reports-notification.html"/>
+			<item name="LogicalReader concept" href="/reader-concept.html"/>
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
-			<item name="LogicalReaderManager" href="/logical-reader-manager.html"/>
+			<item name="LogicalReader Management" href="/logical-reader-manager.html"/>		
 		</item>
 	</menu>
 </body>

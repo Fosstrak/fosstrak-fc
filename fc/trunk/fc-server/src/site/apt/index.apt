@@ -1,32 +1,45 @@
        ------
-                                    Filtering and Collection
+                                    Filtering and Collection Overview
                                     ------
                                     ------
 
 
-Filtering and Collection
+Filtering and Collection Overview
 
 * Objective
 
-	The Filtering and Collection middleware provides an interface
-	through which clients may interact with filtered, consolidated
-	EPC data and related data from a variety  of sources. Its an
-	implementation of the EPCglobal standart ALE 1.1.
+	The objective of the Filtering and Collection Project is to implement the Filtering and 
+	Collection role in the EPC Network and to develop the appropriate tools that facilitate 
+	communication with the Filtering and Collection instance. 
 
 
 * Organization
 
-	The Filtering and Collection middleware is accessed by a single component.
+[images/ALE_overview/FilteringCollectionProjectOverview.png]
+
+	The Filtering and Collection Project comprises three separate modules: 
 	
-	* The Ale class
+	* the Filtering and Collection implementation itself
 	
+	* the ALE Proxy 
+	
+	* the ALE Test Client
 	
 	[]
+	All three implement the ALE Specification defined by EPCglobal and its members. The middleware 
+	itself communicates with readers via the EPCglobal Reader Protocol.
+
+* How can the Accada Filtering and Collection Project help you?
 	
-	For detailed information please refer to those chapters:
+	This project allows you to:
 	
-	* Tag aggregation and filtering
+	* Interact with an RFID middleware that implements the Filtering and Collection role and which 
+	supports the Application-Level-Events Specification using our ALE Test Client.
 	
-	* Logical Reader API
+	* Communicate with an RFID middleware that implements the Filtering and Collection role and which 
+	supports the Application-Level-Events Specification using the ALE Proxy. 
 	
+	* Deploy an RFID Middleware that implements the Filtering and Collection role and supports the 
+	reader protocol and ALE specification.
+
 	[]

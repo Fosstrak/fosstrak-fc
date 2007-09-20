@@ -1,0 +1,46 @@
+       ------
+                                    Developers guide
+                                    ------
+                                    ------
+
+
+Developers guide
+
+* Objective
+
+	The Filtering and Collection middleware provides an interface
+	through which clients may interact with filtered, consolidated
+	EPC data and related data from a variety  of sources. Its an
+	implementation of the EPCglobal standart ALE 1.1.
+
+	FIXME write about it.
+
+	FIXME write about it.
+	
+	FIXME write about it.
+	
+	FIXME write about it.
+	
+	FIXME write about it.
+	
+	FIXME write about it.
+
+
+
+
+* Organization
+
+	The Filtering and Collection middleware is accessed by a single component.
+	
+	* The Ale class
+	
+	
+	[]
+	
+	For detailed information please refer to those chapters:
+	
+	* Tag aggregation and filtering
+	
+	* Logical Reader API
+	
+	[]
