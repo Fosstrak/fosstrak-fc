@@ -15,6 +15,10 @@ Users guide
 	[[3]] {{{#Configuration}Configuration}}
 	
 	[[4]] {{{#LogicalReaders}LogicalReaders Schema}}
+	
+	[[5]] {{{#Example1}Example 1}}
+	
+	[[6]] {{{#Example2}Example 2}}
 
 * {Objective}
 
@@ -154,6 +158,77 @@ readerAPI = /LogicalReaders.xml
 +-------------------------------------------------------------------+
 
 
+
+
+
+
+* {Example1}
+
++-------------------------------------------------------------------+
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+			<LRProperty name="Description" value="This Logical Reader consists of shelf 1 and shelf 2,3,4 of the physical reader named MyReader"/>
+			<LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
+			<LRProperty name="NotificationPoint" value="http://localhost:9090"/>
+			<LRProperty name="ReadTimeInterval" value="200"/>
+			<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
+			<LRProperty name="ImplClass" value="org.accada.ale.server.readers.rp.RPAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader1">
+		<LRSpec isComposite="true" readerType="org.accada.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="compositeReader consisting of LogicalReader1 created during system startup"/>
+			<readers>LogicalReader1</readers>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader2">
+		<LRSpec isComposite="true" readerType="org.accada.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="CompositeReader consisting of 2 BaseReaders and 1 CompositeReader created during system startup"/>
+			<readers>LogicalReader1</readers>
+			<readers>CompositeReader1</readers>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>
++-------------------------------------------------------------------+
+
+
+
+
+
+* {Example2}
+
++-------------------------------------------------------------------+
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="HAL reader created during system startup"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="ImplClass" value="org.accada.ale.server.readers.hal.HALAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader1">
+		<LRSpec isComposite="true" readerType="org.accada.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="compositeReader consisting of LogicalReader1 created during system startup"/>
+			<readers>LogicalReader1</readers>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader2">
+		<LRSpec isComposite="true" readerType="org.accada.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="CompositeReader consisting of 2 BaseReaders and 1 CompositeReader created during system startup"/>
+			<readers>LogicalReader1</readers>
+			<readers>CompositeReader1</readers>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>
++-------------------------------------------------------------------+
 
 
 
