@@ -52,57 +52,24 @@ ALE features
 
 * Detailed Feature List
 
-	Accada ALE supports all mandatory and some optional features of EPCglobal's filtering and collection interface 
-	(ALE) Specification, Version 1.1. The following table gives an overview of which features are supported and which are not.
-	Feature
-	Described in
-	ALE Specification 1.1
-	Supported in
-	Accada ALE 0.?
-Notes
-ALE reading API
-Sect. 8
-X
-[1]
-ALE writing API
-Sect. 9
--
+	The list below shows which features of EPCglobal's filtering and collection interface 
+	(ALE) Specification, Version 1.1 are implemented in the current version of Accada ALE.
+	The following table gives an overview of which features are supported and which are not.
+	
 
-ALE LogicalReader API
-Sect. 10
-X
-[2]
-Access Control API
-Sect. 11
--
-
-ECSpec
-Sect. 8.2
-X
-[5]
-ECReports
-Sect. 8.3
-X
-[3]
-Event Cycles
-Sect. 5.2
-X
-[5]
-LRSpec
-Sect. 10.4
-X
-
-LRProperty
-Sect. 10.5
-X
-[4]
-Tag Smoothing
-Sect. 10.6
--
-
-[1] - no support for "new vocabulary type" extension
-[2] - EPC syntax is not checked against Tag Data Standard 1.3
-[3] - query paramter orderBy does not support ordering for event field extensions, parameters EQATTR_fieldname_attrname and HASATTR_fieldname do not support event field extensions
-[4] - SecurityException is never thrown, QueryTooComplexException is thrown when query execution takes longer than a predefined threshold, QueryTooLargeException is thrown when a query returns more results than a predefined threshold
-[5] - optional feature
+*-----------+----------+---+
+ Feature | Described in ALE Specification 1.1 | Supported inAccada ALE 0.?
+*-----------+----------+---+
+ ALE reading API | Sect. 8 | X
+ ALE writing API | Sect. 9 | -
+ ALE LogicalReader API | Sect. 10 | X
+ Access Control API | Sect. 11 | - 
+ ECSpec | Sect. 8.2 | X
+ ECSpec | Sect. 8.2 | X
+ ECReports | Sect. 8.3 | X
+ Event Cycles | Sect. 5.2 | X
+ LRSpec | Sect. 10.4 | X
+ LRProperty | Sect. 10.5 | X
+ Tag Smoothing | Sect. 10.6 | -
+*-----------+----------+---+
 
