@@ -20,6 +20,11 @@
 
 package org.accada.ale.server.readers.rp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 import org.accada.ale.server.Tag;
@@ -61,8 +66,12 @@ public class RPAdaptor extends BaseReader {
 	/** the interval in which shall be read from the reader. */
 	private int readTimeInterval = -1;
 	
-	/** the physical sources where tags are read (eg shelf1, shelf2). */
-	private String sources = null;
+	/** the physical sources where tags are read in a String (eg shelf1, shelf2). */
+	private String sourcesString = null;
+	
+	/** the physical sources. */
+	private Set<String> sources = new HashSet<String>();
+	
 	
 	/**
 	 * constructor for the RP adaptor.
@@ -88,108 +97,122 @@ public class RPAdaptor extends BaseReader {
 		}
 		
 		try {
+			// extract from LRSpec how to connect to the reader
 			extractConnectionSettings();
 		} catch (ImplementationException ie) {
 			ie.printStackTrace();
 			LOG.error("could not extract connection settings from LRSpec");
 			throw new ImplementationException();
 		}
+		
+		// connect to the reader
+		connectReader();
 	}
 	
 	/**
-	 * this method extracts the connection settings from the LRProperty.
+	 * this method calls the URL constructor with a string.
+	 * @param urlString the URL to be converted into a java.net.URL
+	 * @param comment "NotificationPoint" or " ConnectionPoint" 
+	 * @return a URL created from urlString
+	 * @throws ImplementationException when a MalformedURLException is thrown
+	 */
+	private URL toURL(String urlString, String comment) throws ImplementationException {
+		URL url = null;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new ImplementationException("Could not extract " + comment + " from LRProperty",
+				ImplementationExceptionSeverity.ERROR);
+		}
+		return url;
+	}
+	
+	/**
+	 * this method extracts the connection settings from the LRProperty. when there 
+	 * is the need to disconnect the reader (when something in the connection to the 
+	 * reader has been changed in the LRSpec), true will be returned false otherwise.
 	 * if necessary the reader will be restarted
 	 * @throws ImplementationException whenever an error occurs
+	 * @return returns true if the connection to the reader needs to be reconnected
 	 */
-	private void extractConnectionSettings() throws ImplementationException {
-		String connectionPoint = logicalReaderProperties.get("ConnectionPoint");
-		String notificationPoint = logicalReaderProperties.get("NotificationPoint");
+	private boolean extractConnectionSettings() throws ImplementationException {
+		URL connectionPoint = toURL(logicalReaderProperties.get("ConnectionPoint"), "ConnectionPoint");
+		URL notificationPoint = toURL(logicalReaderProperties.get("NotificationPoint"), "NotificationPoint");
 		String interval = logicalReaderProperties.get("ReadTimeInterval");
-
-		String [] commandChannelParts = null;
+	
+		setReadTimeInterval(-1);
 		try {
-			// parse the URI from the form http://localhost:8080
-			commandChannelParts = connectionPoint.split("[:]");
-		} catch (NullPointerException ne) {
-			LOG.error("could not extract connectionPoint from LRPropery");
-			throw new ImplementationException("could not extract connectionPoint from LRPropery", ImplementationExceptionSeverity.ERROR);
-		}
-		
-		String [] notificationChannelParts = null;		
-		try {
-			// parse the uri from the form http://localhost:8080
-			notificationChannelParts = notificationPoint.split("[:]");
-		} catch (NullPointerException ne) {
-			LOG.error("could not extract notificationPoint from LRPropery");
-			throw new ImplementationException("could not extract notificationPoint from LRPropery", ImplementationExceptionSeverity.ERROR);
-		}
-
-		
-		String ncommandChannelHost = commandChannelParts[1].replaceAll("/", "");
-		int ncommandChannelPort = Integer.parseInt(commandChannelParts[2]);
-		
-		String nnotificationChannelHost = notificationChannelParts[1].replaceAll("/", "");
-		int nnotificationChannelPort = Integer.parseInt(notificationChannelParts[2]);
-
-		int nreadTimeInterval = -1;
-		try {
-			nreadTimeInterval = Integer.parseInt(interval);
+			setReadTimeInterval(Integer.parseInt(interval));
 		} catch (Exception ne) {
 			LOG.error("could not extract readTimeIntervall from LRPropery");
-			throw new ImplementationException("could not extract notificationPoint from LRPropery", ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationException("could not extract notificationPoint from LRPropery", 
+					ImplementationExceptionSeverity.ERROR);
 		}
 		
 		// assert that the readTimeInterval is not -1
-		if (nreadTimeInterval == -1) {
+		if (readTimeInterval == -1) {
 			LOG.error("ReadTimeInterval not set - assuming 2000ms");
-			nreadTimeInterval = DEFAULT_READTIME_INTERVALL;
+			setReadTimeInterval(DEFAULT_READTIME_INTERVALL);
 		}
 		
-		boolean disconn = false;
+		boolean disconnect = false;
 		
+		// compare the new sources string to the old sources string 
 		String nsources = logicalReaderProperties.get("PhysicalReaderSource");
-		if (!nsources.equalsIgnoreCase(sources)) {
-			disconn = true;
+		if (!nsources.equalsIgnoreCase(sourcesString)) {
+			disconnect = true;
 		}		
 		
-		if (!ncommandChannelHost.equals(commandChannelHost)) {
-			disconn = true;
-		}
-		if (!nnotificationChannelHost.equals(notificationChannelHost)) {
-			disconn = true;
-		}
-		if (ncommandChannelPort != commandChannelPort) {
-			disconn = true; 
-		}
-		if (nnotificationChannelPort != notificationChannelPort) {
-			disconn = true;
+		// disconnect if command channel host has changed
+		if (!connectionPoint.getHost().equalsIgnoreCase(commandChannelHost)) {
+			disconnect = true;
 		}
 		
-		LOG.debug("readTimeInterval " + nreadTimeInterval);
-		LOG.debug(String.format("commandChannelHost %s on port %d", ncommandChannelHost, ncommandChannelPort));
-		LOG.debug(String.format("notificationChannelHost %s on port %d", nnotificationChannelHost, nnotificationChannelPort));
-
-		if (disconn) {
-			disconnectReader();
-
-			readTimeInterval = nreadTimeInterval;
-			commandChannelHost = ncommandChannelHost;
-			notificationChannelHost = nnotificationChannelHost;
-			commandChannelPort = ncommandChannelPort;
-			notificationChannelPort = nnotificationChannelPort;
-			sources = nsources;
-			
-			connectReader();
-			setConnected();
-		} else {
-			// just change the readTimeIntervall
-			readTimeInterval = nreadTimeInterval;
+		// disconnect if notificationChannelHost has changed
+		if (!notificationPoint.getHost().equalsIgnoreCase(notificationChannelHost)) {
+			disconnect = true;
 		}
+		
+		// disconnect when the port has changed
+		if (connectionPoint.getPort() != commandChannelPort) {
+			disconnect = true;
+		}
+			
+		// disconnect when the port has changed
+		if (notificationPoint.getPort() != notificationChannelPort) {
+			disconnect = true;
+		}
+		
+		
+		
+		LOG.debug("readTimeInterval " + readTimeInterval);
+		LOG.debug(String.format("commandChannelHost %s on port %d", 
+				connectionPoint.getHost(), 
+				connectionPoint.getPort()));
+		LOG.debug(String.format("notificationChannelHost %s on port %d", 
+				notificationPoint.getHost(), 
+				notificationPoint.getPort()));
+		
+		// set the new commandChannelSettings
+		setCommandChannelHost(connectionPoint.getHost());
+		setCommandChannelPort(connectionPoint.getPort());
+		
+		// set the new notificationChannelSettings
+		setNotificationChannelHost(notificationPoint.getHost());
+		setNotificationChannelPort(notificationPoint.getPort());
+		
+		// set the new sources
+		sourcesString = nsources;
+		setSourcesFromArray(sourcesString.split("[,]"));
+		
+		return disconnect;
 	}
 	
 	
 	/**
-	 * sets up a reader.
+	 * sets up a reader. if the adaptor can be connected to the rp-proxy 
+	 * the adaptor will be set to connected.
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
@@ -198,16 +221,9 @@ public class RPAdaptor extends BaseReader {
 			return;
 		}
 		
-		String [] physicalSources = sources.split("[,]");
-		
 		try {
-			inputGenerator = new InputGenerator(this, 
-												commandChannelHost, 
-												commandChannelPort, 
-												notificationChannelHost, 
-												notificationChannelPort, 
-												readTimeInterval,
-												physicalSources);
+			inputGenerator = new InputGenerator(this);
+			
 		} catch (ImplementationException e) {
 			setDisconnected();
 			throw e;
@@ -223,11 +239,11 @@ public class RPAdaptor extends BaseReader {
 	@Override
 	public void disconnectReader() throws ImplementationException {
 		
-		commandChannelHost = null;
-		notificationChannelHost = null;
-		commandChannelPort = -1;
-		notificationChannelPort = -1;
-		readTimeInterval = -1;
+		setCommandChannelHost(null);
+		setNotificationChannelHost(null);
+		setCommandChannelPort(-1);
+		setNotificationChannelPort(-1);
+		setReadTimeInterval(-1);
 		
 		if (inputGenerator != null) {
 			inputGenerator.remove();
@@ -245,14 +261,18 @@ public class RPAdaptor extends BaseReader {
 	 */
 	@Override
 	public void addTag(Tag tag) {
-		tag.addTrace(getName());
-		
 		setChanged();
+		tag.addTrace(getName());
+		LOG.debug("calling observers");
 		notifyObservers(tag);
 	}
 
 	/**
-	 * starts a base reader to read tags.
+	 * starts a base reader to read tags. if the reader 
+	 * is not yet connected this command will connect the reader 
+	 * immediately and then start it.
+	 * If the reader cannot be connected then the reader is 
+	 * not started as well.
 	 *
 	 */
 	@Override
@@ -267,6 +287,7 @@ public class RPAdaptor extends BaseReader {
 			}
 		}
 		
+		// reader is not connected so it is not started as well
 		if (!isConnected()) {
 			setStopped();
 		} else {
@@ -291,8 +312,13 @@ public class RPAdaptor extends BaseReader {
 	@Override
 	public synchronized void update(LRSpec spec) throws ImplementationException {
 		stop();
+		
 		setLRSpec(spec);
-		extractConnectionSettings();
+		if (extractConnectionSettings()) {
+			disconnectReader();
+			connectReader();
+		}
+		
 		start();
 	}
 	
@@ -311,5 +337,104 @@ public class RPAdaptor extends BaseReader {
 		
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * returns the commandChannelHost of the rp-proxy.
+	 * @return the commandChannelHost.
+	 */
+	public String getCommandChannelHost() {
+		return commandChannelHost;
+	}
+
+	/**
+	 * sets the commandChannelHost of the rp-proxy.
+	 * @param commandChannelHost new commandChannelHost.
+	 */
+	private void setCommandChannelHost(String commandChannelHost) {
+		this.commandChannelHost = commandChannelHost;
+	}
+
+	/**
+	 * returns the commandChannelPort of the rp-proxy.
+	 * @return the commandChannelPort.
+	 */
+	public int getCommandChannelPort() {
+		return commandChannelPort;
+	}
+
+	/**
+	 * sets the commandChannelPort of the rp-proxy.
+	 * @param commandChannelPort the new commandChannelPort
+	 */
+	private void setCommandChannelPort(int commandChannelPort) {
+		this.commandChannelPort = commandChannelPort;
+	}
+
+	/**
+	 * returns the notificationChannelHost of the rp-proxy.
+	 * @return the notificationChannelHost
+	 */
+	public String getNotificationChannelHost() {
+		return notificationChannelHost;
+	}
+
+	/**
+	 * sets the notificationChannelHost of the rp-proxy.
+	 * @param notificationChannelHost the new notificationChannelHost
+	 */
+	private void setNotificationChannelHost(String notificationChannelHost) {
+		this.notificationChannelHost = notificationChannelHost;
+	}
+
+	/**
+	 * returns the notificationChannelPort of the rp-proxy.
+	 * @return the notificationChannelPort.
+	 */
+	public int getNotificationChannelPort() {
+		return notificationChannelPort;
+	}
+
+	/**
+	 * sets the notificationChannelPort of the rp-proxy.
+	 * @param notificationChannelPort the new notificationChannelPort
+	 */
+	private void setNotificationChannelPort(int notificationChannelPort) {
+		this.notificationChannelPort = notificationChannelPort;
+	}
+
+	/**
+	 * returns the readTimeInterval.
+	 * @return the readTimeInterval
+	 */
+	public int getReadTimeInterval() {
+		return readTimeInterval;
+	}
+
+	/**
+	 * sets the readTimeInterval.
+	 * @param readTimeInterval the readTimeInterval
+	 */
+	private void setReadTimeInterval(int readTimeInterval) {
+		this.readTimeInterval = readTimeInterval;
+	}
+
+	/**
+	 * returns the sources from where the reader reads tags. 
+	 * @return the sources from where the reader reads tags.
+	 */
+	public Set<String> getSources() {
+		return sources;
+	}
+
+	/**
+	 * sets the sources from where the reader reads tags. the 
+	 * sources are copied into the HashSet sources 
+	 * @param sources an array of strings containing the sources.
+	 */
+	private void setSourcesFromArray(String[] sources) {
+		for (String source : sources) {
+			this.sources.add(source);
+		}
 	}
 }

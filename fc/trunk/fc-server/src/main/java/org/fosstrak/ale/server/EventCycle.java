@@ -135,21 +135,27 @@ public class EventCycle implements Runnable, Observer {
 		
 		setAcceptTags(false);
 		
+		LOG.debug("adding logicalReaders to EventCycle");
 		// get LogicalReaderStubs
 		if (spec.getLogicalReaders() != null) {
 			String[] logicalReaderNames = spec.getLogicalReaders();
 			for (String logicalReaderName : logicalReaderNames) {
+				LOG.debug("retrieving logicalReader " + logicalReaderName);
 				LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(logicalReaderName);
 				
 				if (logicalReader != null) {
+					LOG.debug("adding logicalReader " + logicalReader.getName() + " to EventCycle " + name);
 					logicalReaders.add(logicalReader);
 				}
 			}
+		} else {
+			LOG.error("ECSpec contains no readers");
 		}
 		
 		for (LogicalReader logicalReader : logicalReaders) {
 			
 			// subscribe this event cycle to the logical readers
+			LOG.debug("registering EventCycle " + name + " on reader " + logicalReader.getName());
 			logicalReader.addObserver(this);
 		}
 		
@@ -271,6 +277,8 @@ public class EventCycle implements Runnable, Observer {
 		if (!isAcceptingTags()) {
 			return;
 		}
+		
+		LOG.debug("received update notification");
 		
 		if (arg instanceof Tag) {
 			Tag tag = (Tag) arg;
