@@ -20,11 +20,7 @@
 
 package org.accada.ale.server.readers;
 
-import java.util.Observable;
-
-import org.accada.ale.server.EventCycle;
 import org.accada.ale.server.Tag;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.reader.hal.HardwareException;
 import org.accada.reader.hal.Observation;
