@@ -21,24 +21,22 @@
 package org.accada.ale.server.readers.rp;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
-import org.accada.reader.rprm.core.EventType;
 import org.accada.reader.rprm.core.FieldName;
 import org.accada.reader.rprm.core.msg.notification.Notification;
-import org.accada.reader.rprm.core.msg.notification.ReadReportType;
-import org.accada.reader.rprm.core.msg.notification.TagEventType;
-import org.accada.reader.rprm.core.msg.notification.TagType;
-import org.accada.reader.rprm.core.msg.notification.ReadReportType.SourceReport;
+import org.accada.reader.rprm.core.msg.reply.ReadReportType;
+import org.accada.reader.rprm.core.msg.reply.TagType;
+import org.accada.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
 import org.accada.reader.rp.proxy.DataSelector;
 import org.accada.reader.rp.proxy.NotificationChannel;
 import org.accada.reader.rp.proxy.NotificationChannelEndPoint;
 import org.accada.reader.rp.proxy.NotificationChannelListener;
 import org.accada.reader.rp.proxy.RPProxyException;
+import org.accada.reader.rp.proxy.ReadReport;
 import org.accada.reader.rp.proxy.ReaderDevice;
 import org.accada.reader.rp.proxy.Source;
 import org.accada.reader.rp.proxy.Trigger;
@@ -148,53 +146,7 @@ public class InputGenerator implements NotificationChannelListener {
 	 * @param notification from the reader device
 	 */
 	public void dataReceived(Notification notification) {
-		
-		LOG.debug("Notification received");
-		List<ReadReportType> readReports = notification.getReadReport();
-		if (readReports != null) {
-			for (ReadReportType readReport : readReports) {
-				List<SourceReport> sourceReports = readReport.getSourceReport();
-				if (sourceReports != null) {
-					for (SourceReport sourceReport : sourceReports) {
-						List<TagType> tags = sourceReport.getTag();
-						if (tags != null) {
-							for (TagType tag : tags) {
-								
-								List<TagEventType> tagEvents = tag.getTagEvent();
-								for (TagEventType tagEvent : tagEvents) {
-									LOG.debug("EventType: " + tagEvent.getEventType());
-								}
-								 
-								// send all the tags
-								adaptor.addTag(new Tag(adaptor.getName(), 
-										HexUtil.byteArrayToHexString(tag.getTagID()),
-										System.currentTimeMillis()));
-								
-								/*
-								List<TagEventType> tagEvents = tag.getTagEvent();
-								if (tagEvents != null) {
-									for (TagEventType tagEvent : tagEvents) {
-										String eventType = tagEvent.getEventType();
-										String tagID = HexUtil.byteArrayToHexString(tag.getTagID());
-										LOG.debug("Tag '" + tagID + "' fired Event of type '" + eventType + "'");
-										if (EventType.EV_GLIMPSED.equals(eventType)) {
-											LOG.debug("Tag '" + tagID + "' entered the range of source '" 
-													+	sourceName + "' of reader '" +  readerName + "'.");
-											
-											
-											adaptor.addTag(new Tag(adaptor.getName(), tagID,
-															System.currentTimeMillis()));
-										}
-									}
-								}
-								*/
-							}
-						}
-					}
-				}
-			}
-		}
-		
+		LOG.debug("Notification received but not processed - polling mode is used");
 	}
 	
 	/**
@@ -265,6 +217,58 @@ public class InputGenerator implements NotificationChannelListener {
 	}
 	
 	/**
+	 * polls the rp-proxy for all tags available.
+	 * @throws RPProxyException when the polling failed
+	 */
+	public void poll() throws RPProxyException {
+		
+		LOG.debug("Polling the rp-proxy");
+		
+		// get all the sources from the device
+		Source[] sources = readerDevice.getAllSources();
+		if (sources != null) {
+			for (Source source : sources) {
+				// remove all data-selectors on the source 
+				// this is important !!!!!!!!!!!!! 
+				// otherwise you will not get any tags
+				source.removeAllTagSelectors();
+				
+				// read all ids on the source
+				// just for safety pass an empty dataSelector
+				ReadReport readReport = source.rawReadIDs(null);
+
+				
+				if (readReport != null) {
+					// get the readReport holding the sourceReports
+					ReadReportType report = readReport.getReport();
+					// get the sourceReports
+					List<SourceReport> sourceReports = report.getSourceReport();
+					
+					// for each sourceReport process the tags
+					for (SourceReport sourceReport : sourceReports) {
+						List<TagType> tags = sourceReport.getTag();
+						if (tags != null) {
+							// for each tag create a new reader api tag
+							for (TagType tag : tags) {
+										 
+								// send all the tags
+								adaptor.addTag(new Tag(adaptor.getName(), 
+										HexUtil.byteArrayToHexString(tag.getTagID()),
+										System.currentTimeMillis()));
+								
+							}
+						}
+					}
+				} else {
+					LOG.debug("readReport null");
+				}
+			}
+		} else {
+			LOG.debug("sources null");
+		}
+	}
+	
+	/**
 	 * This class initializes the input generator by creating objects on the reader device using the proxies.
 	 * 
 	 * @author regli
@@ -327,6 +331,7 @@ public class InputGenerator implements NotificationChannelListener {
 			
 			// create read trigger
 			readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER, 
+					//String.format("ms=%d", 50), readerDevice);
 						String.format("ms=%d", adaptor.getReadTimeInterval()), readerDevice);
 
 			LOG.debug("created read trigger: " + readTriggerName);
@@ -344,11 +349,6 @@ public class InputGenerator implements NotificationChannelListener {
 								FieldName.READER_NAME, 
 								FieldName.TAG_ID,  
 								FieldName.SOURCE_NAME});
-			LOG.debug("adding eventFilters to dataSelector");
-			dataSelector.addEventFilters(new String[] {EventType.EV_GLIMPSED, 
-														EventType.EV_NEW, 
-														EventType.EV_OBSERVED});
-			
 			
 			// create notification channel
 			String notificationAddress = "tcp://" + adaptor.getNotificationChannelHost() + ":" + adaptor.getNotificationChannelPort()

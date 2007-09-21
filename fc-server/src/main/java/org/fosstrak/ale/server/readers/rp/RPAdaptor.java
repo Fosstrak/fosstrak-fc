@@ -29,11 +29,13 @@ import org.apache.log4j.Logger;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
+import org.accada.ale.server.readers.IdentifyThread;
 import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.reader.hal.HardwareException;
 import org.accada.reader.hal.Observation;
+import org.accada.reader.rp.proxy.RPProxyException;
 
 /**
  * represents an adaptor to the RP reader.
@@ -71,6 +73,9 @@ public class RPAdaptor extends BaseReader {
 	
 	/** the physical sources. */
 	private Set<String> sources = new HashSet<String>();
+	
+	/** to get all the tags we need a polling thread.  */
+	private IdentifyThread identifyThread = null;
 	
 	
 	/**
@@ -229,6 +234,15 @@ public class RPAdaptor extends BaseReader {
 			throw e;
 		}
 		
+		LOG.debug("setup identifyThread on RPAdaptor " + getName());
+		// setup the polling thread
+		identifyThread = new IdentifyThread(this);
+		identifyThread.setPollingFrequency(readTimeInterval);
+		identifyThread.start();
+		
+		// suspend the polling thread to the beginning
+		identifyThread.suspendIdentify();		
+		
 		setConnected();
 	}
 
@@ -251,6 +265,11 @@ public class RPAdaptor extends BaseReader {
 			inputGenerator = null;
 		}
 		
+		
+		if (identifyThread != null) {
+			identifyThread.stopIdentify();
+			identifyThread = null;
+		}
 		setDisconnected();
 		setStopped();
 	}
@@ -291,6 +310,8 @@ public class RPAdaptor extends BaseReader {
 		if (!isConnected()) {
 			setStopped();
 		} else {
+			LOG.debug("identifyThread starting to identify");
+			identifyThread.resumeIdentify();
 			setStarted();
 		}
 	}
@@ -301,6 +322,8 @@ public class RPAdaptor extends BaseReader {
 	 */
 	@Override
 	public synchronized void stop() {
+		LOG.debug("identifyThread suspend to identify");
+		identifyThread.suspendIdentify();
 		setStopped();
 	}
 
@@ -333,9 +356,24 @@ public class RPAdaptor extends BaseReader {
 	public Observation[] identify(String[] readPointNames)
 			throws HardwareException {
 		
-		// how can we poll a ReaderProtocol device?
+		LOG.debug("identify called an RPAdaptor " + getName());
 		
-		// TODO Auto-generated method stub
+		if (inputGenerator != null) {
+			
+			if (inputGenerator.isReady()) {
+			
+				try {
+					inputGenerator.poll();
+					
+				} catch (RPProxyException e) {
+					e.printStackTrace();
+					throw new HardwareException("Could not poll the adaptor " + getName());
+				}
+			} else {
+				LOG.debug("rp-proxy not ready (yet)");
+			}
+		}
+		
 		return null;
 	}
 
