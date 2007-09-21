@@ -20,10 +20,8 @@
 
 package org.accada.ale.server.readers.rp;
 
-import java.math.BigInteger;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Vector;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.util.HexUtil;
@@ -33,7 +31,6 @@ import org.accada.reader.rprm.core.EventType;
 import org.accada.reader.rprm.core.FieldName;
 import org.accada.reader.rprm.core.msg.notification.Notification;
 import org.accada.reader.rprm.core.msg.notification.ReadReportType;
-import org.accada.reader.rprm.core.msg.notification.SourceInfoType;
 import org.accada.reader.rprm.core.msg.notification.TagEventType;
 import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.accada.reader.rprm.core.msg.notification.ReadReportType.SourceReport;
@@ -91,19 +88,6 @@ public class InputGenerator implements NotificationChannelListener {
 	 */
 	private static final String DEFAULT_NOTIFICATION_TRIGGER_NAME = PREFIX + "NotificationTrigger";
 
-	// command channel parameters
-	/** command channel host name. */
-	private String commandChannelHost;
-	/** command channel port number. */
-	private int commandChannelPort;
-	
-	// notification parameters
-	/** notification channel host name. */
-	private String notificationChannelHost;
-	/** notification channel port number. */
-	private int notificationChannelPort;
-	/** notification channel read time interval. */
-	private int readTimeInterval;
 	/** notification channel mode. */
 	private static final String NOTIFICATION_CHANNEL_MODE = "connect";
 	
@@ -136,49 +120,19 @@ public class InputGenerator implements NotificationChannelListener {
 	/** indicates if the initialization of this input generator is failed or not. */
 	private boolean isFailed = false;
 	
-	/** the physical sources where tags are read (eg shelf1, shelf2). */
-	private Set<String> physicalSources = new HashSet<String>();
-	
-	/** reader to which the input generator belongs. */
-	private RPAdaptor reader = null;
+	/** adaptor to which the input generator belongs. */
+	private RPAdaptor adaptor = null;
 
 	/**
 	 * Constructor sets parameter and starts initializer.
 	 * 
-	 * @param commandChannelHost the host to connect for the commandChannel 
-	 * @param commandChannelPort the port for the commandChannel
-	 * @param notificationChannelHost the host for the notificationChannel
-	 * @param notificationChannelPort the port for the notificationChannel
-	 * @param readTimeIntervall in milliseconds
-	 * @param reader the reader holding this inputGenerator
-	 * @param physicalSources the physical sources where tags are read (eg shelf1, shelf2)
+	 * @param adaptor the adaptor holding this inputGenerator
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public InputGenerator(RPAdaptor reader, 
-			String commandChannelHost, 
-			int commandChannelPort, 
-			String notificationChannelHost,
-			int notificationChannelPort, 
-			int readTimeIntervall,
-			String [] physicalSources
-			) throws ImplementationException {
+	public InputGenerator(RPAdaptor adaptor) throws ImplementationException {
 
-		this.reader = reader;
-				
-		// set command channel parameters
-		this.commandChannelHost = commandChannelHost;
-		this.commandChannelPort = commandChannelPort;
-		
-		// set notification parameters
-		this.notificationChannelHost = notificationChannelHost;
-		this.notificationChannelPort = notificationChannelPort;
-		this.readTimeInterval = readTimeIntervall;
-		
-		// add the physical sources
-		for (String source : physicalSources) {
-			this.physicalSources.add(source);
-		}
-		
+		this.adaptor = adaptor;
+
 		// start Initializer Thread
 		try {
 			new Initializer(this).start();
@@ -202,11 +156,21 @@ public class InputGenerator implements NotificationChannelListener {
 				List<SourceReport> sourceReports = readReport.getSourceReport();
 				if (sourceReports != null) {
 					for (SourceReport sourceReport : sourceReports) {
-						SourceInfoType sourceInfo = sourceReport.getSourceInfo();
-						String sourceName = sourceInfo.getSourceName();
 						List<TagType> tags = sourceReport.getTag();
 						if (tags != null) {
 							for (TagType tag : tags) {
+								
+								List<TagEventType> tagEvents = tag.getTagEvent();
+								for (TagEventType tagEvent : tagEvents) {
+									LOG.debug("EventType: " + tagEvent.getEventType());
+								}
+								 
+								// send all the tags
+								adaptor.addTag(new Tag(adaptor.getName(), 
+										HexUtil.byteArrayToHexString(tag.getTagID()),
+										System.currentTimeMillis()));
+								
+								/*
 								List<TagEventType> tagEvents = tag.getTagEvent();
 								if (tagEvents != null) {
 									for (TagEventType tagEvent : tagEvents) {
@@ -217,13 +181,13 @@ public class InputGenerator implements NotificationChannelListener {
 											LOG.debug("Tag '" + tagID + "' entered the range of source '" 
 													+	sourceName + "' of reader '" +  readerName + "'.");
 											
-											Tag newTag = new Tag(reader.getName());
-											newTag.setTagID(tagID);
-											newTag.setTimestamp(System.currentTimeMillis());
-											addToReader(sourceName, newTag);
+											
+											adaptor.addTag(new Tag(adaptor.getName(), tagID,
+															System.currentTimeMillis()));
 										}
 									}
 								}
+								*/
 							}
 						}
 					}
@@ -301,18 +265,6 @@ public class InputGenerator implements NotificationChannelListener {
 	}
 	
 	/**
-	 * This method is invoked if the notification contains a glimpsed event.
-	 * the tag is then passed to the reader containing this input generator.
-	 * 
-	 * @param sourceName of the glimpes event
-	 * @param tag of the glimpes event
-	 */
-	private void addToReader(String sourceName, Tag tag) {
-		
-		reader.addTag(tag);
-	}
-	
-	/**
 	 * This class initializes the input generator by creating objects on the reader device using the proxies.
 	 * 
 	 * @author regli
@@ -362,20 +314,20 @@ public class InputGenerator implements NotificationChannelListener {
 			Handshake handshake = new Handshake();
 			handshake.setTransportProtocol(Handshake.HTTP);
 			handshake.setMessageFormat(Handshake.FORMAT_XML);
-			readerDevice = ReaderDeviceFactory.getReaderDevice(commandChannelHost,
-					commandChannelPort, handshake);
+			readerDevice = ReaderDeviceFactory.getReaderDevice(adaptor.getCommandChannelHost(),
+					adaptor.getCommandChannelPort(), handshake);
 			readerName = readerDevice.getName();
 
 			// create notification channel endpoint and add listener
-			LOG.debug("Try to create NotificationChannelEndpoint at port '" + notificationChannelPort + "'...");
-			notificationChannelEndPoint = new NotificationChannelEndPoint(notificationChannelPort);
+			LOG.debug("Try to create NotificationChannelEndpoint at port '" + adaptor.getNotificationChannelPort() + "'...");
+			notificationChannelEndPoint = new NotificationChannelEndPoint(adaptor.getNotificationChannelPort());
 			notificationChannelEndPoint.addListener(generator);
-			LOG.debug("NotificationChannelEndpoint at port '" + notificationChannelPort + "' created.");			
+			LOG.debug("NotificationChannelEndpoint at port '" + adaptor.getNotificationChannelPort() + "' created.");			
 			
 			
 			// create read trigger
 			readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER, 
-						String.format("ms=%d", readTimeInterval), readerDevice);
+						String.format("ms=%d", adaptor.getReadTimeInterval()), readerDevice);
 
 			LOG.debug("created read trigger: " + readTriggerName);
 
@@ -390,16 +342,16 @@ public class InputGenerator implements NotificationChannelListener {
 			LOG.debug("adding Fieldnames to dataSelector");
 			dataSelector.addFieldNames(new String[] {FieldName.EVENT_TYPE, 
 								FieldName.READER_NAME, 
-								FieldName.TAG_ID, 
-								FieldName.TAG_ID_AS_PURE_URI, 
-								FieldName.TAG_ID_AS_TAG_URI, 
+								FieldName.TAG_ID,  
 								FieldName.SOURCE_NAME});
 			LOG.debug("adding eventFilters to dataSelector");
-			dataSelector.addEventFilters(new String[] {EventType.EV_GLIMPSED});
+			dataSelector.addEventFilters(new String[] {EventType.EV_GLIMPSED, 
+														EventType.EV_NEW, 
+														EventType.EV_OBSERVED});
 			
 			
 			// create notification channel
-			String notificationAddress = "tcp://" + notificationChannelHost + ":" + notificationChannelPort
+			String notificationAddress = "tcp://" + adaptor.getNotificationChannelHost() + ":" + adaptor.getNotificationChannelPort()
 						+ "?mode=" + NOTIFICATION_CHANNEL_MODE;
 
 			LOG.debug("create NotificationChannel" + notificationChannelName);
@@ -422,7 +374,7 @@ public class InputGenerator implements NotificationChannelListener {
 			
 			LOG.debug("add readTriggers to the sources");
 			for (Source source : sources) {
-				if (physicalSources.contains(source.getName())) {
+				if (adaptor.getSources().contains(source.getName())) {
 					LOG.debug("adding physical source " + source.getName());
 					source.addReadTriggers(new Trigger[] {readTrigger});
 				}
@@ -450,7 +402,7 @@ public class InputGenerator implements NotificationChannelListener {
 		private void isFailed(Exception exception) {
 			
 			isFailed = true;
-			LOG.error("InputGenerator '" + commandChannelHost + ":" + commandChannelPort + "' initialization failed. (" + exception.getMessage() + ")");
+			LOG.error("InputGenerator '" + adaptor.getCommandChannelHost() + ":" + adaptor.getCommandChannelPort() + "' initialization failed. (" + exception.getMessage() + ")");
 			
 			// notify all when InputGenerator is failed
 			synchronized (generator) {

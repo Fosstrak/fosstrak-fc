@@ -31,6 +31,19 @@ public class Tag {
 	}
 	
 	/**
+	 * assignment constructor for Tag.
+	 * @param origin reader where the tag was read originally 
+	 * @param tagId the tagID
+	 * @param timestamp the timestamp
+	 */
+	public Tag(String origin, String tagId, long timestamp) {
+		setOrigin(origin);
+		setReader(origin);
+		setTagID(tagId);
+		setTimestamp(timestamp);		
+	}
+	
+	/**
 	 * constructor for a tag.(assignment constructor).
 	 * @param origin the baseReader where the tag has been read
 	 */
