@@ -6,41 +6,72 @@
 
 Developers guide
 
-* Objective
+* Contents
+	
+	[[1]] {{{#Objective}Objective}}
+	
+	[[2]] {{{#Overview}Overview}}
+	
+	[[3]] {{{#Detailed}Detailed information}}
+
+
+* {Objective}
 
 	The Filtering and Collection middleware provides an interface
 	through which clients may interact with filtered, consolidated
 	EPC data and related data from a variety  of sources. Its an
 	implementation of the EPCglobal standart ALE 1.1.
 
-	FIXME write about it.
+		
+* {Overview}
 
-	FIXME write about it.
+	From a global view one can split the Accada Filtering and 
+	Collection framework into 3 layers that are built on top 
+	of each other.
 	
-	FIXME write about it.
+	* org.accada.ale.server: This layer provides the interface 
+		to the client through the class ALE. This includes:
+	  
+	  	* Tag filtering and reports generation
+			
+		* EventCycle and ReportsGenerator administration
+			
+		* Client subscription/unsubscription
 	
-	FIXME write about it.
-	
-	FIXME write about it.
-	
-	FIXME write about it.
+	* org.accada.ale.server.readers: This layer models the logical 
+		reader API. This includes:
+	  
+	  	* Tag aggregation
+			
+		* Reader management
+		
+	* org.accada.ale.server.readers.XYZ: This layer acts as the 
+		layer to the physical hardware. This includes:
+	  	
+		* Aquiring of the tags
+		
+		* Maintenance of reader connections
+		
+	[]
+
+[images/ALE/ALE_overview.png]
 
 
 
 
-* Organization
-
-	The Filtering and Collection middleware is accessed by a single component.
+* {Detailed} information
 	
-	* The Ale class
+	For detailed information please refer to the chapters:
+	 
+	* {{{ale.html}ALE}}
 	
+	* {{{eventcycle.html}EventCycle}}
+	
+	* {{{reports-generator.html}Reports generation}}
+	
+	* {{{reports-notification.html}Reports notification}}
+	
+	* {{{reader-concept.html}LogicalReader Concept}} (logical reader API)
 	
 	[]
 	
-	For detailed information please refer to those chapters:
-	
-	* Tag aggregation and filtering
-	
-	* Logical Reader API
-	
-	[]
