@@ -1,6 +1,8 @@
 package org.accada.ale.server.readers.hal;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
@@ -16,7 +18,7 @@ import org.apache.log4j.Logger;
 
 /**
  * adaptor for all HAL devices.
- * this adaptor allows to attach hal devices directly to the ale
+ * this adaptor allows to attach HAL devices directly to the ale
  * @author sawielan
  *
  */
@@ -59,8 +61,13 @@ public class HALAdaptor extends BaseReader {
 
 		pollingFrequency = Long.parseLong(logicalReaderProperties.get("ReadTimeInterval"));
 
+		// there is a problem with the HAL simulators when they try to load
+		// a realtive path from within a jar.
+		// the easiest solution is to provide the absolute path
 		propertiesFile = logicalReaderProperties.get("PropertiesFile");
-		// create the hal device
+		URL url = this.getClass().getResource(propertiesFile);
+		propertiesFile = url.getFile();
+		// create the HAL device
 		hal = new SimulatorController(name, propertiesFile);
 		
 
@@ -204,11 +211,24 @@ public class HALAdaptor extends BaseReader {
 	 */
 	@Override
 	public void addTag(Tag tag) {
-		LOG.debug("HALAdaptor: notifying observers");
+		//LOG.debug("HALAdaptor: notifying observers");
 		tag.addTrace(getName());
 		
 		setChanged();
 		notifyObservers(tag);
+	}
+	
+	/**
+	 * whenever new Tags are read a notification is sent to the observers.
+	 * @param tags a list of tags to be added to the reader
+	 */
+	@Override
+	public void addTags(List<Tag> tags) {
+		setChanged();
+		for (Tag tag : tags) {
+			tag.addTrace(getName());
+			notifyObservers(tags);
+		}
 	}
 
 	/**
@@ -227,15 +247,23 @@ public class HALAdaptor extends BaseReader {
 		if (countObservers() > 0) {
 			
 			observations = hal.identify(hal.getReadPointNames());
-			for (Observation observation : observations) {
-				
-				// For each tag create a new Tag
-				for (String tagobserved : observation.getIds()) {
-					Tag tag = new Tag(getName());
-					tag.setTagID(tagobserved);
-					tag.setTimestamp(observation.getTimestamp());
-					addTag(tag);
+			
+			// only process if there are tags
+			if (observations.length > 0) {
+				List<Tag> tags = new LinkedList<Tag>();
+				for (Observation observation : observations) {
+					
+					// For each tag create a new Tag
+					for (String tagobserved : observation.getIds()) {
+						Tag tag = new Tag(getName());
+						tag.setTagID(tagobserved);
+						tag.setTimestamp(observation.getTimestamp());
+						tags.add(tag);
+					}
 				}
+				
+				// send the tags as a list
+				addTags(tags);
 			}
 		}
 		return observations;

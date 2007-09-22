@@ -20,6 +20,7 @@
 
 package org.accada.ale.server.readers.rp;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.accada.ale.server.Tag;
@@ -222,7 +223,7 @@ public class InputGenerator implements NotificationChannelListener {
 	 */
 	public void poll() throws RPProxyException {
 		
-		LOG.debug("Polling the rp-proxy");
+		//LOG.debug("Polling the rp-proxy");
 		
 		// get all the sources from the device
 		Source[] sources = readerDevice.getAllSources();
@@ -244,6 +245,7 @@ public class InputGenerator implements NotificationChannelListener {
 					// get the sourceReports
 					List<SourceReport> sourceReports = report.getSourceReport();
 					
+					List<Tag> tagsToNotify = new LinkedList<Tag>();
 					// for each sourceReport process the tags
 					for (SourceReport sourceReport : sourceReports) {
 						List<TagType> tags = sourceReport.getTag();
@@ -251,14 +253,25 @@ public class InputGenerator implements NotificationChannelListener {
 							// for each tag create a new reader api tag
 							for (TagType tag : tags) {
 										 
-								// send all the tags
+								// prepare the tag
+								/*
 								adaptor.addTag(new Tag(adaptor.getName(), 
 										HexUtil.byteArrayToHexString(tag.getTagID()),
 										System.currentTimeMillis()));
+								*/
 								
+								// add it to the taglist
+								tagsToNotify.add(new Tag(adaptor.getName(), 
+										HexUtil.byteArrayToHexString(tag.getTagID()),
+										System.currentTimeMillis()));
 							}
 						}
 					}
+					
+					if (tagsToNotify.size() > 0) {
+						adaptor.addTags(tagsToNotify);
+					}
+					
 				} else {
 					LOG.debug("readReport null");
 				}
@@ -331,7 +344,6 @@ public class InputGenerator implements NotificationChannelListener {
 			
 			// create read trigger
 			readTrigger = TriggerFactory.createTrigger(readTriggerName, Trigger.TIMER, 
-					//String.format("ms=%d", 50), readerDevice);
 						String.format("ms=%d", adaptor.getReadTimeInterval()), readerDevice);
 
 			LOG.debug("created read trigger: " + readTriggerName);

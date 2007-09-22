@@ -20,6 +20,8 @@
 
 package org.accada.ale.server.readers;
 
+import java.util.List;
+
 import org.accada.ale.server.Tag;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.reader.hal.HardwareException;
@@ -56,6 +58,12 @@ public abstract class BaseReader extends LogicalReader {
 	 * @param tag tag to be added to the reader
 	 */
 	public abstract void addTag(Tag tag);
+	
+	/**
+	 * add a List of tags to a reader.
+	 * @param tags a list of tags to be added to the reader
+	 */
+	public abstract void addTags(List<Tag> tags);
 	
 	/**
 	 * starts a basereader to read tags.

@@ -23,6 +23,7 @@ package org.accada.ale.server.readers.rp;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -282,8 +283,21 @@ public class RPAdaptor extends BaseReader {
 	public void addTag(Tag tag) {
 		setChanged();
 		tag.addTrace(getName());
-		LOG.debug("calling observers");
+		//LOG.debug("calling observers");
 		notifyObservers(tag);
+	}
+	
+	/**
+	 * whenever new Tags are read a notification is sent to the observers.
+	 * @param tags a list of tags to be added to the reader
+	 */
+	@Override
+	public void addTags(List<Tag> tags) {
+		setChanged();
+		for (Tag tag : tags) {
+			tag.addTrace(getName());
+			notifyObservers(tags);
+		}
 	}
 
 	/**
@@ -356,9 +370,9 @@ public class RPAdaptor extends BaseReader {
 	public Observation[] identify(String[] readPointNames)
 			throws HardwareException {
 		
-		LOG.debug("identify called an RPAdaptor " + getName());
+		//LOG.debug("identify called an RPAdaptor " + getName());
 		
-		if (inputGenerator != null) {
+		if ((inputGenerator != null) && (countObservers() > 0)) {
 			
 			if (inputGenerator.isReady()) {
 			

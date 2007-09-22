@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -281,6 +282,8 @@ public class EventCycle implements Runnable, Observer {
 		LOG.debug("received update notification");
 		
 		if (arg instanceof Tag) {
+			// process one tag
+			
 			Tag tag = (Tag) arg;
 			LOG.debug("EventCycle: received tag :");
 			//tag.prettyPrint(LOG);
@@ -290,6 +293,20 @@ public class EventCycle implements Runnable, Observer {
 				ie.printStackTrace();
 			} catch (ECSpecValidationException ive) {
 				ive.printStackTrace();
+			}
+		} else if (arg instanceof List) {
+			// process multiple tags at once
+			
+			List<Tag> tagList = (List<Tag>) arg;
+			LOG.debug("EventCycle: received list of tags :");
+			for (Tag tag : tagList) {
+				try {
+					addTag(tag);
+				} catch (ImplementationException ie) {
+					ie.printStackTrace();
+				} catch (ECSpecValidationException ive) {
+					ive.printStackTrace();
+				}
 			}
 		}
 	}
