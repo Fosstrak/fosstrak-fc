@@ -15,8 +15,10 @@ Event Cycle
    [[3]] {{{#Creation}Creation and Flow}}
    
    [[4]] {{{#Sequence}Sequence Diagram}}
+   
+   [[5]] {{{#State}State Diagram}}
 
-   [[5]] {{{#Interface}Interface}}
+   [[6]] {{{#Interface}Interface}}
 
 
 * {Objective}
@@ -159,6 +161,28 @@ try {
 []
 
 [images/ALE/EventCycleSequence.png]
+
+
+
+
+* {State} diagram
+
+	The following state diagram shall visualize the states of an 
+	EventCycle. 
+	
+	The EventCycle is initially null. A ReportsGenerator creates 
+	the EventCycle and starts it (Transition to the wait-state). 
+	Then a subscription for this EventCycle arrives and the EventCycle 
+	is launched (Transition to running state). After the cycle 
+	is over the EventCycle returns into the wait-state. When 
+	an undefine occurs the EventCycle moves into the stopped final 
+	state and becomes destroyed.
+	
+[images/ALE/EventCycleStateDiagram.png]
+
+
+
+
 
 * {Interface}
 
