@@ -26,6 +26,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.accada.ale.server.Tag;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.apache.log4j.Logger;
 
@@ -95,10 +96,18 @@ public class CompositeReader extends org.accada.ale.server.readers.LogicalReader
 			if (arg instanceof Tag) {
 				setChanged();
 				Tag tag = (Tag) arg;
-				tag.setReader(this.readerName);
+				tag.setReader(getName());
 				tag.addTrace(getName());
 				
 				notifyObservers((Tag) arg);
+			} else if (arg instanceof List) {
+				// process multiple tags at once				
+				List<Tag> tagList = (List<Tag>) arg;				
+				for (Tag tag : tagList) {
+					tag.setReader(getName());
+					tag.addTrace(getName());
+				}
+				setChanged();
 			}
 		}
 	}
