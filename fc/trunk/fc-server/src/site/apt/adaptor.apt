@@ -101,6 +101,18 @@ How to implement an Adaptor
 
 
 
+	[]
+	The HAL devices from the Accada project currently do not provide a 
+	polling mechanism. To retrieve Tags from these devices we therefor need 
+	a mechanism to periodically poll the device. We chose an identifyThread 
+	that polls the HAL device in a regular time interval.
+	
+[images/readerAPI/HALAdaptorPolling.png]
+
+
+
+
+
 
 
 
@@ -207,8 +219,19 @@ How to implement an Adaptor
 	tag events that are then processed by the InputGenerator and sent through the 
 	RPAdaptor to the observers (CompositeReader or EventCycle).
 	
+	
 [images/readerAPI/RPAdaptor.png]
 	
+	The reader protocol provides a tag-smoothing by hardware. In the current 
+	implementation of the RPAdaptor we do not use this feature and poll 
+	the adaptor in a regular time intervall through a identifyThread instead. 
+	The main reason why we did without the tag smoothing is mainly an 
+	architectural decision. The reports generation performs this action in 
+	a higher application level again. To allow maximum flexibility 
+	in this high level tag smoothing we wanted to provide as many tags as 
+	possible. 
+	
+[images/readerAPI/RPAdaptorPolling.png]
 	
 	
 	
