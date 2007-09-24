@@ -156,7 +156,7 @@ readerAPI = /LogicalReaders.xml
 	your needs. In the following we will give a short introduction 
 	how you can setup the basic structure for a LogicalReader. You will 
 	find some elaborate Examples for real LogicalReaders later on in this 
-	guide (See FIXME FIXME FIXME).
+	guide (See {{{#Example 1}Example 1}}, {{{#Example 2}Example 2}}, {{{#Example 3}Example 3}}).
 
 	When you want to define your own LogicalReader through an xml-file 
 	you need to obey some restrictions. Some of them are discussed here. 
@@ -318,7 +318,7 @@ example:
 
 
 
-* Clients
+* {Clients}
 
  Accada comes with two different testclients that allow to interactively use a Filtering and
   Collection Server instance. While the first client is a standalone Java application with a
