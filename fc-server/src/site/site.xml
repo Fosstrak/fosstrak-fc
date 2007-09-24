@@ -26,7 +26,8 @@
 			<item name="Reports notification" href="/reports-notification.html"/>
 			<item name="LogicalReader concept" href="/reader-concept.html"/>
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
-			<item name="LogicalReader Management" href="/logical-reader-manager.html"/>		
+			<item name="LogicalReader Management" href="/logical-reader-manager.html"/>
+			<item name="Java doc" href="apidocs/index.html"/>
 		</item>
 	</menu>
 </body>
