@@ -164,7 +164,7 @@ public class LogicalReaderManager {
 	public static void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameException, InUseException, ImmutableReaderException, NonCompositeReaderException, SecurityException, ImplementationException {
 		LogicalReader lgRd = logicalReaders.get(name);
 		if (! (lgRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException("reader is not composite");
+			throw new NonCompositeReaderException();//("reader is not composite");
 		}
 		LRSpec spec = lgRd.getLRSpec();
 		spec.getReaders().removeAll(readers);
@@ -187,7 +187,7 @@ public class LogicalReaderManager {
 	public static void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, NonCompositeReaderException, ReaderLoopException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
 		if (! (logRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException("reader is not composite");
+			throw new NonCompositeReaderException();//"reader is not composite");
 		}
 		LRSpec spec = logRd.getLRSpec();
 		spec.setReaders(readers);
