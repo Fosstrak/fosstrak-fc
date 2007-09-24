@@ -5,9 +5,9 @@
  * by the Apache Axis WSDL2Java emitter.
  */
 
-package _1.wsdl.ale.epcglobal;
+package org.accada.ale.wsdl.ale.epcglobal;
 
-public class InUseException  extends _1.wsdl.ale.epcglobal.ALEException  implements java.io.Serializable {
+public class InUseException  extends org.accada.ale.wsdl.ale.epcglobal.ALEException  implements java.io.Serializable {
 
     public InUseException() {
     }

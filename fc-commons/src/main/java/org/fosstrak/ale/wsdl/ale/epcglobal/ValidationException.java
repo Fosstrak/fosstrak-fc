@@ -5,9 +5,9 @@
  * by the Apache Axis WSDL2Java emitter.
  */
 
-package _1.wsdl.ale.epcglobal;
+package org.accada.ale.wsdl.ale.epcglobal;
 
-public class ValidationException  extends _1.wsdl.ale.epcglobal.ALEException  implements java.io.Serializable {
+public class ValidationException  extends org.accada.ale.wsdl.ale.epcglobal.ALEException  implements java.io.Serializable {
 
     public ValidationException() {
     }
