@@ -8,7 +8,8 @@
    <!-- <simType>org.accada.reader.hal.impl.sim.CmdLineSim</simType> -->
    <!-- <simType>org.accada.reader.hal.impl.sim.SimulatorClient</simType> -->
 <!--    <simTypePropFile>GraphicSimulator.xml</simTypePropFile> -->
-   <simTypePropFile>BatchSimulator.xml</simTypePropFile>
+   <simTypePropFile>/props/BatchSimulator.xml</simTypePropFile>
+   <simTypeDefaultPropFile>/props/BatchSimulator.xml</simTypeDefaultPropFile>
 
    <!-- Read point definition -->
    <numberOfReadPoints>4</numberOfReadPoints>
