@@ -21,6 +21,12 @@ Users guide
 	[[6]] {{{#Example 2}Example 2 - A HAL Protocol LogicalReader}}
 	
 	[[7]] {{{#Example 3}Example 3 - A Complete Example with a CompositeReader}}
+	
+	[[8]] {{{#Clients}Clients}}
+	
+	[[9]] {{{#Displaying}Displaying reports}}
+	
+	
 
 * {Objective}
 
@@ -311,6 +317,125 @@ example:
 
 
 
+
+* Clients
+
+ Accada comes with two different testclients that allow to interactively use a Filtering and
+  Collection Server instance. While the first client is a standalone Java application with a
+  Swing GUI, the second client is a web application that can be accessed with any web browser.
+  
+** Standalone Client
+
+  The <<Filtering and Collection Standalone Client>> is a pure Java application. On our {{{../download.html}download page}}
+  we provide a ZIP file  with all the necessary libraries included.
+
+  The standalone client is configure through the <<<ALEClient.properties>>> file. To get started quickly, it should 
+  be sufficient to adjust the <<<EndPoint>>> option to specify the server to communicate with. All other options
+  can be left unchanged initially. After starting the client with the <<<java -jar fc-client<Version>.jar>>> command,
+  you will see the following screen:
+
+[images/userGuide/GUIClientBasic.png]
+
+  If the endpoint is not correctly configured an error dialog pops up, informing you that the client couldn't connect
+  to the server:
+
+[images/userGuide/GUIClientFailureDialog.png]
+
+  The client's user interface has three sections. Commands can be choosen from a dropdown box in the top section.
+  In the middle, parameters for the selected command can be typed in (not all commands need parameters).
+  Commands are sent to the server by clicking the the <<<execute>>> button. 
+  
+[images/userGuide/GUIClientCommando.png]
+
+  The third section is used to display the server's response.
+
+  []
+
+** Web Client
+
+  The <<Filtering and Collection Web Client>> is based on Java Server Pages (JSP). To set it up, you have to get
+  the Web Client WAR file from our {{{../download.html}download page}} and simply place it into 
+  Tomcat's webapp directory. After restarting Tomcat, the WAR file will be deployed and the Web Client is ready 
+  without any need for configuration (for more information about the deployment process, visit this
+  {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
+  To access the Web Client, visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebClient.jsp>>>.
+  Again, you will see a user interface that is divided into three frames. In the left frame, all methods are listed,
+  while the top right one accepts the method arguments and the bottom right frame displays server responses.
+
+[images/userGuide/WebClient.png]
+
+  Before invoking any other methods, you will have to set the endpoint (i.e., the Filtering and Collection Server
+  to communicate with) by choosing the <<<setEndpoint() >>> method in left frame and inserts the URL of your
+  Filtering and Collection Server in the text field (top right frame). After hitting the <<<Invoke >>> button,
+  the endpoint is set. You can use the <<<getVendorVersion() >>> method, to check if communication between the
+  Web Client and the server works.
+
+  []
+
+** ECSpecifications
+
+   The ECSpecs, i.e. the specifications for the Filtering and Collection Server on how to generate reports,
+   can be transfered to the server using one of the two client applications. The define command gives a
+   specification a name for later reference and a file path with the ECSpec XML file. The
+   ({{{files/ECSpec_LogicalReader1_noFilters_noGroups_current_every30s.xml} example ECSpec_LogicalReader1_noFilters_noGroups_current_every30s.xml}}) is shown below. A specification becomes active after subscribing for
+   it using the subscribe command.
+
++---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:ECSpec includeSpecInReports="false" xmlns:ns1="urn:epcglobal:ale:xsd:1">
+	<logicalReaders soapenc:arrayType="xsd:string[1]" xsi:type="soapenc:Array" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<logicalReader xsi:type="xsd:string">LogicalReader1</logicalReader>
+	</logicalReaders>
+	<boundarySpec xsi:type="ns1:ECBoundarySpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<startTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">30000</repeatPeriod>
+		<stopTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<duration unit="MS" xsi:type="ns1:ECTime">1000</duration>
+		<stableSetInterval unit="MS" xsi:type="ns1:ECTime">0</stableSetInterval>
+		<extension xsi:type="ns1:ECBoundarySpecExtension" xsi:nil="true"/>
+	</boundarySpec>
+	<reportSpecs soapenc:arrayType="ns1:ECReportSpec[1]" xsi:type="soapenc:Array" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<reportSpec reportIfEmpty="true" reportName="Current" reportOnlyOnChange="false" xsi:type="ns1:ECReportSpec">
+			<reportSet set="CURRENT" xsi:type="ns1:ECReportSetSpec"/>
+			<filterSpec xsi:type="ns1:ECFilterSpec" xsi:nil="true"/>
+			<groupSpec xsi:type="soapenc:Array" xsi:nil="true"/>
+			<output includeCount="true" includeEPC="true" includeRawDecimal="true" includeRawHex="true" includeTag="true" xsi:type="ns1:ECReportOutputSpec">
+				<extension xsi:type="ns1:ECReportOutputSpecExtension" xsi:nil="true"/>
+			</output>
+			<extension xsi:type="ns1:ECReportSpecExtension" xsi:nil="true"/>
+		</reportSpec>
+	</reportSpecs>
+	<extension xsi:type="ns1:ECSpecExtension" xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+</ns1:ECSpec>
+
++---
+
+
+
+	
+* {Displaying} reports
+
+   For testing purposes, the class org.accada.reader.rp.client.EventSinkUI from the Accada Reader Client module
+   can be used to receive and display reports.
+
+   The following steps show how to install and execute the EventSinkUI class:
+
+   * Download the Reader RP Client binaries with the dependencies included from the {{{../download.html}download}} section of the website.
+  
+   * Unzip the downloaded file
+   
+   * Make sure a JRE 1.5 or higher is installed and it is added to the path variable.
+   
+   * Start the class in the jar file with the following command:
+     java -cp reader-rp-client-VERSION.jar org.accada.reader.rp.client.EventSinkUI [port]
+
+   * As the port use the TCP port to which the filtering and collection module is sending the reports.
+     The port is specified when subscribing for a specification in the notification URI.
+     (e.g. tcp://localhost:9999 as the notification URI). 
+
+  []
+	
 
 
 
