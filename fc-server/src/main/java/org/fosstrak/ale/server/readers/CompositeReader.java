@@ -101,6 +101,8 @@ public class CompositeReader extends org.accada.ale.server.readers.LogicalReader
 				
 				notifyObservers((Tag) arg);
 			} else if (arg instanceof List) {
+				LOG.debug("processing multiple tags");
+				
 				// process multiple tags at once				
 				List<Tag> tagList = (List<Tag>) arg;				
 				for (Tag tag : tagList) {
@@ -108,6 +110,7 @@ public class CompositeReader extends org.accada.ale.server.readers.LogicalReader
 					tag.addTrace(getName());
 				}
 				setChanged();
+				notifyObservers(tagList);
 			}
 		}
 	}
