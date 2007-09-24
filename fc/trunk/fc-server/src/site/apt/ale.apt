@@ -8,26 +8,70 @@ ALE
 
 * Objective
 
-	The Ale is the responible class for the communication with the applications 
-	of the Layer above.
+	This document shall give a short overview to the ALE class from the 
+	Accada filtering and collection.
 
-	FIXME: write about it.
 
-	FIXME: write about it.
-	
-	FIXME: write about it.
-	
-	FIXME: write about it.
-	
-	FIXME: write about it.
-	
-	FIXME: write about it.
-	
-	FIXME: write about it.
-	
-	FIXME: write about it.
+* Overview
 
+	The Ale is the responsible class for the communication with the applications 
+	of the Layer above. It provides: 
+	 
+	* Interface for the definition and modification of EventCycles
+	
+	* Subscription/unsubscription of report notifications
+	
+	* Administrative methods (eg. VendorVersion).
+
+* EventCycle modification
+
+	The ALE provides the following methods to create or modify EventCycles:
+	 
+	* define: Define takes a two parameters, a name for the EventCycle to 
+		be created and an ECSpec for the definition of the EventCycle.
+	
+	* undefine: When you want to destroy an EventCycle you can call this 
+		method with the appropriate name for the EventCycle to be 
+		destroyed.
+	
+	* getECSpecNames: Returns the names of all EventCycles available in 
+		the ALE.
+
+* Client Subscription:
+	
+	Whenever a client wants to use an ALE service it has to register.
+	
+	* subscribe: A notificationURI will be subscribed to one of the EventCycles. 
+		The EventCycle can be selected through the parameter specName.
+	
+	* unsubscribe: When a client does no more need the service of an EventCycle 
+		it can unsubscribe the notifcationURI.
+	
+	* getSubscribers: Returns a list of all subscribers for the EventCycle 
+		specified.
 
 * Status
 
-	blablabla
+	Currently the ALE supports the functionality of the logical reader API. For 
+	further reading refer to the following documents:
+	 
+	* {{{ALE_features.html} Features}}
+	
+	* {{{apidocs/index.html}Java doc}}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
