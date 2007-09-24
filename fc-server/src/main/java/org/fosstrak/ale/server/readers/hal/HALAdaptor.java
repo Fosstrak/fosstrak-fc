@@ -68,9 +68,11 @@ public class HALAdaptor extends BaseReader {
 		URL url = this.getClass().getResource(propertiesFile);
 		propertiesFile = url.getFile();
 		// create the HAL device
-		hal = new SimulatorController(name, propertiesFile);
+		hal = new SimulatorController(name, propertiesFile, propertiesFile);
 		
 
+		setDisconnected();
+		setStopped();
 		
 		// now need to determine whether the HAL device supports auto-polling or 
 		// whether we need to install a polling thread
@@ -88,7 +90,9 @@ public class HALAdaptor extends BaseReader {
 	@Override
 	public void connectReader() throws ImplementationException {
 		if (!isConnected()) {
+			LOG.debug("Connecting reader " + getName());
 			if (!isAutoPolling()) {
+				LOG.debug("reader " + getName() + " needs a polling thread - setting it up.");
 				// create the polling thread
 				identifyThread = new IdentifyThread(this);
 				identifyThread.setPollingFrequency(pollingFrequency);
@@ -97,6 +101,7 @@ public class HALAdaptor extends BaseReader {
 			}
 			
 			setConnected();
+			LOG.debug("reader " + getName() + " is connected");
 		}
 	}
 
@@ -136,6 +141,8 @@ public class HALAdaptor extends BaseReader {
 				} catch (ImplementationException e) {
 					LOG.info("could not start the reader " + readerName);
 					e.printStackTrace();
+					
+					return;
 				}
 		}
 		
@@ -227,8 +234,9 @@ public class HALAdaptor extends BaseReader {
 		setChanged();
 		for (Tag tag : tags) {
 			tag.addTrace(getName());
-			notifyObservers(tags);
 		}
+		LOG.debug("notifying observers about " + tags.size() + " tags");
+		notifyObservers(tags);
 	}
 
 	/**
@@ -247,7 +255,6 @@ public class HALAdaptor extends BaseReader {
 		if (countObservers() > 0) {
 			
 			observations = hal.identify(hal.getReadPointNames());
-			
 			// only process if there are tags
 			if (observations.length > 0) {
 				List<Tag> tags = new LinkedList<Tag>();

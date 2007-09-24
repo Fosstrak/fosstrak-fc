@@ -296,8 +296,8 @@ public class RPAdaptor extends BaseReader {
 		setChanged();
 		for (Tag tag : tags) {
 			tag.addTrace(getName());
-			notifyObservers(tags);
 		}
+		notifyObservers(tags);
 	}
 
 	/**
