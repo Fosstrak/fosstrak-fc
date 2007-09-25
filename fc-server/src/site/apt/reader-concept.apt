@@ -39,7 +39,8 @@ Logical Reader concept
 	
 	The documentation for the usage of the Logical Reader API 
 	through the LogicalReaderManager is not covered here. 
-	Please refer to the chapter "LogicalReaderManager".
+	Please refer to the chapter 
+	"{{{logical-reader-manager.html}LogicalReader Management}}"
 	
 	
 	
@@ -173,7 +174,15 @@ Logical Reader concept
 	implement several BaseReaders. Therefor the adaptor pattern was used to 
 	generalize the notion of a BaseReader. 
 	
+	The Adaptor pattern translates an interface of a class into another interface. 
+	In this case the interfaces of different readers are translated into the 
+	interface BaseReader.
+	
 [images/readerAPI/AdaptorPattern.png]	
+	
+	One drawback of this pattern is, that for each new reader one has to 
+	implement a new adaptor. Nevertheless, in our opinion the advantages still 
+	overrule the drawbacks.
 	
 	The instantiation of such adaptors are explained in the 
 	section BaseReader.	

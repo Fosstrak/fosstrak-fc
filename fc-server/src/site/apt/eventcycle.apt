@@ -100,7 +100,12 @@ try {
 	
 	Upon creation the EventCycle aquires the readers from the 
 	logical reader API and registers as an Observer. The EventCycle 
-	does not yet accept tags yet.
+	does not accept tags yet.
+	
++-------------------------------------------------+
+// code piece from the EventCycle constructor
+setAcceptTags(false);
++-------------------------------------------------+
 	
 	As soon as a client subscribes for an EventCycle, the 
 	ReportsGenerator starts the demanded EventCycle. Tags are 
@@ -111,10 +116,19 @@ try {
 	the clients by the ReportsGenerator. The tag-filtering is 
 	performed by the class Reports.
 	
++-------------------------------------------------+	
+ECReports ecReports = getECReports();
+
+// notifySubscribers
+generator.notifySubscribers(ecReports);
++-------------------------------------------------+
+	
 	In case where the EventCycle is not repeating (this means that 
 	one EventCycle does not run multiple times) all readers are 
 	deregistered and the EventCycle is destroyed together with 
-	its ReportsGenerator. 
+	its ReportsGenerator. This is preformed by a call to the stop() 
+	method.
+
 
 * {Sequence} Diagram
 

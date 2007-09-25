@@ -79,7 +79,7 @@ Reports Generation
 	The ReportsGenerator is implemented as a state machine with essentially 
 	3 states. When a ReportsGenerator is created it transitions into the 
 	running state and from there directly into one of the two substates 
-	<REQUESTED> or <UNREQUESTED> depending wheter the ALE requestes the 
+	<REQUESTED> or <UNREQUESTED> depending whether the ALE requestes the 
 	ReportsGenerator to deliver tags or not. As long as the ReportsGenerator 
 	is not undefined through the ALE it transitions between the states
 	<REQUESTED> and <UNREQUESTED>.
