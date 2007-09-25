@@ -7,7 +7,7 @@
 		<startTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
 		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">30000</repeatPeriod>
 		<stopTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
-		<duration unit="MS" xsi:type="ns1:ECTime">1000</duration>
+		<duration unit="MS" xsi:type="ns1:ECTime">5000</duration>
 		<stableSetInterval unit="MS" xsi:type="ns1:ECTime">0</stableSetInterval>
 		<extension xsi:type="ns1:ECBoundarySpecExtension" xsi:nil="true"/>
 	</boundarySpec>
