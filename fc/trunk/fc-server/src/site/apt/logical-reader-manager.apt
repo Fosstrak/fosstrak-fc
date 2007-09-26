@@ -1,13 +1,17 @@
        ------
-                                    Logical Reader Manager
+                                    Logical Reader Management
                                     ------
                                     ------
 
 
-Logical Reader Manager
+Logical Reader Management
 
 * Objective
 
+	The Accada Filtering and Collection middleware provides an abstraction from the 
+	physical reader devices. The Logical Reader Management is an interface through which 
+	clients may define logical reader names for use with the Reading API, which maps 
+	to one or more sources/actuators provided by the implementation.
 	This guide should give you a brief overview of the Logical Reader Manager which 
 	manages the list of Logical Readers which are part of a current setting.
 
@@ -26,7 +30,8 @@ Logical Reader Manager
 
 * Implementation
 
-	The main functionality is contained in the methods described below. Most of the
+	The whole functionality is in a single class: LogicalReaderManager.java.
+	The most functionality is contained in the methods described below. Most of the
 	other methods are delegated using reflection to the specializations of a Logical
 	Reader. Please refer to the logical-reader-api for more information about the logical 
 	readers functionality.
