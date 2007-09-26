@@ -239,22 +239,26 @@ public class ReportsGenerator implements Runnable {
 	/**
 	 * This method notifies all subscribers of this report generator about the specified ec reports.
 	 * 
-	 * @param reports ro notify the subscribers about
+	 * @param reports to notify the subscribers about
 	 */
 	public void notifySubscribers(ECReports reports) {
 		
-		LOG.info("Notify subscribers of Spec '" + name + "' with ECReports '" + reports.getSpecName() + "'.");
-		ECReport[] ecReports = reports.getReports();
-		for (ECReport ecReport : ecReports) {
-			LOG.info("  Report: " + ecReport.getReportName());
-			if (ecReport.getGroup() != null) {
-				for (ECReportGroup group : ecReport.getGroup()) {
-					LOG.info("    Group: " + group.getGroupName() + "(" + group.getGroupCount() + " members)");
-					for (ECReportGroupListMember member : group.getGroupList().getMember()) {
-						LOG.info("      " + member.getTag());
+		LOG.debug("Notify subscribers of Spec '" + name + "' with ECReports '" + reports.getSpecName() + "'.");
+		if (reports.getReports() != null){
+			ECReport[] ecReports = reports.getReports();
+			for (ECReport ecReport : ecReports) {
+				LOG.debug("  Report: " + ecReport.getReportName());
+				if (ecReport.getGroup() != null) {
+					for (ECReportGroup group : ecReport.getGroup()) {
+						LOG.debug("    Group: " + group.getGroupName() + "(" + group.getGroupCount() + " members)");
+						if (group.getGroupList().getMember() != null) {
+							for (ECReportGroupListMember member : group.getGroupList().getMember()) {
+								LOG.debug("      " + member.getTag());
+							}
+						}	
 					}
 				}
-			}
+			}	
 		}
 		
 		// notifiy subscribers
