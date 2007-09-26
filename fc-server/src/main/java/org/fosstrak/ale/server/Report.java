@@ -77,6 +77,8 @@ public class Report {
 	/** ec report specification. */
 	private ECReportSpec reportSpec;
 		
+	private ECReportGroup[] globalGroups;
+	
 	/**
 	 * This boolean indicates if the report is ready to create ec reports.
 	 * In some cases the last event cycle must be terminated before a new report can be generated.
@@ -115,25 +117,8 @@ public class Report {
 		// init patterns
 		initFilterPatterns();
 		initGroupPatterns();
-		
-		// check if system is ready to create report
-		if (reportType == ECReportSetEnum.CURRENT || (reportType == ECReportSetEnum.ADDITIONS)) {
-			
-			// if report type is current or if report type is additions and last event cycle is terminated, set true
-			readyToCreateReport = true;
-			
-			// if report type is additions add tags to lastEventCycleTags
-			if (reportType == ECReportSetEnum.ADDITIONS && currentEventCycle.getLastEventCycleTags()  != null) {
-				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
-					lastEventCycleTags.add(tag.getTagID());
-				}
-			}
-		} else {
-			
-			// otherwise set false
-			readyToCreateReport = false;
-		}
-		
+		readyToCreateReport = true;
+
 	}
 
 	/**
@@ -149,19 +134,15 @@ public class Report {
 		
 		// get tag URI
 		String tagURI = tag.getTagID();
-		
-		if (readyToCreateReport) {
-			
-			// check if the tag is a member of this report (use filter patterns and set spec)
-			if (isMember(tagURI)) {
+	
+		// check if the tag is a member of this report (use filter patterns and set spec)
+		if (isMember(tagURI)) {
 	
 				LOG.debug("Event '" + tag + "' is member of report '" + name + "'");
 			
 				// add tag to report
 				addTagToReportGroup(tag);
-			}
-		}
-
+		}	
 	}
 	
 	/**
@@ -177,23 +158,19 @@ public class Report {
 	}
 
 	/**
-	 * This method returns the ec report.
+	 * This method returns the new ec report.
 	 * 
 	 * @return ec report
 	 * @throws ECSpecValidationException if a tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
-				
-		if (readyToCreateReport) {
-			if (reportSpec.isReportIfEmpty() || !isEmpty()) {
-				return report;
-			} else {
-				return null;
-			}
-		} else {
-			
-			if (reportType == ECReportSetEnum.ADDITIONS) {
+
+		//generate new ECReport
+		report = new ECReport();
+		report.setReportName(name);
+
+		if (reportType == ECReportSetEnum.ADDITIONS) {
 				
 				// get additional tags
 				Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -212,11 +189,18 @@ public class Report {
 				
 				// add tags to report with filtering
 				readyToCreateReport = true;
-				reportType = ECReportSetEnum.CURRENT;
+
 				for (Tag tag : reportTags.values()) {
 					addTag(tag);
 				}
 	
+			} else if(reportType == ECReportSetEnum.CURRENT){
+
+				// get tags from current EventCycle 
+				for (Tag tag : currentEventCycle.getTags()) {
+					addTag(tag);
+				}
+
 			} else {
 				
 				// get removed tags
@@ -236,17 +220,16 @@ public class Report {
 				
 				// add tags to report with filtering
 				readyToCreateReport = true;
-				reportType = ECReportSetEnum.CURRENT;
 				for (Tag tag : reportTags.values()) {
 					addTag(tag);
 				}
 			}
+			
 			if (reportSpec.isReportIfEmpty() || !isEmpty()) {
 				return report;
 			} else {
 				return null;
 			}
-		}
 	}
 
 	//
@@ -323,16 +306,7 @@ public class Report {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	private boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
-		
-		if (reportType == ECReportSetEnum.ADDITIONS) {
-			
-			// if report type is additions the tag is only a member if it wasn't a member of the last event cycle
-			if (lastEventCycleTags.contains(tagURI)) {
-				return false;
-			}
-			
-		}
-		
+				
 		// check if tagURI is member of an exclude pattern
 		for (Pattern pattern : excludePatterns) {
 			if (pattern.isMember(tagURI)) {
@@ -426,6 +400,7 @@ public class Report {
 				 newGroups[0] = matchingGroup;
 			}
 			report.setGroup(newGroups);
+			globalGroups = newGroups;
 				
 		}
 		
@@ -494,12 +469,13 @@ public class Report {
 		if (groups != null) {
 			for (ECReportGroup group : groups) {
 				ECReportGroupList groupList = group.getGroupList();
+				groupList.setMember(null);
 				if (groupList.getMember().length > 0) {
 					return false;
 				}
 			}
 		}
 		return true;
-		
+
 	}
 }
