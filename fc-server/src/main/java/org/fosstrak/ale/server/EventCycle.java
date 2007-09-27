@@ -426,6 +426,8 @@ public class EventCycle implements Runnable, Observer {
 				generator.notifySubscribers(ecReports);
 				
 				// store the current tags into the old tags
+				// explicitly clear the tags 
+				lastEventCycleTags = null;
 				lastEventCycleTags = tags;
 				tags = new HashSet<Tag>();
 				
