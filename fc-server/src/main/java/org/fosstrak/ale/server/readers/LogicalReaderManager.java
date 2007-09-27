@@ -39,12 +39,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
+import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 
 
 import org.accada.ale.server.ALE;
 import org.accada.ale.server.readers.gen.LogicalReaders;
+import org.accada.ale.server.readers.gen.MyHashMapType;
 import org.accada.ale.server.readers.gen.ObjectFactory;
 import org.accada.ale.wsdl.ale.epcglobal.Define;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
@@ -74,7 +76,7 @@ public class LogicalReaderManager {
 	private static final String JAXB_CONTEXT = "org.accada.ale.server.readers.gen";
 	
 	/** default path to file which contains the initial logical reader configuration. */
-	private static final String LOAD_FILEPATH = "/LogicalReaders.xml";
+	private static final String LOAD_FILEPATH = "/HALTest_RP.xml";
 	
 	/** default path to file which contains the current setting of logical readers. */
 	private static final String STORE_FILEPATH = "/StoreLogicalReaders.xml";
@@ -164,7 +166,7 @@ public class LogicalReaderManager {
 	public static void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameException, InUseException, ImmutableReaderException, NonCompositeReaderException, SecurityException, ImplementationException {
 		LogicalReader lgRd = logicalReaders.get(name);
 		if (! (lgRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException();//("reader is not composite");
+			throw new NonCompositeReaderException(name);//("reader is not composite");
 		}
 		LRSpec spec = lgRd.getLRSpec();
 		spec.getReaders().removeAll(readers);
@@ -187,7 +189,7 @@ public class LogicalReaderManager {
 	public static void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, NonCompositeReaderException, ReaderLoopException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
 		if (! (logRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException();//"reader is not composite");
+			throw new NonCompositeReaderException(name);//"reader is not composite");
 		}
 		LRSpec spec = logRd.getLRSpec();
 		spec.setReaders(readers);
@@ -457,13 +459,14 @@ public class LogicalReaderManager {
 					genLogReaders.getLogicalReader().add(genLogRd);
 				}
 			}
-			marshaller.marshal(logicalReaders, new FileOutputStream("storeFile.xml"));			
+			// store the file to the file path
+			marshaller.marshal(genLogReaders, new FileOutputStream(storeFilePath));			
 
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 		
-		LOG.debug("LogicalReaderManager successfully stored");
+		LOG.info("LogicalReaderManager successfully stored");
 	}
 	
 	
@@ -478,6 +481,9 @@ public class LogicalReaderManager {
 			reader = LogicalReaderManager.logicalReaders.get(readerName);
 		} else {
 			LOG.error("reader " + readerName + " not contained in LogicalReaderManager");
+			for(LogicalReader logicalreader: logicalReaders.values()){
+				LOG.error(logicalreader.getName());
+			}
 		}
 		return reader;
 	}
