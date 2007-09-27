@@ -46,7 +46,6 @@ import javax.xml.validation.Schema;
 
 import org.accada.ale.server.ALE;
 import org.accada.ale.server.readers.gen.LogicalReaders;
-import org.accada.ale.server.readers.gen.MyHashMapType;
 import org.accada.ale.server.readers.gen.ObjectFactory;
 import org.accada.ale.wsdl.ale.epcglobal.Define;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
