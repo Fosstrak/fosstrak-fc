@@ -22,7 +22,7 @@
  * ECSpec.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package org.accada.ale.xsd.ale.epcglobal;
@@ -59,21 +59,21 @@ public class ECSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
     public ECSpec(
            java.math.BigDecimal schemaVersion,
            java.util.Calendar creationDate,
+           boolean includeSpecInReports,
            java.lang.String[] logicalReaders,
            org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec boundarySpec,
            org.accada.ale.xsd.ale.epcglobal.ECReportSpec[] reportSpecs,
            org.accada.ale.xsd.ale.epcglobal.ECSpecExtension extension,
-           org.apache.axis.message.MessageElement [] _any,
-           boolean includeSpecInReports) {
+           org.apache.axis.message.MessageElement [] _any) {
         super(
             schemaVersion,
             creationDate);
+        this.includeSpecInReports = includeSpecInReports;
         this.logicalReaders = logicalReaders;
         this.boundarySpec = boundarySpec;
         this.reportSpecs = reportSpecs;
         this.extension = extension;
         this._any = _any;
-        this.includeSpecInReports = includeSpecInReports;
     }
 
 
