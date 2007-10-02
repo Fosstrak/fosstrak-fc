@@ -197,27 +197,40 @@ public class ALEServiceBindingImpl implements org.accada.ale.wsdl.ale.epcglobal.
 		return null;
 	}
 
+	/**
+	 * returns a list containing all logical reader names in the LogicalReaderManager.
+	 * @param parms holder for void
+	 * @return an array of String holding the logical reader names
+	 */
 	public java.lang.String[] getLogicalReaderNames(org.accada.ale.wsdl.ale.epcglobal.EmptyParms parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException 
 	{
-    	System.out.println("calling LogicalReaderManager to get the logicalReaderNames");
     	List<String> lrmReaders = LogicalReaderManager.getLogicalReaderNames();
     	String[] readers = new String[lrmReaders.size()];
-    	for (int i=0; i<lrmReaders.size(); i++) {
+    	for (int i = 0; i < lrmReaders.size(); i++) {
     		readers[i] = lrmReaders.get(i);
     	}
     	
     	return readers;
 	}
 
+	/**
+	 * returns an LRSpec of the reader specified.
+	 * @param parms Serialization for the name of the reader 
+	 * @return an LRSpec for the specified reader
+	 */
 	public org.accada.ale.xsd.ale.epcglobal.LRSpec getLRSpec(org.accada.ale.wsdl.ale.epcglobal.GetLRSpec parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException 
 	{
 		org.accada.ale.server.readers.LRSpec lrspec = LogicalReaderManager.getLRSpec(parms.getName());
-		org.accada.ale.xsd.ale.epcglobal.LRSpec spec = new org.accada.ale.xsd.ale.epcglobal.LRSpec();
-		spec.setIsComposite(lrspec.isComposite());
-		spec.setProperties(objectArrayToLRPropertiesArray(lrspec.getProperties().toArray()));
-		spec.setReaders(objectArrayToStringArray(lrspec.getReaders().toArray()));
-		// FIXME set readerType in vendor extension
+		org.accada.ale.xsd.ale.epcglobal.LRSpec spec = null;
 		
+		if (lrspec != null) {
+			spec = new org.accada.ale.xsd.ale.epcglobal.LRSpec();
+			spec.setIsComposite(lrspec.isComposite());
+			spec.setReaders(stringListToStringArray(lrspec.getReaders()));
+			spec.setProperties(propertiesListToLRPropertiesArray(lrspec.getProperties()));
+			
+			// FIXME set readerType in vendor extension
+		}
 		return spec;		
 	}
 
@@ -255,19 +268,48 @@ public class ALEServiceBindingImpl implements org.accada.ale.wsdl.ale.epcglobal.
 		return LogicalReaderManager.getPropertyValue(parms.getName(), parms.getPropertyName());
 	}
 
-	
-	private java.lang.String[] objectArrayToStringArray(Object[] arr) {
+	/**
+	 * converts a List&gt;String&lt; into a string array.
+	 * @param list List&gt;String&lt; to be converted
+	 * @return string array
+	 */
+	private java.lang.String[] stringListToStringArray(List<String> list) {
+		if (list == null) {
+			return null;
+		}
+		
+		Object[] arr = list.toArray();
+		if (arr == null) {
+			return null;
+		}
+		
 		java.lang.String[] narr = new java.lang.String[arr.length];
 		for (int i = 0; i < arr.length; i++) {
 			narr[i] = (String) arr[i];
 		}
 		return narr;
+		
 	}
 	
-	private org.accada.ale.xsd.ale.epcglobal.LRProperty[] objectArrayToLRPropertiesArray(Object[] arr) {
+	/**
+	 * converts List containing LRProperties into a org.accada.ale.xsd.ale.epcglobal.LRPropertys array.
+	 * @param list List&gt;org.accada.ale.server.readers.LRProperty&lt; to be converted into an array 
+	 * @return array of org.accada.ale.xsd.ale.epcglobal.LRProperty
+	 */
+	private org.accada.ale.xsd.ale.epcglobal.LRProperty[] propertiesListToLRPropertiesArray(List<org.accada.ale.server.readers.LRProperty> list) {
+		if (list == null) {
+			return null;
+		}
+		
+		Object[] arr = list.toArray();
+		if (arr == null) {
+			return null;
+		}
+		
 		org.accada.ale.xsd.ale.epcglobal.LRProperty[] narr = new org.accada.ale.xsd.ale.epcglobal.LRProperty[arr.length];
 		for (int i = 0; i < arr.length; i++) {
-			narr[i] = (org.accada.ale.xsd.ale.epcglobal.LRProperty) arr[i];
+			org.accada.ale.server.readers.LRProperty p = (org.accada.ale.server.readers.LRProperty) arr[i];
+			narr[i] = new org.accada.ale.xsd.ale.epcglobal.LRProperty(p.getName(), p.getValue());
 		}
 		return narr;
 	}
