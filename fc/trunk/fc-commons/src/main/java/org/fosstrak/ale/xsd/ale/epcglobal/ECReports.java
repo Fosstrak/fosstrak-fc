@@ -22,7 +22,7 @@
  * ECReports.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package org.accada.ale.xsd.ale.epcglobal;
@@ -67,29 +67,29 @@ public class ECReports  extends org.accada.ale.xsd.epcglobal.Document  implement
     public ECReports(
            java.math.BigDecimal schemaVersion,
            java.util.Calendar creationDate,
-           org.accada.ale.xsd.ale.epcglobal.ECReport[] reports,
-           org.accada.ale.xsd.ale.epcglobal.ECReportsExtension extension,
-           org.accada.ale.xsd.ale.epcglobal.ECSpec ECSpec,
-           org.apache.axis.message.MessageElement [] _any,
            java.lang.String specName,
            java.util.Calendar date,
            java.lang.String ALEID,
            long totalMilliseconds,
            org.accada.ale.xsd.ale.epcglobal.ECTerminationCondition terminationCondition,
-           java.lang.String schemaURL) {
+           java.lang.String schemaURL,
+           org.accada.ale.xsd.ale.epcglobal.ECReport[] reports,
+           org.accada.ale.xsd.ale.epcglobal.ECReportsExtension extension,
+           org.accada.ale.xsd.ale.epcglobal.ECSpec ECSpec,
+           org.apache.axis.message.MessageElement [] _any) {
         super(
             schemaVersion,
             creationDate);
-        this.reports = reports;
-        this.extension = extension;
-        this.ECSpec = ECSpec;
-        this._any = _any;
         this.specName = specName;
         this.date = date;
         this.ALEID = ALEID;
         this.totalMilliseconds = totalMilliseconds;
         this.terminationCondition = terminationCondition;
         this.schemaURL = schemaURL;
+        this.reports = reports;
+        this.extension = extension;
+        this.ECSpec = ECSpec;
+        this._any = _any;
     }
 
 

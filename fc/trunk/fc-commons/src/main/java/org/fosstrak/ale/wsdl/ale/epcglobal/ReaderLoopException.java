@@ -1,15 +1,40 @@
+/*
+ * Copyright (C) 2007 ETH Zurich
+ *
+ * This file is part of Accada (www.accada.org).
+ *
+ * Accada is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1, as published by the Free Software Foundation.
+ *
+ * Accada is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Accada; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
+
 /**
  * ReaderLoopException.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package org.accada.ale.wsdl.ale.epcglobal;
 
 public class ReaderLoopException  extends org.accada.ale.wsdl.ale.epcglobal.ALEException  implements java.io.Serializable {
-
     public ReaderLoopException() {
+    }
+
+    public ReaderLoopException(
+           java.lang.String reason) {
+        super(
+            reason);
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -41,7 +66,7 @@ public class ReaderLoopException  extends org.accada.ale.wsdl.ale.epcglobal.ALEE
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(ReaderLoopException.class);
+        new org.apache.axis.description.TypeDesc(ReaderLoopException.class, true);
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", "ReaderLoopException"));
@@ -78,4 +103,11 @@ public class ReaderLoopException  extends org.accada.ale.wsdl.ale.epcglobal.ALEE
             _javaType, _xmlType, typeDesc);
     }
 
+
+    /**
+     * Writes the exception data to the faultDetails
+     */
+    public void writeDetails(javax.xml.namespace.QName qname, org.apache.axis.encoding.SerializationContext context) throws java.io.IOException {
+        context.serialize(qname, null, this);
+    }
 }
