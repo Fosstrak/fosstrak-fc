@@ -20,34 +20,25 @@
 
 package org.accada.ale.server.readers;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
-import javax.xml.namespace.QName;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 
 
 import org.accada.ale.server.ALE;
 import org.accada.ale.server.readers.gen.LogicalReaders;
 import org.accada.ale.server.readers.gen.ObjectFactory;
-import org.accada.ale.wsdl.ale.epcglobal.Define;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
 import org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
@@ -57,7 +48,6 @@ import org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException;
 import org.accada.ale.wsdl.ale.epcglobal.ReaderLoopException;
 import org.accada.ale.wsdl.ale.epcglobal.ValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.SecurityException;
-import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 
 /**
@@ -75,7 +65,7 @@ public class LogicalReaderManager {
 	private static final String JAXB_CONTEXT = "org.accada.ale.server.readers.gen";
 	
 	/** default path to file which contains the initial logical reader configuration. */
-	private static final String LOAD_FILEPATH = "/HALTest_RP.xml";
+	private static final String LOAD_FILEPATH = "/LogicalReaders.xml";
 	
 	/** default path to file which contains the current setting of logical readers. */
 	private static final String STORE_FILEPATH = "/StoreLogicalReaders.xml";
@@ -251,8 +241,9 @@ public class LogicalReaderManager {
 	 * @throws InUseException Is thrown when you try to undefine a Reader that is still referenced by EC or CC
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImmutableReaderException whenever you want to change a immutable reader
+	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public static void undefine(String name) throws NoSuchNameException, InUseException, SecurityException, ImmutableReaderException {
+	public static void undefine(String name) throws NoSuchNameException, InUseException, SecurityException, ImmutableReaderException, ImplementationException {
 		// the logicalReader must delete himself from its observables
 		LOG.debug("undefining reader " + name);
 		LogicalReader reader = LogicalReaderManager.getLogicalReader(name);
@@ -267,6 +258,9 @@ public class LogicalReaderManager {
 		if (reader instanceof CompositeReader) {
 			CompositeReader composite = (CompositeReader) reader;
 			composite.unregisterAsObserver();
+		} else if (reader instanceof BaseReader) {
+			BaseReader basereader = (BaseReader) reader;
+			basereader.disconnectReader();
 		}
 		logicalReaders.remove(name);
 	}
