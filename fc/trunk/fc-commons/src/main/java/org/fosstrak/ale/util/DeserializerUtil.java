@@ -31,6 +31,8 @@ import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
+import org.accada.ale.xsd.ale.epcglobal.LRProperty;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.axis.MessageContext;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.DeserializationContext;
@@ -111,6 +113,44 @@ public class DeserializerUtil {
 		return (ECReports)deserialize(inputStream, ECReports.class, ecReportsQName);
 		
 	}
+	
+	
+	/**
+	 * This method deserializes a LRSpec from an input stream
+	 * @param inputStream to deserialize
+	 * @return LRSpec
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRSpec deserializeLRSpec(InputStream inputStream) throws Exception {
+		QName lrSpecQName  = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
+		return (LRSpec)deserialize(inputStream, LRSpec.class, lrSpecQName);
+	}
+
+	/**
+	 * This method deserializes a LRSpec from an file path
+	 * @param pathName to deserialize
+	 * @return LRSpec
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRSpec deserializeLRSpec(String pathName) throws FileNotFoundException, Exception {
+		System.out.println("deserializing LRSpec from String " + pathName);
+		QName lrSpecQName = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
+		return (LRSpec)deserialize(new FileInputStream(pathName), LRSpec.class, lrSpecQName);
+	}
+
+	
+	/**
+	 * 
+	 * This method deserializes a LRProperty from an input stream
+	 * @param inputStream to deserialize
+	 * @return LRProperty
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRProperty deserializeLRProperty(InputStream inputStream) throws Exception {
+		QName lrPropertyQName = new QName("urn:epcglobal:ale:xsd:1", "LRProperty");
+		return (LRProperty)deserialize(inputStream, LRProperty.class, lrPropertyQName);
+	}
+	
 	
 	//
 	// private methods
