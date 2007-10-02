@@ -45,5 +45,20 @@
 <LI><A HREF="Input.jsp?method=296" TARGET="inputs"> getStandardVersion()</A></LI>
 <LI><A HREF="Input.jsp?method=301" TARGET="inputs"> getVendorVersion()</A></LI>
 </UL>
+<BR/>
+<BR/>
+LogicalReader API<BR/>
+<UL>
+<LI><A HREF="Input.jsp?method=305" TARGET="inputs"> define(String readerName, LRSpec spec)</A></LI>
+<LI><A HREF="Input.jsp?method=306" TARGET="inputs"> undefine(String readerName)</A></LI>
+<LI><A HREF="Input.jsp?method=307" TARGET="inputs"> update(String readerName, LRSpec spec)</A></LI>
+<LI><A HREF="Input.jsp?method=308" TARGET="inputs"> getLogicalReaderNames()</A></LI>
+<LI><A HREF="Input.jsp?method=309" TARGET="inputs"> getLRSpec(String readerName)</A></LI>
+<LI><A HREF="Input.jsp?method=310" TARGET="inputs"> addReaders(String readerName, String[] readers)</A></LI>
+<LI><A HREF="Input.jsp?method=311" TARGET="inputs"> setReaders(String readerName, String[] readers)</A></LI>
+<LI><A HREF="Input.jsp?method=312" TARGET="inputs"> removeReaders(String readerName, String[] readers)</A></LI>
+<LI><A HREF="Input.jsp?method=313" TARGET="inputs"> setProperties(String readerName, LRProperty[] properties</A></LI>
+<LI><A HREF="Input.jsp?method=314" TARGET="inputs"> getPropertyValue(String readerName, String propertyName)</A></LI>
+</UL>
 </BODY>
 </HTML>
