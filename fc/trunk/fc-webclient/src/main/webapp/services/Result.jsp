@@ -1436,7 +1436,7 @@ if(getVendorVersion301mtemp == null){
 }
 break;
 
-// defineReader
+// defineReader(String readerName, LRSpec spec)
 case 305:
 	gotMethod = true;
 	String readerName = request.getParameter("readerName");
@@ -1446,26 +1446,40 @@ case 305:
 	<%
 	dR1.setName(readerName);
 	dR1.setSpec(org.accada.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
-	org.accada.ale.wsdl.ale.epcglobal.DefineReaderResult ret  = sampleALEServicePortTypeProxyid.defineReader(dR1);
-	if (ret == null) {
+	org.accada.ale.wsdl.ale.epcglobal.DefineReaderResult defineReaderRes  = sampleALEServicePortTypeProxyid.defineReader(dR1);
 	%>
-		<%=ret%>
+	<%=defineReaderRes%>
 	<%
-	} else {
-		String retString = ret.toString(); 
-	%>
-	<%=retString%>
-	<%
-	}
 break;
 
-// undefineReader
+// undefineReader(String readerName)
 case 306:
-break;
+	gotMethod = true;
+	%>
+	<jsp:useBean id="undefineReader1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.UndefineReader" />
+	<%
+	undefineReader1.setName(request.getParameter("readerName"));
+	org.accada.ale.wsdl.ale.epcglobal.UndefineReaderResult undefineReaderRes = sampleALEServicePortTypeProxyid.undefineReader(undefineReader1);
+	%>
+	<%=undefineReaderRes%>
+	<%
+	break;
 
-// updateReader
+// updateReader(String readerName, LRSpec spec)
 case 307:
-break;
+	gotMethod = true;
+	readerName = request.getParameter("readerName");
+	specFilePath = request.getParameter("specFilePath");
+	%>
+	<jsp:useBean id="updateReader1" class="org.accada.ale.wsdl.ale.epcglobal.UpdateReader" />
+	<%
+	updateReader1.setName(readerName);
+	updateReader1.setSpec(org.accada.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
+	org.accada.ale.wsdl.ale.epcglobal.UpdateReaderResult updateReaderRes = sampleALEServicePortTypeProxyid.updateReader(updateReader1);
+	%>
+	<%=updateReaderRes%>
+	<%
+	break;
 
 // getLogicalReaderNames
 case 308:
@@ -1510,10 +1524,75 @@ case 309:
 		}
 		org.accada.ale.xsd.ale.epcglobal.LRSpecExtension getLRSpecExtension = lrSpecGetLRSpec.getExtension();
 		%>
-		isComposite:<%=getLRSpecIsComposite%>
-		logicalReaders:<%=getLRSpecReadersString%>
-		<%
+		<table border="0">
+		<tr><th style="text-align:left;"><%=request.getParameter("readerName")%></th>
+			<th style="text-align:left;">&nbsp;</th></tr>
+		<tr><td style="text-align:left;">isComposite:</td>
+			<td style="text-align:left;"><%=getLRSpecIsComposite%></td></tr>
+		<tr><td style="text-align:left;">LogicalReaders:</td>
+			<td style="text-align:left;"><%=getLRSpecReadersString%></td></tr>
+		<tr><td style="text-align:left; vertical-align:top;">LRProperties:</td>
+			<td style="text-align:left;">
+			<table><tr><th style="border-right:1px solid black; text-align:left;">name</th>
+				<th style="text-align:left;">value</th></tr>
+			<%
+			if (getLRSpecProperties != null) {
+				for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : getLRSpecProperties) {
+					%>
+					<td style="border-right:1px solid black; text-align:left;"><%=prop.getName()%></td>
+					<td style="text-align:left;"><%=prop.getValue()%></td></tr>
+					<%
+				}
+			} else {
+				%>
+				<td style="border-right:1px solid black; text-align:left;"><%=getLRSpecProperties%></td><td>&nbsp;</td>
+				<%
+			}
+			%>
+			</table>
+			</td></tr>
+		</table>
+			<%
 	}
+	break;
+
+// addReaders(String readerName, String[] readers);
+case 310:
+	gotMethod = true;
+	%>
+	NOT Implemented yet
+	<%
+	
+	break;
+	
+	
+// setReaders(String readerName, String[] readers);
+case 311:
+	gotMethod = true;
+	%>
+	NOT Implemented yet
+	<%
+	
+	break;
+	
+	
+// removeReaders(String readerName, String[] readers);
+case 312:
+	gotMethod = true;
+	%>
+	NOT Implemented yet
+	<%
+	
+	break;
+	
+	
+// setProperties(String readerName, LRProperty[] readers);
+case 313:
+	gotMethod = true;
+	%>
+	NOT Implemented yet
+	<%
+	
 	break;
 	
 // getPropertyValue(String readerName, String propertyName)
