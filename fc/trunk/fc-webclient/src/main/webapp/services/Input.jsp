@@ -299,6 +299,163 @@ valid = false;
 </FORM>
 <%
 break;
+
+
+// sawielan
+
+// define(String name, LRSpec spec)
+// update(String name, LRSpec spec)
+case 305:
+case 307:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<table border="0">
+	<tr>
+		<td colspan="3" align="left">params:</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readerName:</td>
+		<td align="left"><input type="text" name="readerName" size="50"></td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">specFilePath:</td>
+		<td align="left"><input type="text" name="specFilePath" size="50"></td>
+	</tr>
+</table>
+<br>
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+break;
+
+// undefine(String name)
+// getLRSpec (String name)
+case 306:
+case 309:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<table border="0">
+	<tr>
+		<td colspan="3" align="left">params:</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readerName:</td>
+		<td align="left"><input type="text" name="readerName" size="50"></td>
+	</tr>
+</table>
+<br>
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+break;
+
+// getLogicalReaderNames()
+case 308:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+
+break;
+
+case 310:
+case 311:
+case 312:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<table border="0">
+	<tr>
+		<td colspan="3" align="left">params:</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readerName:</td>
+		<td align="left"><input type="text" name="readerName" size="50"></td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readersArray filePath:</td>
+		<td align="left"><input type="text" name="filePath" size="50"></td>
+	</tr>
+</table>
+<br>
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+break;
+
+
+case 313:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<table border="0">
+	<tr>
+		<td colspan="3" align="left">params:</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readerName:</td>
+		<td align="left"><input type="text" name="readerName" size="50"></td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">LRPropertiesArray filePath:</td>
+		<td align="left"><input type="text" name="filePath" size="50"></td>
+	</tr>
+</table>
+<br>
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+break;
+
+case 314:
+valid = false;
+%>
+<form method="post" action="Result.jsp" target="result">
+<input type="hidden" name="method" value="<%=method%>">
+<table border="0">
+	<tr>
+		<td colspan="3" align="left">params:</td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">readerName:</td>
+		<td align="left"><input type="text" name="readerName" size="50"></td>
+	</tr>
+	<tr>
+		<td width="5%"></td>
+		<td colspan="2" align="left">propertyName:</td>
+		<td align="left"><input type="text" name="propertyName" size="50"></td>
+	</tr>
+</table>
+<br>
+<input type="submit" value="Invoke">
+<input type="reset" value="Clear">
+</form>
+<%
+break;
+
+
 case 1111111111:
 valid = false;
 %>
