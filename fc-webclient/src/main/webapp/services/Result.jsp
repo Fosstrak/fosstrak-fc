@@ -1435,7 +1435,108 @@ if(getVendorVersion301mtemp == null){
         <%
 }
 break;
+
+// defineReader
+case 305:
+	gotMethod = true;
+	String readerName = request.getParameter("readerName");
+	specFilePath = request.getParameter("specFilePath");
+	%>
+	<jsp:useBean id="dR1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.DefineReader" />
+	<%
+	dR1.setName(readerName);
+	dR1.setSpec(org.accada.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
+	org.accada.ale.wsdl.ale.epcglobal.DefineReaderResult ret  = sampleALEServicePortTypeProxyid.defineReader(dR1);
+	if (ret == null) {
+	%>
+		<%=ret%>
+	<%
+	} else {
+		String retString = ret.toString(); 
+	%>
+	<%=retString%>
+	<%
+	}
+break;
+
+// undefineReader
+case 306:
+break;
+
+// updateReader
+case 307:
+break;
+
+// getLogicalReaderNames
+case 308:
+	gotMethod = true;
+	%>
+	<jsp:useBean id="gLRN1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.EmptyParms" />
+	<%
+	java.lang.String[] readersArray = sampleALEServicePortTypeProxyid.getLogicalReaderNames(gLRN1);
+	if (readersArray == null) {
+	%>
+	<%=readersArray%>
+	<%
+	} else {
+		java.util.List readersList = java.util.Arrays.asList(readersArray);
+		String readers = readersList.toString();
+		%>
+		<%=readers%>
+		<%
+	}
+		
+	break;
+
+// getLRSpec(String readerName);
+case 309:
+	gotMethod = true;
+	%>
+	<jsp:useBean id="getLRSpec1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.GetLRSpec" />
+	<%
+	getLRSpec1.setName(request.getParameter("readerName"));
+	org.accada.ale.xsd.ale.epcglobal.LRSpec lrSpecGetLRSpec = sampleALEServicePortTypeProxyid.getLRSpec(getLRSpec1);
+	if (lrSpecGetLRSpec == null) {
+		%>
+		<%=lrSpecGetLRSpec%>
+		<%
+	} else {
+		boolean getLRSpecIsComposite = lrSpecGetLRSpec.getIsComposite();
+		org.accada.ale.xsd.ale.epcglobal.LRProperty[] getLRSpecProperties = lrSpecGetLRSpec.getProperties();
+		java.lang.String[] getLRSpecReaders = lrSpecGetLRSpec.getReaders();
+		java.lang.String getLRSpecReadersString = null;
+		if (getLRSpecReaders != null) {
+			getLRSpecReadersString = java.util.Arrays.asList(getLRSpecReaders).toString();
+		}
+		org.accada.ale.xsd.ale.epcglobal.LRSpecExtension getLRSpecExtension = lrSpecGetLRSpec.getExtension();
+		%>
+		isComposite:<%=getLRSpecIsComposite%>
+		logicalReaders:<%=getLRSpecReadersString%>
+		<%
+	}
+	break;
+	
+// getPropertyValue(String readerName, String propertyName)
+case 314:
+	gotMethod = true;
+	%>
+	<jsp:useBean id="gPropertyValue1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.GetPropertyValue" />
+	<%
+	gPropertyValue1.setName(request.getParameter("readerName"));
+	gPropertyValue1.setPropertyName(request.getParameter("propertyName"));
+	java.lang.String propertyValue = sampleALEServicePortTypeProxyid.getPropertyValue(gPropertyValue1);
+	if (propertyValue == null) {
+		%>
+		<%=propertyValue%>
+		<%
+	} else {
+		%>
+		<%=propertyValue%>
+		<%
+	}
+	break;
 }
+
 } catch (Exception e) { 
 %>
 exception: <%= e %>
