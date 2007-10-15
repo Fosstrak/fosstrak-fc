@@ -30,14 +30,14 @@ package org.accada.ale.wsdl.ale.epcglobal;
 public class SetProperties  implements java.io.Serializable {
     private java.lang.String name;
 
-    private org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties;
+    private org.accada.ale.xsd.ale.epcglobal.LRProperties properties;
 
     public SetProperties() {
     }
 
     public SetProperties(
            java.lang.String name,
-           org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties) {
+           org.accada.ale.xsd.ale.epcglobal.LRProperties properties) {
            this.name = name;
            this.properties = properties;
     }
@@ -68,7 +68,7 @@ public class SetProperties  implements java.io.Serializable {
      * 
      * @return properties
      */
-    public org.accada.ale.xsd.ale.epcglobal.LRProperty[] getProperties() {
+    public org.accada.ale.xsd.ale.epcglobal.LRProperties getProperties() {
         return properties;
     }
 
@@ -78,7 +78,7 @@ public class SetProperties  implements java.io.Serializable {
      * 
      * @param properties
      */
-    public void setProperties(org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties) {
+    public void setProperties(org.accada.ale.xsd.ale.epcglobal.LRProperties properties) {
         this.properties = properties;
     }
 
@@ -99,7 +99,7 @@ public class SetProperties  implements java.io.Serializable {
               this.name.equals(other.getName()))) &&
             ((this.properties==null && other.getProperties()==null) || 
              (this.properties!=null &&
-              java.util.Arrays.equals(this.properties, other.getProperties())));
+              this.properties.equals(other.getProperties())));
         __equalsCalc = null;
         return _equals;
     }
@@ -115,15 +115,7 @@ public class SetProperties  implements java.io.Serializable {
             _hashCode += getName().hashCode();
         }
         if (getProperties() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getProperties());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getProperties(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getProperties().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -144,10 +136,8 @@ public class SetProperties  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("properties");
         elemField.setXmlName(new javax.xml.namespace.QName("", "properties"));
-        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperty"));
-        elemField.setMinOccurs(0);
+        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperties"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("", "property"));
         typeDesc.addFieldDesc(elemField);
     }
 

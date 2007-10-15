@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2007 ETH Zurich
+ *
+ * This file is part of Accada (www.accada.org).
+ *
+ * Accada is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1, as published by the Free Software Foundation.
+ *
+ * Accada is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Accada; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
+
 /**
  * ALEServiceBindingStub.java
  *
@@ -813,15 +833,6 @@ public class ALEServiceBindingStub extends org.apache.axis.client.Stub implement
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">AddReaders>readers");
-            cachedSerQNames.add(qName);
-            cls = java.lang.String[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
-            qName2 = new javax.xml.namespace.QName("", "reader");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
-
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">AddReadersResult");
             cachedSerQNames.add(qName);
             cls = org.accada.ale.wsdl.ale.epcglobal.AddReadersResult.class;
@@ -836,15 +847,6 @@ public class ALEServiceBindingStub extends org.apache.axis.client.Stub implement
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">RemoveReaders>readers");
-            cachedSerQNames.add(qName);
-            cls = java.lang.String[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
-            qName2 = new javax.xml.namespace.QName("", "reader");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
-
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">RemoveReadersResult");
             cachedSerQNames.add(qName);
             cls = org.accada.ale.wsdl.ale.epcglobal.RemoveReadersResult.class;
@@ -852,30 +854,12 @@ public class ALEServiceBindingStub extends org.apache.axis.client.Stub implement
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">SetProperties>properties");
-            cachedSerQNames.add(qName);
-            cls = org.accada.ale.xsd.ale.epcglobal.LRProperty[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperty");
-            qName2 = new javax.xml.namespace.QName("", "property");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
-
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">SetPropertiesResult");
             cachedSerQNames.add(qName);
             cls = org.accada.ale.wsdl.ale.epcglobal.SetPropertiesResult.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
-
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">SetReaders>readers");
-            cachedSerQNames.add(qName);
-            cls = java.lang.String[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
-            qName2 = new javax.xml.namespace.QName("", "reader");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
 
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", ">SetReadersResult");
             cachedSerQNames.add(qName);
@@ -1145,24 +1129,6 @@ public class ALEServiceBindingStub extends org.apache.axis.client.Stub implement
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", ">LRSpec>properties");
-            cachedSerQNames.add(qName);
-            cls = org.accada.ale.xsd.ale.epcglobal.LRProperty[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperty");
-            qName2 = new javax.xml.namespace.QName("", "property");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
-
-            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", ">LRSpec>readers");
-            cachedSerQNames.add(qName);
-            cls = java.lang.String[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
-            qName2 = new javax.xml.namespace.QName("", "reader");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
-
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "ECBoundarySpec");
             cachedSerQNames.add(qName);
             cls = org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec.class;
@@ -1412,6 +1378,20 @@ public class ALEServiceBindingStub extends org.apache.axis.client.Stub implement
             cachedSerClasses.add(cls);
             cachedSerFactories.add(org.apache.axis.encoding.ser.BaseSerializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleSerializerFactory.class, cls, qName));
             cachedDeserFactories.add(org.apache.axis.encoding.ser.BaseDeserializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleDeserializerFactory.class, cls, qName));
+
+            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders");
+            cachedSerQNames.add(qName);
+            cls = org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperties");
+            cachedSerQNames.add(qName);
+            cls = org.accada.ale.xsd.ale.epcglobal.LRProperties.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperty");
             cachedSerQNames.add(qName);

@@ -30,12 +30,16 @@ package org.accada.ale.xsd.ale.epcglobal;
 public class LRSpecExtension  implements java.io.Serializable, org.apache.axis.encoding.AnyContentType {
     private org.apache.axis.message.MessageElement [] _any;
 
+    private java.lang.String readerType;
+
     public LRSpecExtension() {
     }
 
     public LRSpecExtension(
-           org.apache.axis.message.MessageElement [] _any) {
+           org.apache.axis.message.MessageElement [] _any,
+           java.lang.String readerType) {
            this._any = _any;
+           this.readerType = readerType;
     }
 
 
@@ -58,6 +62,26 @@ public class LRSpecExtension  implements java.io.Serializable, org.apache.axis.e
         this._any = _any;
     }
 
+
+    /**
+     * Gets the readerType value for this LRSpecExtension.
+     * 
+     * @return readerType
+     */
+    public java.lang.String getReaderType() {
+        return readerType;
+    }
+
+
+    /**
+     * Sets the readerType value for this LRSpecExtension.
+     * 
+     * @param readerType
+     */
+    public void setReaderType(java.lang.String readerType) {
+        this.readerType = readerType;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof LRSpecExtension)) return false;
@@ -72,7 +96,10 @@ public class LRSpecExtension  implements java.io.Serializable, org.apache.axis.e
         _equals = true && 
             ((this._any==null && other.get_any()==null) || 
              (this._any!=null &&
-              java.util.Arrays.equals(this._any, other.get_any())));
+              java.util.Arrays.equals(this._any, other.get_any()))) &&
+            ((this.readerType==null && other.getReaderType()==null) || 
+             (this.readerType!=null &&
+              this.readerType.equals(other.getReaderType())));
         __equalsCalc = null;
         return _equals;
     }
@@ -95,6 +122,9 @@ public class LRSpecExtension  implements java.io.Serializable, org.apache.axis.e
                 }
             }
         }
+        if (getReaderType() != null) {
+            _hashCode += getReaderType().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -105,6 +135,12 @@ public class LRSpecExtension  implements java.io.Serializable, org.apache.axis.e
 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRSpecExtension"));
+        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("readerType");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "readerType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
     }
 
     /**

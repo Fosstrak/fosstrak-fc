@@ -30,9 +30,9 @@ package org.accada.ale.xsd.ale.epcglobal;
 public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements java.io.Serializable, org.apache.axis.encoding.AnyContentType {
     private java.lang.Boolean isComposite;
 
-    private java.lang.String[] readers;
+    private org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers;
 
-    private org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties;
+    private org.accada.ale.xsd.ale.epcglobal.LRProperties properties;
 
     private org.accada.ale.xsd.ale.epcglobal.LRSpecExtension extension;
 
@@ -45,8 +45,8 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
            java.math.BigDecimal schemaVersion,
            java.util.Calendar creationDate,
            java.lang.Boolean isComposite,
-           java.lang.String[] readers,
-           org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties,
+           org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers,
+           org.accada.ale.xsd.ale.epcglobal.LRProperties properties,
            org.accada.ale.xsd.ale.epcglobal.LRSpecExtension extension,
            org.apache.axis.message.MessageElement [] _any) {
         super(
@@ -85,7 +85,7 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
      * 
      * @return readers
      */
-    public java.lang.String[] getReaders() {
+    public org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders getReaders() {
         return readers;
     }
 
@@ -95,7 +95,7 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
      * 
      * @param readers
      */
-    public void setReaders(java.lang.String[] readers) {
+    public void setReaders(org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers) {
         this.readers = readers;
     }
 
@@ -105,7 +105,7 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
      * 
      * @return properties
      */
-    public org.accada.ale.xsd.ale.epcglobal.LRProperty[] getProperties() {
+    public org.accada.ale.xsd.ale.epcglobal.LRProperties getProperties() {
         return properties;
     }
 
@@ -115,7 +115,7 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
      * 
      * @param properties
      */
-    public void setProperties(org.accada.ale.xsd.ale.epcglobal.LRProperty[] properties) {
+    public void setProperties(org.accada.ale.xsd.ale.epcglobal.LRProperties properties) {
         this.properties = properties;
     }
 
@@ -176,10 +176,10 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
               this.isComposite.equals(other.getIsComposite()))) &&
             ((this.readers==null && other.getReaders()==null) || 
              (this.readers!=null &&
-              java.util.Arrays.equals(this.readers, other.getReaders()))) &&
+              this.readers.equals(other.getReaders()))) &&
             ((this.properties==null && other.getProperties()==null) || 
              (this.properties!=null &&
-              java.util.Arrays.equals(this.properties, other.getProperties()))) &&
+              this.properties.equals(other.getProperties()))) &&
             ((this.extension==null && other.getExtension()==null) || 
              (this.extension!=null &&
               this.extension.equals(other.getExtension()))) &&
@@ -201,26 +201,10 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
             _hashCode += getIsComposite().hashCode();
         }
         if (getReaders() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getReaders());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getReaders(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getReaders().hashCode();
         }
         if (getProperties() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getProperties());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getProperties(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getProperties().hashCode();
         }
         if (getExtension() != null) {
             _hashCode += getExtension().hashCode();
@@ -256,18 +240,14 @@ public class LRSpec  extends org.accada.ale.xsd.epcglobal.Document  implements j
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("readers");
         elemField.setXmlName(new javax.xml.namespace.QName("", "readers"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
+        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("", "reader"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("properties");
         elemField.setXmlName(new javax.xml.namespace.QName("", "properties"));
-        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperty"));
-        elemField.setMinOccurs(0);
+        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRProperties"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("", "property"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("extension");
