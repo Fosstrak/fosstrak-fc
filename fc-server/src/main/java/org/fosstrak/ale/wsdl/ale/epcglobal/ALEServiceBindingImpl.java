@@ -28,7 +28,9 @@ import java.util.List;
 
 import org.accada.ale.server.ALE;
 import org.accada.ale.server.readers.LogicalReaderManager;
-import org.apache.commons.logging.Log;
+import org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders;
+import org.accada.ale.xsd.ale.epcglobal.LRProperties;
+import org.accada.ale.xsd.ale.epcglobal.LRSpecExtension;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,6 +40,8 @@ import org.apache.log4j.Logger;
  */
 public class ALEServiceBindingImpl implements org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType {
 
+	private static Logger log = Logger.getLogger(ALEServiceBindingImpl.class);
+	
 	/**
 	 * constructor that initializes the ale if not already done.
 	 */
@@ -136,58 +140,108 @@ public class ALEServiceBindingImpl implements org.accada.ale.wsdl.ale.epcglobal.
 	
 	public org.accada.ale.wsdl.ale.epcglobal.DefineReaderResult defineReader(org.accada.ale.wsdl.ale.epcglobal.DefineReader parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException, org.accada.ale.wsdl.ale.epcglobal.ValidationException 
 	{
+		log.debug("defineReader " + parms.getName());
 		
-		Logger log = Logger.getLogger(ALEServiceBindingImpl.class);
-		log.debug("got define message");
-		
+		if (parms.getSpec() == null) {
+			log.error("no specification!!!");
+			throw new ImplementationException("no specification - reader not created", ImplementationExceptionSeverity.ERROR);
+		}
+			
 		// create the LRSpec
 		org.accada.ale.server.readers.LRSpec spec = new org.accada.ale.server.readers.LRSpec();
 		if (parms.getSpec().getIsComposite()) {
 			spec.setComposite();
 		}
+		
+		// generate the properties
 		List<org.accada.ale.server.readers.LRProperty> props = new LinkedList<org.accada.ale.server.readers.LRProperty>();
-		for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getSpec().getProperties()) {
-			props.add(new org.accada.ale.server.readers.LRProperty(prop.getName(), prop.getValue()));
+		if (parms.getSpec().getProperties() != null) {
+			if (parms.getSpec().getProperties().getProperty() != null) {
+				for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getSpec().getProperties().getProperty()) {
+					props.add(new org.accada.ale.server.readers.LRProperty(prop.getName(), prop.getValue()));
+				}
+			}
 		}
 		spec.setProperties(props);
 		
+		// generate the readers
 		List<String> readers = new LinkedList<String>();
-		for (String reader : parms.getSpec().getReaders()) {
-			readers.add(reader);
+		if (parms.getSpec().getReaders() != null) {
+			if (parms.getSpec().getReaders().getLogicalReader() != null) {
+				for (String reader : parms.getSpec().getReaders().getLogicalReader()) {
+					readers.add(reader);
+				}
+			}
 		}
 		spec.setReaders(readers);
 		
-		// FIXME determine reader-type from vendor-extension
-		//spec.setReaderType(parms.getSpec().getReaderType());
+		// set the reader type
+		if (parms.getSpec().getExtension() == null) {
+			log.error("spec extension empty");
+			throw new ImplementationException("spec extension empty - reader not defined", ImplementationExceptionSeverity.ERROR);
+		} 
+		if (parms.getSpec().getExtension().getReaderType() == null) {
+			log.error("readertype in specExtension not set");
+			throw new ImplementationException("readertype in specExtension not set - reader not defined", ImplementationExceptionSeverity.ERROR);
+		}
+		spec.setReaderType(parms.getSpec().getExtension().getReaderType());
 	
 		LogicalReaderManager.define(parms.getName(), spec);
+		log.debug("defineReader done");
 		return null;
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.UpdateReaderResult updateReader(org.accada.ale.wsdl.ale.epcglobal.UpdateReader parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.ReaderLoopException, org.accada.ale.wsdl.ale.epcglobal.ValidationException 
 	{
+		log.debug("updateReader " + parms.getName());
+		
+		if (parms.getSpec() == null) {
+			log.error("no specification!!!");
+			throw new ImplementationException("no specification - reader not updated", ImplementationExceptionSeverity.ERROR);
+		}
+			
 		// create the LRSpec
 		org.accada.ale.server.readers.LRSpec spec = new org.accada.ale.server.readers.LRSpec();
 		if (parms.getSpec().getIsComposite()) {
 			spec.setComposite();
 		}
+		
+		// generate the properties
 		List<org.accada.ale.server.readers.LRProperty> props = new LinkedList<org.accada.ale.server.readers.LRProperty>();
-		for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getSpec().getProperties()) {
-			props.add(new org.accada.ale.server.readers.LRProperty(prop.getName(), prop.getValue()));
+		if (parms.getSpec().getProperties() != null) {
+			if (parms.getSpec().getProperties().getProperty() != null) {
+				for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getSpec().getProperties().getProperty()) {
+					props.add(new org.accada.ale.server.readers.LRProperty(prop.getName(), prop.getValue()));
+				}
+			}
 		}
 		spec.setProperties(props);
 		
+		// generate the readers
 		List<String> readers = new LinkedList<String>();
-		for (String reader : parms.getSpec().getReaders()) {
-			readers.add(reader);
+		if (parms.getSpec().getReaders() != null) {
+			if (parms.getSpec().getReaders().getLogicalReader() != null) {
+				for (String reader : parms.getSpec().getReaders().getLogicalReader()) {
+					readers.add(reader);
+				}
+			}
 		}
 		spec.setReaders(readers);
-		// FIXME determine readerType from vendor extension
-		//spec.setReaderType(parms.getSpec().getReaderType());
-	
+		
+		// set the reader type
+		if (parms.getSpec().getExtension() == null) {
+			log.error("spec extension empty");
+			throw new ImplementationException("spec extension empty - reader not defined", ImplementationExceptionSeverity.ERROR);
+		} 
+		if (parms.getSpec().getExtension().getReaderType() == null) {
+			log.error("readertype in specExtension not set");
+			throw new ImplementationException("readertype in specExtension not set - reader not defined", ImplementationExceptionSeverity.ERROR);
+		}
+		spec.setReaderType(parms.getSpec().getExtension().getReaderType());
+		
 		LogicalReaderManager.update(parms.getName(), spec);
+		log.debug("updateReader done");
 		return null;
-
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.UndefineReaderResult undefineReader(org.accada.ale.wsdl.ale.epcglobal.UndefineReader parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException 
@@ -223,39 +277,53 @@ public class ALEServiceBindingImpl implements org.accada.ale.wsdl.ale.epcglobal.
 		org.accada.ale.server.readers.LRSpec lrspec = LogicalReaderManager.getLRSpec(parms.getName());
 		org.accada.ale.xsd.ale.epcglobal.LRSpec spec = null;
 		
+		// create a new LRSpec for the return-type
 		if (lrspec != null) {
 			spec = new org.accada.ale.xsd.ale.epcglobal.LRSpec();
 			spec.setIsComposite(lrspec.isComposite());
-			spec.setReaders(stringListToStringArray(lrspec.getReaders()));
-			spec.setProperties(propertiesListToLRPropertiesArray(lrspec.getProperties()));
 			
-			// FIXME set readerType in vendor extension
+			LRLogicalReaders lr = new LRLogicalReaders();
+			lr.setLogicalReader(stringListToStringArray(lrspec.getReaders()));
+			spec.setReaders(lr);
+			
+			LRProperties lrprops = new LRProperties();
+			lrprops.setProperty(propertiesListToLRPropertiesArray(lrspec.getProperties()));
+			spec.setProperties(lrprops);
+			
+			// create a new LRSpecExtension and store the reader type in this extension
+			LRSpecExtension extension = new LRSpecExtension();
+			extension.setReaderType(lrspec.getReaderType());
+			spec.setExtension(extension);
 		}
 		return spec;		
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.AddReadersResult addReaders(org.accada.ale.wsdl.ale.epcglobal.AddReaders parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException, org.accada.ale.wsdl.ale.epcglobal.ReaderLoopException, org.accada.ale.wsdl.ale.epcglobal.ValidationException 
 	{
-		LogicalReaderManager.addReaders(parms.getName(), Arrays.asList(parms.getReaders()));
+		LogicalReaderManager.addReaders(parms.getName(), Arrays.asList(parms.getReaders().getLogicalReader()));
 		return null;
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.SetReadersResult setReaders(org.accada.ale.wsdl.ale.epcglobal.SetReaders parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException, org.accada.ale.wsdl.ale.epcglobal.ReaderLoopException, org.accada.ale.wsdl.ale.epcglobal.ValidationException 
 	{
-		LogicalReaderManager.setReaders(parms.getName(), Arrays.asList(parms.getReaders()));
+		LogicalReaderManager.setReaders(parms.getName(), Arrays.asList(parms.getReaders().getLogicalReader()));
 		return null;
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.RemoveReadersResult removeReaders(org.accada.ale.wsdl.ale.epcglobal.RemoveReaders parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException 
 	{
-		LogicalReaderManager.removeReaders(parms.getName(), Arrays.asList(parms.getReaders()));
+		LogicalReaderManager.removeReaders(parms.getName(), Arrays.asList(parms.getReaders().getLogicalReader()));
 		return null;
 	}
 
 	public org.accada.ale.wsdl.ale.epcglobal.SetPropertiesResult setProperties(org.accada.ale.wsdl.ale.epcglobal.SetProperties parms) throws java.rmi.RemoteException, org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException, org.accada.ale.wsdl.ale.epcglobal.InUseException, org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException, org.accada.ale.wsdl.ale.epcglobal.ImplementationException, org.accada.ale.wsdl.ale.epcglobal.SecurityException, org.accada.ale.wsdl.ale.epcglobal.ValidationException 
 	{
 		List<org.accada.ale.server.readers.LRProperty> props = new ArrayList<org.accada.ale.server.readers.LRProperty>();
-		for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getProperties()) {
+		if (parms.getProperties().getProperty() == null) {
+			throw new ImplementationException("no properties defined! - not updating reader", ImplementationExceptionSeverity.ERROR);
+		}
+		
+		for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : parms.getProperties().getProperty()) {
 			props.add(new org.accada.ale.server.readers.LRProperty(prop.getName(), prop.getValue()));
 		}
 		
