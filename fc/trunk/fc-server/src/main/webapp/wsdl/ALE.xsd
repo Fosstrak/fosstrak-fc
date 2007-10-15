@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ale="urn:epcglobal:ale:xsd:1" xmlns:epcglobal="urn:epcglobal:xsd:1" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:epcglobal:ale:xsd:1" version="1.0">
+<xsd:schema 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:ale="urn:epcglobal:ale:xsd:1" 
+	xmlns:epcglobal="urn:epcglobal:xsd:1"  
+	attributeFormDefault="unqualified" 
+	elementFormDefault="unqualified" 
+	targetNamespace="urn:epcglobal:ale:xsd:1" 
+	version="1.0">
     <xsd:annotation>
         <xsd:documentation xml:lang="en">
             <epcglobal:copyright> Copyright (C) 2005, 2004 Epcglobal Inc., All Rights Reserved. </epcglobal:copyright>
@@ -13,10 +20,12 @@
     </xsd:annotation>
 
     <xsd:import namespace="urn:epcglobal:xsd:1" schemaLocation="./EpcGlobal.xsd"/>
+	<xsd:import namespace="urn:epcglobal:xsd:1" schemaLocation="./ALElr.xsd"/>
 
     <!-- ALE ELEMENTS -->
     <xsd:element name="ECSpec" type="ale:ECSpec"/>
     <xsd:element name="ECReports" type="ale:ECReports"/>
+	<xsd:element name="ECLogicalReaders" type="ale:ECLogicalReaders"/>
     <!-- ALE TYPES -->
     <!-- items listed alphabetically by name -->
     <!-- Some element types accommodate extensibility in the manner of 
