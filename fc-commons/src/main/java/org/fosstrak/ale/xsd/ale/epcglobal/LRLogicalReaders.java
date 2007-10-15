@@ -19,73 +19,62 @@
  */
 
 /**
- * RemoveReaders.java
+ * LRLogicalReaders.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package org.accada.ale.wsdl.ale.epcglobal;
+package org.accada.ale.xsd.ale.epcglobal;
 
-public class RemoveReaders  implements java.io.Serializable {
-    private java.lang.String name;
+public class LRLogicalReaders  extends org.accada.ale.xsd.epcglobal.Document  implements java.io.Serializable {
+    private java.lang.String[] logicalReader;
 
-    private org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers;
-
-    public RemoveReaders() {
+    public LRLogicalReaders() {
     }
 
-    public RemoveReaders(
-           java.lang.String name,
-           org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers) {
-           this.name = name;
-           this.readers = readers;
-    }
-
-
-    /**
-     * Gets the name value for this RemoveReaders.
-     * 
-     * @return name
-     */
-    public java.lang.String getName() {
-        return name;
+    public LRLogicalReaders(
+           java.math.BigDecimal schemaVersion,
+           java.util.Calendar creationDate,
+           java.lang.String[] logicalReader) {
+        super(
+            schemaVersion,
+            creationDate);
+        this.logicalReader = logicalReader;
     }
 
 
     /**
-     * Sets the name value for this RemoveReaders.
+     * Gets the logicalReader value for this LRLogicalReaders.
      * 
-     * @param name
+     * @return logicalReader
      */
-    public void setName(java.lang.String name) {
-        this.name = name;
+    public java.lang.String[] getLogicalReader() {
+        return logicalReader;
     }
 
 
     /**
-     * Gets the readers value for this RemoveReaders.
+     * Sets the logicalReader value for this LRLogicalReaders.
      * 
-     * @return readers
+     * @param logicalReader
      */
-    public org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders getReaders() {
-        return readers;
+    public void setLogicalReader(java.lang.String[] logicalReader) {
+        this.logicalReader = logicalReader;
     }
 
+    public java.lang.String getLogicalReader(int i) {
+        return this.logicalReader[i];
+    }
 
-    /**
-     * Sets the readers value for this RemoveReaders.
-     * 
-     * @param readers
-     */
-    public void setReaders(org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers) {
-        this.readers = readers;
+    public void setLogicalReader(int i, java.lang.String _value) {
+        this.logicalReader[i] = _value;
     }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof RemoveReaders)) return false;
-        RemoveReaders other = (RemoveReaders) obj;
+        if (!(obj instanceof LRLogicalReaders)) return false;
+        LRLogicalReaders other = (LRLogicalReaders) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -93,13 +82,10 @@ public class RemoveReaders  implements java.io.Serializable {
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = true && 
-            ((this.name==null && other.getName()==null) || 
-             (this.name!=null &&
-              this.name.equals(other.getName()))) &&
-            ((this.readers==null && other.getReaders()==null) || 
-             (this.readers!=null &&
-              this.readers.equals(other.getReaders())));
+        _equals = super.equals(obj) && 
+            ((this.logicalReader==null && other.getLogicalReader()==null) || 
+             (this.logicalReader!=null &&
+              java.util.Arrays.equals(this.logicalReader, other.getLogicalReader())));
         __equalsCalc = null;
         return _equals;
     }
@@ -110,12 +96,17 @@ public class RemoveReaders  implements java.io.Serializable {
             return 0;
         }
         __hashCodeCalc = true;
-        int _hashCode = 1;
-        if (getName() != null) {
-            _hashCode += getName().hashCode();
-        }
-        if (getReaders() != null) {
-            _hashCode += getReaders().hashCode();
+        int _hashCode = super.hashCode();
+        if (getLogicalReader() != null) {
+            for (int i=0;
+                 i<java.lang.reflect.Array.getLength(getLogicalReader());
+                 i++) {
+                java.lang.Object obj = java.lang.reflect.Array.get(getLogicalReader(), i);
+                if (obj != null &&
+                    !obj.getClass().isArray()) {
+                    _hashCode += obj.hashCode();
+                }
+            }
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -123,21 +114,17 @@ public class RemoveReaders  implements java.io.Serializable {
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(RemoveReaders.class, true);
+        new org.apache.axis.description.TypeDesc(LRLogicalReaders.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:wsdl:1", "RemoveReaders"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("name");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "name"));
+        elemField.setFieldName("logicalReader");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "logicalReader"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("readers");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "readers"));
-        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders"));
-        elemField.setNillable(false);
+        elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
     }
 

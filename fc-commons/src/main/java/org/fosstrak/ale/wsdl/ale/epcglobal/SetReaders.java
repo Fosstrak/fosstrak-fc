@@ -30,14 +30,14 @@ package org.accada.ale.wsdl.ale.epcglobal;
 public class SetReaders  implements java.io.Serializable {
     private java.lang.String name;
 
-    private java.lang.String[] readers;
+    private org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers;
 
     public SetReaders() {
     }
 
     public SetReaders(
            java.lang.String name,
-           java.lang.String[] readers) {
+           org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers) {
            this.name = name;
            this.readers = readers;
     }
@@ -68,7 +68,7 @@ public class SetReaders  implements java.io.Serializable {
      * 
      * @return readers
      */
-    public java.lang.String[] getReaders() {
+    public org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders getReaders() {
         return readers;
     }
 
@@ -78,7 +78,7 @@ public class SetReaders  implements java.io.Serializable {
      * 
      * @param readers
      */
-    public void setReaders(java.lang.String[] readers) {
+    public void setReaders(org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders readers) {
         this.readers = readers;
     }
 
@@ -99,7 +99,7 @@ public class SetReaders  implements java.io.Serializable {
               this.name.equals(other.getName()))) &&
             ((this.readers==null && other.getReaders()==null) || 
              (this.readers!=null &&
-              java.util.Arrays.equals(this.readers, other.getReaders())));
+              this.readers.equals(other.getReaders())));
         __equalsCalc = null;
         return _equals;
     }
@@ -115,15 +115,7 @@ public class SetReaders  implements java.io.Serializable {
             _hashCode += getName().hashCode();
         }
         if (getReaders() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getReaders());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getReaders(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getReaders().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -144,10 +136,8 @@ public class SetReaders  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("readers");
         elemField.setXmlName(new javax.xml.namespace.QName("", "readers"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
+        elemField.setXmlType(new javax.xml.namespace.QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("", "reader"));
         typeDesc.addFieldDesc(elemField);
     }
 
