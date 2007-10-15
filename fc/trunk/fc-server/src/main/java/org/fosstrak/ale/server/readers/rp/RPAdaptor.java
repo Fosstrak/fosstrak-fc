@@ -189,8 +189,10 @@ public class RPAdaptor extends BaseReader {
 		if (notificationPoint.getPort() != notificationChannelPort) {
 			disconnect = true;
 		}
-		
-		
+		// disconnect when the reader was not connected before
+		if (inputGenerator != null && !inputGenerator.isReady()) {
+			disconnect = true;
+		}
 		
 		LOG.debug("readTimeInterval " + readTimeInterval);
 		LOG.debug(String.format("commandChannelHost %s on port %d", 
@@ -352,10 +354,12 @@ public class RPAdaptor extends BaseReader {
 		
 		setLRSpec(spec);
 		if (extractConnectionSettings()) {
+			LOG.debug("restarting reader " + getName());
 			disconnectReader();
+			// set the connection settings again and then start the reader
+			extractConnectionSettings();
 			connectReader();
 		}
-		
 		start();
 	}
 	
