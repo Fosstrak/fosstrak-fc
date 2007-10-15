@@ -1436,6 +1436,10 @@ if(getVendorVersion301mtemp == null){
 }
 break;
 
+
+
+
+// sawielan
 // defineReader(String readerName, LRSpec spec)
 case 305:
 	gotMethod = true;
@@ -1516,8 +1520,8 @@ case 309:
 		<%
 	} else {
 		boolean getLRSpecIsComposite = lrSpecGetLRSpec.getIsComposite();
-		org.accada.ale.xsd.ale.epcglobal.LRProperty[] getLRSpecProperties = lrSpecGetLRSpec.getProperties();
-		java.lang.String[] getLRSpecReaders = lrSpecGetLRSpec.getReaders();
+		org.accada.ale.xsd.ale.epcglobal.LRProperty[] getLRSpecProperties = lrSpecGetLRSpec.getProperties().getProperty();
+		java.lang.String[] getLRSpecReaders = lrSpecGetLRSpec.getReaders().getLogicalReader();
 		java.lang.String getLRSpecReadersString = null;
 		if (getLRSpecReaders != null) {
 			getLRSpecReadersString = java.util.Arrays.asList(getLRSpecReaders).toString();
@@ -1548,9 +1552,17 @@ case 309:
 				<td style="border-right:1px solid black; text-align:left;"><%=getLRSpecProperties%></td><td>&nbsp;</td>
 				<%
 			}
-			%>
+				%>
 			</table>
 			</td></tr>
+		<%
+			if (lrSpecGetLRSpec != null && lrSpecGetLRSpec.getExtension() != null) {
+				%>
+				<tr><td style="text-align:left">ReaderType:</td>
+					<td><%=lrSpecGetLRSpec.getExtension().getReaderType()%></td></tr>
+				<%
+			}
+			%>
 		</table>
 			<%
 	}
@@ -1559,10 +1571,15 @@ case 309:
 // addReaders(String readerName, String[] readers);
 case 310:
 	gotMethod = true;
-	%>
-	NOT Implemented yet
+	%>	
+	<jsp:useBean id="addReaders1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.AddReaders" />
 	<%
-	
+	addReaders1.setName(request.getParameter("readerName"));
+	addReaders1.setReaders(org.accada.ale.util.DeserializerUtil.deserializeLRLogicalReaders(request.getParameter("filePath")));
+	org.accada.ale.wsdl.ale.epcglobal.AddReadersResult addReaderRes = sampleALEServicePortTypeProxyid.addReaders(addReaders1);
+	%>
+	<%=addReaderRes%>
+	<%
 	break;
 	
 	
@@ -1570,19 +1587,28 @@ case 310:
 case 311:
 	gotMethod = true;
 	%>
-	NOT Implemented yet
+	<jsp:useBean id="setReaders1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.SetReaders" />
 	<%
-	
-	break;
+	setReaders1.setName(request.getParameter("readerName"));
+	setReaders1.setReaders(org.accada.ale.util.DeserializerUtil.deserializeLRLogicalReaders(request.getParameter("filePath")));
+	org.accada.ale.wsdl.ale.epcglobal.SetReadersResult setReaderRes = sampleALEServicePortTypeProxyid.setReaders(setReaders1);
+	%>
+	<%=setReaderRes%>
+	<%	break;
 	
 	
 // removeReaders(String readerName, String[] readers);
 case 312:
 	gotMethod = true;
 	%>
-	NOT Implemented yet
+	<jsp:useBean id="removeReaders1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.RemoveReaders" />
 	<%
-	
+	removeReaders1.setName(request.getParameter("readerName"));
+	removeReaders1.setReaders(org.accada.ale.util.DeserializerUtil.deserializeLRLogicalReaders(request.getParameter("filePath")));
+	org.accada.ale.wsdl.ale.epcglobal.RemoveReadersResult removeReaderRes = sampleALEServicePortTypeProxyid.removeReaders(removeReaders1);
+	%>
+	<%=removeReaderRes%>
+	<%
 	break;
 	
 	
@@ -1590,9 +1616,14 @@ case 312:
 case 313:
 	gotMethod = true;
 	%>
-	NOT Implemented yet
+	<jsp:useBean id="setProperties1" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.SetProperties" />
 	<%
-	
+	setProperties1.setName(request.getParameter("readerName"));
+	setProperties1.setProperties(org.accada.ale.util.DeserializerUtil.deserializeLRProperties(request.getParameter("filePath")) );
+	org.accada.ale.wsdl.ale.epcglobal.SetPropertiesResult setPropRes  = sampleALEServicePortTypeProxyid.setProperties(setProperties1);
+	%>
+	<%=setPropRes%>
+	<%	
 	break;
 	
 // getPropertyValue(String readerName, String propertyName)
@@ -1604,15 +1635,9 @@ case 314:
 	gPropertyValue1.setName(request.getParameter("readerName"));
 	gPropertyValue1.setPropertyName(request.getParameter("propertyName"));
 	java.lang.String propertyValue = sampleALEServicePortTypeProxyid.getPropertyValue(gPropertyValue1);
-	if (propertyValue == null) {
-		%>
-		<%=propertyValue%>
-		<%
-	} else {
-		%>
-		<%=propertyValue%>
-		<%
-	}
+	%>
+	<%=propertyValue%>
+	<%
 	break;
 }
 
