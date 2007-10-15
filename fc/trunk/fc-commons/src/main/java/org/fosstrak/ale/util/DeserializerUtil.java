@@ -27,30 +27,33 @@ import java.io.InputStream;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 
-import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
+import org.accada.ale.xsd.ale.epcglobal.LRLogicalReaders;
+import org.accada.ale.xsd.ale.epcglobal.LRProperties;
 import org.accada.ale.xsd.ale.epcglobal.LRProperty;
 import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.axis.MessageContext;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.DeserializationContext;
-import org.apache.axis.encoding.TypeMapping;
 import org.apache.axis.message.PrefixedQName;
 import org.apache.axis.message.RPCElement;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import org.accada.ale.xsd.ale.epcglobal.LRSpecExtension;
+
 /**
  * This class provides some methods to deserialize ec specifications and reports.
  * 
  * @author regli
+ * @author sawielan
  */
 public class DeserializerUtil {
 
-	/**	logger */
+	/**	logger. */
 	public static final Logger LOG = Logger.getLogger(DeserializerUtil.class);
 	
 	/**
@@ -64,7 +67,7 @@ public class DeserializerUtil {
 		
 		QName ecSpecQName = new QName("urn:epcglobal:ale:xsd:1", "ECSpec");
 
-		return (ECSpec)deserialize(inputStream, ECSpec.class, ecSpecQName);
+		return (ECSpec) deserialize(inputStream, ECSpec.class, ecSpecQName);
 		
 	}
 	
@@ -80,7 +83,7 @@ public class DeserializerUtil {
 		
 		QName ecSpecQName = new QName("urn:epcglobal:ale:xsd:1", "ECSpec");
 		
-		return (ECSpec)deserialize(new FileInputStream(pathName), ECSpec.class, ecSpecQName);
+		return (ECSpec) deserialize(new FileInputStream(pathName), ECSpec.class, ecSpecQName);
 		
 	}
 	
@@ -95,7 +98,7 @@ public class DeserializerUtil {
 		
 		QName ecReportQName = new QName("urn:epcglobal:ale:xsd:1", "ECReport");
 		
-		return (ECReport)deserialize(inputStream, ECReport.class, ecReportQName);
+		return (ECReport) deserialize(inputStream, ECReport.class, ecReportQName);
 		
 	}
 	
@@ -107,50 +110,111 @@ public class DeserializerUtil {
 	 * @throws Exception if deserialization fails
 	 */
 	public static ECReports deserializeECReports(InputStream inputStream) throws Exception {
-		
+	
 		QName ecReportsQName = new QName("urn:epcglobal:ale:xsd:1", "ECReports");
 		
-		return (ECReports)deserialize(inputStream, ECReports.class, ecReportsQName);
+		return (ECReports) deserialize(inputStream, ECReports.class, ecReportsQName);
 		
 	}
 	
 	
 	/**
-	 * This method deserializes a LRSpec from an input stream
+	 * This method deserializes a LRSpec from an input stream.
 	 * @param inputStream to deserialize
 	 * @return LRSpec
 	 * @throws Exception if deserialization fails
 	 */
 	public static LRSpec deserializeLRSpec(InputStream inputStream) throws Exception {
 		QName lrSpecQName  = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
-		return (LRSpec)deserialize(inputStream, LRSpec.class, lrSpecQName);
+		return (LRSpec) deserialize(inputStream, LRSpec.class, lrSpecQName);
 	}
 
 	/**
-	 * This method deserializes a LRSpec from an file path
+	 * This method deserializes a LRSpec from an file path.
 	 * @param pathName to deserialize
 	 * @return LRSpec
 	 * @throws Exception if deserialization fails
 	 */
 	public static LRSpec deserializeLRSpec(String pathName) throws FileNotFoundException, Exception {
-		System.out.println("deserializing LRSpec from String " + pathName);
 		QName lrSpecQName = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
-		return (LRSpec)deserialize(new FileInputStream(pathName), LRSpec.class, lrSpecQName);
+		LRSpec spec;
+		try {
+			spec = (LRSpec) deserialize(new FileInputStream(pathName), LRSpec.class, lrSpecQName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return spec;
 	}
 
 	
 	/**
 	 * 
-	 * This method deserializes a LRProperty from an input stream
+	 * This method deserializes a LRProperty from an input stream.
 	 * @param inputStream to deserialize
 	 * @return LRProperty
 	 * @throws Exception if deserialization fails
 	 */
 	public static LRProperty deserializeLRProperty(InputStream inputStream) throws Exception {
 		QName lrPropertyQName = new QName("urn:epcglobal:ale:xsd:1", "LRProperty");
-		return (LRProperty)deserialize(inputStream, LRProperty.class, lrPropertyQName);
+		return (LRProperty) deserialize(inputStream, LRProperty.class, lrPropertyQName);
 	}
 	
+	/**
+	 * 
+	 * This method deserializes a LRProperty from an string.
+	 * @param pathName path to the file to be deserialized
+	 * @return LRProperty
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRProperty deserializeLRProperty(String pathName) throws Exception {
+		QName lrPropertyQName = new QName("urn:epcglobal:ale:xsd:1", "LRProperty");
+		return (LRProperty) deserialize(new FileInputStream(pathName), LRProperty.class, lrPropertyQName);
+	}
+
+	/**
+	 * This method deserializes LRProperties from a string.
+	 * @param pathName the path to the properties file
+	 * @return LRProperties
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRProperties deserializeLRProperties(String pathName) throws Exception {
+		return deserializeLRProperties(new FileInputStream(pathName));
+	}
+
+	/**
+	 * This method deserializes LRProperties from an InputStream.
+	 * @param inputStream the inputStream to deserialize
+	 * @return LRProperties
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRProperties deserializeLRProperties(InputStream inputStream) throws Exception {
+		QName lrp = new QName("urn:epcglobal:ale.xsd:1", "LRProperties");
+		return (LRProperties) deserialize(inputStream, LRProperties.class, lrp);
+	}
+
+	/**
+	 * This method deserializes LRLogicalReaders.
+	 * @param pathName path to the file to be deserialized.
+	 * @return LRLogicalReaders
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRLogicalReaders deserializeLRLogicalReaders(String pathName) throws Exception {
+		QName ra = new QName("urn:epcglobal:ale:xsd:1", "LRLogicalReaders");
+		LRLogicalReaders lr = (LRLogicalReaders) deserialize(new FileInputStream(pathName), LRLogicalReaders.class , ra);
+		return lr;
+	}
+
+	/**
+	 * This method deserializes an LRSpecExtension from a file input stream.
+	 * @param inputStream the inputstream to be deserialized
+	 * @return LRSpecExtension
+	 * @throws Exception if deserialization fails
+	 */
+	public static LRSpecExtension deserializeLRSpecExtension(InputStream inputStream) throws Exception {
+		QName lrs = new QName("urn:epcglobal:ale:xsd:1", "LRSpecExtension");
+		return (LRSpecExtension) deserialize(inputStream, LRSpecExtension.class, lrs);
+	}
 	
 	//
 	// private methods
