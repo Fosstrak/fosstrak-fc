@@ -17,17 +17,21 @@
 	
 	<menu name="Guides &amp; Documentation">
 		
-		<item name="Users guide" href="/users-guide.html"/>
+		<item name="Users guide" href="/users-guide.html">
+			<item name="Installation &amp; configuration" href="/ug_installation.html"/>
+			<item name="Logical Reader Definitions" href="/ug_lrdef.html"/>
+			<item name="Test clients" href="/ug_testclients.html"/>
+		</item>
+			
 		
 		<item name="Developers guide" href="/devguide-overview.html">
-			<item name="ALE" href="/ale.html"/>
-			<item name="EventCycle" href="/eventcycle.html"/>
+			<item name="Application Layer Events" href="/ale.html"/>
+			<item name="Event Cycle" href="/eventcycle.html"/>
 			<item name="Reports generation" href="/reports-generator.html"/>
 			<item name="Reports notification" href="/reports-notification.html"/>
-			<item name="LogicalReader concept" href="/reader-concept.html"/>
+			<item name="Logical Reader concept" href="/reader-concept.html"/>
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
-			<item name="LogicalReader Management" href="/logical-reader-manager.html"/>
-			<item name="Java doc" href="apidocs/index.html"/>
+			<item name="Logical Reader Management" href="/logical-reader-manager.html"/>
 		</item>
 	</menu>
 </body>
