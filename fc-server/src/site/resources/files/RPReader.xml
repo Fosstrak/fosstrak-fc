@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:LRSpec xmlns:ns1="urn:epcglobal:ale:xsd:1">
+ <isComposite xsi:type="xsd:boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">false</isComposite>
+ <readers xsi:type="ns1:LRLogicalReaders" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+ <properties xsi:type="ns1:LRProperties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Description</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">This Logical Reader consists of shelf 1 and shelf 2,3,4 of the physical reader named MyReader</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">ConnectionPoint</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">http://localhost:8000</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">NotificationPoint</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">http://localhost:9090</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">ReadTimeInterval</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">200</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">PhysicalReaderName</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">MyReader</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">PhysicalReaderSource</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Shelf1,Shelf2,Shelf3,Shelf4</value>
+  </property>
+ </properties>
+ <extension xsi:type="ns1:LRSpecExtension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <readerType xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">org.accada.ale.server.readers.rp.RPAdaptor</readerType>
+ </extension>
+</ns1:LRSpec>
