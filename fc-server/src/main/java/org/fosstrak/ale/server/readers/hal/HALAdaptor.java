@@ -122,6 +122,7 @@ public class HALAdaptor extends BaseReader {
 			} else {
 				// use the identifyThread
 				identifyThread.stopIdentify();
+				identifyThread = null;
 			}
 			
 			setDisconnected();
