@@ -42,6 +42,7 @@ import org.accada.ale.server.readers.gen.ObjectFactory;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
 import org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
 import org.accada.ale.wsdl.ale.epcglobal.InUseException;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
 import org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException;
@@ -131,14 +132,18 @@ public class LogicalReaderManager {
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @throws ValidationException the provided LRSpec is invalid
-	 * @throws ReaderLoopException the reader would include itself which would result in a loop
 	 */
-	public static void setProperties(String name, List<LRProperty> properties) throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, SecurityException, ImplementationException, ReaderLoopException {
+	public static void setProperties(String name, List<LRProperty> properties) throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
 		LRSpec spec = logRd.getLRSpec();
 		spec.setProperties(properties);
 		LOG.debug("set the properties");
-		update(name, spec);
+		try {
+			update(name, spec);
+		} catch (ReaderLoopException e) {
+			throw new ImplementationException("reader loop detected", 
+					ImplementationExceptionSeverity.ERROR);
+		}
 		// TODO what is table below?
 	}
 
