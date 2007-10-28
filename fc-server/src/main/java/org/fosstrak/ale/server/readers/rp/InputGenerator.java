@@ -27,9 +27,11 @@ import org.accada.ale.server.Tag;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.reader.rprm.core.EventType;
 import org.accada.reader.rprm.core.FieldName;
 import org.accada.reader.rprm.core.msg.notification.Notification;
 import org.accada.reader.rprm.core.msg.reply.ReadReportType;
+import org.accada.reader.rprm.core.msg.reply.TagEventType;
 import org.accada.reader.rprm.core.msg.reply.TagType;
 import org.accada.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
 import org.accada.reader.rp.proxy.DataSelector;
@@ -252,18 +254,16 @@ public class InputGenerator implements NotificationChannelListener {
 						if (tags != null) {
 							// for each tag create a new reader api tag
 							for (TagType tag : tags) {
-										 
-								// prepare the tag
-								/*
-								adaptor.addTag(new Tag(adaptor.getName(), 
-										HexUtil.byteArrayToHexString(tag.getTagID()),
-										System.currentTimeMillis()));
-								*/
-								
-								// add it to the taglist
-								tagsToNotify.add(new Tag(adaptor.getName(), 
-										HexUtil.byteArrayToHexString(tag.getTagID()),
-										System.currentTimeMillis()));
+								List<TagEventType> tagEvents = tag.getTagEvent();
+								if (tagEvents != null) {
+									for (TagEventType tagEvent : tagEvents) {
+										String eventType = tagEvent.getEventType();
+										LOG.debug("Tag '" + tag.getTagIDAsPureURI() + "' fired Event of type '" + eventType + "'");
+										if (EventType.EV_OBSERVED.equals(eventType)) {
+											tagsToNotify.add(new Tag(adaptor.getName(), tag.getTagID(), tag.getTagIDAsPureURI(), System.currentTimeMillis()));
+										}
+									}
+								}
 							}
 						}
 					}

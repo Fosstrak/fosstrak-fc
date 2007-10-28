@@ -259,13 +259,25 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
 	public void addTag(TagType tag) throws ImplementationException, ECSpecValidationException {
-		if (!isAcceptingTags()) {
-			return;
-		}
 		
 		Tag newTag = new Tag();
-		newTag.setTagID(tag.getTagIDAsPureURI());
-		addTag(newTag);
+		newTag.setTagID(tag.getTagID());
+		newTag.setTagIDAsPureURI(tag.getTagIDAsPureURI());
+		
+		// add event only if EventCycle is still running
+		if (thread.isAlive()) {
+			LOG.debug("EventCycle '" + name + "' add Tag '" + newTag.getTagID() + "'.");
+			
+			for (Tag atag : tags) {
+				// do not add the tag it is already in the list
+				if (atag.equals(newTag)) {
+					return;
+				}
+			}
+			
+			// add tag to tags
+			tags.add(newTag);
+		}
 	}
 
 
@@ -279,13 +291,12 @@ public class EventCycle implements Runnable, Observer {
 			return;
 		}
 		
-		LOG.debug("received update notification");
+		LOG.debug("Update notification received. ");
 		
 		if (arg instanceof Tag) {
-			// process one tag
 			
+			// process one tag
 			Tag tag = (Tag) arg;
-			LOG.debug("EventCycle: received tag :");
 			//tag.prettyPrint(LOG);
 			try {
 				addTag(tag);
@@ -419,6 +430,10 @@ public class EventCycle implements Runnable, Observer {
 			
 			// get reports
 			try {
+				// compute total time
+				totalTime = System.currentTimeMillis() - startTime;
+				
+				LOG.info("Number of Tags read in the current EventCyle.java: " + tags.size());
 				
 				ECReports ecReports = getECReports();
 				
@@ -437,9 +452,7 @@ public class EventCycle implements Runnable, Observer {
 				LOG.error("Could not create ECReports (" + e.getMessage() + ")");
 			}
 			
-			// compute total time
-			totalTime = System.currentTimeMillis() - startTime;
-		
+			
 			LOG.debug("EventCycle finished");
 			try {
 				synchronized (this) {
@@ -531,6 +544,15 @@ public class EventCycle implements Runnable, Observer {
 	 */
 	private void setAcceptTags(boolean acceptTags) {
 		this.acceptTags = acceptTags;
+	}
+	/**
+	 * for testing only!
+	 * set some tags as last event cycle tags
+	 * for testing only!
+	 * @param tags the set of the tags from the last event cycle
+	 */
+	void setLastEventCycleTags(Set<Tag> tags){
+		this.lastEventCycleTags = tags;
 	}
 
 }

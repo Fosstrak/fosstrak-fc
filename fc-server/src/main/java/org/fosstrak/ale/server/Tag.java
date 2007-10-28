@@ -1,5 +1,8 @@
 package org.accada.ale.server;
 
+import org.accada.ale.util.HexUtil;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.apache.log4j.Logger;
 
 /**
@@ -16,7 +19,10 @@ public class Tag {
 	private String origin  = null;
 	
 	/** id of this tag. */
-	private String tagID = null;
+	private byte[] tagID = null;
+	
+	/** id as pure uri*/
+	private String tagIDAsPureURI = null;
 	
 	/** trace where the tag passed through the ALE.  */
 	private String trace = null;
@@ -36,10 +42,11 @@ public class Tag {
 	 * @param tagId the tagID
 	 * @param timestamp the timestamp
 	 */
-	public Tag(String origin, String tagId, long timestamp) {
+	public Tag(String origin, byte[] tagId, String tagIDAsPureURI, long timestamp) {
 		setOrigin(origin);
 		setReader(origin);
 		setTagID(tagId);
+		setTagIDAsPureURI(tagIDAsPureURI);
 		setTimestamp(timestamp);		
 	}
 	
@@ -85,17 +92,17 @@ public class Tag {
 
 	/**
 	 * returns the id of this tag.
-	 * @return string containing the tag id
+	 * @return byte[] containing the tag id
 	 */
-	public String getTagID() {
+	public byte[] getTagID() {
 		return tagID;
 	}
 
 	/**
 	 * sets the tag id.
-	 * @param tagID a string holding the tag id.
+	 * @param tagID a byte[] holding the tag id.
 	 */
-	public void setTagID(String tagID) {
+	public void setTagID(byte[] tagID) {
 		this.tagID = tagID;
 	}
 
@@ -155,7 +162,7 @@ public class Tag {
 	public String getOrigin() {
 		return origin;
 	}
-
+	
 	/**
 	 * sets the origin  (baseReader) where the tag has been read.
 	 * @param origin the name of the baseReader where the tag has been read.
@@ -179,5 +186,21 @@ public class Tag {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * returns the id of this tag as pure uri.
+	 * @return String containing the tag id
+	 */
+	public String getTagIDAsPureURI() {
+		return tagIDAsPureURI;
+	}
+
+	/**
+	 * sets the tag id as pure uri.
+	 * @param tagIDAsPureURI a string holding the tag id.
+	 */
+	public void setTagIDAsPureURI(String tagIDAsPureURI) {
+		this.tagIDAsPureURI = tagIDAsPureURI;
 	}
 }
