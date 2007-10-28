@@ -264,7 +264,7 @@ public class HALAdaptor extends BaseReader {
 					// For each tag create a new Tag
 					for (String tagobserved : observation.getIds()) {
 						Tag tag = new Tag(getName());
-						tag.setTagID(tagobserved);
+						tag.setTagIDAsPureURI(tagobserved);
 						tag.setTimestamp(observation.getTimestamp());
 						tags.add(tag);
 					}

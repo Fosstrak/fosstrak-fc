@@ -21,12 +21,15 @@
 package org.accada.ale.server;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.accada.ale.server.EventCycle;
 import org.accada.ale.server.Report;
 import org.accada.ale.server.ReportsGenerator;
+import org.accada.ale.server.readers.gen.LogicalReader;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
@@ -83,12 +86,12 @@ public class ReportTest extends TestCase {
 	private static final String DEFAULT_GROUP_TAG_TAG_URI = "urn:epc:pat:gid-96:1.11.3";
 	
 	// last event cycle default tag parameters
-	private static final byte[] LAST_CYCLE_TAG_ID = new byte[] {1, 2, 3};
+	private static final byte[] LAST_CYCLE_TAG_ID = new byte[] {1, 3, 3};
 	private static final String LAST_CYCLE_TAG_PURE_URI = "urn:epc:pat:gid-96:1.3.3";
 	private static final String LAST_CYCLE_TAG_TAG_URI = "urn:epc:pat:gid-96:1.3.3";
 	
 	// last event cycle default group tag parameters
-	private static final byte[] LAST_CYCLE_DEFAULT_GROUP_TAG_ID = new byte[] {1, 11, 3};
+	private static final byte[] LAST_CYCLE_DEFAULT_GROUP_TAG_ID = new byte[] {1, 12, 3};
 	private static final String LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI = "urn:epc:pat:gid-96:1.12.3";
 	private static final String LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI = "urn:epc:pat:gid-96:1.12.3";
 	
@@ -130,7 +133,7 @@ public class ReportTest extends TestCase {
 		
 		// get ECReport
 		ECReport ecReport = report.getECReport();
-
+		
 		// test report name
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
@@ -194,6 +197,7 @@ public class ReportTest extends TestCase {
 		report.addTag(createTag(DEFAULT_GROUP_TAG_ID, DEFAULT_GROUP_TAG_PURE_URI, DEFAULT_GROUP_TAG_TAG_URI));
 		report.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
 		
+
 		// get ECReport
 		ECReport ecReport = report.getECReport();
 
@@ -256,10 +260,10 @@ public class ReportTest extends TestCase {
 		Report report = new Report(reportSpec, eventCycle);
 		
 		// add event
-		report.addTag(createTag(LAST_CYCLE_TAG_ID, LAST_CYCLE_TAG_PURE_URI, LAST_CYCLE_TAG_TAG_URI));
-		report.addTag(createTag(LAST_CYCLE_DEFAULT_GROUP_TAG_ID, LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI,
+		eventCycle.addTag(createTag(LAST_CYCLE_TAG_ID, LAST_CYCLE_TAG_PURE_URI, LAST_CYCLE_TAG_TAG_URI));
+		eventCycle.addTag(createTag(LAST_CYCLE_DEFAULT_GROUP_TAG_ID, LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI,
 				LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI));
-		report.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
+		eventCycle.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
 		
 		// get ECReport
 		ECReport ecReport = report.getECReport();
@@ -281,9 +285,9 @@ public class ReportTest extends TestCase {
 		Report report = new Report(reportSpec, eventCycle);
 		
 		// add event
-		report.addTag(createTag(TAG_ID, TAG_PURE_URI, TAG_TAG_URI));
-		report.addTag(createTag(DEFAULT_GROUP_TAG_ID, DEFAULT_GROUP_TAG_PURE_URI, DEFAULT_GROUP_TAG_TAG_URI));
-		report.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
+		eventCycle.addTag(createTag(TAG_ID, TAG_PURE_URI, TAG_TAG_URI));
+		eventCycle.addTag(createTag(DEFAULT_GROUP_TAG_ID, DEFAULT_GROUP_TAG_PURE_URI, DEFAULT_GROUP_TAG_TAG_URI));
+		eventCycle.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
 		
 		// get ECReport
 		ECReport ecReport = report.getECReport();
@@ -438,22 +442,34 @@ public class ReportTest extends TestCase {
 	
 		// create EventCycle
 		EventCycle eventCycle = new EventCycle(createReportsGenerator());
+		eventCycle.setLastEventCycleTags(getLastEventCycleTags());
 		
 		return eventCycle;
 		
 	}
 	
-	private EventCycle createLastEventCycle() throws ImplementationException, ECSpecValidationException {
+	private Set<Tag> getLastEventCycleTags() throws ImplementationException, ECSpecValidationException {
 		
 		// create EventCycle
 		EventCycle eventCycle = new EventCycle(createReportsGenerator());
-		eventCycle.addTag(createTag(LAST_CYCLE_TAG_ID, LAST_CYCLE_TAG_PURE_URI, LAST_CYCLE_TAG_TAG_URI));
-		eventCycle.addTag(createTag(LAST_CYCLE_DEFAULT_GROUP_TAG_ID, LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI,
-				LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI));
-		eventCycle.addTag(createTag(EXCLUDED_TAG_ID, EXCLUDED_TAG_PURE_URI, EXCLUDED_TAG_TAG_URI));
+		Set<Tag> tags = new HashSet<Tag>();
+		Tag tag1 = new Tag();
+		tag1.setTagIDAsPureURI(LAST_CYCLE_TAG_PURE_URI);
+		tag1.setTagID(LAST_CYCLE_TAG_ID);
+		tags.add(tag1);
+		Tag tag2 = new Tag();
+		tag2.setTagIDAsPureURI(LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI);
+		tag2.setTagID(LAST_CYCLE_DEFAULT_GROUP_TAG_ID);
+		tags.add(tag2);
+		Tag tag3 = new Tag();
+		tag3.setTagIDAsPureURI(EXCLUDED_TAG_PURE_URI);
+		tag3.setTagID(EXCLUDED_TAG_ID);
+		tags.add(tag3);
+		
+		
 		eventCycle.stop();
 		
-		return eventCycle;
+		return tags;
 		
 	}
 	

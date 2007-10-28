@@ -76,8 +76,6 @@ public class Report {
 	private ECReport report;
 	/** ec report specification. */
 	private ECReportSpec reportSpec;
-		
-	private ECReportGroup[] globalGroups;
 	
 	/**
 	 * This boolean indicates if the report is ready to create ec reports.
@@ -133,7 +131,7 @@ public class Report {
 		LOG.debug("add tag '" + tag + "'");
 		
 		// get tag URI
-		String tagURI = tag.getTagID();
+		String tagURI = tag.getTagIDAsPureURI();
 	
 		// check if the tag is a member of this report (use filter patterns and set spec)
 		if (isMember(tagURI)) {
@@ -153,7 +151,8 @@ public class Report {
 	 */
 	public void addTag(org.accada.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationException, ImplementationException {
 		Tag newtag = new Tag();
-		newtag.setTagID(tag.getTagIDAsPureURI());
+		newtag.setTagID(tag.getTagID());
+		newtag.setTagIDAsPureURI(tag.getTagIDAsPureURI());
 		addTag(newtag);
 	}
 
@@ -167,69 +166,71 @@ public class Report {
 	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
 
 		//generate new ECReport
-		report = new ECReport();
-		report.setReportName(name);
-
 		if (reportType == ECReportSetEnum.ADDITIONS) {
-				
-				// get additional tags
-				Map<String, Tag> reportTags = new HashMap<String, Tag>();
+			
+			// get additional tags
+			Map<String, Tag> reportTags = new HashMap<String, Tag>();
 
-				// add tags from current EventCycle 
-				for (Tag tag : currentEventCycle.getTags()) {
-					reportTags.put(tag.getTagID(), tag);
-				}
+			// add tags from current EventCycle 
+			for (Tag tag : currentEventCycle.getTags()) {
+				reportTags.put(tag.getTagIDAsPureURI(), tag);
+			}
 				
-				// remove tags from last EventCycle
-				if (currentEventCycle.getLastEventCycleTags() != null) {
-					for (Tag tag :currentEventCycle.getLastEventCycleTags()) {
-						reportTags.remove(tag.getTagID());
-					}
-				}
-				
-				// add tags to report with filtering
-				readyToCreateReport = true;
-
-				for (Tag tag : reportTags.values()) {
-					addTag(tag);
-				}
-	
-			} else if(reportType == ECReportSetEnum.CURRENT){
-
-				// get tags from current EventCycle 
-				for (Tag tag : currentEventCycle.getTags()) {
-					addTag(tag);
-				}
-
-			} else {
-				
-				// get removed tags
-				Map<String, Tag> reportTags = new HashMap<String, Tag>();
-				
-				// add tags from last EventCycle
-				if (currentEventCycle.getLastEventCycleTags() != null) {
-					for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
-						reportTags.put(tag.getTagID(), tag);
-					}
-				}
-				
-				// remove tags from current EventCycle
-				for (Tag tag : currentEventCycle.getTags()) {
+			// remove tags from last EventCycle
+			if (currentEventCycle.getLastEventCycleTags() != null) {
+				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
 					reportTags.remove(tag.getTagID());
 				}
+			}
 				
-				// add tags to report with filtering
-				readyToCreateReport = true;
-				for (Tag tag : reportTags.values()) {
-					addTag(tag);
+			// add tags to report with filtering
+			readyToCreateReport = true;
+
+			for (Tag tag : reportTags.values()) {
+				addTag(tag);
+			}
+	
+		} else if (reportType == ECReportSetEnum.CURRENT) {
+
+			// get tags from current EventCycle 
+			for (Tag tag : currentEventCycle.getTags()) {
+				addTag(tag);
+			}
+
+		} else {
+			
+			// get removed tags
+			Map<String, Tag> reportTags = new HashMap<String, Tag>();
+				
+			// add tags from last EventCycle
+			if (currentEventCycle.getLastEventCycleTags() != null) {
+				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
+					reportTags.put(tag.getTagIDAsPureURI(), tag);
 				}
 			}
-			
-			if (reportSpec.isReportIfEmpty() || !isEmpty()) {
-				return report;
-			} else {
-				return null;
+				
+			// remove tags from current EventCycle
+			for (Tag tag : currentEventCycle.getTags()) {
+				reportTags.remove(tag.getTagIDAsPureURI());
 			}
+				
+			// add tags to report with filtering
+			readyToCreateReport = true;
+			for (Tag tag : reportTags.values()) {
+				addTag(tag);
+			}
+		}
+		
+		if (reportSpec.isReportIfEmpty() || !isEmpty()) {
+			ECReport temp = report;	
+			report = new ECReport();
+			report.setReportName(name);	
+			return temp;
+		} else {
+			report = new ECReport();
+			report.setReportName(name);
+			return null;
+		}
 	}
 
 	//
@@ -291,7 +292,7 @@ public class Report {
 					groupPatterns.add(new Pattern(pattern, PatternUsage.GROUP));
 				} catch (ECSpecValidationException e) {
 					e.printStackTrace();
-				}
+				}	
 			}
 		}
 		
@@ -307,6 +308,17 @@ public class Report {
 	 */
 	private boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
 				
+		if (reportType == ECReportSetEnum.ADDITIONS) {
+		
+			// if report type is additions the tag is only a member if it wasn't a member of the last event cycle	
+			Set<Tag> tags = currentEventCycle.getLastEventCycleTags();
+			for (Tag tag : tags) {
+				if (tag.getTagIDAsPureURI().equals(tagURI)) {
+					return false;
+				}
+			}
+		}			
+		
 		// check if tagURI is member of an exclude pattern
 		for (Pattern pattern : excludePatterns) {
 			if (pattern.isMember(tagURI)) {
@@ -340,7 +352,7 @@ public class Report {
 	private void addTagToReportGroup(Tag tag) throws ImplementationException, ECSpecValidationException {
 		
 		// get tag URI
-		String tagURI = tag.getTagID();
+		String tagURI = tag.getTagIDAsPureURI();
 		
 		// get group name (use group patterns)
 		String groupName = getGroupName(tagURI);
@@ -359,7 +371,7 @@ public class Report {
 						matchingGroup = group;
 					}
 				} else {
-					if(groupName.equals(group.getGroupName())) {
+					if (groupName.equals(group.getGroupName())) {
 						matchingGroup = group;
 					}
 				}
@@ -399,31 +411,30 @@ public class Report {
 				 newGroups = new ECReportGroup[1];
 				 newGroups[0] = matchingGroup;
 			}
-			report.setGroup(newGroups);
-			globalGroups = newGroups;
-				
+			report.setGroup(newGroups);					
 		}
 		
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
 		if (reportSpec.getOutput().isIncludeRawDecimal()) {
-			groupMember.setRawDecimal(new EPC(tag.getTagID()));
+			groupMember.setRawDecimal(new EPC(tag.getTagIDAsPureURI()));
 		}
 		if (reportSpec.getOutput().isIncludeTag()) {
-			groupMember.setTag(new EPC(tag.getTagID()));
+			groupMember.setTag(new EPC(tag.getTagIDAsPureURI()));
 		}
 		if (reportSpec.getOutput().isIncludeRawHex()) {
-			// FIXME: this has to be fixed
-			// groupMember.setRawHex(new EPC(HexUtil.byteArrayToHexString(tag.getTagID())));
+			if (tag.getTagID() != null) {
+				groupMember.setRawHex(new EPC(HexUtil.byteArrayToHexString(tag.getTagID())));
+			}
 		}
 		
 		// add list member to group list
-		ECReportGroupListMember[] members = (ECReportGroupListMember[])matchingGroup.getGroupList().getMember();
+		ECReportGroupListMember[] members = (ECReportGroupListMember[]) matchingGroup.getGroupList().getMember();
 		if (members == null) {
 			members = new ECReportGroupListMember[0];
 		}
 		ECReportGroupListMember[] newMembers = new ECReportGroupListMember[members.length + 1];
-		for (int i = 0; i < members.length; i ++) {
+		for (int i = 0; i < members.length; i++) {
 			newMembers[i] = members[i];
 		}
 		newMembers[members.length] = groupMember;
