@@ -129,8 +129,7 @@ public class ALEServicePortTypeProxy implements org.accada.ale.wsdl.ale.epcgloba
     return aLEServicePortType.getVendorVersion(parms);
   }
 
-@Override
-public AddReadersResult addReaders(AddReaders parms) throws RemoteException,
+  public AddReadersResult addReaders(AddReaders parms) throws RemoteException,
 		ImmutableReaderException, InUseException, NoSuchNameException,
 		ImplementationException, SecurityException,
 		NonCompositeReaderException, ReaderLoopException, ValidationException {
@@ -139,10 +138,9 @@ public AddReadersResult addReaders(AddReaders parms) throws RemoteException,
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.addReaders(parms);
-}
+  }
 
-@Override
-public DefineReaderResult defineReader(DefineReader parms)
+  public DefineReaderResult defineReader(DefineReader parms)
 		throws RemoteException, ImplementationException, SecurityException,
 		DuplicateNameException, ValidationException {
 	
@@ -150,40 +148,36 @@ public DefineReaderResult defineReader(DefineReader parms)
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.defineReader(parms);
-}
+  }
 
-@Override
-public LRSpec getLRSpec(GetLRSpec parms) throws RemoteException,
+  public LRSpec getLRSpec(GetLRSpec parms) throws RemoteException,
 		NoSuchNameException, ImplementationException, SecurityException {
 	
 	if (aLEServicePortType == null) {
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.getLRSpec(parms);
-}
+  }
 
-@Override
-public String[] getLogicalReaderNames(EmptyParms parms) throws RemoteException,
+  public String[] getLogicalReaderNames(EmptyParms parms) throws RemoteException,
 		ImplementationException, SecurityException {
 	
 	if (aLEServicePortType == null) {
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.getLogicalReaderNames(parms);
-}
+  }
 
-@Override
-public String getPropertyValue(GetPropertyValue parms) throws RemoteException,
+  public String getPropertyValue(GetPropertyValue parms) throws RemoteException,
 		NoSuchNameException, ImplementationException, SecurityException {
 	
 	if (aLEServicePortType == null) {
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.getPropertyValue(parms);
-}
+  }
 
-@Override
-public RemoveReadersResult removeReaders(RemoveReaders parms)
+  public RemoveReadersResult removeReaders(RemoveReaders parms)
 		throws RemoteException, ImmutableReaderException, InUseException,
 		NoSuchNameException, ImplementationException, SecurityException,
 		NonCompositeReaderException {
@@ -192,10 +186,9 @@ public RemoveReadersResult removeReaders(RemoveReaders parms)
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.removeReaders(parms);
-}
+  }
 
-@Override
-public SetPropertiesResult setProperties(SetProperties parms)
+  public SetPropertiesResult setProperties(SetProperties parms)
 		throws RemoteException, ImmutableReaderException, InUseException,
 		NoSuchNameException, ImplementationException, SecurityException,
 		ValidationException {
@@ -204,10 +197,9 @@ public SetPropertiesResult setProperties(SetProperties parms)
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.setProperties(parms);
-}
+  }
 
-@Override
-public SetReadersResult setReaders(SetReaders parms) throws RemoteException,
+  public SetReadersResult setReaders(SetReaders parms) throws RemoteException,
 		ImmutableReaderException, InUseException, NoSuchNameException,
 		ImplementationException, SecurityException,
 		NonCompositeReaderException, ReaderLoopException, ValidationException {
@@ -216,10 +208,9 @@ public SetReadersResult setReaders(SetReaders parms) throws RemoteException,
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.setReaders(parms);
-}
+  }
 
-@Override
-public UndefineReaderResult undefineReader(UndefineReader parms)
+  public UndefineReaderResult undefineReader(UndefineReader parms)
 		throws RemoteException, ImmutableReaderException, InUseException,
 		NoSuchNameException, ImplementationException, SecurityException {
 	
@@ -227,10 +218,9 @@ public UndefineReaderResult undefineReader(UndefineReader parms)
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.undefineReader(parms);
-}
+  }
 
-@Override
-public UpdateReaderResult updateReader(UpdateReader parms)
+  public UpdateReaderResult updateReader(UpdateReader parms)
 		throws RemoteException, ImmutableReaderException, InUseException,
 		NoSuchNameException, ImplementationException, SecurityException,
 		ReaderLoopException, ValidationException {
@@ -239,6 +229,6 @@ public UpdateReaderResult updateReader(UpdateReader parms)
 		_initALEServicePortTypeProxy();
 	}
 	return aLEServicePortType.updateReader(parms);
-}
+  }
   
 }
