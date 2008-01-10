@@ -1543,7 +1543,7 @@ case 309:
 			if (getLRSpecProperties != null) {
 				for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : getLRSpecProperties) {
 					%>
-					<td style="border-right:1px solid black; text-align:left;"><%=prop.getName()%></td>
+					<tr><td style="border-right:1px solid black; text-align:left;"><%=prop.getName()%></td>
 					<td style="text-align:left;"><%=prop.getValue()%></td></tr>
 					<%
 				}
