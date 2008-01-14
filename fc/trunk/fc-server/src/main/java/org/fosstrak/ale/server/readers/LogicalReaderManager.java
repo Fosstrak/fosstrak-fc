@@ -478,6 +478,10 @@ public class LogicalReaderManager {
 		LogicalReader reader = null;
 		if (LogicalReaderManager.logicalReaders.containsKey(readerName)) {
 			reader = LogicalReaderManager.logicalReaders.get(readerName);
+			
+			if (!reader.isStarted()) {
+				reader.start();
+			}
 		} else {
 			LOG.error("reader " + readerName + " not contained in LogicalReaderManager");
 			for(LogicalReader logicalreader: logicalReaders.values()){

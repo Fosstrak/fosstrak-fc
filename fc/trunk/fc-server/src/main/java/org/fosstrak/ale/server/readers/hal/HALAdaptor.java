@@ -9,11 +9,11 @@ import org.accada.ale.server.readers.BaseReader;
 import org.accada.ale.server.readers.IdentifyThread;
 import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.reader.hal.HardwareAbstraction;
-import org.accada.reader.hal.HardwareException;
-import org.accada.reader.hal.Observation;
-import org.accada.reader.hal.Trigger;
-import org.accada.reader.hal.impl.sim.SimulatorController;
+import org.accada.hal.HardwareAbstraction;
+import org.accada.hal.HardwareException;
+import org.accada.hal.Observation;
+import org.accada.hal.Trigger;
+import org.accada.hal.impl.sim.SimulatorController;
 import org.apache.log4j.Logger;
 
 /**
@@ -68,7 +68,7 @@ public class HALAdaptor extends BaseReader {
 		URL url = this.getClass().getResource(propertiesFile);
 		propertiesFile = url.getFile();
 		// create the HAL device
-		hal = new SimulatorController(name, propertiesFile, propertiesFile);
+		hal = new SimulatorController(name, propertiesFile);
 		
 
 		setDisconnected();
