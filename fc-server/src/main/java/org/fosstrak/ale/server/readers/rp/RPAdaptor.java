@@ -34,8 +34,8 @@ import org.accada.ale.server.readers.IdentifyThread;
 import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
-import org.accada.reader.hal.HardwareException;
-import org.accada.reader.hal.Observation;
+import org.accada.hal.HardwareException;
+import org.accada.hal.Observation;
 import org.accada.reader.rp.proxy.RPProxyException;
 
 /**

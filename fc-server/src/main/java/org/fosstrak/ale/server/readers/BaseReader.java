@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.reader.hal.HardwareException;
-import org.accada.reader.hal.Observation;
+import org.accada.hal.HardwareException;
+import org.accada.hal.Observation;
 
 /**
  * represents an abstract superclass for basereaders.

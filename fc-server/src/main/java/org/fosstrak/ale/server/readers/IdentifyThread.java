@@ -31,7 +31,7 @@
 package org.accada.ale.server.readers;
 
 import org.accada.reader.hal.HardwareException;
-import org.accada.reader.hal.Observation;
+import org.accada.hal.Observation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -123,33 +123,12 @@ public class IdentifyThread implements Runnable {
 			}
 			// Do work
 			log.debug("Continuous identify...");
+			Observation[] obs = null;
 			try {
-				Observation[] obs = null;
-				
-				/*
-				if (sourceIds == null) { //single reader mode
-					log.debug("SingleReaderMode...");
-					obs = this.adapter.identify(this.prefix, this.estimateNoTags, this.mode, this.diagnostic);
-				}
-				else { //MultiplexerMode
-					log.debug("MultiplexerMode...");
-					obs = this.adapter.multiplexIdentify(this.sourceIds, this.prefix, this.estimateNoTags, this.mode, this.diagnostic);
-				}
-				*/
 				obs = this.adapter.identify(sourceIds);
-				
-//				put the observations into the buffer...
-				/*
-				if (obs != null) {
-					;//buffer.putAll(obs);
-				} else {
-					log.debug("No observations to put into buffer");
-				}
-				*/
-			}
-			catch (HardwareException e){
-				e.printStackTrace();
-				//this.stopIdentify();
+			} catch (org.accada.hal.HardwareException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 			try {
 				if (this.frequency > 0){
