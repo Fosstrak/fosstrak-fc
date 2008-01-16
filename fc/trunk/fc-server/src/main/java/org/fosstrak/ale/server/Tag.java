@@ -177,15 +177,25 @@ public class Tag {
 	 * @return boolean value flaging whether equal or not
 	 */
 	public boolean equalsTag(Tag tag) {
+		// compare the origin
 		if (!tag.getOrigin().equalsIgnoreCase(getOrigin())) {
 			return false;
 		}
 		
+		// compare the reader
 		if (!tag.getReader().equalsIgnoreCase(getReader()))  {
 			return false;
 		}
 		
+		// compare the tag id
+		if (!tag.getTagIDAsPureURI().equalsIgnoreCase(getTagIDAsPureURI())) {
+			return false;
+		}
 		return true;
+	}
+	
+	public boolean equals(Tag tag) {
+		return equalsTag(tag);
 	}
 
 	/**
