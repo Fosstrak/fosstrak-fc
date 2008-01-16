@@ -4,7 +4,7 @@
    <!-- SimulatorType to be loaded dynamically -->
    <!-- currently only org.accada.reader.hal.impl.sim.GraphicSimulator is supported -->
 <!--    <simType>org.accada.reader.hal.impl.sim.GraphicSimulator</simType> -->
-   <simType>org.accada.reader.hal.impl.sim.BatchSimulator</simType>
+   <simType>org.accada.hal.impl.sim.BatchSimulator</simType>
    <!-- <simType>org.accada.reader.hal.impl.sim.CmdLineSim</simType> -->
    <!-- <simType>org.accada.reader.hal.impl.sim.SimulatorClient</simType> -->
 <!--    <simTypePropFile>GraphicSimulator.xml</simTypePropFile> -->
