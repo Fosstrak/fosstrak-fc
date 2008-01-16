@@ -232,11 +232,12 @@ public class EventCycle implements Runnable, Observer {
 		
 		// add event only if EventCycle is still running
 		if (thread.isAlive()) {
-			LOG.debug("EventCycle '" + name + "' add Tag '" + tag.getTagID() + "'.");
+			LOG.debug("EventCycle '" + name + "' add Tag '" + tag.getTagIDAsPureURI() + "'.");
 			
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(tag)) {
+					//LOG.debug("Tag " + tag.getTagIDAsPureURI() + "already in the list");
 					return;
 				}
 			}
@@ -266,11 +267,12 @@ public class EventCycle implements Runnable, Observer {
 		
 		// add event only if EventCycle is still running
 		if (thread.isAlive()) {
-			LOG.debug("EventCycle '" + name + "' add Tag '" + newTag.getTagID() + "'.");
+			LOG.debug("EventCycle '" + name + "' add Tag '" + newTag.getTagIDAsPureURI() + "'.");
 			
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(newTag)) {
+					//LOG.debug("Tag " + tag.getTagIDAsTagURI() + "already in the list");
 					return;
 				}
 			}
@@ -287,12 +289,11 @@ public class EventCycle implements Runnable, Observer {
 	 * @param arg the arguments passed by the observable
 	 */
 	public synchronized void update(Observable o, Object arg) {
+		LOG.debug("Update notification received. ");
 		if (!isAcceptingTags()) {
+			LOG.debug("Not accepting notification.");
 			return;
 		}
-		
-		LOG.debug("Update notification received. ");
-		
 		if (arg instanceof Tag) {
 			
 			// process one tag
@@ -436,7 +437,7 @@ public class EventCycle implements Runnable, Observer {
 				LOG.info("Number of Tags read in the current EventCyle.java: " + tags.size());
 				
 				ECReports ecReports = getECReports();
-				
+
 				// notifySubscribers
 				generator.notifySubscribers(ecReports);
 				
