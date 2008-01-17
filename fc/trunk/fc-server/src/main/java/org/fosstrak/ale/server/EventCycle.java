@@ -106,6 +106,9 @@ public class EventCycle implements Runnable, Observer {
 	/** flags whether the EventCycle is currently not accepting tags. */
 	private boolean acceptTags = false;
 	
+	/** tells how many times this EventCycle has been scheduled. */
+	private int rounds = 0;
+	
 	/**
 	 * Constructor sets parameter and starts thread.
 	 * 
@@ -159,6 +162,8 @@ public class EventCycle implements Runnable, Observer {
 			LOG.debug("registering EventCycle " + name + " on reader " + logicalReader.getName());
 			logicalReader.addObserver(this);
 		}
+		
+		rounds = 0;
 		
 		// create and start Thread
 		thread = new Thread(this);
@@ -289,9 +294,9 @@ public class EventCycle implements Runnable, Observer {
 	 * @param arg the arguments passed by the observable
 	 */
 	public synchronized void update(Observable o, Object arg) {
-		LOG.debug("Update notification received. ");
+		LOG.debug("EventCycle "+ getName() + ": Update notification received. ");
 		if (!isAcceptingTags()) {
-			LOG.debug("Not accepting notification.");
+			LOG.debug("EventCycle "+ getName() + ": Not accepting notification.");
 			return;
 		}
 		if (arg instanceof Tag) {
@@ -310,7 +315,7 @@ public class EventCycle implements Runnable, Observer {
 			// process multiple tags at once
 			
 			List<Tag> tagList = (List<Tag>) arg;
-			LOG.debug("EventCycle: received list of tags :");
+			LOG.debug("EventCycle "+ getName() + ": Received list of tags :");
 			for (Tag tag : tagList) {
 				try {
 					addTag(tag);
@@ -392,7 +397,8 @@ public class EventCycle implements Runnable, Observer {
 		}
 		
 		while (running) {
-			LOG.debug("starting EventCycle");
+			rounds ++;
+			LOG.debug("EventCycle "+ getName() + ": Starting (Round " + rounds + ").");
 			
 			// set start time
 			long startTime = System.currentTimeMillis();
@@ -434,7 +440,7 @@ public class EventCycle implements Runnable, Observer {
 				// compute total time
 				totalTime = System.currentTimeMillis() - startTime;
 				
-				LOG.info("Number of Tags read in the current EventCyle.java: " + tags.size());
+				LOG.info("EventCycle "+ getName() + ": Number of Tags read in the current EventCyle.java: " + tags.size());
 				
 				ECReports ecReports = getECReports();
 
@@ -442,19 +448,21 @@ public class EventCycle implements Runnable, Observer {
 				generator.notifySubscribers(ecReports);
 				
 				// store the current tags into the old tags
-				// explicitly clear the tags 
-				lastEventCycleTags = null;
+				// explicitly clear the tags
+				if (lastEventCycleTags != null) {
+					lastEventCycleTags.clear();
+				}
 				lastEventCycleTags = tags;
 				tags = new HashSet<Tag>();
 				
 			} catch (ECSpecValidationException e) {
-				LOG.error("Could not create ECReports (" + e.getMessage() + ")");
+				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
 			} catch (ImplementationException e) {
-				LOG.error("Could not create ECReports (" + e.getMessage() + ")");
+				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
 			}
 			
 			
-			LOG.debug("EventCycle finished");
+			LOG.debug("EventCycle "+ getName() + ": EventCycle finished (Round " + rounds + ").");
 			try {
 				synchronized (this) {
 					this.wait();
@@ -462,7 +470,7 @@ public class EventCycle implements Runnable, Observer {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}			
 		}
 			
 			
@@ -476,6 +484,7 @@ public class EventCycle implements Runnable, Observer {
 	 */
 	public void launch() {
 		this.running = true;
+		LOG.debug("launching eventCycle" + getName());
 		synchronized (this) {
 			this.notifyAll();
 		}
