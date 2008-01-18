@@ -4,9 +4,9 @@
 
     <menu name="Filtering and Collection Project Modules">
 	    <item name="FC Server" href="../fc-server/index.html" collapse="false">
-		<item name="Overview" href="/index.html"/>
+		<!--<item name="Overview" href="/index.html"/>-->
 		<item name="Features" href="/ALE_features.html"/>
-		<item name="Downloads" href="/ALE_download.html"/>
+		<!--<item name="Downloads" href="/ALE_download.html"/>-->
 
 		<item name="Users guide" href="/users-guide.html" collapse="false">
 			<item name="Installation &amp; configuration" href="/ug_installation.html"/>
