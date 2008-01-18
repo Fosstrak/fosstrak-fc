@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Accada - fc-server">
-<body>
-	<menu name="Accada Filtering &amp; Collection">
+<project name="Accada Filtering and Collection">
+	<body>
+
+    <menu name="Filtering and Collection Project Modules">
+	    <item name="FC Server" href="../fc-server/index.html" collapse="false">
 		<item name="Overview" href="/index.html"/>
 		<item name="Features" href="/ALE_features.html"/>
 		<item name="Downloads" href="/ALE_download.html"/>
-	</menu>
-	
-	<menu name="Guides &amp; Documentation">
-		
-		<item name="Users guide" href="/users-guide.html">
+
+		<item name="Users guide" href="/users-guide.html" collapse="false">
 			<item name="Installation &amp; configuration" href="/ug_installation.html"/>
 			<item name="Logical Reader Definitions" href="/ug_lrdef.html"/>
 			<item name="Test clients" href="/ug_testclients.html"/>
 		</item>
-			
 		
-		<item name="Developers guide" href="/devguide-overview.html">
+		<item name="Developers guide" href="/devguide-overview.html" collapse="false">
 			<item name="Application Layer Events" href="/ale.html"/>
 			<item name="Event Cycle" href="/eventcycle.html"/>
 			<item name="Reports generation" href="/reports-generator.html"/>
@@ -25,6 +23,9 @@
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
 			<item name="Logical Reader Management" href="/logical-reader-manager.html"/>
 		</item>
-	</menu>
+
+		<item name="JavaDoc" href="apidocs/index.html"/>
+	    </item>
+    </menu>
 </body>
 </project>
