@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Accada - fc-server">
 <body>
-	<links>
-		<item name="Accada" href="../index.html"/>
-		<item name="Reader" href="../reader/index.html"/>
-		<item name="Filtering and Collection" href="../fc/index.html"/>
-		<item name="EPCIS" href="../epcis/index.html"/>
-		<item name="Tag Data Translation" href="../tdt/index.html"/>
-	</links>
-	
 	<menu name="Accada Filtering &amp; Collection">
 		<item name="Overview" href="/index.html"/>
 		<item name="Features" href="/ALE_features.html"/>

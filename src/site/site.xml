@@ -25,6 +25,7 @@
       <item name="Filtering and Collection" href="index.html"/>
       <item name="EPCIS" href="../epcis/index.html"/>
       <item name="Tag Data Translation" href="../tdt/index.html"/>
+      <item name="HAL" href="../hal/index.html"/>
     </links>
 
 
@@ -47,11 +48,12 @@
 <!--      <item name="Source Repository" href="source-repository.html"/> -->
     </menu>
 
-<!--
-    <menu name="Module Reports" inherit="none">
+    <menu name="Filtering and Collection Project Modules" inherit="none">
       <item name="FC Server" href="fc-server/index.html" collapse="true">
         <item name="dummy"/>
-      </item>
+	</item>
+
+<!--
       <item name="FC Client" href="fc-client/index.html" collapse="true">
         <item name="dummy"/>
       </item>
@@ -60,9 +62,8 @@
       </item>
       <item name="FC Commons" href="fc-commons/index.html" collapse="true">
         <item name="dummy"/>
-      </item>
+</item>-->
     </menu>
--->
 
     <breadcrumbs>
       <item href="../index.html" name="Accada" />
