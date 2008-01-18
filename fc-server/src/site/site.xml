@@ -23,8 +23,6 @@
 			<item name="Implement an Adaptor" href="/adaptor.html"/>
 			<item name="Logical Reader Management" href="/logical-reader-manager.html"/>
 		</item>
-
-		<item name="JavaDoc" href="apidocs/index.html"/>
 	    </item>
     </menu>
 </body>
