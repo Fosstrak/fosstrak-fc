@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Accada Filtering&amp;amp;Collection">
+<project name="Accada Filtering and Collection">
   <bannerLeft>
     <name>Accada</name>
     <src>images/banner2_left.jpg</src>
@@ -37,7 +37,7 @@
       <item name="Home" href="../index.html"/>
     </menu>
     
-    <menu name="Filtering and Collection Project">
+    <menu name="Filtering and Collection Project" inherit="top">
       <item name="Overview" href="index.html"/>
 <!-- <item name="Features" href="features.html"/> -->
       <item name="Getting Started" href="docs/user-guide.html"/>
@@ -51,18 +51,7 @@
     <menu name="Filtering and Collection Project Modules" inherit="none">
       <item name="FC Server" href="fc-server/index.html" collapse="true">
         <item name="dummy"/>
-	</item>
-
-<!--
-      <item name="FC Client" href="fc-client/index.html" collapse="true">
-        <item name="dummy"/>
       </item>
-      <item name="FC Webclient" href="fc-webclient/index.html" collapse="true">
-        <item name="dummy"/>
-      </item>
-      <item name="FC Commons" href="fc-commons/index.html" collapse="true">
-        <item name="dummy"/>
-</item>-->
     </menu>
 
     <breadcrumbs>
