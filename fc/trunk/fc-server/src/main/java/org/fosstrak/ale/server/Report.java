@@ -128,7 +128,7 @@ public class Report {
 	 */
 	public void addTag(Tag tag) throws ECSpecValidationException, ImplementationException {
 
-		LOG.debug("add tag '" + tag + "'");
+		LOG.debug("add tag '" + tag.getTagIDAsPureURI() + "'");
 		
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
@@ -157,6 +157,29 @@ public class Report {
 	}
 
 	/**
+	 * helper method to display tags that were added or deleted.
+	 * @param reportTags a map holding the tags that were either added or deleted.
+	 */
+	private void writeDebugInformation(Map<String, Tag> reportTags) {
+		String out = '\n' + "+++++++++++++++++++++++++++++++++++++++++++++++++++++" + '\n';
+		out +=  '\t' + "eventcycle " + currentEventCycle.getName() + '\n';
+		out +=  '\t' + "round " + currentEventCycle.getRounds() + '\n';
+		if (reportTags == null) {
+			out += '\t' + "no tags" + '\n';
+			out +=  "+++++++++++++++++++++++++++++++++++++++++++++++++++++" + '\n';
+			LOG.info(out);
+			return;
+		}
+		
+		
+		for (Tag tag : reportTags.values()) {
+			out += '\t' + tag.getTagIDAsPureURI() + '\n';
+		}
+		out +=  "+++++++++++++++++++++++++++++++++++++++++++++++++++++" + '\n';
+		LOG.info(out);
+	}
+	
+	/**
 	 * This method returns the new ec report.
 	 * 
 	 * @return ec report
@@ -179,7 +202,7 @@ public class Report {
 			// remove tags from last EventCycle
 			if (currentEventCycle.getLastEventCycleTags() != null) {
 				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
-					reportTags.remove(tag.getTagID());
+					reportTags.remove(tag.getTagIDAsPureURI());
 				}
 			}
 				
@@ -189,6 +212,7 @@ public class Report {
 			for (Tag tag : reportTags.values()) {
 				addTag(tag);
 			}
+			//writeDebugInformation(reportTags);
 	
 		} else if (reportType == ECReportSetEnum.CURRENT) {
 
@@ -197,7 +221,8 @@ public class Report {
 				addTag(tag);
 			}
 
-		} else {
+		//} else if (reportType == ECReportSetEnum.DELETIONS) {
+		} else if (reportType == ECReportSetEnum.DELETIONS) {
 			
 			// get removed tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -219,8 +244,9 @@ public class Report {
 			for (Tag tag : reportTags.values()) {
 				addTag(tag);
 			}
+			//writeDebugInformation(reportTags);
 		}
-		
+
 		if (reportSpec.isReportIfEmpty() || !isEmpty()) {
 			ECReport temp = report;	
 			report = new ECReport();
@@ -312,13 +338,15 @@ public class Report {
 		
 			// if report type is additions the tag is only a member if it wasn't a member of the last event cycle	
 			Set<Tag> tags = currentEventCycle.getLastEventCycleTags();
-			for (Tag tag : tags) {
-				if (tag.getTagIDAsPureURI().equals(tagURI)) {
-					return false;
+			if (tags != null) {
+				for (Tag tag : tags) {
+					if (tag.getTagIDAsPureURI().equals(tagURI)) {
+						return false;
+					}
 				}
 			}
 		}			
-		
+
 		// check if tagURI is member of an exclude pattern
 		for (Pattern pattern : excludePatterns) {
 			if (pattern.isMember(tagURI)) {
@@ -339,7 +367,6 @@ public class Report {
 			}
 			return false;
 		}
-		
 	}
 
 	/**

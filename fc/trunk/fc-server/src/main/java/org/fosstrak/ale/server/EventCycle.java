@@ -248,13 +248,7 @@ public class EventCycle implements Runnable, Observer {
 			}
 			
 			// add tag to tags
-			tags.add(tag);
-			
-			// iterate over reports and add event
-			for (Report report : reports) {
-				report.addTag(tag);
-			}
-			
+			tags.add(tag);			
 		}
 	}
 	
@@ -398,7 +392,7 @@ public class EventCycle implements Runnable, Observer {
 		
 		while (running) {
 			rounds ++;
-			LOG.debug("EventCycle "+ getName() + ": Starting (Round " + rounds + ").");
+			LOG.info("EventCycle "+ getName() + ": Starting (Round " + rounds + ").");
 			
 			// set start time
 			long startTime = System.currentTimeMillis();
@@ -462,7 +456,7 @@ public class EventCycle implements Runnable, Observer {
 			}
 			
 			
-			LOG.debug("EventCycle "+ getName() + ": EventCycle finished (Round " + rounds + ").");
+			LOG.info("EventCycle "+ getName() + ": EventCycle finished (Round " + rounds + ").");
 			try {
 				synchronized (this) {
 					this.wait();
@@ -563,6 +557,10 @@ public class EventCycle implements Runnable, Observer {
 	 */
 	void setLastEventCycleTags(Set<Tag> tags){
 		this.lastEventCycleTags = tags;
+	}
+
+	public int getRounds() {
+		return rounds;
 	}
 
 }
