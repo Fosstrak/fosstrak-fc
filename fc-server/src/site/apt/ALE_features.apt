@@ -31,25 +31,19 @@ ALE features
 
 
 	Our implementation features the ALE server as defined by EPCglobal. We provide a HTTP binding for 
-	the webclient and a SOAP for the client. Our webclient implementation requires Apachee Tomcat 5.5 or higher.
+	the webclient and a SOAP for the client. Our webclient implementation requires Apache Tomcat 5.5 or higher.
 	Accada ALE Client Features
 
 	The Accada ALE client provides an intuitive graphical user interface to define ECSpecs and Endpoints. 
 	Further one can subscribe and unsubscribe to the generated reports.
-	The Webclient is a equivalent tomcat webservice implementation. 
-	They can be used to interactively test and explore the ALE functionality supporting the HTTP binding for the webclient 
-	and the SOAP binding for the client.
+
+	The Accada ALE webclient provides the same functionality as the Accada ALE client. As a supplement 
+	the webclient is able to access the Accada Logical Reader API. This API provides the ability to 
+	define logical readers and to modify them according to Logical Reader Specifications (LRSpec).
+ 
+	Both the Client and the webclient can be used to interactively test and explore the ALE functionality 
+	supporting the HTTP binding for the webclient and the SOAP binding for the client.
 	
-	The following two screenshots show the features available in our ALE client and webclient:
-
-[images/ALE_features/GUIClientCommando.png]
-
-	The ALE standalone Client
-
-[images/ALE_features/WebClient.png]
-
-	The ALE WebClient
-
 * Detailed Feature List
 
 	The list below shows which features of EPCglobal's filtering and collection interface 

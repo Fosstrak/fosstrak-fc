@@ -1,45 +1,27 @@
        ------
-                                    Filtering and Collection Overview
+                                    Filtering and Collection Server
                                     ------
                                     ------
 
 
-Filtering and Collection Overview
+Filtering and Collection Server
 
 * Objective
 
-	The objective of the Filtering and Collection Project is to implement the Filtering and 
-	Collection role in the EPC Network and to develop the appropriate tools that facilitate 
-	communication with the Filtering and Collection instance. 
+	The Filtering and Collection Module implements the Filtering and 
+	Collection role in the EPC network.
+	
+	In the Accada Implementation the Filtering and Collection Server 
+	(fc-server) provides a simple and efficient access to the Application 
+	Layer Events (ALE) and to the Logical Reader API.
 
-
-* Organization
-
-[images/ALE_overview/FilteringCollectionProjectOverview.png]
-
-	The Filtering and Collection Project comprises three separate modules: 
+	If you just want to try out the Accada Filtering and Collection please 
+	refer to the "Users guide" that will give you a short overview to the 
+	basic usage. In the "Users guide" there exists a complete example that 
+	will guide you through the setup of a complete instance of the Accada 
+	Filtering and Collection Server.
 	
-	* the Filtering and Collection implementation itself
-	
-	* the ALE Proxy 
-	
-	* the ALE Test Client
-	
-	[]
-	All three implement the ALE Specification defined by EPCglobal and its members. The middleware 
-	itself communicates with readers via the EPCglobal Reader Protocol.
-
-* How can the Accada Filtering and Collection Project help you?
-	
-	This project allows you to:
-	
-	* Interact with an RFID middleware that implements the Filtering and Collection role and which 
-	supports the Application-Level-Events Specification using our ALE Test Client.
-	
-	* Communicate with an RFID middleware that implements the Filtering and Collection role and which 
-	supports the Application-Level-Events Specification using the ALE Proxy. 
-	
-	* Deploy an RFID Middleware that implements the Filtering and Collection role and supports the 
-	reader protocol and ALE specification.
-
-	[]
+	If you want to know about the insides of the Accada Filtering and 
+	Collection Server please refer to the "Developers guide". The 
+	"Developers guide" contains detailed design decisions, the "big picture" 
+	and several advices how to avoid common pitfalls.
