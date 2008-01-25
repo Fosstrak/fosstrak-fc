@@ -16,9 +16,7 @@ Users guide - Test clients
 	
 	[[4]] {{{#LRSpec}LRSpec}}
 	
-	[[5]] {{{#Displaying}Displaying reports}}
-	
-	
+	[[5]] {{{#Displaying}Displaying reports}}	
 
 * {Objective}
 
@@ -145,4 +143,4 @@ Users guide - Test clients
      (e.g. tcp://localhost:9999 as the notification URI). 
 
   []
-	
+
