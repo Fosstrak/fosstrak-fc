@@ -8,7 +8,10 @@
       <item name="FC Commons" href="../fc-commons/project-reports.html" collapse="true">
         <item name="dummy"/>
       </item>
-      <item name="FC Server" href="project-reports.html" collapse="false">
+      <item name="FC Server" href="../fc-server/project-reports.html" collapse="true">
+        <item name="dummy"/>
+      </item>
+      <item name="FC Webclient" href="project-reports.html" collapse="false">
         <item name="Dependencies" href="dependencies.html"/>
         <item name="Dependency Convergence" href="dependency-convergence.html"/>
         <item name="PMD Report" href="pmd.html"/>
@@ -16,21 +19,6 @@
         <item name="JavaNCSS Report" href="javancss.html"/>
         <item name="Issue Tracking" href="issue-tracking.html"/>
       </item>
-      <item name="FC Webclient" href="../fc-webclient/project-reports.html" collapse="true">
-        <item name="dummy"/>
-      </item>
     </menu>
-    
-	<!--
-
-    <menu name="Filtering and Collection Project Modules">
-	    <item name="FC Server" href="../fc-server/index.html" collapse="false">
-		<item name="Features" href="/ALE_features.html"/>
-		<item name="FAQ" href="/faq.html"/>
-
-
-	    </item>
-    </menu>
-    -->
 </body>
 </project>

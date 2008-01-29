@@ -41,18 +41,18 @@ Users guide - Test clients
   can be left unchanged initially. After starting the client with the <<<java -jar fc-client<Version>.jar>>> command,
   you will see the following screen:
 
-[images/userGuide/GUIClientBasic.png]
+[../images/userGuide/GUIClientBasic.png]
 
   If the endpoint is not correctly configured an error dialog pops up, informing you that the client couldn't connect
   to the server:
 
-[images/userGuide/GUIClientFailureDialog.png]
+[../images/userGuide/GUIClientFailureDialog.png]
 
   The client's user interface has three sections. Commands can be choosen from a dropdown box in the top section.
   In the middle, parameters for the selected command can be typed in (not all commands need parameters).
   Commands are sent to the server by clicking the the <<<execute>>> button. 
   
-[images/userGuide/GUIClientCommando.png]
+[../images/userGuide/GUIClientCommando.png]
 
   The third section is used to display the server's response.
 
@@ -69,7 +69,7 @@ Users guide - Test clients
   Again, you will see a user interface that is divided into three frames. In the left frame, all methods are listed,
   while the top right one accepts the method arguments and the bottom right frame displays server responses.
 
-[images/userGuide/WebClient.png]
+[../images/userGuide/WebClient.png]
 
   Before invoking any other methods, you will have to set the endpoint (i.e., the Filtering and Collection Server
   to communicate with) by choosing the <<<setEndpoint() >>> method in left frame and inserts the URL of your
@@ -95,13 +95,13 @@ Users guide - Test clients
 	parameters to your needs. Attention: The readTimeInterval should be smaller than the duration of 
 	the EventCycle.
 	
-	* {{{files/ECSpec_current.xml}ECSpec_current.xml}}: Retrieve all the tags that are currently on 
+	* {{{../files/ECSpec_current.xml}ECSpec_current.xml}}: Retrieve all the tags that are currently on 
 		the reader.
 	
-	* {{{files/ECSpec_additions.xml}ECSpec_additions.xml}}: Retrieve all the tags that have been added 
+	* {{{../files/ECSpec_additions.xml}ECSpec_additions.xml}}: Retrieve all the tags that have been added 
 		to the reader since the last EventCycle.
 	
-	* {{{files/ECSpec_deletions.xml}ECSpec_deletions.xml}}: Retrieve all the tags that have been deleted 
+	* {{{../files/ECSpec_deletions.xml}ECSpec_deletions.xml}}: Retrieve all the tags that have been deleted 
 		from the reader since the last EventCycle.
 	
 * {LRSpec}
@@ -111,11 +111,11 @@ Users guide - Test clients
 	
 	The following list provides a few sample LRSpecs.
 	
-	* {{{files/RPReader.xml}RPReader.xml}}: Create a reader protocoll reader.
+	* {{{../files/RPReader.xml}RPReader.xml}}: Create a reader protocoll reader.
 	
-	* {{{files/HALReader.xml}HALReader.xml}}: Create a HAL reader.
+	* {{{../files/HALReader.xml}HALReader.xml}}: Create a HAL reader.
 	
-	* {{{files/CompositeReader1.xml}CompositeReader1.xml}}: Create a composite reader. You 
+	* {{{../files/CompositeReader1.xml}CompositeReader1.xml}}: Create a composite reader. You 
 		need two readers reader1 and reader2 that are already defined, else the Logical Reader API will complain 
 		about the missing readers.
 		

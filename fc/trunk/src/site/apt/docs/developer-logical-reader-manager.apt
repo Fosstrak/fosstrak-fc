@@ -6,7 +6,15 @@
 
 Logical Reader Management
 
-* Objective
+* Contents
+
+   [[1]] {{{#Overview}Overview}}
+
+   [[2]] {{{#Organisation}Organisation}}
+   
+   [[3]] {{{#Implementation}Implementation}}
+   
+* {Overview}
 
 	The Accada Filtering and Collection middleware provides an abstraction from the 
 	physical reader devices. The Logical Reader Management is an interface through which 
@@ -16,7 +24,7 @@ Logical Reader Management
 	manages the list of Logical Readers which are part of a current setting.
 
 
-* Organisation
+* {Organisation}
 	
 	The Logical Reader Manager has the current list of all Logical Readers
 	which are present in the current setting.
@@ -28,7 +36,7 @@ Logical Reader Management
 	possible to store the current setting to a .xml file, so that in case of a 
 	failure, the previous setting can be retained at any time. 
 
-* Implementation
+* {Implementation}
 
 	The whole functionality is in a single class: LogicalReaderManager.java.
 	The most functionality is contained in the methods described below. Most of the
