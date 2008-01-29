@@ -54,9 +54,9 @@ Users guide - A complete Example
    
    * a copy of the rp reader simulator. eg. reader-rprm-core-0.4.0-SNAPSHOT.jar
    
-   * an ECSpec. eg. {{{files/ECSpec_current.xml}ECSpec_current.xml}}
+   * an ECSpec. eg. {{{../files/ECSpec_current.xml}ECSpec_current.xml}}
    
-   * a logical reader definition xml. eg {{{files/RPReader.xml}RPReader.xml}}
+   * a logical reader definition xml. eg {{{../files/RPReader.xml}RPReader.xml}}
    
    []
    

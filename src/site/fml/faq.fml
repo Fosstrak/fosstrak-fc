@@ -3,6 +3,27 @@
 
 <part id="about">
 <faq>
+<question>Can i start a graphical HAL Simulator from within Apache Tomcat?</question>
+<answer>Yes, you can. You need to modify the runtime permissions for Apache Tomcat<br/><br/>
+Variant 1: Tomcat is started through the Service Manager (System tray)<br/>
+<ol>
+	<li>Start the Service Manager</li>
+	<li>Select "Configure...".</li>
+	<li>Select tab "Log On".</li>
+	<li>Choose "This account" and modify the username and the password to the current user.</li>
+	<li>Start Apache Tomcat.</li>
+</ol>
+Variant 2: Tomcat is started through the command line<br/>
+<ol>
+	<li>In the Windows system settings select the "Services" within "Administrative Control".</li>
+	<li>Select Apache Tomcat</li>
+	<li>Select tab "Log On".</li>
+	<li>Choose "This account" and modify the username and the password to the current user.</li>
+	<li>Start Apache Tomcat.</li>
+</ol>
+</answer>
+</faq>
+<faq>
 <question>Is this a reference implementation of the EPCglobal Reader Protocol Version 1.1?</question>
 <answer>No, not at all. It is currently alpha software that is intended to facilitate rapid prototyping.</answer>
 </faq>

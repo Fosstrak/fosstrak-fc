@@ -40,7 +40,7 @@ Logical Reader concept
 	The documentation for the usage of the Logical Reader API 
 	through the LogicalReaderManager is not covered here. 
 	Please refer to the chapter 
-	"{{{logical-reader-manager.html}LogicalReader Management}}"
+	"{{{developer-logical-reader-manager.html}LogicalReader Management}}"
 	
 	
 	
@@ -64,7 +64,7 @@ Logical Reader concept
 	in the next image.
 	
 		
-[images/readerAPI/CompositePattern.png]
+[../images/readerAPI/CompositePattern.png]
 
 	
 	* LogicalReader is the most general interface to a reader. 
@@ -138,31 +138,35 @@ Logical Reader concept
 		its components accessed as LogicalReaders.
 
 	[]
-[images/readerAPI/ObserverPattern.png]
+[../images/readerAPI/ObserverPattern.png]
 	
-	As the image visualizes a LogicalReader acts in any case only as Observable 
-	where CompositeReaders or EventCycles can register. CompositeReaders 
-	register themself on other LogicalReaders, therefor act as Observer 
-	and as Observable in the same time.
+	As the image visualizes a LogicalReader acts in any case only as 
+	Observable where CompositeReaders or EventCycles can register. 
+	CompositeReaders register themself on other LogicalReaders, therefor 
+	act as Observer and as Observable in the same time.
 	
 	The following image shall give an example.
 	
-[images/readerAPI/ObserverPattern_example.png]
+[../images/readerAPI/ObserverPattern_example.png]
 
-		* "EventCycle 1" has registered on "CompositeReader 1" and "Reader 2". 
+		* "EventCycle 1" has registered on "CompositeReader 1" and 
+			"Reader 2". 
 		
-		* "EventCycle 2" has registered on "CompositeReader 1" and "CompositeReader 2".
+		* "EventCycle 2" has registered on "CompositeReader 1" and 
+			"CompositeReader 2".
 		
-		* "CompositeReader 1" has registered on "Reader 1", "Reader 2" and "Reader 3".
+		* "CompositeReader 1" has registered on "Reader 1", 
+			"Reader 2" and "Reader 3".
 		
-		* "CompositeReader 2" has registered on "CompositeReader 1", "Reader 3" and 
-			"CompositeReader 3".
+		* "CompositeReader 2" has registered on "CompositeReader 1", 
+			"Reader 3" and "CompositeReader 3".
 	
 	
-	Whenever a BaseReader reads a Tag it calls its notify-method. This method 
-	calls the update-method on all the Observers. Like that one BaseReader can send 
-	one Tag to multiple receivers. In the same manner CompositeReader calls its 
-	notify method whenever a component triggered the update-method.
+	Whenever a BaseReader reads a Tag it calls its notify-method. This 
+	method calls the update-method on all the Observers. Like that one 
+	BaseReader can send one Tag to multiple receivers. In the same manner 
+	CompositeReader calls its notify method whenever a component triggered 
+	the update-method.
 	
 	
 	
@@ -174,15 +178,15 @@ Logical Reader concept
 	implement several BaseReaders. Therefor the adaptor pattern was used to 
 	generalize the notion of a BaseReader. 
 	
-	The Adaptor pattern translates an interface of a class into another interface. 
-	In this case the interfaces of different readers are translated into the 
-	interface BaseReader.
+	The Adaptor pattern translates an interface of a class into another 
+	interface. In this case the interfaces of different readers are 
+	translated into the interface BaseReader.
 	
-[images/readerAPI/AdaptorPattern.png]	
+[../images/readerAPI/AdaptorPattern.png]	
 	
 	One drawback of this pattern is, that for each new reader one has to 
-	implement a new adaptor. Nevertheless, in our opinion the advantages still 
-	overrule the drawbacks.
+	implement a new adaptor. Nevertheless, in our opinion the advantages 
+	still overrule the drawbacks.
 	
 	The instantiation of such adaptors are explained in the 
 	section BaseReader.	
@@ -196,41 +200,42 @@ Logical Reader concept
 	
 * {LogicalReader}
 	
-	As motivated by the CompositePattern LogicalReader declares the interface 
-	to a reader. In following the methods contained in LogicalReader are 
-	explained shortly.
+	As motivated by the CompositePattern LogicalReader declares the 
+	interface to a reader. In following the methods contained in 
+	LogicalReader are explained shortly.
 	
-[images/readerAPI/LogicalReader.png]	
+[../images/readerAPI/LogicalReader.png]	
 	
-	* setLRSpec/getLRSpec: These methods set/return the logical reader specification 
-		(called LRSpec) for a LogicalReader.
+	* setLRSpec/getLRSpec: These methods set/return the logical reader 
+		specification (called LRSpec) for a LogicalReader.
 	
-	* setProperties/getProperties: These methods set/return the logical reader 
-		properties (called LRProperty) for a LogicalReader.
+	* setProperties/getProperties: These methods set/return the logical 
+		reader properties (called LRProperty) for a LogicalReader.
 	
 	* setName/getName: Set/return the name of the current LogicalReader.
 	
-	* update: Update is an abstract method that is used in either a CompositeReader 
-		or a BaseReader. By calling the update-method an ALE client can 
-		change the LRSpec of a LogicalReader.
+	* update: Update is an abstract method that is used in either a 
+		CompositeReader or a BaseReader. By calling the update-method 
+		an ALE client can change the LRSpec of a LogicalReader.
 	
 	* start/stop: Abstract methods allowing an ALE client to start/stop a 
 		LogicalReader.
 	
-	* setStarted/setStopped: A reader can be suspended from within the LogicalReader 
-		API. This is neccessary for a CompositeReader whenever an update 
-		inside the CompositeReader occures.
+	* setStarted/setStopped: A reader can be suspended from within the 
+		LogicalReader API. This is neccessary for a CompositeReader 
+		whenever an update inside the CompositeReader occures.
 		
 	* createReader: This static factory method is used to create/setup a 
 		LogicalReader. In a first step the LRSpec is used to determine 
 		whether to create a CompositeReader or a LogicalReader. 
 		
-		The first case is simply the instantiation of a new CompositeReader 
-		object through a constructor-call. The setup of a CompositeReader 
-		is explained in the section about CompositeReader.
+		The first case is simply the instantiation of a new 
+		CompositeReader object through a constructor-call. The setup 
+		of a CompositeReader is explained in the section about 
+		CompositeReader.
 		
-		The second case is more complicated an shall be explained in the section 
-		about BaseReaders.
+		The second case is more complicated an shall be explained in 
+		the section about BaseReaders.
 		
 		In both of the two cases a LogicalReader is returned.
 	
@@ -241,17 +246,17 @@ Logical Reader concept
 	
 * {CompositeReader}
 
-	The class CompositeReader models a composite in the composite pattern that 
-	can be composed by different other components. The components are in 
-	this case LogicalReaders.
+	The class CompositeReader models a composite in the composite pattern 
+	that can be composed by different other components. The components are 
+	in this case LogicalReaders.
 
-[images/readerAPI/CompositeReader.png]
+[../images/readerAPI/CompositeReader.png]
 
 	The image above shows only new or overwritten methods from 
 	LogicalReader. 
 	
-	* unregisterAsObserver: Unregisteres the current CompositeReader from all 
-		the leafs (other LogicalReaders).
+	* unregisterAsObserver: Unregisteres the current CompositeReader from 
+		all the leafs (other LogicalReaders).
 		
 	* update(o: Observable, arg: Object): Whenever an Observable calls its 
 		notify-method this update-method is invoked by the java observer 
@@ -261,18 +266,20 @@ Logical Reader concept
 	* update(spec: LRSpec): Changes the LRSpec of the CompositeReader. This 
 		includes the change of available readers and the LRProperties.
 	
-	* addReader/removeReader: Modify the readers contained in this CompositeReader. 
+	* addReader/removeReader: Modify the readers contained in this 
+		CompositeReader. 
 	
 	* start/stop: Whenever changes to the leafs have to be performed these 
 		methods are invoked to start/stop the reader
 		
-	* initialize and CompositeReader: Whenever a new CompositeReader is to be 
-		created a call to the initialize-method follows the Constructor-call. 
+	* initialize and CompositeReader: Whenever a new CompositeReader is to 
+		be created a call to the initialize-method follows the 
+		Constructor-call. 
 		
 		In the initialize-method the leafs of the CompositeReader are 
-		aquired from the LogicalReaderManager by calling the Logical Reader 
-		API. The CompositeReader registers itself on the leafs as an 
-		Observer.
+		aquired from the LogicalReaderManager by calling the Logical 
+		Reader API. The CompositeReader registers itself on the leafs 
+		as an Observer.
 	
 	
 	
@@ -281,10 +288,11 @@ Logical Reader concept
 	
 * {BaseReader}
 
-	BaseReader models the leaf of the composite pattern. BaseReader provides more 
-	methods that can be used to communicate directly with a physical reader. 
+	BaseReader models the leaf of the composite pattern. BaseReader 
+	provides more methods that can be used to communicate directly with a 
+	physical reader. 
 
-[images/readerAPI/BaseReader.png]
+[../images/readerAPI/BaseReader.png]
 
 	In the image above only new or overwritten methods from 
 	LogicalReader are shown. 

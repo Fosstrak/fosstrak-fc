@@ -10,11 +10,11 @@ Users guide - Logical Reader Definitions
 	
 	[[1]] {{{#LogicalReaders}LogicalReaders}}
 	
-	[[2]] {{{#Example 1}Example 1 - A Reader Protocol LogicalReader}}
+	[[2]] {{{#Example1}Example1 - A Reader Protocol LogicalReader}}
 	
-	[[3]] {{{#Example 2}Example 2 - A HAL Protocol LogicalReader}}
+	[[3]] {{{#Example2}Example2 - A HAL Protocol LogicalReader}}
 	
-	[[4]] {{{#Example 3}Example 3 - A Complete Example with a CompositeReader}}
+	[[4]] {{{#Example3}Example3 - A Complete Example with a CompositeReader}}
 	
 
 * Objective
@@ -31,7 +31,7 @@ Users guide - Logical Reader Definitions
 	your needs. In the following we will give a short introduction 
 	how you can setup the basic structure for a LogicalReader. You will 
 	find some elaborate Examples for real LogicalReaders later on in this 
-	guide (See {{{#Example 1}Example 1}}, {{{#Example 2}Example 2}}, {{{#Example 3}Example 3}}).
+	guide (See {{{#Example1}Example1}}, {{{#Example2}Example2}}, {{{#Example3}Example3}}).
 
 	When you want to define your own LogicalReader through an xml-file 
 	you need to obey some restrictions. Some of them are discussed here. 
@@ -75,21 +75,21 @@ example:
 	[]
 	
 	To check your xml-file for correctness you can use 
-	our xsd schema ({{{files/LogicalReaders.xsd}LogicalReaders.xsd}}).
+	our xsd schema ({{{../files/LogicalReaders.xsd}LogicalReaders.xsd}}).
 
 
 
-* {Example 1} - A Reader Protocol LogicalReader
+* {Example1} - A Reader Protocol LogicalReader
 
 	In the Reader Protocol (RP) the reader needs special 
 	parameters for the connection between the physical reader 
 	and the LogicalReader. For a detailed introduction of these 
 	parameters refer to the developers-guide - section 
-	{{{adaptor.html}"Implement an Adaptor"}}.
+	{{{developer-adaptor.html}"Implement an Adaptor"}}.
 	
 	The Example shows the definition of one RP LogicalReader.
 	
-	You can download the xml {{{files/users-guide-example1.xml}users-guide-example1.xml}}.
+	You can download the xml {{{../files/users-guide-example1.xml}users-guide-example1.xml}}.
 	
 +-------------------------------------------------------------------+
 <?xml version="1.0" encoding="UTF-8"?>
@@ -109,16 +109,16 @@ example:
 </LogicalReaders>
 +-------------------------------------------------------------------+
 
-* {Example 2} - A HAL Protocol LogicalReader
+* {Example2} - A HAL Protocol LogicalReader
 
 	In the Hardware Abstraction Layer (HAL) the reader needs special 
 	parameters for the bootstrapping of the HAL. For a 
 	detailed introduction of these parameters refer to the 
-	developers-guide - section {{{adaptor.html}"Implement an Adaptor"}}.
+	developers-guide - section {{{developer-adaptor.html}"Implement an Adaptor"}}.
 	
 	The Example shows the definition of one HAL LogicalReader.
 	
-	You can download the xml {{{files/users-guide-example2.xml}users-guide-example2.xml}}.
+	You can download the xml {{{../files/users-guide-example2.xml}users-guide-example2.xml}}.
 	
 +-------------------------------------------------------------------+
 <?xml version="1.0" encoding="UTF-8"?>
@@ -141,7 +141,7 @@ example:
 
 
 
-* {Example 3} - A Complete Example with a CompositeReader
+* {Example3} - A Complete Example with a CompositeReader
 
 	The following Example introduces the capability of the 
 	logical reader API to combine several readers into one 
@@ -152,7 +152,7 @@ example:
 	This Example shows one HAL reader and one RP reader that then will be 
 	part of one CompositeReader.
 	
-	You can download the xml {{{files/users-guide-example3.xml}users-guide-example3.xml}}.
+	You can download the xml {{{../files/users-guide-example3.xml}users-guide-example3.xml}}.
 	
 +-------------------------------------------------------------------+
 <?xml version="1.0" encoding="UTF-8"?>

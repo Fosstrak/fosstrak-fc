@@ -174,7 +174,7 @@ generator.notifySubscribers(ecReports);
 	
 []
 
-[images/ALE/EventCycleSequence.png]
+[../images/ALE/EventCycleSequence.png]
 
 
 
@@ -192,7 +192,7 @@ generator.notifySubscribers(ecReports);
 	an undefine occurs the EventCycle moves into the stopped final 
 	state and becomes destroyed.
 	
-[images/ALE/EventCycleStateDiagram.png]
+[../images/ALE/EventCycleStateDiagram.png]
 
 
 
@@ -203,7 +203,7 @@ generator.notifySubscribers(ecReports);
 	The following class interface gives an overview to the methods 
 	available from the EventCycle.
 
-[images/ALE/EventCycle.png]
+[../images/ALE/EventCycle.png]
 
 	* EventCycle: The constructor takes a ReportsGenerator as an 
 		argument. The constructor performs:

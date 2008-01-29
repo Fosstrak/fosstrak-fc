@@ -54,7 +54,7 @@ Developers guide
 		
 	[]
 
-[images/ALE/ALE_overview.png]
+[../images/ALE/ALE_overview.png]
 
 
 
@@ -63,15 +63,15 @@ Developers guide
 	
 	For detailed information please refer to the chapters:
 	 
-	* {{{ale.html}ALE}}
+	* {{{developer-ale.html}Application Layer Events}}
 	
-	* {{{eventcycle.html}EventCycle}}
+	* {{{developer-eventcycle.html}Event Cycle}}
 	
-	* {{{reports-generator.html}Reports generation}}
+	* {{{developer-reports-generator.html}Reports generation}}
 	
-	* {{{reports-notification.html}Reports notification}}
+	* {{{developer-reports-notification.html}Reports notification}}
 	
-	* {{{reader-concept.html}LogicalReader Concept}} (logical reader API)
+	* {{{developer-reader-concept.html}LogicalReader Concept}} (logical reader API)
 	
 	[]
 	

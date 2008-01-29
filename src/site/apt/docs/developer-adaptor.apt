@@ -27,23 +27,25 @@ How to implement an Adaptor
 
 * {HALAdaptor}
 	
-	The HALAdaptor provides an adaptor to the Hardware Abstraction Layer (HAL).
+	The HALAdaptor provides an adaptor to the Hardware Abstraction Layer 
+	(HAL).
 	
 	The following list will show the required LRProperties that have to be 
 	provided through an LRSpec when a new HAL reader shall be constructed.
 	
-	* ImplClass: The full path to the type of the reader. For a HALAdaptor this 
-		is always "org.accada.ale.server.readers.hal.HALAdaptor".
+	* ImplClass: The full path to the type of the reader. For a HALAdaptor 
+		this is always "org.accada.ale.server.readers.hal.HALAdaptor".
 
------------------------------------------------------------------------------------
-<LRProperty name="ImplClass" value="org.accada.ale.server.readers.hal.HALAdaptor"/>
------------------------------------------------------------------------------------
++---+
+<LRProperty name="ImplClass" 
+	value="org.accada.ale.server.readers.hal.HALAdaptor"/>
++---+
 	
 	* PhysicalReadername: The name of the HAL reader.
 	
----------------------------------------------------------------------------------
++---+
 <LRProperty name="PhysicalReaderName" value="MyReader"/>
----------------------------------------------------------------------------------	
++---+	
 	* ReadTimeInterval: The interval in which a HAL device shall inform the 
 		HALAdaptor about new tags. If the HAL device does not provide an 
 		auto-polling mechanism, the HALAdaptor will automatically create 
@@ -52,46 +54,50 @@ How to implement an Adaptor
 		
 		Syntax: integer
 		
----------------------------------------------------------------------------------
++---+
 <LRProperty name="ReadTimeInterval" value="2000"/>
----------------------------------------------------------------------------------
++---+
 	
 	* PropertiesFile: All HAL devices that are currently supported, need a 
 		properties file.
 
----------------------------------------------------------------------------------
++---+
 <LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
----------------------------------------------------------------------------------
++---+
 
 	* Description: This gives a general human readable description to the 
 		adaptor.
 	
------------------------------------------------------------------------------------
++---+
 <LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
------------------------------------------------------------------------------------	
++---+	
 	
 	[]
 	
 	A sample configuration for a HALAdaptor
 
-+----------------------------------------------------------------------------------------------------+
++---+
 <LogicalReader name="LogicalReader1">
-	<LRSpec isComposite="false" readerType="org.accada.ale.server.readers.hal.HALAdaptor">
-		<LRProperty name="Description" value="HAL reader created during system startup"/>
+	<LRSpec isComposite="false" 
+		readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+		<LRProperty name="Description" 
+			value="HAL reader created during system startup"/>
 		<LRProperty name="AdaptorClass" value="HAL"/>
-		<LRProperty name="ImplClass" value="org.accada.ale.server.readers.hal.HALAdaptor"/>
+		<LRProperty name="ImplClass" 
+			value="org.accada.ale.server.readers.hal.HALAdaptor"/>
 		<LRProperty name="PhysicalReaderName" value="MyReader"/>
 		<LRProperty name="ReadTimeInterval" value="1000"/>
-		<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		<LRProperty name="PropertiesFile" 
+			value="/props/SimulatorController.xml"/>
 	</LRSpec>
 </LogicalReader>
-+----------------------------------------------------------------------------------------------------+
++---+
 	
 	[]
 	Currently the HALAdaptor creates a SimulatorController object. This object 
 	in turn then sets up the HAL device as requested by the properties file. 
 
-[images/readerAPI/HALAdaptor.png]
+[../images/readerAPI/HALAdaptor.png]
 
 	For example properties files refer to:
 	 
@@ -107,7 +113,7 @@ How to implement an Adaptor
 	a mechanism to periodically poll the device. We chose an identifyThread 
 	that polls the HAL device in a regular time interval.
 	
-[images/readerAPI/HALAdaptorPolling.png]
+[../images/readerAPI/HALAdaptorPolling.png]
 
 
 
@@ -127,41 +133,42 @@ How to implement an Adaptor
 	have to be provided through an LRSpec when a new RP reader shall 
 	be constructed.
 	
-	* ConnectionPoint: the connection point is needed to connect to the reader. 
-		The rp-proxy will connect to this url.
+	* ConnectionPoint: the connection point is needed to connect to the 
+		reader. The rp-proxy will connect to this url.
 		
 		Syntax: "proto://ip:port"
 		
------------------------------------------------------------------------------------
++---+
 <LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
------------------------------------------------------------------------------------	
++---+	
 	
-	* NotificationPoint: the notification point is used to communicate from 
-		the reader to the RPAdaptor. All tags read by the reader are returned 
-		over this channel.
+	* NotificationPoint: the notification point is used to communicate 
+		from the reader to the RPAdaptor. All tags read by the reader 
+		are returned over this channel.
 		
 		Syntax: "proto://ip:port"
 
------------------------------------------------------------------------------------
++---+
 <LRProperty name="NotificationPoint" value="http://localhost:9090"/>
------------------------------------------------------------------------------------
++---+
 	
-	* ReadTimeInterval: the read time interval specifies how often the reader 
-		informs the RPAdaptor about new tag events. The interval is 
-		in miliseconds.
+	* ReadTimeInterval: the read time interval specifies how often the 
+		reader informs the RPAdaptor about new tag events. The interval 
+		is in miliseconds.
 		
 		Syntax: integer
 		
------------------------------------------------------------------------------------
++---+
 <LRProperty name="ReadTimeInterval" value="2000"/>
------------------------------------------------------------------------------------
++---+
 	
-	* ImplClass: the full path to the type of the reader. For a RPAdaptor this 
-		is always "org.accada.ale.server.readers.rp.RPAdaptor".
+	* ImplClass: the full path to the type of the reader. For a RPAdaptor 
+		this is always "org.accada.ale.server.readers.rp.RPAdaptor".
 	
------------------------------------------------------------------------------------
-<LRProperty name="ImplClass" value="org.accada.ale.server.readers.rp.RPAdaptor"/>
------------------------------------------------------------------------------------
++---+
+<LRProperty name="ImplClass" 
+	value="org.accada.ale.server.readers.rp.RPAdaptor"/>
++---+
 	
 	* PhysicalReaderName: The name of the physical reader.
 	
@@ -170,57 +177,65 @@ How to implement an Adaptor
 		
 		Syntax: "Antenna1,Antenna2,Antenna3"
 		
------------------------------------------------------------------------------------
++---+
 <LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3"/>
------------------------------------------------------------------------------------	
++---+	
 	
 	* Description: This gives a general human readable description to the 
 		adaptor.
 	
------------------------------------------------------------------------------------
++---+
 <LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
------------------------------------------------------------------------------------
++---+
 	
 	[]
 	A sample configuration for a RPAdaptor
 	
-+-----------------------------------------------------------------------------------------------+
++---+
 <LogicalReader name="LogicalReader1">
-	<LRSpec isComposite="false" readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+	<LRSpec isComposite="false" 
+		readerType="org.accada.ale.server.readers.rp.RPAdaptor">
 		<LRProperty name="Description" value="My physical Reader"/>
-		<LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
-		<LRProperty name="NotificationPoint" value="http://localhost:9090"/>
+		<LRProperty name="ConnectionPoint" 
+			value="http://localhost:8000"/>
+		<LRProperty name="NotificationPoint" 
+			value="http://localhost:9090"/>
 		<LRProperty name="ReadTimeInterval" value="200"/>
 		<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
-		<LRProperty name="ImplClass" value="org.accada.ale.server.readers.rp.RPAdaptor"/>
+		<LRProperty name="ImplClass" 
+			value="org.accada.ale.server.readers.rp.RPAdaptor"/>
 		<LRProperty name="PhysicalReaderName" value="MyReader"/>
-		<LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+		<LRProperty name="PhysicalReaderSource" 
+			value="Shelf1,Shelf2,Shelf3,Shelf4"/>
 	</LRSpec>
 </LogicalReader>
-+-----------------------------------------------------------------------------------------------
++---+
 
 		
 	[]
-	The RPAdaptor provides a default constructor and an initializer method. Both 
-	are called in the construction phase of the LogicalReader. The RPAdaptor 
-	implements all methods that are required by the logical reader API (basically 
-	these are the methods that are specified in LogicalReader and in BaseReader).
+	The RPAdaptor provides a default constructor and an initializer method. 
+	Both are called in the construction phase of the LogicalReader. The 
+	RPAdaptor implements all methods that are required by the logical 
+	reader API (basically these are the methods that are specified in 
+	LogicalReader and in BaseReader).
 	
 	Aside the standard methods and fields the RPAdaptor requires some more 
-	functionality to communicate with a rp-proxy. The InputGenerator sets up 
-	the connection between the RPAdaptor and the rp-proxy. There are two channels 
-	that need to be created. The first one (command channel) is created for the 
-	communication from the RPAdaptor to the rp-proxy. The command channel uses the 
-	connection settings provided by ConnectionPoint. The second channel (notification 
-	channel) is used for the communication from the rp-proxy to the RPAdaptor and 
-	provides a channel for the delivery of tags from the physical reader. The 
-	settings provided by NotificationPoint are used to set up this channel. As soon 
-	as the RPAdaptor is started through the logical reader API the rp-proxy sends 
-	tag events that are then processed by the InputGenerator and sent through the 
-	RPAdaptor to the observers (CompositeReader or EventCycle).
+	functionality to communicate with a rp-proxy. The InputGenerator sets 
+	up the connection between the RPAdaptor and the rp-proxy. There are 
+	two channels that need to be created. The first one (command channel) 
+	is created for the communication from the RPAdaptor to the rp-proxy. 
+	The command channel uses the connection settings provided by 
+	ConnectionPoint. The second channel (notification channel) is used 
+	for the communication from the rp-proxy to the RPAdaptor and provides 
+	a channel for the delivery of tags from the physical reader. The 
+	settings provided by NotificationPoint are used to set up this 
+	channel. As soon as the RPAdaptor is started through the logical 
+	reader API the rp-proxy sends tag events that are then processed by 
+	the InputGenerator and sent through the RPAdaptor to the observers 
+	(CompositeReader or EventCycle).
 	
 	
-[images/readerAPI/RPAdaptor.png]
+[../images/readerAPI/RPAdaptor.png]
 	
 	The reader protocol provides a tag-smoothing by hardware. In the current 
 	implementation of the RPAdaptor we do not use this feature and poll 
@@ -231,7 +246,7 @@ How to implement an Adaptor
 	in this high level tag smoothing we wanted to provide as many tags as 
 	possible. 
 	
-[images/readerAPI/RPAdaptorPolling.png]
+[../images/readerAPI/RPAdaptorPolling.png]
 	
 	
 	
@@ -312,7 +327,7 @@ How to implement an Adaptor
 	
 	sample code of an empty reader adaptor:
 	 
-+------------------------------------------------------------------+
++---+
 package org.accada.ale.server.readers.myreader;
 
 import org.accada.ale.server.Tag;
@@ -328,7 +343,8 @@ public class MyReaderAdaptor extends BaseReader {
 		super();
 	}
 	
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) 
+	  throws ImplementationException {
 		super.initialize(name, spec);
 	}
 
@@ -375,6 +391,6 @@ public class MyReaderAdaptor extends BaseReader {
 
 	}
 }
-+------------------------------------------------------------------+
++---+
 	
 	
