@@ -177,13 +177,25 @@ public class Tag {
 	 * @return boolean value flaging whether equal or not
 	 */
 	public boolean equalsTag(Tag tag) {
-		// compare the origin
-		if (!tag.getOrigin().equalsIgnoreCase(getOrigin())) {
+		// if the origin in both tags is null, then do not take the 
+		// origin into account when comparing
+		if ((getOrigin() != null) && (tag.getOrigin() != null)) { 
+			// compare the origin
+			if (!tag.getOrigin().equalsIgnoreCase(getOrigin())) {
+				return false;
+			}
+		} else if ((getOrigin() == null) || (tag.getOrigin() == null)) {
 			return false;
 		}
 		
-		// compare the reader
-		if (!tag.getReader().equalsIgnoreCase(getReader()))  {
+		// if the reader in both tags is null, then do not take the
+		// reader into account when comparing
+		if ((getReader() != null) && (tag.getReader() != null)) {
+			// compare the reader
+			if (!tag.getReader().equalsIgnoreCase(getReader()))  {
+				return false;
+			}
+		} else if ((getReader() == null) || (tag.getReader() == null)) {
 			return false;
 		}
 		
