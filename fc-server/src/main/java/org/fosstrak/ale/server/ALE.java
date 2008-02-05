@@ -302,7 +302,7 @@ public class ALE {
 	 */
 	public static String getStandardVersion() {
 		
-		return "1.0";
+		return "1.1";
 		
 	}
 	

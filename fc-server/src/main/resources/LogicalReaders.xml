@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/home/wuschu/workspace-accada/fc-server/src/main/resources/LogicalReaders.xsd">
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/LogicalReaders.xsd">
 </LogicalReaders>
