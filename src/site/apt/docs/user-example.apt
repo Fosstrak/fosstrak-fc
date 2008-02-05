@@ -89,10 +89,12 @@ java -jar reader-rprm-core-0.4.0-SNAPSHOT.jar
    Make sure the provided port is not used by some other application.
 
 +--------------+
-java -cp <READER_RP_CLIENT_VERSION>.jar org.accada.reader.rp.client.EventSinkUI <PORT>
+java -cp <READER_RP_CLIENT_VERSION>.jar \ 
+	org.accada.reader.rp.client.EventSinkUI <PORT>
 
 example:
-java -cp reader-rp-client-0.3.1.jar org.accada.reader.rp.client.EventSinkUI 9999
+java -cp reader-rp-client-0.3.1.jar \ 
+	org.accada.reader.rp.client.EventSinkUI 9999
 +--------------+
 
 

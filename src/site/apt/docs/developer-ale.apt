@@ -48,6 +48,7 @@ Application Layer Events
 	* Administrative methods (eg. VendorVersion).
 	
 	[]
+	
 	The ALEServicePort provides the interface that allows 
 	clients to connect to the ALE. The service port provides:
 	
@@ -199,7 +200,9 @@ java -cp axis.jar org.apache.axis.wsdl.WSDL2Java --all --output . \
 		new types accessible in the wsdl (this includes input 
 		parameters, return values, exceptions ...)
 		
-+-------------------------------------------------------------+		
+	[]
+		
++---+		
 Example: SecurityException:
 
 <xsd:element name="SecurityException" type="impl:SecurityException"/>
@@ -208,29 +211,34 @@ Example: SecurityException:
 		<xsd:extension base="impl:ALEException"/>
 	</xsd:complexContent>
 </xsd:complexType>
-+-------------------------------------------------------------+
++---+
 
 	* <wsdl:message>: with the <wsdl:message>-tag 
 		you describe a message.
 
-+-------------------------------------------------------------+
+	[]
+		
++---+
 Example: InUseException:
 
 <wsdl:message name="InUseExceptionResponse">
 	<wsdl:part name="fault" element="impl:InUseException"/>
 </wsdl:message>	
-+-------------------------------------------------------------+
-  
++---+
+	
 	* <wsdl:portType>: this section describes the methods 
 		in detail including parameters, return values and 
 		exceptions.
+
+	[]
 		
-+-------------------------------------------------------------+
++---+
 Example: getLRSpec:
 
 <wsdl:operation name="getLRSpec">
 	<wsdl:input message="impl:getLRSpecRequest" name="getLRSpecRequest"/>
-	<wsdl:output message="impl:getLRSpecResponse" name="getLRSpecResponse"/>
+	<wsdl:output message="impl:getLRSpecResponse" 
+		name="getLRSpecResponse"/>
 	<wsdl:fault message="impl:NoSuchNameExceptionResponse"
 			  name="NoSuchNameExceptionFault"/>
 	<wsdl:fault message="impl:SecurityExceptionResponse"
@@ -238,13 +246,16 @@ Example: getLRSpec:
 	<wsdl:fault message="impl:ImplementationExceptionResponse"
 			  name="ImplementationExceptionFault"/>
 </wsdl:operation>
-+-------------------------------------------------------------+
++---+
 		
+
 	* <wsdl:binding> : This glues the parts together into 
 	the binding interface. All the methods you provide 
 	here are later on accessible through the service port
 
-+-------------------------------------------------------------+
+	[]
+	
++---+
 Example: undefine:
 
 <wsdl:operation name="undefine"> 
@@ -265,7 +276,7 @@ Example: undefine:
 	   <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/> 
 	</wsdl:fault> 
 </wsdl:operation> 
-+-------------------------------------------------------------+
++---+
 
 
 	
@@ -289,7 +300,7 @@ Example: undefine:
 	(if necessary) and calls the ALE or the LogicalReaderManager 
 	accordingly.
 	
-+-------------------------------------------------------------+
++---+
 example for getPropertyValue:
 
 	public java.lang.String getPropertyValue(
@@ -303,7 +314,7 @@ example for getPropertyValue:
 			parms.getName(), 
 			parms.getPropertyName());
 	}
-+-------------------------------------------------------------+
++---+
 
 	You need to implement all the methods that shall be 
 	provided to clients in the ALEServiceBindingImpl.
@@ -414,7 +425,7 @@ example for getPropertyValue:
 					Description</name>
 			<value xsi:type="xsd:string" 
 				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-					HAL reader created during system startup
+				   HAL reader created during system startup
 			</value>
 		</property>
 		<property xsi:type="ns1:LRProperty">
