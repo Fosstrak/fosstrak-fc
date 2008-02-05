@@ -115,6 +115,8 @@ Users guide - Test clients
 	
 	* {{{../files/HALReader.xml}HALReader.xml}}: Create a HAL reader.
 	
+	* {{{../files/TestAdaptor.xml}TestAdaptor.xml}}: Create a test reader.
+	
 	* {{{../files/CompositeReader1.xml}CompositeReader1.xml}}: Create a composite reader. You 
 		need two readers reader1 and reader2 that are already defined, else the Logical Reader API will complain 
 		about the missing readers.

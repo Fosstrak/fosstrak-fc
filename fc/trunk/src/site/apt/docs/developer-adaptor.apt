@@ -13,8 +13,10 @@ How to implement an Adaptor
    [[2]] {{{#HALAdaptor}HALAdaptor}}
    
    [[3]] {{{#RPAdaptor}RPAdaptor}}
+   
+   [[4]] {{{#TestAdaptor}TestAdaptor}}
 
-   [[4]] {{{#A}A new Adaptor}}
+   [[5]] {{{#A}A new Adaptor}}
 
 
 * {Objective}
@@ -36,6 +38,8 @@ How to implement an Adaptor
 	* ImplClass: The full path to the type of the reader. For a HALAdaptor 
 		this is always "org.accada.ale.server.readers.hal.HALAdaptor".
 
+	[]
+	
 +---+
 <LRProperty name="ImplClass" 
 	value="org.accada.ale.server.readers.hal.HALAdaptor"/>
@@ -43,9 +47,12 @@ How to implement an Adaptor
 	
 	* PhysicalReadername: The name of the HAL reader.
 	
+	[]
+	
 +---+
 <LRProperty name="PhysicalReaderName" value="MyReader"/>
 +---+	
+
 	* ReadTimeInterval: The interval in which a HAL device shall inform the 
 		HALAdaptor about new tags. If the HAL device does not provide an 
 		auto-polling mechanism, the HALAdaptor will automatically create 
@@ -54,6 +61,8 @@ How to implement an Adaptor
 		
 		Syntax: integer
 		
+	[]
+	
 +---+
 <LRProperty name="ReadTimeInterval" value="2000"/>
 +---+
@@ -61,12 +70,16 @@ How to implement an Adaptor
 	* PropertiesFile: All HAL devices that are currently supported, need a 
 		properties file.
 
+	[]
+	
 +---+
 <LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
 +---+
 
 	* Description: This gives a general human readable description to the 
 		adaptor.
+	
+	[]
 	
 +---+
 <LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
@@ -138,6 +151,8 @@ How to implement an Adaptor
 		
 		Syntax: "proto://ip:port"
 		
+		[]
+		
 +---+
 <LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
 +---+	
@@ -148,6 +163,8 @@ How to implement an Adaptor
 		
 		Syntax: "proto://ip:port"
 
+		[]		
+		
 +---+
 <LRProperty name="NotificationPoint" value="http://localhost:9090"/>
 +---+
@@ -157,6 +174,8 @@ How to implement an Adaptor
 		is in miliseconds.
 		
 		Syntax: integer
+
+		[]
 		
 +---+
 <LRProperty name="ReadTimeInterval" value="2000"/>
@@ -165,6 +184,8 @@ How to implement an Adaptor
 	* ImplClass: the full path to the type of the reader. For a RPAdaptor 
 		this is always "org.accada.ale.server.readers.rp.RPAdaptor".
 	
+		[]
+		
 +---+
 <LRProperty name="ImplClass" 
 	value="org.accada.ale.server.readers.rp.RPAdaptor"/>
@@ -176,6 +197,8 @@ How to implement an Adaptor
 		device that shall send tags. 
 		
 		Syntax: "Antenna1,Antenna2,Antenna3"
+
+		[]
 		
 +---+
 <LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3"/>
@@ -183,7 +206,9 @@ How to implement an Adaptor
 	
 	* Description: This gives a general human readable description to the 
 		adaptor.
-	
+		
+		[]
+		
 +---+
 <LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
 +---+
@@ -253,13 +278,63 @@ How to implement an Adaptor
 	
 	
 	
+
+* {TestAdaptor}
+	
+	For testing purposes the TestAdaptor can be used. The TestAdaptor 
+	simulates a reader that from time to time reads a tag.
+	
+	As the TestAdaptor is not intended to be used as a productive 
+	reader adaptor only the basic configuration parameters will be 
+	explained here.
+	
+	* tps: this value indicates the "tags per shot", meaning how many
+		tags get fired in each iteration
+		
+		[]
+		
++---+
+<LRProperty name="tps" value="100"/>
++---+	
+
+	* wt: this value indicates the "wait time", meaning how long 
+		to wait between two shots
+		
+		[]
+		
++---+
+<LRProperty name="wt" value="100"/>
++---+	
+
+	* gain: this value indicates the increase of the tags per shot. 
+		ATTENTION: this rapidly increases the tps!
+		
+		[]
+		
++---+
+<LRProperty name="gain" value="0"/>
++---+	
+
+	[]
+	A sample configuration for a TestAdaptor
+	
++---+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.accada.ale.server.readers.test.TestAdaptor">
+		<LRProperty name="Description" value="My test reader"/>
+		<LRProperty name="tps" value="100"/>
+		<LRProperty name="wt" value="3000"/>
+		<LRProperty name="gain" value="0"/>
+		<LRProperty name="ImplClass" 
+	   	   value="org.accada.ale.server.readers.test.TestAdaptor"/>
+	</LRSpec>
+</LogicalReader>
++---+
 	
 	
-	
-	
-	
-	
-	
+
+
 
 * {A} new Adaptor
 
