@@ -137,6 +137,9 @@ public class EventCycle implements Runnable, Observer {
 		// init BoundarySpec values
 		durationValue = getDurationValue();
 		
+		LOG.debug(String.format("durationValue: %s\n",
+				durationValue));
+		
 		setAcceptTags(false);
 		
 		LOG.debug("adding logicalReaders to EventCycle");

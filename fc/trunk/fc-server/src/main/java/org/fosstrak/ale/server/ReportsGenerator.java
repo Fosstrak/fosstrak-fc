@@ -131,6 +131,9 @@ public class ReportsGenerator implements Runnable {
 		repeatPeriodValue = getRepeatPeriodValue();
 		stableSetInterval = getStableSetInterval();
 		
+		LOG.debug(String.format("startTriggerValue: %s\nstopTriggerValue: %s\nrepeatPeriodValue: %s\nstableSetInterval: %s\n",
+				startTriggerValue, stopTriggerValue, repeatPeriodValue, stableSetInterval));
+		
 		LOG.debug("ReportGenerator '" + name + "' successfully created.");
 		
 	}
