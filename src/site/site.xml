@@ -55,6 +55,7 @@
 		<item name="Logical Reader Definitions" href="docs/user-lrdef.html"/>
 		<item name="Test clients" href="docs/user-testclients.html"/>
 		<item name="A complete Example" href="docs/user-example.html"/>
+		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
 	</item>
 	
 	<item name="Developers guide" href="docs/developer-index.html" collapse="false">
