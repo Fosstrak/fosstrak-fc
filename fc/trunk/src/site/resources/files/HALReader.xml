@@ -11,6 +11,10 @@
    <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">MyReader</value>
   </property>
   <property xsi:type="ns1:LRProperty">
+   <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">ReadPoints</name>
+   <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Shelf1,Shelf2</value>
+  </property>
+  <property xsi:type="ns1:LRProperty">
    <name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">ReadTimeInterval</name>
    <value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">1000</value>
   </property>

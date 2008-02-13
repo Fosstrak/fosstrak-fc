@@ -7,6 +7,7 @@
 			<LRProperty name="ImplClass" value="org.accada.ale.server.readers.hal.HALAdaptor"/>
 			<LRProperty name="PhysicalReaderName" value="MyReader"/>
 			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
 			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
 		</LRSpec>
 	</LogicalReader>

@@ -267,6 +267,7 @@ public class LogicalReaderManager {
 		} else if (reader instanceof BaseReader) {
 			BaseReader basereader = (BaseReader) reader;
 			basereader.disconnectReader();
+			basereader.cleanup();
 		}
 		logicalReaders.remove(name);
 	}

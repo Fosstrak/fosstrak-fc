@@ -13,7 +13,6 @@ import org.accada.hal.HardwareAbstraction;
 import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
 import org.accada.hal.Trigger;
-import org.accada.hal.impl.sim.SimulatorController;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,6 +41,12 @@ public class HALAdaptor extends BaseReader {
 	/** the properties file for this adaptor. */
 	private String propertiesFile = null;
 	
+	/** the name of the hal device. */
+	private String halName = null;
+	
+	/** the readpoints where shall be read from. */
+	private String [] readPoints = null;
+	
 	/**
 	 * constructor for the HAL adaptor.
 	 */
@@ -60,16 +65,20 @@ public class HALAdaptor extends BaseReader {
 		super.initialize(name, spec);
 
 		pollingFrequency = Long.parseLong(logicalReaderProperties.get("ReadTimeInterval"));
-
+		halName = logicalReaderProperties.get("PhysicalReaderName");
+		String rpS = logicalReaderProperties.get("ReadPoints");
+		if (rpS != null) {
+			readPoints = rpS.split(",");
+		}
+		
 		// there is a problem with the HAL simulators when they try to load
-		// a realtive path from within a jar.
+		// a relative path from within a jar.
 		// the easiest solution is to provide the absolute path
 		propertiesFile = logicalReaderProperties.get("PropertiesFile");
 		URL url = this.getClass().getResource(propertiesFile);
 		propertiesFile = url.getFile();
-		// create the HAL device
-		hal = new SimulatorController(name, propertiesFile);
-		
+				
+		hal = HALManager.getInstance().define(halName, propertiesFile);
 
 		setDisconnected();
 		setStopped();
@@ -209,6 +218,12 @@ public class HALAdaptor extends BaseReader {
 		// extract the pollingFrequency
 		pollingFrequency = Long.parseLong(logicalReaderProperties.get("pollingFrequency"));
 		
+		readPoints = null;
+		String rpS = logicalReaderProperties.get("ReadPoints");
+		if (rpS != null) {
+			readPoints = rpS.split(",");
+		}
+		
 		// restart the reader
 		start();
 	}
@@ -255,7 +270,14 @@ public class HALAdaptor extends BaseReader {
 		Observation[] observations = null;
 		if (countObservers() > 0) {
 			
-			observations = hal.identify(hal.getReadPointNames());
+			// if there are no readPoints specified through the 
+			// lrspec, just use all available readPoints
+			if (readPoints == null) {
+				observations = hal.identify(hal.getReadPointNames());	
+			} else {
+				observations = hal.identify(readPoints);
+			}
+			
 			// only process if there are tags
 			if (observations.length > 0) {
 				List<Tag> tags = new LinkedList<Tag>();
@@ -291,5 +313,10 @@ public class HALAdaptor extends BaseReader {
 	 */
 	private void setAutoPolling(boolean autoPolling) {
 		this.autoPolling = autoPolling;
+	}
+	
+	@Override
+	public void cleanup() {
+		HALManager.getInstance().undefine(halName);
 	}
 }

@@ -84,6 +84,17 @@ How to implement an Adaptor
 +---+
 <LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
 +---+	
+
+	* ReadPoints: If you specify the ReadPoints, you can restrict the 
+		logical reader to specific shelfs on the HAL reader. If you do 
+		not specify the ReadPoints, all available ReadPoints on the 
+		device are used.
+
+	[]
+
++---+
+<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
++---+
 	
 	[]
 	
@@ -102,6 +113,7 @@ How to implement an Adaptor
 		<LRProperty name="ReadTimeInterval" value="1000"/>
 		<LRProperty name="PropertiesFile" 
 			value="/props/SimulatorController.xml"/>
+		<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
 	</LRSpec>
 </LogicalReader>
 +---+

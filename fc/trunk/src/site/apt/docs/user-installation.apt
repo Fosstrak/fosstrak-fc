@@ -36,7 +36,7 @@ Users guide - Installation and configuration
 	
 	You need a copy of the fc-server sources from the accada 
 	svn repository.
-	To compile le the sources run the following command in a shell.
+	To compile the sources run the following command in a shell.
 	
 +-------------------------------------------------------------------+
 under windows:

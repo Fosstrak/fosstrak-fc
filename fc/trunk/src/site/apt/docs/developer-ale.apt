@@ -447,6 +447,14 @@ example for getPropertyValue:
 		<property xsi:type="ns1:LRProperty">
 			<name xsi:type="xsd:string" 
 				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+					ReadPoints</name>
+			<value xsi:type="xsd:string" 
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+					Shelf1,Shelf2</value>
+		</property>
+		<property xsi:type="ns1:LRProperty">
+			<name xsi:type="xsd:string" 
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 					PropertiesFile</name>
 			<value xsi:type="xsd:string" 
 				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -470,7 +478,7 @@ example for getPropertyValue:
 		* The reader is a BaseReader and therefor element readers does 
 			not contain any readers.
 		
-		* Properties contains 4 name-value pairs. Please refer to the 
+		* Properties contains 5 name-value pairs. Please refer to the 
 			chapter "Implement an Adaptor" for further reading
 		
 		* extension contains the reader type that is used in the 

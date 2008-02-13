@@ -132,4 +132,10 @@ public abstract class BaseReader extends LogicalReader {
 		return connected;
 	}
 
+	/** 
+	 * this method is called whenever a reader is undefined. a basereader 
+	 * can override this method with its own cleanup routine.
+	 */
+	public void cleanup() {
+	}
 }
