@@ -25,7 +25,9 @@ import java.net.URL;
 import org.accada.ale.server.PatternDataField;
 import org.accada.ale.server.PatternUsage;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.apache.log4j.PropertyConfigurator;
 
 
@@ -64,8 +66,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(RANGE, PatternUsage.TAG);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + RANGE + "'. Only 'int' is allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + RANGE + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
@@ -77,8 +79,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(ASTERISK, PatternUsage.TAG);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + ASTERISK + "'. Only 'int' is allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + ASTERISK + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
@@ -90,8 +92,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(X, PatternUsage.TAG);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + X + "'. Only 'int' is allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + X + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
@@ -103,8 +105,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.TAG);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only 'int' is allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + ABC + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
@@ -124,8 +126,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(X, PatternUsage.FILTER);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + X + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + X + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
@@ -137,8 +139,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.FILTER);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + ABC + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
@@ -158,8 +160,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.GROUP);
-		} catch(ECSpecValidationException e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getReason());
+		} catch(ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '" + ABC + "'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
@@ -210,8 +212,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			rangeField.getValue();
-		} catch(ImplementationException e) {
-			assertEquals("Data field is not an int.", e.getReason());
+		} catch(ImplementationExceptionResponse e) {
+			assertEquals("Data field is not an int.", e.getMessage());
 			return;
 		}
 		
@@ -233,8 +235,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			intField.getLow();
-		} catch(ImplementationException e) {
-			assertEquals("Data field is not a range.", e.getReason());
+		} catch(ImplementationExceptionResponse e) {
+			assertEquals("Data field is not a range.", e.getMessage());
 			return;
 		}
 		
@@ -256,8 +258,8 @@ public class PatternDataFieldTest extends TestCase {
 		
 		try {
 			intField.getHigh();
-		} catch(ImplementationException e) {
-			assertEquals("Data field is not a range.", e.getReason());
+		} catch(ImplementationExceptionResponse e) {
+			assertEquals("Data field is not a range.", e.getMessage());
 			return;
 		}
 		

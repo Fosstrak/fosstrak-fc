@@ -21,7 +21,9 @@
 package org.accada.ale.server;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -30,21 +32,24 @@ import org.accada.ale.server.EventCycle;
 import org.accada.ale.server.Report;
 import org.accada.ale.server.ReportsGenerator;
 import org.accada.ale.server.readers.gen.LogicalReader;
+import org.accada.ale.util.ECReportSetEnum;
+import org.accada.ale.util.ECTimeUnit;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.accada.ale.xsd.ale.epcglobal.ECGroupSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSetEnum;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSetSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
 import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -59,14 +64,14 @@ public class ReportTest extends TestCase {
 	private static final boolean REPORT_IF_EMPTY = true;
 	
 	// default set spec parameters
-	private static final ECReportSetEnum SET_SPEC = ECReportSetEnum.CURRENT;
+	private static final String SET_SPEC = ECReportSetEnum.CURRENT;
 	
 	// default filter spec parameters
-	private static final String[] INCLUDE_PATTERNS = new String[] {"urn:epc:pat:gid-96:1.*.*"};
-	private static final String[] EXCLUDE_PATTERNS = new String[] {"urn:epc:pat:gid-96:5.*.*"};
+	private static final List<String> INCLUDE_PATTERNS;
+	private static final List<String> EXCLUDE_PATTERNS;
 	
 	// default group spec parameters
-	private static final String[] GROUP_PATTERNS = new String[] {"urn:epc:pat:gid-96:1.[0-10].X"};
+	private static final List<String> GROUP_PATTERNS;
 	
 	// default output sepc parameters
 	private static final boolean INCLUDE_COUNT = true;
@@ -105,6 +110,16 @@ public class ReportTest extends TestCase {
 	private ECReportSpec reportSpec;
 	private EventCycle eventCycle;
 	
+	static {
+		GROUP_PATTERNS = new ArrayList<String>();
+		GROUP_PATTERNS.add("urn:epc:pat:gid-96:1.[0-10].X");
+		
+		INCLUDE_PATTERNS = new ArrayList<String>();
+		INCLUDE_PATTERNS.add("urn:epc:pat:gid-96:1.*.*");
+		EXCLUDE_PATTERNS = new ArrayList<String>(); 
+		EXCLUDE_PATTERNS.add("urn:epc:pat:gid-96:5.*.*");
+	}
+	
 	protected void setUp() throws Exception {
 		
 		super.setUp();
@@ -138,8 +153,8 @@ public class ReportTest extends TestCase {
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
 		// test groups
-		ECReportGroup[] groups = ecReport.getGroup();
-		assertEquals(2, groups.length);
+		List<ECReportGroup> groups = ecReport.getGroup();
+		assertEquals(2, groups.size());
 		
 		// test group
 		for (ECReportGroup group : groups) {
@@ -150,14 +165,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().get_value());
-				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
 				
@@ -168,14 +183,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().get_value());
-				assertEquals(TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().getValue());
+				assertEquals(TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
 				
@@ -205,8 +220,8 @@ public class ReportTest extends TestCase {
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
 		// test groups
-		ECReportGroup[] groups = ecReport.getGroup();
-		assertEquals(2, groups.length);
+		List<ECReportGroup> groups = ecReport.getGroup();
+		assertEquals(2, groups.size());
 		
 		// test group
 		for (ECReportGroup group : groups) {
@@ -217,14 +232,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().get_value());
-				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
 				
@@ -235,14 +250,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().get_value());
-				assertEquals(TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().getValue());
+				assertEquals(TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
 				
@@ -272,7 +287,7 @@ public class ReportTest extends TestCase {
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
 		// test groups
-		assertNull(ecReport.getGroup());
+		assertEquals(ecReport.getGroup().size(), 0);
 		
 	}
 	
@@ -296,8 +311,8 @@ public class ReportTest extends TestCase {
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
 		// test groups
-		ECReportGroup[] groups = ecReport.getGroup();
-		assertEquals(2, groups.length);
+		List<ECReportGroup> groups = ecReport.getGroup();
+		assertEquals(2, groups.size());
 		
 		// test group
 		for (ECReportGroup group : groups) {
@@ -308,14 +323,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_DEFAULT_GROUP_TAG_ID), member.getRawHex().get_value());
-				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
 				
@@ -326,14 +341,14 @@ public class ReportTest extends TestCase {
 				assertEquals(1, group.getGroupCount().getCount());
 				
 				// test members
-				ECReportGroupListMember[] members = group.getGroupList().getMember();
-				assertEquals(1, members.length);
+				List<ECReportGroupListMember> members = group.getGroupList().getMember();
+				assertEquals(1, members.size());
 				
 				// test member
-				ECReportGroupListMember member = members[0];
-				assertEquals(LAST_CYCLE_TAG_PURE_URI, member.getRawDecimal().get_value());
-				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_TAG_ID), member.getRawHex().get_value());
-				assertEquals(LAST_CYCLE_TAG_TAG_URI, member.getTag().get_value());
+				ECReportGroupListMember member = members.get(0);
+				assertEquals(LAST_CYCLE_TAG_PURE_URI, member.getRawDecimal().getValue());
+				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_TAG_ID), member.getRawHex().getValue());
+				assertEquals(LAST_CYCLE_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
 				
@@ -362,7 +377,7 @@ public class ReportTest extends TestCase {
 		assertEquals(REPORT_NAME, ecReport.getReportName());
 
 		// test groups
-		assertNull(ecReport.getGroup());
+		assertEquals(ecReport.getGroup().size(), 0);
 		
 	}
 	
@@ -388,7 +403,8 @@ public class ReportTest extends TestCase {
 		spec.setReportIfEmpty(REPORT_IF_EMPTY);
 		spec.setReportSet(createECReportSetSpec());
 		spec.setFilterSpec(createECFilterSpec());
-		spec.setGroupSpec(GROUP_PATTERNS);
+		spec.setGroupSpec(new ECGroupSpec());
+		spec.getGroupSpec().getPattern().addAll(GROUP_PATTERNS);
 		spec.setOutput(createECReportOutputSpec());
 		
 		return spec;
@@ -413,10 +429,12 @@ public class ReportTest extends TestCase {
 		ECFilterSpec spec = new ECFilterSpec();
 		
 		// set include patterns
-		spec.setIncludePatterns(INCLUDE_PATTERNS);
+		spec.setIncludePatterns(new ECFilterSpec.IncludePatterns());
+		spec.getIncludePatterns().getIncludePattern().addAll(INCLUDE_PATTERNS);
 		
 		// set exclude patterns
-		spec.setExcludePatterns(EXCLUDE_PATTERNS);
+		spec.setExcludePatterns(new ECFilterSpec.ExcludePatterns());
+		spec.getExcludePatterns().getExcludePattern().addAll(EXCLUDE_PATTERNS);
 		
 		return spec;
 		
@@ -438,7 +456,7 @@ public class ReportTest extends TestCase {
 		
 	}
 	
-	private EventCycle createEventCycle() throws ImplementationException, ECSpecValidationException {
+	private EventCycle createEventCycle() throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 	
 		// create EventCycle
 		EventCycle eventCycle = new EventCycle(createReportsGenerator());
@@ -448,7 +466,7 @@ public class ReportTest extends TestCase {
 		
 	}
 	
-	private Set<Tag> getLastEventCycleTags() throws ImplementationException, ECSpecValidationException {
+	private Set<Tag> getLastEventCycleTags() throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		
 		// create EventCycle
 		EventCycle eventCycle = new EventCycle(createReportsGenerator());
@@ -473,7 +491,7 @@ public class ReportTest extends TestCase {
 		
 	}
 	
-	private ReportsGenerator createReportsGenerator() throws ECSpecValidationException, ImplementationException {
+	private ReportsGenerator createReportsGenerator() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		
 		// create ReportsGenerator
 		ReportsGenerator reportsGenerator = new ReportsGenerator(REPORT_NAME, createECSpec());
@@ -490,20 +508,21 @@ public class ReportTest extends TestCase {
 		// set parameter
 		ecSpec.setBoundarySpec(createECBoundarySpec());
 		ecSpec.setIncludeSpecInReports(false);
-		ecSpec.setLogicalReaders(null);
-		ecSpec.setReportSpecs(createECReportSpecs());
+		ecSpec.setLogicalReaders(new ECSpec.LogicalReaders());
+		ecSpec.setReportSpecs(new ECSpec.ReportSpecs());
+		ecSpec.getReportSpecs().getReportSpec().addAll(createECReportSpecs());
 		
 		return ecSpec;
 		
 	}
 	
-	private ECReportSpec[] createECReportSpecs() {
+	private List<ECReportSpec> createECReportSpecs() {
 		
 		// create ECReportSpecs
-		ECReportSpec[] ecReportSpecs = new ECReportSpec[1];
+		List<ECReportSpec> ecReportSpecs = new ArrayList<ECReportSpec>();
 		
 		// add report spec
-		ecReportSpecs[0] = reportSpec;
+		ecReportSpecs.add(reportSpec);
 		
 		return ecReportSpecs;
 		
@@ -537,7 +556,7 @@ public class ReportTest extends TestCase {
 		
 		ECTime time = new ECTime();
 		time.setUnit(ECTimeUnit.MS);
-		time.set_value(value);
+		time.setValue(value);
 		
 		return time;
 		

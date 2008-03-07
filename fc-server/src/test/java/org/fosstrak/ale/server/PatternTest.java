@@ -25,6 +25,7 @@ import java.net.URL;
 import org.accada.ale.server.Pattern;
 import org.accada.ale.server.PatternUsage;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.apache.log4j.PropertyConfigurator;
 
 
@@ -64,8 +65,8 @@ public class PatternTest extends TestCase {
 		
 		try {
 			new Pattern(FILTER_PATTERN, PatternUsage.TAG);
-		} catch (ECSpecValidationException e) {
-			assertEquals("Invalid data field '[1-2]'. Only 'int' is allowed.", e.getReason());
+		} catch (ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field '[1-2]'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
@@ -84,8 +85,8 @@ public class PatternTest extends TestCase {
 		
 		try {
 			new Pattern(GROUP_PATTERN, PatternUsage.FILTER);
-		} catch (ECSpecValidationException e) {
-			assertEquals("Invalid data field 'X'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getReason());
+		} catch (ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field 'X'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
@@ -105,8 +106,8 @@ public class PatternTest extends TestCase {
 		
 		try {
 			new Pattern(INVALID_PATTERN, PatternUsage.GROUP);
-		} catch (ECSpecValidationException e) {
-			assertEquals("Invalid data field 'a'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getReason());
+		} catch (ECSpecValidationExceptionResponse e) {
+			assertEquals("Invalid data field 'a'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		

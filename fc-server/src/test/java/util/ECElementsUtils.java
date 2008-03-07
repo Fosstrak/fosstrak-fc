@@ -20,22 +20,25 @@
 
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.accada.ale.util.ECReportSetEnum;
+import org.accada.ale.util.ECTimeUnit;
 import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.accada.ale.xsd.ale.epcglobal.ECGroupSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupCount;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupList;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSetEnum;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSetSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.ale.xsd.ale.epcglobal.ECTrigger;
 import org.accada.ale.xsd.epcglobal.EPC;
 
 import junit.framework.Assert;
@@ -45,21 +48,19 @@ public class ECElementsUtils extends Assert {
 
 	// default spec parameters
 	private static final String REPORT_NAME = "TestReport";
-	private static final String[] LOGICAL_READER_NAMES = new String[] {"LogicalReader1", "LogicalReader2"};
+	private static final List<String> LOGICAL_READER_NAMES;
 	private static final Boolean INCLUDE_SPEC_IN_REPORTS = true;
 	private static final long DURATION = 3000;
 	private static final long REPEAT_PERIOD = 5000;
 	private static final long STABLE_SET_INTERVAL = 0;
-	private static final ECTrigger START_TRIGGER = null;
-	private static final ECTrigger STOP_TRIGGER = null;
+	private static final String START_TRIGGER = null;
+	private static final String STOP_TRIGGER = null;
 	private static final boolean REPORT_ONLY_ON_CHANGE = false;
 	private static final boolean REPORT_IF_EMPTY = true;
-	private static final ECReportSetEnum SET_SPEC = ECReportSetEnum.CURRENT;
-	private static final String[] INCLUDE_PATTERNS = new String[] {"urn:epc:pat:gid-96:1.2.3", "urn:epc:pat:gid-96:1.2.*"};
-	private static final String[] EXCLUDE_PATTERNS = 
-		new String[] {"urn:epc:pat:sgtin-64:1.2.3.[1-10]", "urn:epc:pat:sgtin-64:1.2.*.*"};
-	private static final String[] GROUP_PATTERNS = 
-		new String[] {"urn:epc:pat:sscc-64:1.[0-99].X", "urn:epc:pat:sscc-64:1.[100-1000].X"};
+	private static final String SET_SPEC = ECReportSetEnum.CURRENT;
+	private static final List<String> INCLUDE_PATTERNS;
+	private static final List<String> EXCLUDE_PATTERNS;
+	private static final List<String> GROUP_PATTERNS;
 	private static final boolean INCLUDE_COUNT = true;
 	private static final boolean INCLUDE_EPC = true;
 	private static final boolean INCLUDE_RAW_DECIMAL = false;
@@ -73,6 +74,24 @@ public class ECElementsUtils extends Assert {
 	private static final String[] RAW_HEX = new String[] {"hex1", "hex2", "hex3"};
 	private static final String[] TAGS = new String[] {"tag1", "tag2", "tag3"};
 	
+	static {
+		LOGICAL_READER_NAMES = new ArrayList<String>();
+		LOGICAL_READER_NAMES.add("LogicalReader1");
+		LOGICAL_READER_NAMES.add("LogicalReader2");
+		
+		INCLUDE_PATTERNS = new ArrayList<String>();
+		INCLUDE_PATTERNS.add("urn:epc:pat:gid-96:1.2.3");
+		INCLUDE_PATTERNS.add("urn:epc:pat:gid-96:1.2.*");
+		
+		EXCLUDE_PATTERNS = new ArrayList<String>();
+		EXCLUDE_PATTERNS.add("urn:epc:pat:sgtin-64:1.2.3.[1-10]");
+		EXCLUDE_PATTERNS.add("urn:epc:pat:sgtin-64:1.2.*.*");
+		
+		GROUP_PATTERNS = new ArrayList<String>();
+		GROUP_PATTERNS.add("urn:epc:pat:sscc-64:1.[0-99].X");
+		GROUP_PATTERNS.add("urn:epc:pat:sscc-64:1.[100-1000].X");
+	}
+	
 	public static ECSpec createECSpec() {
 		
 		// create spec
@@ -80,8 +99,9 @@ public class ECElementsUtils extends Assert {
 		
 		// set parameters
 		spec.setBoundarySpec(createECBoundarySpec());
-		spec.setLogicalReaders(LOGICAL_READER_NAMES);
-		spec.setReportSpecs(createECReportSpecs());
+		spec.getLogicalReaders().getLogicalReader().addAll(LOGICAL_READER_NAMES);
+		spec.setReportSpecs(new ECSpec.ReportSpecs());
+		spec.getReportSpecs().getReportSpec().addAll(createECReportSpecs());
 		spec.setIncludeSpecInReports(INCLUDE_SPEC_IN_REPORTS);
 		
 		return spec;
@@ -112,13 +132,13 @@ public class ECElementsUtils extends Assert {
 		
 	}
 	
-	public static ECReportSpec[] createECReportSpecs() {
+	public static List<ECReportSpec> createECReportSpecs() {
 		
 		// create specs
-		ECReportSpec[] specs = new ECReportSpec[1];
+		List<ECReportSpec> specs = new ArrayList<ECReportSpec>();
 		
 		// add spec
-		specs[0] = createECReportSpec();
+		specs.add(createECReportSpec());
 		
 		return specs;
 		
@@ -135,7 +155,8 @@ public class ECElementsUtils extends Assert {
 		spec.setReportIfEmpty(REPORT_IF_EMPTY);
 		spec.setReportSet(createECReportSetSpec());
 		spec.setFilterSpec(createECFilterSpec());
-		spec.setGroupSpec(GROUP_PATTERNS);
+		spec.setGroupSpec(new ECGroupSpec());
+		spec.getGroupSpec().getPattern().addAll(GROUP_PATTERNS);
 		spec.setOutput(createECReportOutputSpec());
 		
 		return spec;
@@ -160,10 +181,12 @@ public class ECElementsUtils extends Assert {
 		ECFilterSpec spec = new ECFilterSpec();
 		
 		// set include patterns
-		spec.setIncludePatterns(INCLUDE_PATTERNS);
+		spec.setIncludePatterns(new ECFilterSpec.IncludePatterns());
+		spec.getIncludePatterns().getIncludePattern().addAll(INCLUDE_PATTERNS);
 		
 		// set exclude patterns
-		spec.setExcludePatterns(EXCLUDE_PATTERNS);
+		spec.setExcludePatterns(new ECFilterSpec.ExcludePatterns());
+		spec.getExcludePatterns().getExcludePattern().addAll(EXCLUDE_PATTERNS);
 		
 		return spec;
 		
@@ -194,8 +217,9 @@ public class ECElementsUtils extends Assert {
 		reports.setALEID(ALEID);
 		reports.setDate(null);
 		reports.setECSpec(null);
-		reports.setReports(createECReportList());
-		// reports.setSchemaURL();
+		reports.setReports(new ECReports.Reports());
+		reports.getReports().getReport().addAll(createECReportList());
+		reports.setSchemaURL("");
 		reports.setSpecName(SPEC_NAME);
 		reports.setTerminationCondition(null);
 		reports.setTotalMilliseconds(1000);
@@ -204,13 +228,13 @@ public class ECElementsUtils extends Assert {
 		
 	}
 	
-	public static ECReport[] createECReportList() {
+	public static List<ECReport> createECReportList() {
 		
 		// create report list
-		ECReport[] ecReports = new ECReport[1];
+		List<ECReport> ecReports = new ArrayList<ECReport>();
 		
 		// set reports
-		ecReports[0] = createECReport();
+		ecReports.add(createECReport());
 		
 		return ecReports;
 		
@@ -223,7 +247,7 @@ public class ECElementsUtils extends Assert {
 		
 		// set name and group
 		report.setReportName(REPORT_NAME);
-		report.setGroup(new ECReportGroup[] {createECReportGroup()});
+		report.getGroup().add(createECReportGroup());
 		
 		return report;
 		
@@ -261,11 +285,11 @@ public class ECElementsUtils extends Assert {
 		ECReportGroupList groupList = new ECReportGroupList();
 		
 		// add members
-		ECReportGroupListMember[] members = new ECReportGroupListMember[EPC.length];
+		List<ECReportGroupListMember> members = new ArrayList<ECReportGroupListMember>();
 		for (int i = 0; i < EPC.length; i++) {
-			members[i] = createECReportGroupListMember(EPC[i], RAW_DEC[i], RAW_HEX[i], TAGS[i]);
+			members.add(createECReportGroupListMember(EPC[i], RAW_DEC[i], RAW_HEX[i], TAGS[i]));
 		}
-		groupList.setMember(members);
+		groupList.getMember().addAll(members);
 		
 		return groupList;
 		
@@ -277,10 +301,16 @@ public class ECElementsUtils extends Assert {
 		ECReportGroupListMember member = new ECReportGroupListMember();
 		
 		// set parameter
-		member.setEpc(new EPC(epc));
-		member.setRawDecimal(new EPC(rawDec));
-		member.setRawHex(new EPC(rawHex));
-		member.setTag(new EPC(tag));
+		EPC nepc = new EPC();
+		nepc.setValue(epc);
+		member.setEpc(new EPC());
+		member.getEpc().setValue(epc);
+		member.setRawDecimal(new EPC());
+		member.getRawDecimal().setValue(rawDec);
+		member.setRawHex(new EPC());
+		member.getRawHex().setValue(rawHex);
+		member.setTag(new EPC());
+		member.getTag().setValue(tag);
 	
 		return member;
 		
@@ -295,7 +325,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getBoundarySpec(), actual.getBoundarySpec());
 		assertEquals(expected.getCreationDate(), actual.getCreationDate());
 		assertEquals(expected.getExtension(), actual.getExtension());
@@ -314,7 +344,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getDuration(), actual.getDuration());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		assertEquals(expected.getRepeatPeriod(), actual.getRepeatPeriod());
@@ -333,11 +363,11 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_value(), actual.get_value());
+		assertEquals(expected.getValue(), actual.getValue());
 		assertEquals(expected.getUnit(), actual.getUnit());
 		
 	}
-	
+	/*
 	public static void assertEquals(ECTimeUnit expected, ECTimeUnit actual) {
 		
 		if (expected == null || actual == null) {
@@ -349,9 +379,9 @@ public class ECElementsUtils extends Assert {
 		}
 		assertEquals(expected.getValue(), actual.getValue());
 			
-	}
+	}*/
 	
-	public static void assertEquals(ECTrigger expected, ECTrigger actual) {
+	public static void assertEquals(String expected, String actual) {
 		
 		if (expected == null || actual == null) {
 			if (expected == null && actual == null) {
@@ -360,7 +390,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_value(), actual.get_value());
+		assertEquals(expected, actual);
 		
 	}
 	
@@ -401,7 +431,7 @@ public class ECElementsUtils extends Assert {
 			}
 		}
 		assertEquals(expected.getGroupSpec(), actual.getGroupSpec());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		assertEquals(expected.getFilterSpec(), actual.getFilterSpec());
 		assertEquals(expected.getOutput(), actual.getOutput());
@@ -421,7 +451,7 @@ public class ECElementsUtils extends Assert {
 		}
 		assertEquals(expected.getExcludePatterns(), actual.getExcludePatterns());
 		assertEquals(expected.getIncludePatterns(), actual.getIncludePatterns());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
 	}
@@ -440,7 +470,7 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.isIncludeRawDecimal(), actual.isIncludeRawDecimal());
 		assertEquals(expected.isIncludeRawHex(), actual.isIncludeRawHex());
 		assertEquals(expected.isIncludeTag(), actual.isIncludeTag());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
 	}
@@ -457,7 +487,7 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getSet(), actual.getSet());
 		
 	}
-	
+	/*
 	public static void assertEquals(ECReportSetEnum expected, ECReportSetEnum actual) {
 		
 		if (expected == null || actual == null) {
@@ -469,7 +499,7 @@ public class ECElementsUtils extends Assert {
 		}
 		assertEquals(expected.getValue(), actual.getValue());
 		
-	}
+	}*/
 	
 	public static void assertEquals(ECReports expected, ECReports actual) {
 		
@@ -483,17 +513,17 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getALEID(), actual.getALEID());
 		assertEquals(expected.getSchemaURL(), actual.getSchemaURL());
 		assertEquals(expected.getSpecName(), actual.getSpecName());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getDate(), actual.getDate());
 		assertEquals(expected.getECSpec(), actual.getECSpec());
 		assertEquals(expected.getExtension(), actual.getExtension());
-		assertEquals(expected.getReports(), actual.getReports());
+		assertEquals(expected.getReports().getReport(), actual.getReports().getReport());
 		assertEquals(expected.getTerminationCondition(), actual.getTerminationCondition());
 		assertEquals(expected.getTotalMilliseconds(), actual.getTotalMilliseconds());
 
 	}
 	
-	public static void assertEquals(ECReport[] expected, ECReport[] actual) {
+	public static void assertEqualsReports(List<ECReport> expected, List<ECReport> actual) {
 		
 		if (expected == null || actual == null) {
 			if (expected == null && actual == null) {
@@ -502,7 +532,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.length, actual.length);
+		assertEquals(expected.size(), actual.size());
 		for (ECReport expectedReport : expected) {
 			boolean contains = false;
 			for (ECReport actualReport : actual) {
@@ -530,13 +560,13 @@ public class ECElementsUtils extends Assert {
 			}
 		}
 		assertEquals(expected.getReportName(), actual.getReportName());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
-		ECReportGroup[] expectedGroups = expected.getGroup();
-		ECReportGroup[] actualGroups = actual.getGroup();
+		List<ECReportGroup> expectedGroups = expected.getGroup();
+		List<ECReportGroup> actualGroups = actual.getGroup();
 		
-		assertEquals(expectedGroups.length, actualGroups.length);
+		assertEquals(expectedGroups.size(), actualGroups.size());
 		
 		for (ECReportGroup expectedGroup : expectedGroups) {
 			boolean contains = false;
@@ -564,7 +594,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		assertEquals(expected.getGroupCount(), actual.getGroupCount());
 		assertEquals(expected.getGroupList(), actual.getGroupList());
@@ -581,7 +611,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getCount(), actual.getCount());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
@@ -596,13 +626,13 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
-		ECReportGroupListMember[] expectedMembers = expected.getMember();
-		ECReportGroupListMember[] actualMembers = actual.getMember();
+		List<ECReportGroupListMember> expectedMembers = expected.getMember();
+		List<ECReportGroupListMember> actualMembers = actual.getMember();
 		
-		assertEquals(expectedMembers.length, actualMembers.length);
+		assertEquals(expectedMembers.size(), actualMembers.size());
 		
 		for (ECReportGroupListMember expectedMember : expectedMembers) {
 			boolean contains = false;
@@ -634,12 +664,12 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getRawDecimal(), actual.getRawDecimal());
 		assertEquals(expected.getRawHex(), actual.getRawHex());
 		assertEquals(expected.getTag(), actual.getTag());
-		assertEquals(expected.get_any(), actual.get_any());
+		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
 		
 	}
 	
-	public static void assertEquals(String[] expected, String[] actual) {
+	public static void assertEqualsString(List<String> expected, List<String> actual) {
 		
 		if (expected == null || actual == null) {
 			if (expected == null && actual == null) {
@@ -648,7 +678,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected.length, actual.length);
+		assertEquals(expected.size(), actual.size());
 		for (String expectedString : expected) {
 			boolean contains = false;
 			for (String actualString : actual) {
@@ -670,7 +700,7 @@ public class ECElementsUtils extends Assert {
 		
 		ECTime time = new ECTime();
 		time.setUnit(ECTimeUnit.MS);
-		time.set_value(value);
+		time.setValue(value);
 		
 		return time;
 		
