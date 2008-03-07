@@ -31,9 +31,9 @@ import org.apache.log4j.Logger;
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
 import org.accada.ale.server.readers.IdentifyThread;
-import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
 import org.accada.reader.rp.proxy.RPProxyException;
@@ -94,10 +94,10 @@ public class RPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occurs.
 
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 		try {
 			super.initialize(name, spec);
-		} catch (ImplementationException ie) {
+		} catch (ImplementationExceptionResponse ie) {
 			LOG.error("error in initialize of superclass");
 			throw ie;
 		}
@@ -105,10 +105,10 @@ public class RPAdaptor extends BaseReader {
 		try {
 			// extract from LRSpec how to connect to the reader
 			extractConnectionSettings();
-		} catch (ImplementationException ie) {
+		} catch (ImplementationExceptionResponse ie) {
 			ie.printStackTrace();
 			LOG.error("could not extract connection settings from LRSpec");
-			throw new ImplementationException();
+			throw new ImplementationExceptionResponse();
 		}
 		
 		// connect to the reader
@@ -122,14 +122,13 @@ public class RPAdaptor extends BaseReader {
 	 * @return a URL created from urlString
 	 * @throws ImplementationException when a MalformedURLException is thrown
 	 */
-	private URL toURL(String urlString, String comment) throws ImplementationException {
+	private URL toURL(String urlString, String comment) throws ImplementationExceptionResponse {
 		URL url = null;
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			throw new ImplementationException("Could not extract " + comment + " from LRProperty",
-				ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationExceptionResponse("Could not extract " + comment + " from LRProperty");
 		}
 		return url;
 	}
@@ -142,7 +141,7 @@ public class RPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an error occurs
 	 * @return returns true if the connection to the reader needs to be reconnected
 	 */
-	private boolean extractConnectionSettings() throws ImplementationException {
+	private boolean extractConnectionSettings() throws ImplementationExceptionResponse {
 		URL connectionPoint = toURL(logicalReaderProperties.get("ConnectionPoint"), "ConnectionPoint");
 		URL notificationPoint = toURL(logicalReaderProperties.get("NotificationPoint"), "NotificationPoint");
 		String interval = logicalReaderProperties.get("ReadTimeInterval");
@@ -152,8 +151,7 @@ public class RPAdaptor extends BaseReader {
 			setReadTimeInterval(Integer.parseInt(interval));
 		} catch (Exception ne) {
 			LOG.error("could not extract readTimeIntervall from LRPropery");
-			throw new ImplementationException("could not extract notificationPoint from LRPropery", 
-					ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationExceptionResponse("could not extract notificationPoint from LRPropery");
 		}
 		
 		// assert that the readTimeInterval is not -1
@@ -224,7 +222,7 @@ public class RPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void connectReader() throws ImplementationException {
+	public void connectReader() throws ImplementationExceptionResponse {
 		if (isConnected()) {
 			return;
 		}
@@ -232,7 +230,7 @@ public class RPAdaptor extends BaseReader {
 		try {
 			inputGenerator = new InputGenerator(this);
 			
-		} catch (ImplementationException e) {
+		} catch (ImplementationExceptionResponse e) {
 			setDisconnected();
 			throw e;
 		}
@@ -254,7 +252,7 @@ public class RPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void disconnectReader() throws ImplementationException {
+	public void disconnectReader() throws ImplementationExceptionResponse {
 		
 		setCommandChannelHost(null);
 		setNotificationChannelHost(null);
@@ -315,7 +313,7 @@ public class RPAdaptor extends BaseReader {
 		if (!isConnected()) {
 			try {
 				connectReader();
-			} catch (ImplementationException e) {
+			} catch (ImplementationExceptionResponse e) {
 				e.printStackTrace();
 				
 				setDisconnected();
@@ -349,7 +347,7 @@ public class RPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
 	@Override
-	public synchronized void update(LRSpec spec) throws ImplementationException {
+	public synchronized void update(LRSpec spec) throws ImplementationExceptionResponse {
 		stop();
 		
 		setLRSpec(spec);

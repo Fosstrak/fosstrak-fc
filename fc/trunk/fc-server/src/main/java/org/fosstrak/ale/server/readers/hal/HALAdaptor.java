@@ -7,8 +7,9 @@ import java.util.List;
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
 import org.accada.ale.server.readers.IdentifyThread;
-import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.accada.hal.HardwareAbstraction;
 import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
@@ -61,7 +62,7 @@ public class HALAdaptor extends BaseReader {
 	 * @param spec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 		super.initialize(name, spec);
 
 		pollingFrequency = Long.parseLong(logicalReaderProperties.get("ReadTimeInterval"));
@@ -97,7 +98,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void connectReader() throws ImplementationException {
+	public void connectReader() throws ImplementationExceptionResponse {
 		if (!isConnected()) {
 			LOG.debug("Connecting reader " + getName());
 			if (!isAutoPolling()) {
@@ -119,7 +120,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void disconnectReader() throws ImplementationException {
+	public void disconnectReader() throws ImplementationExceptionResponse {
 		if (isConnected()) {
 			if (isAutoPolling()) {
 				try {
@@ -148,7 +149,7 @@ public class HALAdaptor extends BaseReader {
 		if (!isConnected()) {
 				try {
 					connectReader();
-				} catch (ImplementationException e) {
+				} catch (ImplementationExceptionResponse e) {
 					LOG.info("could not start the reader " + readerName);
 					e.printStackTrace();
 					
@@ -209,7 +210,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
 	@Override
-	public synchronized  void update(LRSpec spec) throws ImplementationException {
+	public synchronized  void update(LRSpec spec) throws ImplementationExceptionResponse {
 		
 		// we update the properties, so stop the reader from retrieving tags
 		stop();

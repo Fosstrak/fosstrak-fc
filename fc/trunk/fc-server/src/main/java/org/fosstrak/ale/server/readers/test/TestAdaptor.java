@@ -6,9 +6,10 @@ import java.util.List;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.server.readers.BaseReader;
-import org.accada.ale.server.readers.LRProperty;
-import org.accada.ale.server.readers.LRSpec;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRProperty;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
 import org.apache.log4j.Logger;
@@ -70,7 +71,7 @@ public class TestAdaptor extends BaseReader {
 	}
 	
 	@Override
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 		super.initialize(name, spec);
 	}
 	
@@ -130,10 +131,12 @@ public class TestAdaptor extends BaseReader {
 		logicalReaderProperties = new HashMap<String, String>();
 		properties = new LinkedList<LRProperty>();
 		
-		for (LRProperty prop : spec.getLRProperty()) {
-			logicalReaderProperties.put(prop.getName(), prop.getValue());
-			properties.add(prop);
-		}	
+		if (spec.getProperties() != null) {
+			for (LRProperty prop : spec.getProperties().getProperty()) {
+				logicalReaderProperties.put(prop.getName(), prop.getValue());
+				properties.add(prop);
+			}	
+		}
 		connectReader();
 		if (started) {
 			start();

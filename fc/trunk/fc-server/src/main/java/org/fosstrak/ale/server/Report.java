@@ -22,23 +22,25 @@ package org.accada.ale.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.accada.ale.util.ECReportSetEnum;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupCount;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupList;
 import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSetEnum;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.epcglobal.EPC;
-import org.accada.reader.rprm.core.readreport.TagType;
 import org.accada.ale.server.Tag;
 
 /**
@@ -70,7 +72,7 @@ public class Report {
 	private final Set<String> lastEventCycleTags = new HashSet<String>();
 	
 	/** type of this report (current, additions or deletions). */
-	private ECReportSetEnum reportType;
+	private String reportType;
 
 	/** ec report. */
 	private ECReport report;
@@ -90,7 +92,7 @@ public class Report {
 	 * @param currentEventCycle this report belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public Report(ECReportSpec reportSpec, EventCycle currentEventCycle) throws ImplementationException {
+	public Report(ECReportSpec reportSpec, EventCycle currentEventCycle) throws ImplementationExceptionResponse {
 		
 		// set name
 		name = reportSpec.getReportName();
@@ -126,10 +128,8 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public void addTag(Tag tag) throws ECSpecValidationException, ImplementationException {
+	public void addTag(Tag tag) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 
-		LOG.debug("add tag '" + tag.getTagIDAsPureURI() + "'");
-		
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
 	
@@ -140,7 +140,7 @@ public class Report {
 			
 				// add tag to report
 				addTagToReportGroup(tag);
-		}	
+		}
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public void addTag(org.accada.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationException, ImplementationException {
+	public void addTag(org.accada.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		Tag newtag = new Tag();
 		newtag.setTagID(tag.getTagID());
 		newtag.setTagIDAsPureURI(tag.getTagIDAsPureURI());
@@ -186,10 +186,10 @@ public class Report {
 	 * @throws ECSpecValidationException if a tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
+	public ECReport getECReport() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 
 		//generate new ECReport
-		if (reportType == ECReportSetEnum.ADDITIONS) {
+		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
 			
 			// get additional tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -214,7 +214,7 @@ public class Report {
 			}
 			//writeDebugInformation(reportTags);
 	
-		} else if (reportType == ECReportSetEnum.CURRENT) {
+		} else if (reportType.equalsIgnoreCase(ECReportSetEnum.CURRENT)) {
 
 			// get tags from current EventCycle 
 			for (Tag tag : currentEventCycle.getTags()) {
@@ -222,7 +222,7 @@ public class Report {
 			}
 
 		//} else if (reportType == ECReportSetEnum.DELETIONS) {
-		} else if (reportType == ECReportSetEnum.DELETIONS) {
+		} else if (reportType.equalsIgnoreCase(ECReportSetEnum.DELETIONS)) {
 			
 			// get removed tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -275,24 +275,24 @@ public class Report {
 		if (filterSpec != null) {
 			
 			// add ECIncludePatterns from spec to includePatterns set
-			String[] ecIncludePatterns = filterSpec.getIncludePatterns();
+			List<String> ecIncludePatterns = filterSpec.getIncludePatterns().getIncludePattern();
 			if (ecIncludePatterns != null) {
 				for (String pattern : ecIncludePatterns) {
 					try {
 						includePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
-					} catch (ECSpecValidationException e) {
+					} catch (ECSpecValidationExceptionResponse e) {
 						e.printStackTrace();
 					}
 				}
 			}
 			
 			// add ECExcludePatterns from spec to excludePatterns set
-			String[] ecExcludePatterns = filterSpec.getExcludePatterns();
+			List<String> ecExcludePatterns = filterSpec.getExcludePatterns().getExcludePattern();
 			if (ecExcludePatterns != null) {
 				for (String pattern : ecExcludePatterns) {
 					try {
 						excludePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
-					} catch (ECSpecValidationException e) {
+					} catch (ECSpecValidationExceptionResponse e) {
 						e.printStackTrace();
 					}
 				}
@@ -307,21 +307,18 @@ public class Report {
 	private void initGroupPatterns() {
 		
 		LOG.debug("Init group patterns");
-	
-		// get group spec
-		String[] groupSpec = reportSpec.getGroupSpec();
-		if (groupSpec != null) {
-			
+		if (reportSpec.getGroupSpec() != null) {
+			// get group spec
+			List<String> groupSpec = reportSpec.getGroupSpec().getPattern();
 			// add ECGroupPatterns from spec to groupPatterns set
 			for (String pattern : groupSpec) {
 				try {
 					groupPatterns.add(new Pattern(pattern, PatternUsage.GROUP));
-				} catch (ECSpecValidationException e) {
+				} catch (ECSpecValidationExceptionResponse e) {
 					e.printStackTrace();
 				}	
 			}
-		}
-		
+		}		
 	}
 	
 	/**
@@ -332,9 +329,9 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
+	private boolean isMember(String tagURI) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 				
-		if (reportType == ECReportSetEnum.ADDITIONS) {
+		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
 		
 			// if report type is additions the tag is only a member if it wasn't a member of the last event cycle	
 			Set<Tag> tags = currentEventCycle.getLastEventCycleTags();
@@ -376,7 +373,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private void addTagToReportGroup(Tag tag) throws ImplementationException, ECSpecValidationException {
+	private void addTagToReportGroup(Tag tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
@@ -388,8 +385,9 @@ public class Report {
 		
 		// get matching group
 		ECReportGroup matchingGroup = null;
-		ECReportGroup[] groups = report.getGroup();
-		if (groups == null) {
+		List<ECReportGroup> groups = report.getGroup();
+		//if (groups == null) {
+		if (groups.isEmpty()) {
 			matchingGroup = null;
 		} else {
 			for (ECReportGroup group : groups) {
@@ -404,12 +402,12 @@ public class Report {
 				}
 			}
 		}
-		
+	
 		// create group if group does not already exist
 		if (matchingGroup == null) {
 			
 			LOG.debug("Group '" + groupName + "' does not already exist, create it");
-			
+						
 			// create group
 			matchingGroup = new ECReportGroup();
 			
@@ -427,45 +425,32 @@ public class Report {
 			matchingGroup.setGroupList(new ECReportGroupList());
 			
 			// add to groups
-			ECReportGroup[] newGroups;
-			if (groups != null) {
-				newGroups = new ECReportGroup[groups.length + 1];
-				for (int i = 0; i < groups.length; i++) {
-					newGroups[i] = groups[i];
-				}
-				newGroups[groups.length] = matchingGroup;
-			} else {
-				 newGroups = new ECReportGroup[1];
-				 newGroups[0] = matchingGroup;
-			}
-			report.setGroup(newGroups);					
+			report.getGroup().add(matchingGroup);
+			
 		}
 		
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
 		if (reportSpec.getOutput().isIncludeRawDecimal()) {
-			groupMember.setRawDecimal(new EPC(tag.getTagIDAsPureURI()));
+			EPC epc = new EPC();
+			epc.setValue(tag.getTagIDAsPureURI());
+			groupMember.setRawDecimal(epc);
 		}
 		if (reportSpec.getOutput().isIncludeTag()) {
-			groupMember.setTag(new EPC(tag.getTagIDAsPureURI()));
+			EPC epc = new EPC();
+			epc.setValue(tag.getTagIDAsPureURI());
+			groupMember.setTag(epc);
 		}
 		if (reportSpec.getOutput().isIncludeRawHex()) {
 			if (tag.getTagID() != null) {
-				groupMember.setRawHex(new EPC(HexUtil.byteArrayToHexString(tag.getTagID())));
+				EPC epc = new EPC();
+				epc.setValue(HexUtil.byteArrayToHexString(tag.getTagID()));
+				groupMember.setRawHex(epc);
 			}
 		}
 		
 		// add list member to group list
-		ECReportGroupListMember[] members = (ECReportGroupListMember[]) matchingGroup.getGroupList().getMember();
-		if (members == null) {
-			members = new ECReportGroupListMember[0];
-		}
-		ECReportGroupListMember[] newMembers = new ECReportGroupListMember[members.length + 1];
-		for (int i = 0; i < members.length; i++) {
-			newMembers[i] = members[i];
-		}
-		newMembers[members.length] = groupMember;
-		matchingGroup.getGroupList().setMember(newMembers);
+		List<ECReportGroupListMember> members = matchingGroup.getGroupList().getMember();		members.add(groupMember);
 		
 		// increment group counter
 		if (reportSpec.getOutput().isIncludeCount()) {
@@ -475,7 +460,7 @@ public class Report {
 		LOG.debug("Tag '" + tagURI + "' successfully added to group '" + groupName + "' of report '" + name + "'");
 		
 	}
-	
+
 	/**
 	 * This method get the matching group of this report for the specified tag.
 	 * 
@@ -484,7 +469,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private String getGroupName(String tagURI) throws ImplementationException, ECSpecValidationException {
+	private String getGroupName(String tagURI) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		
 		for (Pattern pattern : groupPatterns) {
 			if (pattern.isMember(tagURI)) {
@@ -503,12 +488,11 @@ public class Report {
 	 */
 	private boolean isEmpty() {
 		
-		ECReportGroup[] groups = report.getGroup();
+		List<ECReportGroup> groups = report.getGroup();
 		if (groups != null) {
 			for (ECReportGroup group : groups) {
 				ECReportGroupList groupList = group.getGroupList();
-				groupList.setMember(null);
-				if (groupList.getMember().length > 0) {
+				if (groupList.getMember().size() > 0) {
 					return false;
 				}
 			}

@@ -21,12 +21,8 @@
 package org.accada.ale.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -34,17 +30,18 @@ import java.util.Set;
 
 import org.accada.ale.server.readers.LogicalReader;
 import org.accada.ale.server.readers.LogicalReaderManager;
+import org.accada.ale.util.ECTerminationCondition;
+import org.accada.ale.util.ECTimeUnit;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
 import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECTerminationCondition;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.reader.rp.proxy.RPProxyException;
+import org.accada.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.Logger;
 
@@ -98,7 +95,7 @@ public class EventCycle implements Runnable, Observer {
 	/** the total time this event cycle runs in milliseconds. */
 	private long totalTime;
 	/** the termination condition of this event cycle. */
-	private ECTerminationCondition terminationCondition = null;
+	private String terminationCondition = null;
 
 	/** flags the eventCycle whether it shall run several times or not.	 */
 	private boolean running = false;
@@ -115,7 +112,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @param generator to which this event cycle belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public EventCycle(ReportsGenerator generator) throws ImplementationException {
+	public EventCycle(ReportsGenerator generator) throws ImplementationExceptionResponse {
 		
 		// set name
 		name = generator.getName() + "_" + number++;
@@ -127,7 +124,7 @@ public class EventCycle implements Runnable, Observer {
 		spec = generator.getSpec();
 		
 		// get report specs and create a report for each spec
-		for (ECReportSpec reportSpec : spec.getReportSpecs()) {
+		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
 			
 			// add report spec and report to reports
 			reports.add(new Report(reportSpec, this));
@@ -145,7 +142,7 @@ public class EventCycle implements Runnable, Observer {
 		LOG.debug("adding logicalReaders to EventCycle");
 		// get LogicalReaderStubs
 		if (spec.getLogicalReaders() != null) {
-			String[] logicalReaderNames = spec.getLogicalReaders();
+			List<String> logicalReaderNames = spec.getLogicalReaders().getLogicalReader();
 			for (String logicalReaderName : logicalReaderNames) {
 				LOG.debug("retrieving logicalReader " + logicalReaderName);
 				LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(logicalReaderName);
@@ -183,7 +180,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tags of the report are not valid
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	private ECReports getECReports() throws ECSpecValidationException, ImplementationException {
+	private ECReports getECReports() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		
 		// create ECReports
 		ECReports reports = new ECReports();
@@ -192,7 +189,8 @@ public class EventCycle implements Runnable, Observer {
 		reports.setSpecName(generator.getName());
 		
 		// set date
-		reports.setDate(new GregorianCalendar());
+		// FIXME FIXME FIXME
+		//reports.setDate(new XMLGregorianCalendar());
 
 		// set ale id
 		reports.setALEID(ALEID);
@@ -209,7 +207,8 @@ public class EventCycle implements Runnable, Observer {
 		}
 		
 		// set reports
-		reports.setReports(getReportList());
+		reports.setReports(new Reports());
+		reports.getReports().getReport().addAll(getReportList());
 		
 		return reports;
 		
@@ -233,7 +232,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occures
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public synchronized void addTag(Tag tag) throws ImplementationException, ECSpecValidationException {
+	public synchronized void addTag(Tag tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		if (!isAcceptingTags()) {
 			return;
 		}
@@ -261,7 +260,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occures
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public void addTag(TagType tag) throws ImplementationException, ECSpecValidationException {
+	public void addTag(TagType tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		
 		Tag newTag = new Tag();
 		newTag.setTagID(tag.getTagID());
@@ -303,9 +302,9 @@ public class EventCycle implements Runnable, Observer {
 			//tag.prettyPrint(LOG);
 			try {
 				addTag(tag);
-			} catch (ImplementationException ie) {
+			} catch (ImplementationExceptionResponse ie) {
 				ie.printStackTrace();
-			} catch (ECSpecValidationException ive) {
+			} catch (ECSpecValidationExceptionResponse ive) {
 				ive.printStackTrace();
 			}
 		} else if (arg instanceof List) {
@@ -316,9 +315,9 @@ public class EventCycle implements Runnable, Observer {
 			for (Tag tag : tagList) {
 				try {
 					addTag(tag);
-				} catch (ImplementationException ie) {
+				} catch (ImplementationExceptionResponse ie) {
 					ie.printStackTrace();
-				} catch (ECSpecValidationException ive) {
+				} catch (ECSpecValidationExceptionResponse ive) {
 					ive.printStackTrace();
 				}
 			}
@@ -440,7 +439,7 @@ public class EventCycle implements Runnable, Observer {
 				LOG.info("EventCycle "+ getName() + ": Number of Tags read in the current EventCyle.java: " + tags.size());
 				
 				ECReports ecReports = getECReports();
-
+				
 				// notifySubscribers
 				generator.notifySubscribers(ecReports);
 				
@@ -452,10 +451,12 @@ public class EventCycle implements Runnable, Observer {
 				lastEventCycleTags = tags;
 				tags = new HashSet<Tag>();
 				
-			} catch (ECSpecValidationException e) {
+			} catch (ECSpecValidationExceptionResponse e) {
 				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
-			} catch (ImplementationException e) {
+			} catch (ImplementationExceptionResponse e) {
 				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			
@@ -465,8 +466,6 @@ public class EventCycle implements Runnable, Observer {
 					this.wait();
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}			
 		}
 			
@@ -498,13 +497,13 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if a tag of this report is not valid
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	private ECReport[] getReportList() throws ECSpecValidationException, ImplementationException {
+	private List<ECReport> getReportList() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 
 		ArrayList<ECReport> ecReports = new ArrayList<ECReport>();
 		for (Report report : reports) {
 			ecReports.add(report.getECReport());
 		}
-		return ecReports.toArray(new ECReport[reports.size()]);
+		return ecReports;
 		
 	}
 	
@@ -514,15 +513,15 @@ public class EventCycle implements Runnable, Observer {
 	 * @return duration value in milliseconds
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private long getDurationValue() throws ImplementationException {
-		
-		ECTime duration = spec.getBoundarySpec().getDuration();
-		if (duration != null) {
-			if (duration.getUnit() == ECTimeUnit.MS) {
-				return duration.get_value();
-			} else {
-				throw new ImplementationException("The only ECTimeUnit allowed is milliseconds (MS).",
-						ImplementationExceptionSeverity.ERROR);
+	private long getDurationValue() throws ImplementationExceptionResponse {
+		if (spec.getBoundarySpec() != null) {
+			ECTime duration = spec.getBoundarySpec().getDuration();
+			if (duration != null) {
+				if (duration.getUnit().compareToIgnoreCase(ECTimeUnit.MS) == 0) {
+					return duration.getValue();
+				} else {
+					throw new ImplementationExceptionResponse("The only ECTimeUnit allowed is milliseconds (MS).");
+				}
 			}
 		}
 		return -1;

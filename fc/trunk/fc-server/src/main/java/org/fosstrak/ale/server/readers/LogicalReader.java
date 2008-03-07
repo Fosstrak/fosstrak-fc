@@ -20,16 +20,16 @@
 
 package org.accada.ale.server.readers;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Observable;
-import java.util.Set;
 import java.util.List;
 
-import org.accada.ale.server.Tag;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRProperty;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -70,13 +70,16 @@ public abstract class LogicalReader extends Observable{
 	 * @param spec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 
 		this.readerName = name;
 		this.logicalReaderSpec = spec;
 		
+		if (spec.getProperties() == null) {
+			throw new ImplementationExceptionResponse("no properties specified");
+		}
 		// store the properties
-			for (LRProperty prop : spec.getLRProperty()) {
+			for (LRProperty prop : spec.getProperties().getProperty()) {
 				logicalReaderProperties.put(prop.getName(), prop.getValue());
 				properties.add(prop);
 			}	
@@ -149,9 +152,9 @@ public abstract class LogicalReader extends Observable{
 	 * @return a logical reader
 	 * @throws ImplementationException when the LogicalReader could not be built by reflection
 	 */
-	public static LogicalReader createReader(String name, LRSpec spec)  throws ImplementationException {
+	public static LogicalReader createReader(String name, LRSpec spec)  throws ImplementationExceptionResponse {
 		// determine whether composite or basereader
-		if (spec.isComposite()) {
+		if (spec.isIsComposite()) {
 			CompositeReader compositeReader = new CompositeReader();
 			// initialize the reader
 			compositeReader.initialize(name, spec);
@@ -165,7 +168,19 @@ public abstract class LogicalReader extends Observable{
 		}
 		
 		try {
-			Class cls = Class.forName(spec.getReaderType());  
+			// get the reader type of the reader
+			String readerType = null;
+			for (LRProperty property : spec.getProperties().getProperty()) {
+				if (property.getName().equalsIgnoreCase("ReaderType")) {
+					readerType = property.getValue();
+				}
+			}
+			
+			if (readerType == null) {
+				throw new ImplementationExceptionResponse("Property ReaderType not defined");
+			}
+			
+			Class cls = Class.forName(readerType);  
 			Object result = cls.newInstance();
 			
 			if (result instanceof LogicalReader) {
@@ -182,7 +197,7 @@ public abstract class LogicalReader extends Observable{
 		} catch (Throwable e) {
 			System.out.println("could not dynamically reflect the reader type");
 			e.printStackTrace();
-			throw new ImplementationException();
+			throw new ImplementationExceptionResponse();
 		}
 		
 		return logicalReader;
@@ -211,7 +226,7 @@ public abstract class LogicalReader extends Observable{
 	 * @param spec an LRSpec containing the changes of the reader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public abstract void update(LRSpec spec) throws ImplementationException;
+	public abstract void update(LRSpec spec) throws ImplementationExceptionResponse;
 	
 	/**
 	 * stops a reader from reading tags.

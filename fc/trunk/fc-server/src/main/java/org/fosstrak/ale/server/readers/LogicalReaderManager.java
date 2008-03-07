@@ -32,7 +32,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
 import javax.xml.validation.Schema;
 
 
@@ -40,15 +39,20 @@ import org.accada.ale.server.ALE;
 import org.accada.ale.server.readers.gen.LogicalReaders;
 import org.accada.ale.server.readers.gen.ObjectFactory;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
-import org.accada.ale.wsdl.ale.epcglobal.ImmutableReaderException;
+import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
-import org.accada.ale.wsdl.ale.epcglobal.InUseException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
-import org.accada.ale.wsdl.ale.epcglobal.NonCompositeReaderException;
-import org.accada.ale.wsdl.ale.epcglobal.ReaderLoopException;
-import org.accada.ale.wsdl.ale.epcglobal.ValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.SecurityException;
+import org.accada.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.NonCompositeReaderExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.ReaderLoopExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRProperty;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -87,7 +91,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @return vendor version of the ale
 	 */
-	public static String getVendorVersion()  throws ImplementationException {
+	public static String getVendorVersion()  throws ImplementationExceptionResponse {
 		return ALE.getVendorVersion();
 	}
 
@@ -96,7 +100,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @return standard version of the ale
 	 */
-	public static String getStandardVersion() throws ImplementationException {
+	public static String getStandardVersion() throws ImplementationExceptionResponse {
 		return ALE.getStandardVersion();
 	}
 
@@ -109,7 +113,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @return returns a value for a requested property
 	 */
-	public static String getPropertyValue(String name,  String propertyName) throws NoSuchNameException, SecurityException, ImplementationException {
+	public static String getPropertyValue(String name,  String propertyName) throws NoSuchNameExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		List<LRProperty> propList = logRd.getProperties();
 		Iterator iterator = propList.iterator();
@@ -133,16 +137,18 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @throws ValidationException the provided LRSpec is invalid
 	 */
-	public static void setProperties(String name, List<LRProperty> properties) throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, SecurityException, ImplementationException {
+	public static void setProperties(String name, List<LRProperty> properties) throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		LRSpec spec = logRd.getLRSpec();
-		spec.setProperties(properties);
+		if (spec.getProperties() == null) {
+			spec.setProperties(new LRSpec.Properties());
+		}
+		spec.getProperties().getProperty().addAll(properties);
 		LOG.debug("set the properties");
 		try {
 			update(name, spec);
-		} catch (ReaderLoopException e) {
-			throw new ImplementationException("reader loop detected", 
-					ImplementationExceptionSeverity.ERROR);
+		} catch (ReaderLoopExceptionResponse e) {
+			throw new ImplementationExceptionResponse("reader loop detected");
 		}
 		// TODO what is table below?
 	}
@@ -158,13 +164,25 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @throws NonCompositeReaderException addReader or setReader or removeReader was called on a non compositeReader
 	 */
-	public static void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameException, InUseException, ImmutableReaderException, NonCompositeReaderException, SecurityException, ImplementationException {
+	public static void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, NonCompositeReaderExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader lgRd = logicalReaders.get(name);
 		if (! (lgRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException("reader " + name + " is not composite");
+			throw new NonCompositeReaderExceptionResponse("reader " + name + " is not composite");
 		}
+		// get the readers that are still in the spec
 		LRSpec spec = lgRd.getLRSpec();
-		spec.getReaders().removeAll(readers);
+		List<String> res = new ArrayList<String>();
+		if ((spec.getReaders() != null) && (spec.getReaders().getReader().size() > 0)) {
+			for (String reader : spec.getReaders().getReader()) {
+				if (!readers.contains(reader)) {
+					res.add(reader);
+				}
+			}
+		}
+		
+		// add the resulting readers
+		spec.setReaders(new LRSpec.Readers());
+		spec.getReaders().getReader().addAll(res);
 		lgRd.update(spec);
 	}
 
@@ -181,13 +199,14 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @throws NonCompositeReaderException addReader or setReader was called on a non compositeReader
 	 */
-	public static void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, NonCompositeReaderException, ReaderLoopException, SecurityException, ImplementationException {
+	public static void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, NonCompositeReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		if (! (logRd instanceof CompositeReader)) {
-			throw new NonCompositeReaderException("reader " + name + " is not composite");
+			throw new NonCompositeReaderExceptionResponse("reader " + name + " is not composite");
 		}
 		LRSpec spec = logRd.getLRSpec();
-		spec.setReaders(readers);
+		spec.setReaders(new LRSpec.Readers());
+		spec.getReaders().getReader().addAll(readers);
 		update(name, spec);
 	}
 
@@ -203,12 +222,17 @@ public class LogicalReaderManager {
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 */
-	public static void addReaders(String name, java.util.List<String> readers) throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, ReaderLoopException, SecurityException, ImplementationException {
+	public static void addReaders(String name, java.util.List<String> readers) throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		LRSpec spec = logRd.getLRSpec();
-		List<String> readerList = spec.getReaders();
-		readerList.addAll(readers);
-		spec.setReaders(readerList);
+		if (spec.getReaders() == null) {
+			spec.setReaders(new LRSpec.Readers());
+		}
+		for (String reader : readers) {
+			if (!spec.getReaders().getReader().contains(reader)) {
+				spec.getReaders().getReader().add(reader);
+			}
+		}
 		update(name, spec);
 	}
 
@@ -220,7 +244,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 * @return LRSpec for the logical reader name
 	 */
-	public static LRSpec getLRSpec(String name) throws NoSuchNameException, SecurityException, ImplementationException {
+	public static LRSpec getLRSpec(String name) throws NoSuchNameExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		return logRd.getLRSpec();		
 	}
@@ -231,7 +255,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 * @return list of String containing the logicalReaders
 	 */
-	public static java.util.List<String> getLogicalReaderNames() throws SecurityException, ImplementationException {
+	public static java.util.List<String> getLogicalReaderNames() throws SecurityExceptionResponse, ImplementationExceptionResponse {
 		List<String> rdNames = new ArrayList<String>();
 		Iterable<String> it = logicalReaders.keySet();
 		for (String reader : it) {
@@ -249,7 +273,7 @@ public class LogicalReaderManager {
 	 * @throws ImmutableReaderException whenever you want to change a immutable reader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public static void undefine(String name) throws NoSuchNameException, InUseException, SecurityException, ImmutableReaderException, ImplementationException {
+	public static void undefine(String name) throws NoSuchNameExceptionResponse, InUseExceptionResponse, SecurityExceptionResponse, ImmutableReaderExceptionResponse, ImplementationExceptionResponse {
 		// the logicalReader must delete himself from its observables
 		LOG.debug("undefining reader " + name);
 		LogicalReader reader = LogicalReaderManager.getLogicalReader(name);
@@ -258,7 +282,7 @@ public class LogicalReaderManager {
 		// an active CC or EC pointing to the reader
 		// this raises an InUseException
 		if (reader.countObservers() > 0) {
-			throw new InUseException();
+			throw new InUseExceptionResponse();
 		}
 		
 		if (reader instanceof CompositeReader) {
@@ -289,7 +313,7 @@ public class LogicalReaderManager {
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 * @throws NoSuchNameException whenever the specified name is not defined in the logicalReader API
 	 */
-	public static void update(String name, LRSpec spec)  throws NoSuchNameException, ValidationException, InUseException,  ImmutableReaderException, ReaderLoopException, SecurityException, ImplementationException {
+	public static void update(String name, LRSpec spec)  throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse,  ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		logRd.update(spec);
 	}
@@ -303,8 +327,35 @@ public class LogicalReaderManager {
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 */
-	public static void define(String name, org.accada.ale.server.readers.gen.LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
-		define(name, new LRSpec(spec.getReaders(), spec.isIsComposite(), spec.getLRProperty(), spec.getReaderType()));
+	public static void define(String name, org.accada.ale.server.readers.gen.LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+		
+		LRSpec thespec = new LRSpec();
+		
+		// add the readers
+		thespec.setReaders(new LRSpec.Readers());
+		if (spec.getReaders() != null) {
+			thespec.getReaders().getReader().addAll(spec.getReaders());
+		}
+		
+		// set if composite reader or basereader
+		thespec.setIsComposite(spec.isIsComposite());
+		
+		// set the properties 
+		thespec.setProperties(new LRSpec.Properties());
+		for (org.accada.ale.server.readers.gen.LRProperty prop : spec.getLRProperty()) {
+			LRProperty property = new LRProperty();
+			property.setName(prop.getName());
+			property.setValue(prop.getValue());
+			thespec.getProperties().getProperty().add(property);
+		}
+		
+		// at the ReaderType property
+		LRProperty property = new LRProperty();
+		property.setName("ReaderType");
+		property.setValue(spec.getReaderType());
+		thespec.getProperties().getProperty().add(property);
+		
+		define(name, thespec);
 	}
 	
 	/**
@@ -316,7 +367,7 @@ public class LogicalReaderManager {
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 */
-	public static void define(String name, LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
+	public static void define(String name, LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRead = LogicalReader.createReader(name, spec);
 		// establish connection when basereader
 		if (logRead instanceof BaseReader) {
@@ -333,7 +384,7 @@ public class LogicalReaderManager {
 	 * @throws DuplicateNameException when a reader name is already defined
 	 * @throws ValidationException the provided LRSpec is invalid 
 	 */
-	public static void initialize() throws ImplementationException, SecurityException, DuplicateNameException, ValidationException {
+	public static void initialize() throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse {
 		
 		initializeFromFile(LOAD_FILEPATH); 
 		
@@ -349,7 +400,7 @@ public class LogicalReaderManager {
 	 * @throws DuplicateNameException when a reader name is already defined
 	 * @throws ValidationException the provided LRSpec is invalid
 	 */
-	public static void initializeFromFile(String loadFilePath) throws ImplementationException, SecurityException, DuplicateNameException, ValidationException {
+	public static void initializeFromFile(String loadFilePath) throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse {
 		
 		LOG.debug("Initialize LogicalReaderManager");
 		
@@ -411,7 +462,7 @@ public class LogicalReaderManager {
 	 * @throws ValidationException the provided LRSpec is invalid
 	 * @throws FileNotFoundException the provided file was not found
 	 */
-	public static void storeToFile(String storeFilePath) throws ImplementationException, SecurityException, DuplicateNameException, ValidationException, FileNotFoundException {
+	public static void storeToFile(String storeFilePath) throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse, FileNotFoundException {
 		
 		LOG.debug("Store LogicalReaderManager");
 		
@@ -440,11 +491,13 @@ public class LogicalReaderManager {
 				genLogRd.setName(logRd.getName());
 				genLogRd.setName(name);
 				org.accada.ale.server.readers.gen.LRSpec genSpec = objFactory.createLRSpec();
-				genSpec.setIsComposite(spec.isComposite());
+				genSpec.setIsComposite(spec.isIsComposite());
 				if (genSpec.isIsComposite()){
-					Iterator<String> it = spec.getReaders().iterator();
-					while(it.hasNext()){
-						genSpec.getReaders().add(it.next());
+					if (spec.getReaders() != null) {
+						Iterator<String> it = spec.getReaders().getReader().iterator();
+						while(it.hasNext()){
+							genSpec.getReaders().add(it.next());
+						}
 					}
 				}
 				else {
@@ -505,9 +558,9 @@ public class LogicalReaderManager {
 	 * @param reader a logicalReader to be stored in the manager
 	 * @throws ImplementationException whenever something goes wrong inside the implementation
 	 */
-	public static void setLogicalReader(LogicalReader reader) throws ImplementationException {
+	public static void setLogicalReader(LogicalReader reader) throws ImplementationExceptionResponse {
 		if (LogicalReaderManager.logicalReaders.containsKey(reader.getName())) {
-			throw new ImplementationException();	//	"reader duplicated");
+			throw new ImplementationExceptionResponse();	//	"reader duplicated");
 		}
 		
 		LogicalReaderManager.logicalReaders.put(reader.getName(), reader);
@@ -530,6 +583,10 @@ public class LogicalReaderManager {
 			e.printStackTrace();
 		}
 		return logicalReaders.containsKey(logicalReaderName);
+	}
+
+	public static boolean isInitialized() {
+		return initialized;
 	}
 
 }
