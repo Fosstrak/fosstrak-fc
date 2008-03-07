@@ -59,7 +59,8 @@ valid = false;
 <TABLE>
 <TR>
 <TD COLSPAN="1" ALIGN="LEFT">endpoint:</TD>
-<TD ALIGN="left"><INPUT TYPE="TEXT" NAME="endpoint8" SIZE=20></TD>
+<TD ALIGN="left"><INPUT TYPE="TEXT" NAME="endpoint" style="width:450px;"><br/>
+example: http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService</TD>
 </TR>
 </TABLE>
 <BR>
@@ -302,6 +303,25 @@ break;
 
 
 // sawielan
+case 317:
+	valid = false;
+	%>
+	<FORM METHOD="POST" ACTION="Result.jsp" TARGET="result">
+	<INPUT TYPE="HIDDEN" NAME="lrmethod" VALUE="<%=method%>">
+	<TABLE>
+	<TR>
+	<TD COLSPAN="1" ALIGN="LEFT">endpoint:</TD>
+	<TD ALIGN="left"><INPUT TYPE="TEXT" NAME="lrendpoint" style="width:450px;"><br/>
+	example: http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALELRService
+	</TD>
+	</TR>
+	</TABLE>
+	<BR>
+	<INPUT TYPE="SUBMIT" VALUE="Invoke">
+	<INPUT TYPE="RESET" VALUE="Clear">
+	</FORM>
+	<%
+	break;
 
 // define(String name, LRSpec spec)
 // update(String name, LRSpec spec)
@@ -310,7 +330,7 @@ case 307:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <table border="0">
 	<tr>
 		<td colspan="3" align="left">params:</td>
@@ -340,7 +360,7 @@ case 309:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <table border="0">
 	<tr>
 		<td colspan="3" align="left">params:</td>
@@ -363,7 +383,7 @@ case 308:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <input type="submit" value="Invoke">
 <input type="reset" value="Clear">
 </form>
@@ -377,7 +397,7 @@ case 312:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <table border="0">
 	<tr>
 		<td colspan="3" align="left">params:</td>
@@ -405,7 +425,7 @@ case 313:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <table border="0">
 	<tr>
 		<td colspan="3" align="left">params:</td>
@@ -432,7 +452,7 @@ case 314:
 valid = false;
 %>
 <form method="post" action="Result.jsp" target="result">
-<input type="hidden" name="method" value="<%=method%>">
+<input type="hidden" name="lrmethod" value="<%=method%>">
 <table border="0">
 	<tr>
 		<td colspan="3" align="left">params:</td>
@@ -454,6 +474,53 @@ valid = false;
 </form>
 <%
 break;
+
+case 315:
+	valid = false;
+	%>
+	<FORM METHOD="POST" ACTION="Result.jsp" TARGET="result">
+	<INPUT TYPE="HIDDEN" NAME="lrmethod" VALUE="<%=method%>">
+	<TABLE>
+	<TR>
+	<TD COLSPAN="1" ALIGN="LEFT">parms:</TD>
+	</TABLE>
+	<BR>
+	<INPUT TYPE="SUBMIT" VALUE="Invoke">
+	<INPUT TYPE="RESET" VALUE="Clear">
+	</FORM>
+	<%
+	break;
+	case 316:
+	valid = false;
+	%>
+	<FORM METHOD="POST" ACTION="Result.jsp" TARGET="result">
+	<INPUT TYPE="HIDDEN" NAME="lrmethod" VALUE="<%=method%>">
+	<TABLE>
+	<TR>
+	<TD COLSPAN="1" ALIGN="LEFT">parms:</TD>
+	</TABLE>
+	<BR>
+	<INPUT TYPE="SUBMIT" VALUE="Invoke">
+	<INPUT TYPE="RESET" VALUE="Clear">
+	</FORM>
+	<%
+	break;
+	case 318:
+		valid = false;
+		%>
+		<FORM METHOD="POST" ACTION="Result.jsp" TARGET="result">
+		<INPUT TYPE="HIDDEN" NAME="lrmethod" VALUE="<%=method%>">
+		<TABLE>
+		<TR>
+		<TD COLSPAN="1" ALIGN="LEFT">parms:</TD>
+		</TABLE>
+		<BR>
+		<INPUT TYPE="SUBMIT" VALUE="Invoke">
+		<INPUT TYPE="RESET" VALUE="Clear">
+		</FORM>
+		<%
+		break;
+
 
 
 case 1111111111:

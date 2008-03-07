@@ -28,11 +28,11 @@
 </STYLE>
 </HEAD>
 <BODY>
-<H1>Methods</H1>
+<H2>ALE Webclient</H2>
+<h3>Filtering and Collection API (ALEServicePort)</h3>
 <UL>
 <LI><A HREF="Input.jsp?method=2" TARGET="inputs"> getEndpoint()</A></LI>
 <LI><A HREF="Input.jsp?method=5" TARGET="inputs"> setEndpoint(String endPointName)</A></LI>
-<LI><A HREF="Input.jsp?method=10" TARGET="inputs"> getALEServicePortType()</A></LI>
 <LI><A HREF="Input.jsp?method=14" TARGET="inputs"> define(String specName, String specFilePath)</A></LI>
 <LI><A HREF="Input.jsp?method=50" TARGET="inputs"> undefine(String specName)</A></LI>
 <LI><A HREF="Input.jsp?method=57" TARGET="inputs"> getECSpec(String specName)</A></LI>
@@ -47,8 +47,10 @@
 </UL>
 <BR/>
 <BR/>
-LogicalReader API<BR/>
+<h3>LogicalReader API (ALELRServicePort)</h3>
 <UL>
+<LI><A HREF="Input.jsp?method=318" TARGET="inputs"> getEndpoint()</A></LI>
+<LI><A HREF="Input.jsp?method=317" TARGET="inputs"> setEndpoint(String endPointName)</A></LI>
 <LI><A HREF="Input.jsp?method=305" TARGET="inputs"> define(String readerName, LRSpec spec)</A></LI>
 <LI><A HREF="Input.jsp?method=306" TARGET="inputs"> undefine(String readerName)</A></LI>
 <LI><A HREF="Input.jsp?method=307" TARGET="inputs"> update(String readerName, LRSpec spec)</A></LI>
@@ -59,6 +61,8 @@ LogicalReader API<BR/>
 <LI><A HREF="Input.jsp?method=312" TARGET="inputs"> removeReaders(String readerName, String[] readers)</A></LI>
 <LI><A HREF="Input.jsp?method=313" TARGET="inputs"> setProperties(String readerName, LRProperty[] properties</A></LI>
 <LI><A HREF="Input.jsp?method=314" TARGET="inputs"> getPropertyValue(String readerName, String propertyName)</A></LI>
+<LI><A HREF="Input.jsp?method=315" TARGET="inputs"> getStandardVersion()</A></LI>
+<LI><A HREF="Input.jsp?method=316" TARGET="inputs"> getVendorVersion()</A></LI>
 </UL>
 </BODY>
 </HTML>
