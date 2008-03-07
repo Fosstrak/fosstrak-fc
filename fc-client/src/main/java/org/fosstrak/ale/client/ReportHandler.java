@@ -30,9 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.accada.ale.util.DeserializerUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.reader.rp.proxy.RPProxyException;
 import org.apache.log4j.Logger;
@@ -62,12 +61,12 @@ public class ReportHandler implements Runnable {
 	 * @param port on which the ALE notifies
 	 * @throws ImplementationException if server socket could not be created on specified port.
 	 */
-	public ReportHandler(int port) throws ImplementationException {
+	public ReportHandler(int port) throws ImplementationExceptionResponse {
 		
 		try {
 			ss = new ServerSocket(port);
 		} catch (IOException e) {
-			throw new ImplementationException(e.getMessage(), ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationExceptionResponse(e.getMessage());
 		}
 		
 		thread = new Thread(this);
@@ -152,7 +151,7 @@ public class ReportHandler implements Runnable {
 	 * @param args command line arguments, which can contain the port number
 	 * @throws RPProxyException if something goes wrong while creating the ReportHandler
 	 */
-	public static void main(String[] args) throws ImplementationException {
+	public static void main(String[] args) throws ImplementationExceptionResponse {
 		
 		int port = 9000;
 		if (args.length == 1) {
@@ -177,7 +176,8 @@ public class ReportHandler implements Runnable {
 	private void notifyListeners(StringBuffer data) throws Exception {
 		
 		ECReports ecReports = null;
-		ecReports = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(data.toString().getBytes()));
+		//FIXME
+		//ecReports = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(data.toString().getBytes()));
 			
 		Iterator listenerIt = listeners.iterator();
 		while (listenerIt.hasNext()) {

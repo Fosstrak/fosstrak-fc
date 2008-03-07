@@ -35,8 +35,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.accada.ale.util.SerializerUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 
 /**
@@ -76,7 +76,7 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 			ReportHandler reportHandler = new ReportHandler(port);
 			reportHandler.addListener(this);
 			initializeGUI();
-		} catch (ImplementationException e) {
+		} catch (ImplementationExceptionResponse e) {
 			e.printStackTrace();
 		}
 		
@@ -88,7 +88,7 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 	 * @param reports the ec reports which were received
 	 */
 	public void dataReceived(ECReports reports) {
-		
+		/* FIXME
 		try {
 			CharArrayWriter writer = new CharArrayWriter();
 			SerializerUtil.serializeECReportsPretty(reports, writer);
@@ -97,7 +97,7 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		*/
 	}
 	
 	/**
