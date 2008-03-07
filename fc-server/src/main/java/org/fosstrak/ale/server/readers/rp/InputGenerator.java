@@ -26,7 +26,7 @@ import java.util.List;
 import org.accada.ale.server.Tag;
 import org.accada.ale.util.HexUtil;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.reader.rprm.core.EventType;
 import org.accada.reader.rprm.core.FieldName;
 import org.accada.reader.rprm.core.msg.notification.Notification;
@@ -130,7 +130,7 @@ public class InputGenerator implements NotificationChannelListener {
 	 * @param adaptor the adaptor holding this inputGenerator
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public InputGenerator(RPAdaptor adaptor) throws ImplementationException {
+	public InputGenerator(RPAdaptor adaptor) throws ImplementationExceptionResponse {
 
 		this.adaptor = adaptor;
 
@@ -138,7 +138,7 @@ public class InputGenerator implements NotificationChannelListener {
 		try {
 			new Initializer(this).start();
 		} catch (Exception e) {
-			throw new ImplementationException(e.getMessage(), ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationExceptionResponse(e.getMessage());
 		}
 		
 	}

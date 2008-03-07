@@ -21,6 +21,7 @@
 package org.accada.ale.server;
 
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 
 /**
  * This enumeration defines the possible pattern types.
@@ -48,7 +49,7 @@ public enum PatternType {
 	 * @return pattern type
 	 * @throws ECSpecValidationException if the string representation is invalid
 	 */
-	public static PatternType getType(String type) throws ECSpecValidationException {
+	public static PatternType getType(String type) throws ECSpecValidationExceptionResponse {
 
 		if (GID_96_STRING.equals(type)) {
 			return GID_96;
@@ -57,7 +58,7 @@ public enum PatternType {
 		} else if (SSCC_64_STRING.equals(type)) {
 			return SSCC_64;
 		} else {
-			throw new ECSpecValidationException("Unknown Tag Format '" + type + "'. Known formats are" +
+			throw new ECSpecValidationExceptionResponse("Unknown Tag Format '" + type + "'. Known formats are" +
 					" '" + GID_96_STRING + "', '" + SGTIN_64_STRING + "' and '" + SSCC_64_STRING + "'.");
 		}
 		

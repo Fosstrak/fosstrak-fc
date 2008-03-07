@@ -26,8 +26,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.accada.ale.server.Tag;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -57,11 +58,11 @@ public class CompositeReader extends org.accada.ale.server.readers.LogicalReader
 	 * @param aspec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec aspec) throws ImplementationException {
+	public void initialize(String name, LRSpec aspec) throws ImplementationExceptionResponse {
 		super.initialize(name, aspec);
 
 		// create the sub parts by calling the factory method
-		List<String> readers = aspec.getReaders();
+		List<String> readers = aspec.getReaders().getReader();
 		for (String reader : readers) {
 			
 			LOG.debug(String.format("retrieving reader part %s", reader));
@@ -143,12 +144,12 @@ public class CompositeReader extends org.accada.ale.server.readers.LogicalReader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
 	@Override
-	public  synchronized void update(LRSpec aspec) throws ImplementationException {
+	public  synchronized void update(LRSpec aspec) throws ImplementationExceptionResponse {
 		// get a lock on the logicalReaders
 	 	synchronized (logicalReaders) {
 	 		// test whether we need to update the reader or just the properties
 	 		// this can be done by comparing the readers with the readers in the new LRSpec
-	 		List<String> readers  = aspec.getReaders();
+	 		List<String> readers  = aspec.getReaders().getReader();
 
 	 		// set the new spec
 			setLRSpec(aspec);

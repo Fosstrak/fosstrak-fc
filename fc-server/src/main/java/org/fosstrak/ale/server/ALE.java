@@ -28,15 +28,21 @@ import java.util.Set;
 import org.accada.ale.server.readers.LogicalReaderManager;
 import org.accada.ale.server.readers.rp.InputGenerator;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
+import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
+import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.InvalidURIException;
+import org.accada.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
+import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityException;
-import org.accada.ale.wsdl.ale.epcglobal.ValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
+import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.log4j.Logger;
@@ -64,7 +70,7 @@ public class ALE {
 	private static Set<InputGenerator> inputGenerators = new HashSet<InputGenerator>();
 	
 	/** indicates if the ale is ready or not. */
-	private static boolean isReady;
+	private static boolean isReady = false;
 	
 	/** prefix for name of report generators which are created by immediate command. */
 	private static final String REPORT_GENERATOR_NAME_PREFIX = "ReportGenerator_";
@@ -77,8 +83,7 @@ public class ALE {
 	 * @param propertiesFilePath the filepath to the properties file
 	 * @throws ImplementationException if properties could not be loaded or input generator could not be created
 	 */
-	public static void initialize(String propertiesFilePath) throws ImplementationException {
-
+	public static void initialize(String propertiesFilePath) throws ImplementationExceptionResponse {
 		reportGenerators.clear();
 		inputGenerators.clear();
 		isReady = false;
@@ -91,37 +96,37 @@ public class ALE {
 		try {
 			props.load(ALE.class.getResourceAsStream(propertiesFilePath));
 		} catch (Exception e) {
-			throw new ImplementationException("Error loading properties from ALE properties file '" + propertiesFilePath + "'",
-					ImplementationExceptionSeverity.ERROR);
+			throw new ImplementationExceptionResponse("Error loading properties from ALE properties file '" + propertiesFilePath + "'");
 		}
 		
 		// we need to initialize the LogicalReaderManager
 		String configFile = props.getProperty("readerAPI");
 		try {
-			LogicalReaderManager.initializeFromFile(configFile);
+			if (!LogicalReaderManager.isInitialized()) {
+				LogicalReaderManager.initializeFromFile(configFile);
+			}
 			
 		} catch (Exception e) {
-			if (e instanceof ImplementationException) {
+			if (e instanceof ImplementationExceptionResponse) {
 				LOG.error("ImplementationException thrown: ");
 				
-			} else if (e instanceof DuplicateNameException) {
+			} else if (e instanceof DuplicateNameExceptionResponse) {
 				LOG.error("DuplicateNameException thrown: ");
 				
-			} else if (e instanceof SecurityException) {
+			} else if (e instanceof SecurityExceptionResponse) {
 				LOG.error(" SecurityException thrown: ");
 				
-			} else if (e instanceof ValidationException) {
+			} else if (e instanceof ValidationExceptionResponse) {
 				LOG.error("ValidationException thrown: ");
 				
 			}
 			
 			e.printStackTrace();
-			throw new ImplementationException("ALE cannot be continued", 
-					ImplementationExceptionSeverity.SEVERE);
+			throw new ImplementationExceptionResponse("ALE cannot be continued");
 		} 
 
 		isReady = true;
-		
+		LOG.info("ALE initialized");
 	}
 
 	/**
@@ -129,7 +134,7 @@ public class ALE {
 	 * 
 	 * @throws ImplementationException if properties could not be loaded or input generator could not be created
 	 */
-	public static void initialize() throws ImplementationException {
+	public static void initialize() throws ImplementationExceptionResponse {
 		
 		initialize(DEFAULT_PROPERTIES_PATH);
 		
@@ -155,13 +160,12 @@ public class ALE {
 	 * @throws ECSpecValidationException if the ec specification is not valid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public static void define(String specName, ECSpec spec) throws DuplicateNameException, ECSpecValidationException, ImplementationException {
-		
+	public static void define(String specName, ECSpec spec) throws DuplicateNameExceptionResponse, ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		if (reportGenerators.containsKey(specName)) {
-			throw new DuplicateNameException();
+			LOG.debug("spec already defined: " + specName);
+			throw new DuplicateNameExceptionResponse();
 		}
-		reportGenerators.put(specName, new ReportsGenerator(specName, spec));
-		
+		reportGenerators.put(specName, new ReportsGenerator(specName, spec));		
 	}
 	
 	/**
@@ -170,10 +174,10 @@ public class ALE {
 	 * @param specName of the ec specification to undefine
 	 * @throws NoSuchNameException if there is no ec specification with this name defined
 	 */
-	public static void undefine(String specName) throws NoSuchNameException {
+	public static void undefine(String specName) throws NoSuchNameExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		reportGenerators.remove(specName);
 		
@@ -186,10 +190,10 @@ public class ALE {
 	 * @return ec specification with the specified name
 	 * @throws NoSuchNameException if no such ec specification exists
 	 */
-	public static ECSpec getECSpec(String specName) throws NoSuchNameException {
+	public static ECSpec getECSpec(String specName) throws NoSuchNameExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		return reportGenerators.get(specName).getSpec();
 		
@@ -215,10 +219,10 @@ public class ALE {
 	 * @throws InvalidURIException if the specified notification uri is invalid
 	 * @throws DuplicateSubscriptionException if the same subscription is already done
 	 */
-	public static void subscribe(String specName, String notificationURI) throws NoSuchNameException, InvalidURIException, DuplicateSubscriptionException {
+	public static void subscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, InvalidURIExceptionResponse, DuplicateSubscriptionExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		reportGenerators.get(specName).subscribe(notificationURI);
 		
@@ -233,10 +237,10 @@ public class ALE {
 	 * @throws NoSuchSubscriberException if the specified notification uri is not subscribed to the ec specification.
 	 * @throws InvalidURIException if the specified notification uri is invalid
 	 */
-	public static void unsubscribe(String specName, String notificationURI) throws NoSuchNameException, NoSuchSubscriberException, InvalidURIException {
+	public static void unsubscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, NoSuchSubscriberExceptionResponse, InvalidURIExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		reportGenerators.get(specName).unsubscribe(notificationURI);
 		
@@ -251,10 +255,10 @@ public class ALE {
 	 * @return ec report of the next event cycle
 	 * @throws NoSuchNameException if there is no ec specification with the given name defined
 	 */
-	public static ECReports poll(String specName) throws NoSuchNameException {
+	public static ECReports poll(String specName) throws NoSuchNameExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		return poll(reportGenerators.get(specName));
 		
@@ -269,12 +273,12 @@ public class ALE {
 	 * @throws ECSpecValidationException if the ec specification is not valid
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	public static ECReports immediate(ECSpec spec) throws ECSpecValidationException, ImplementationException {
+	public static ECReports immediate(ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		
 		try {
 			return poll(new ReportsGenerator(getNextReportGeneratorName(), spec));
-		} catch (NoSuchNameException e) {
-			throw new ImplementationException("immediate failed", ImplementationExceptionSeverity.ERROR);
+		} catch (NoSuchNameExceptionResponse e) {
+			throw new ImplementationExceptionResponse("immediate failed");
 		}
 		
 	}
@@ -286,10 +290,10 @@ public class ALE {
 	 * @return array of string with notification uris
 	 * @throws NoSuchNameException if there is no ec specification with the given name is defined
 	 */
-	public static String[] getSubscribers(String specName) throws NoSuchNameException {
+	public static String[] getSubscribers(String specName) throws NoSuchNameExceptionResponse {
 		
 		if (!reportGenerators.containsKey(specName)) {
-			throw new NoSuchNameException();
+			throw new NoSuchNameExceptionResponse();
 		}
 		return reportGenerators.get(specName).getSubscribers().toArray(new String[0]);
 		
@@ -337,7 +341,7 @@ public class ALE {
 	 * @param args can contain the properties file path
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	public static void main(String[] args) throws ImplementationException {
+	public static void main(String[] args) throws ImplementationExceptionResponse {
 		
 		if (args.length == 0) {
 			ALE.initialize();
@@ -351,7 +355,7 @@ public class ALE {
 	// private methods
 	//
 	
-	public static ECReports poll(ReportsGenerator reportGenerator) throws NoSuchNameException {
+	public static ECReports poll(ReportsGenerator reportGenerator) throws NoSuchNameExceptionResponse {
 		
 		ECReports reports = null;
 		reportGenerator.poll();

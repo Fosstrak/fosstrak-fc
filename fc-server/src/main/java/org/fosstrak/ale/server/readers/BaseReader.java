@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.accada.ale.server.Tag;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
 
@@ -49,7 +51,7 @@ public abstract class BaseReader extends LogicalReader {
 	 * @throws ImplementationException whenever an internal error occurs.
 
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationException {
+	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 		super.initialize(name, spec);
 	}
 	
@@ -82,21 +84,21 @@ public abstract class BaseReader extends LogicalReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 *
 	 */
-	public abstract void connectReader() throws ImplementationException;
+	public abstract void connectReader() throws ImplementationExceptionResponse;
 
 	/**
 	 * destroys a reader.
 	 * @throws ImplementationException whenever an internal error occured
 	 *
 	 */
-	public abstract void disconnectReader() throws ImplementationException;
+	public abstract void disconnectReader() throws ImplementationExceptionResponse;
 
 	/**
 	 * updates a reader according the specified LRSpec.
 	 * @param spec LRSpec for the reader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public abstract void update(LRSpec spec) throws ImplementationException;
+	public abstract void update(LRSpec spec) throws ImplementationExceptionResponse;
 	
 	/**
 	 * Triggers the identification of all tags that are currently available 

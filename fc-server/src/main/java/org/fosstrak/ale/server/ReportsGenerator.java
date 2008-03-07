@@ -28,12 +28,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.accada.ale.server.readers.LogicalReaderManager;
+import org.accada.ale.util.ECTimeUnit;
 import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
+import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.InvalidURIException;
+import org.accada.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
+import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
 import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReport;
@@ -44,8 +49,6 @@ import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
 import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.ale.xsd.ale.epcglobal.ECTimeUnit;
-import org.accada.ale.xsd.ale.epcglobal.ECTrigger;
 import org.apache.log4j.Logger;
 
 /**
@@ -106,7 +109,7 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ECSpecValidationException if the ec specification is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public ReportsGenerator(String name, ECSpec spec) throws ECSpecValidationException, ImplementationException {
+	public ReportsGenerator(String name, ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 
 		LOG.debug("Try to create new ReportGenerator '" + name + "'.");
 		
@@ -116,11 +119,11 @@ public class ReportsGenerator implements Runnable {
 		// set spec
 		try {
 			validateSpec(spec);
-		} catch (ECSpecValidationException e) {
-			LOG.error(e.getClass().getSimpleName() + ": " + e.getReason());
+		} catch (ECSpecValidationExceptionResponse e) {
+			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage());
 			throw e;
-		} catch (ImplementationException e) {
-			LOG.error(e.getClass().getSimpleName() + ": " + e.getReason());
+		} catch (ImplementationExceptionResponse e) {
+			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage());
 			throw e;
 		}
 		this.spec = spec;
@@ -191,11 +194,11 @@ public class ReportsGenerator implements Runnable {
 	 * @throws DuplicateSubscriptionException if the specified notifiction uri is already subscribed
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
-	public void subscribe(String notificationURI) throws DuplicateSubscriptionException, InvalidURIException {
+	public void subscribe(String notificationURI) throws DuplicateSubscriptionExceptionResponse, InvalidURIExceptionResponse {
 		
 		Subscriber uri = new Subscriber(notificationURI);
 		if (subscribers.containsKey(notificationURI)) {
-			throw new DuplicateSubscriptionException();
+			throw new DuplicateSubscriptionExceptionResponse();
 		} else {
 			subscribers.put(notificationURI, uri);
 			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
@@ -213,7 +216,7 @@ public class ReportsGenerator implements Runnable {
 	 * @throws NoSuchSubscriberException if the specified notification uri is not yet subscribed
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
-	public void unsubscribe(String notificationURI) throws NoSuchSubscriberException, InvalidURIException {
+	public void unsubscribe(String notificationURI) throws NoSuchSubscriberExceptionResponse, InvalidURIExceptionResponse {
 		
 		new Subscriber(notificationURI);
 		if (subscribers.containsKey(notificationURI)) {
@@ -223,7 +226,7 @@ public class ReportsGenerator implements Runnable {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}
 		} else {
-			throw new NoSuchSubscriberException();
+			throw new NoSuchSubscriberExceptionResponse();
 		}
 		
 	}
@@ -245,31 +248,13 @@ public class ReportsGenerator implements Runnable {
 	 * @param reports to notify the subscribers about
 	 */
 	public void notifySubscribers(ECReports reports) {
-		
-		LOG.debug("Notify subscribers of Spec '" + name + "' with ECReports '" + reports.getSpecName() + "'.");
-		if (reports.getReports() != null){
-			ECReport[] ecReports = reports.getReports();
-			for (ECReport ecReport : ecReports) {
-				LOG.debug("  Report: " + ecReport.getReportName());
-				if (ecReport.getGroup() != null) {
-					for (ECReportGroup group : ecReport.getGroup()) {
-						LOG.debug("    Group: " + group.getGroupName() + "(" + group.getGroupCount() + " members)");
-						if (group.getGroupList().getMember() != null) {
-							for (ECReportGroupListMember member : group.getGroupList().getMember()) {
-								LOG.debug("      " + member.getTag());
-							}
-						}	
-					}
-				}
-			}	
-		}
-		
 		// notifiy subscribers
 		for (Subscriber listener : subscribers.values()) {
 			try {
 				listener.notify(reports);
-			} catch (ImplementationException e) {
+			} catch (ImplementationExceptionResponse e) {
 				LOG.error("Could not notifiy subscriber '" + listener.getURI() + "' (" + e.getMessage() + ")");
+				e.printStackTrace();
 			}
 		}
 		
@@ -328,12 +313,7 @@ public class ReportsGenerator implements Runnable {
 	 * This method stops the main loop of the report generator.
 	 */
 	public void stop() {
-		/*
-		// stop running EventCycles
-		for (EventCycle eventCycle : runningEventCycles) {
-			eventCycle.stop();
-		}
-		*/
+
 		eventCycle.stop();
 		
 		// stop Thread
@@ -366,7 +346,7 @@ public class ReportsGenerator implements Runnable {
 		
 		try {
 			eventCycle = new EventCycle(this);
-		} catch (ImplementationException e) {
+		} catch (ImplementationExceptionResponse e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -467,15 +447,14 @@ public class ReportsGenerator implements Runnable {
 	 * @return repeat period value
 	 * @throws ImplementationException if the time unit in use is unknown
 	 */
-	private long getRepeatPeriodValue() throws ImplementationException {
+	private long getRepeatPeriodValue() throws ImplementationExceptionResponse {
 		
 		ECTime repeatPeriod = spec.getBoundarySpec().getRepeatPeriod();
 		if (repeatPeriod != null) {
-			if (repeatPeriod.getUnit() == ECTimeUnit.MS) {
-				return repeatPeriod.get_value();
+			if (repeatPeriod.getUnit().compareToIgnoreCase(ECTimeUnit.MS) != 0) {
+				throw new ImplementationExceptionResponse("The only ECTimeUnit allowed is milliseconds (MS).");
 			} else {
-				throw new ImplementationException("The only ECTimeUnit allowed is milliseconds (MS).",
-						ImplementationExceptionSeverity.ERROR);
+				return repeatPeriod.getValue();
 			}
 		}
 		return -1;
@@ -489,9 +468,9 @@ public class ReportsGenerator implements Runnable {
 	 */
 	private String getStartTriggerValue() {
 		
-		ECTrigger startTrigger = spec.getBoundarySpec().getStartTrigger();
+		String startTrigger = spec.getBoundarySpec().getStartTrigger();
 		if (startTrigger != null) {
-			return startTrigger.get_value();
+			return startTrigger;
 		}
 		return null;
 		
@@ -504,9 +483,9 @@ public class ReportsGenerator implements Runnable {
 	 */
 	private String getStopTriggerValue() {
 		
-		ECTrigger stopTrigger = spec.getBoundarySpec().getStopTrigger();
+		String stopTrigger = spec.getBoundarySpec().getStopTrigger();
 		if (stopTrigger != null) {
-			return stopTrigger.get_value();
+			return stopTrigger;
 		}
 		return null;
 		
@@ -521,7 +500,7 @@ public class ReportsGenerator implements Runnable {
 		
 		ECTime stableSetInterval = spec.getBoundarySpec().getStableSetInterval();
 		if (stableSetInterval != null) {
-			return stableSetInterval.get_value();
+			return stableSetInterval.getValue();
 		}
 		return -1;
 		
@@ -534,14 +513,14 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ECSpecValidationException if the specification is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private void validateSpec(ECSpec spec) throws ECSpecValidationException, ImplementationException {
+	private void validateSpec(ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 				
 		// check if the logical readers are known to the implementation
-		String[] logicalReaders = spec.getLogicalReaders();
+		List<String> logicalReaders = spec.getLogicalReaders().getLogicalReader();
 		if (logicalReaders != null) {
 			for (String logicalReaderName : logicalReaders) {
 				if (!LogicalReaderManager.contains(logicalReaderName)) {
-					throw new ECSpecValidationException("LogicalReader '" + logicalReaderName + "' is unknown.");
+					throw new ECSpecValidationExceptionResponse("LogicalReader '" + logicalReaderName + "' is unknown.");
 				}
 			}
 		}
@@ -549,7 +528,7 @@ public class ReportsGenerator implements Runnable {
 		// boundaries parameter of ECSpec is null or omitted
 		ECBoundarySpec boundarySpec = spec.getBoundarySpec();
 		if (boundarySpec == null) {
-			throw new ECSpecValidationException("The boundaries parameter of ECSpec is null.");
+			throw new ECSpecValidationExceptionResponse("The boundaries parameter of ECSpec is null.");
 		}
 		
 		// start and stop tiggers
@@ -559,63 +538,63 @@ public class ReportsGenerator implements Runnable {
 		// check if duration, stableSetInterval or repeatPeriod is negative
 		ECTime time;
 		if ((time = boundarySpec.getDuration()) != null) {
-			if (time.get_value() < 0) {
-				throw new ECSpecValidationException("The duration field of ECBoundarySpec is negative.");
+			if (time.getValue() < 0) {
+				throw new ECSpecValidationExceptionResponse("The duration field of ECBoundarySpec is negative.");
 			}
 		}
 		if ((time = boundarySpec.getStableSetInterval()) != null) {
-			if (time.get_value() < 0) {
-				throw new ECSpecValidationException("The stableSetInterval field of ECBoundarySpec is negative.");
+			if (time.getValue() < 0) {
+				throw new ECSpecValidationExceptionResponse("The stableSetInterval field of ECBoundarySpec is negative.");
 			}
 		}
 		if ((time = boundarySpec.getRepeatPeriod()) != null) {
-			if (time.get_value() < 0) {
-				throw new ECSpecValidationException("The repeatPeriod field of ECBoundarySpec is negative.");
+			if (time.getValue() < 0) {
+				throw new ECSpecValidationExceptionResponse("The repeatPeriod field of ECBoundarySpec is negative.");
 			}
 		}
 		
 		// check if start trigger is non-empty and repeatPeriod is non-zero
-		if (boundarySpec.getStartTrigger() != null && boundarySpec.getRepeatPeriod().get_value() != 0) {
-			throw new ECSpecValidationException("The startTrigger field of ECBoundarySpec is non-empty and " +
+		if (boundarySpec.getStartTrigger() != null && boundarySpec.getRepeatPeriod().getValue() != 0) {
+			throw new ECSpecValidationExceptionResponse("The startTrigger field of ECBoundarySpec is non-empty and " +
 					"the repeatPeriod field of ECBoundarySpec is non-zero.");
 		}
 		
 		// check if a stopping condition is specified
 		if (boundarySpec.getStopTrigger() == null && boundarySpec.getDuration() == null &&
 				boundarySpec.getStableSetInterval() == null) {
-			throw new ECSpecValidationException("No stopping condition is specified in ECBoundarySpec.");
+			throw new ECSpecValidationExceptionResponse("No stopping condition is specified in ECBoundarySpec.");
 		}
 		
 		// check if there is a ECReportSpec instance
 		if (spec.getReportSpecs() == null || spec.getReportSpecs() == null ||
-				spec.getReportSpecs().length == 0) {
-			throw new ECSpecValidationException("List of ECReportSpec instances is empty.");
+				spec.getReportSpecs().getReportSpec().size() == 0) {
+			throw new ECSpecValidationExceptionResponse("List of ECReportSpec instances is empty.");
 		}
 		
 		// check if two ECReportSpec instances have identical names
 		Set<String> reportSpecNames = new HashSet<String>();
-		for (ECReportSpec reportSpec : spec.getReportSpecs()) {
+		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
 			if (!reportSpecNames.add(reportSpec.getReportName())) {
-				throw new ECSpecValidationException("Two ReportSpecs instances have identical names '" +
+				throw new ECSpecValidationExceptionResponse("Two ReportSpecs instances have identical names '" +
 						reportSpec.getReportName() + "'.");
 			}
 		}
 		
 		// check filters
-		for (ECReportSpec reportSpec : spec.getReportSpecs()) {
+		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
 			ECFilterSpec filterSpec = reportSpec.getFilterSpec();
 			
 			if (filterSpec != null) {
 				// check include patterns
 				if (filterSpec.getIncludePatterns() != null) {
-					for (String pattern : filterSpec.getIncludePatterns()) {
+					for (String pattern : filterSpec.getIncludePatterns().getIncludePattern()) {
 						new Pattern(pattern, PatternUsage.FILTER);
 					}
 				}
 				
 				// check exclude patterns
 				if (filterSpec.getExcludePatterns() != null) {
-					for (String pattern : filterSpec.getExcludePatterns()) {
+					for (String pattern : filterSpec.getExcludePatterns().getExcludePattern()) {
 						new Pattern(pattern, PatternUsage.FILTER);
 					}
 				}
@@ -624,13 +603,13 @@ public class ReportsGenerator implements Runnable {
 		}
 		
 		// check grouping patterns
-		for (ECReportSpec reportSpec : spec.getReportSpecs()) {
+		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
 			if (reportSpec.getGroupSpec() != null) {
-				for (String pattern1 : reportSpec.getGroupSpec()) {
+				for (String pattern1 : reportSpec.getGroupSpec().getPattern()) {
 					Pattern pattern = new Pattern(pattern1, PatternUsage.GROUP);
-					for (String pattern2 : reportSpec.getGroupSpec()) {
+					for (String pattern2 : reportSpec.getGroupSpec().getPattern()) {
 						if (pattern1 != pattern2 && !pattern.isDisjoint(pattern2)) {
-							throw new ECSpecValidationException("The two grouping patterns '" + pattern1 +
+							throw new ECSpecValidationExceptionResponse("The two grouping patterns '" + pattern1 +
 									"' and '" + pattern2 + "' are not disjoint.");
 						}
 					}
@@ -639,11 +618,11 @@ public class ReportsGenerator implements Runnable {
 		}
 		
 		// check if there is a output type specified for each ECReportSpec
-		for (ECReportSpec reportSpec : spec.getReportSpecs()) {
+		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
 			ECReportOutputSpec outputSpec = reportSpec.getOutput();
 			if (!outputSpec.isIncludeEPC() && !outputSpec.isIncludeTag() && !outputSpec.isIncludeRawHex() &&
 					!outputSpec.isIncludeRawDecimal() && !outputSpec.isIncludeCount()) {
-				throw new ECSpecValidationException("The ECReportOutputSpec of ReportSpec '" +
+				throw new ECSpecValidationExceptionResponse("The ECReportOutputSpec of ReportSpec '" +
 						reportSpec.getReportName() + "' has no output type specified.");
 			}
 		}
@@ -656,7 +635,7 @@ public class ReportsGenerator implements Runnable {
 	 * @param trigger to check
 	 * @throws ECSpecValidationException if the trigger is invalid.
 	 */
-	private void checkTrigger(ECTrigger trigger) throws ECSpecValidationException {
+	private void checkTrigger(String trigger) throws ECSpecValidationExceptionResponse {
 		
 		// TODO: implement checkTrigger
 		

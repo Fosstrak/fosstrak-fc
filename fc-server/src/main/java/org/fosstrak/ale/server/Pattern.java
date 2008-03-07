@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionSeverity;
+import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 
 /**
  * This class represents an tag, filter or group pattern.
@@ -58,7 +59,7 @@ public class Pattern {
 	 * @param usage of this pattern
 	 * @throws ECSpecValidationException if the pattern is invalid
 	 */
-	public Pattern(String pattern, PatternUsage usage) throws ECSpecValidationException {
+	public Pattern(String pattern, PatternUsage usage) throws ECSpecValidationExceptionResponse {
 
 		// set fields
 		this.usage = usage;
@@ -74,12 +75,12 @@ public class Pattern {
 		// split pattern and check first fields
 		String[] parts = pattern.split(":");
 		if (parts.length != 5) {
-			throw new ECSpecValidationException("Invalid Pattern '" + pattern + "'." +
+			throw new ECSpecValidationExceptionResponse("Invalid Pattern '" + pattern + "'." +
 					" Pattern must have the form '" + FIRST_FIELD + ":" + SECOND_FIELD + ":" + thirdFieldString + ":tag-type:data-fields'.");
 		} else {
 			thirdField = parts[2];
 			if (!FIRST_FIELD.equals(parts[0]) || !SECOND_FIELD.equals(parts[1]) || !containsString(THIRD_FIELDS, thirdField)) {
-				throw new ECSpecValidationException("Invalid Pattern '" + pattern + "'." +
+				throw new ECSpecValidationExceptionResponse("Invalid Pattern '" + pattern + "'." +
 						" Pattern must start with '" + FIRST_FIELD + ":" + SECOND_FIELD + ":" + thirdFieldString + "'.");
 			} else {
 				
@@ -168,7 +169,7 @@ public class Pattern {
 	 * @throws ECSpecValidationException if the pattern is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public boolean isDisjoint(String pattern) throws ECSpecValidationException, ImplementationException {
+	public boolean isDisjoint(String pattern) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		
 		return isDisjoint(new Pattern(pattern, PatternUsage.GROUP));
 		
@@ -181,7 +182,7 @@ public class Pattern {
 	 * @return true if the patterns are disjoint and false otherwise
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	public boolean isDisjoint(Pattern pattern) throws ImplementationException {
+	public boolean isDisjoint(Pattern pattern) throws ImplementationExceptionResponse {
 		 
 		if (!type.equals(pattern.getType())) {
 			
@@ -209,7 +210,7 @@ public class Pattern {
 	 * @throws ECSpecValidationException if the tag pattern is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
+	public boolean isMember(String tagURI) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
 		
 		if (usage == PatternUsage.TAG) {
 			return false;
@@ -252,7 +253,7 @@ public class Pattern {
 	 * @throws ImplementationException if an implementation exception occurs
 	 * @throws ECSpecValidationException if the tag pattern is invalid
 	 */
-	public String getGroupName(String tagURI) throws ImplementationException, ECSpecValidationException {
+	public String getGroupName(String tagURI) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
 		
 		if (usage != PatternUsage.GROUP || !isMember(tagURI)) {
 			return null;
@@ -279,8 +280,8 @@ public class Pattern {
 			
 			return groupName.toString();
 			
-		} catch (ECSpecValidationException e) {
-			throw new ImplementationException(e.getMessage(), ImplementationExceptionSeverity.ERROR);
+		} catch (ECSpecValidationExceptionResponse e) {
+			throw new ImplementationExceptionResponse(e.getMessage());
 		}
 		
 	}
@@ -322,7 +323,7 @@ public class Pattern {
 	 * @param pattern the whole pattern
 	 * @throws ECSpecValidationException if the data field string is invalid
 	 */
-	private void parseDataFields(String dataFieldsString, String pattern) throws ECSpecValidationException {
+	private void parseDataFields(String dataFieldsString, String pattern) throws ECSpecValidationExceptionResponse {
 		
 		// split data fields
 		String[] dataFieldsStringArray = dataFieldsString.split("\\.");
@@ -330,10 +331,10 @@ public class Pattern {
 		// check number of data fields
 		int nbrOfDataFields = type.getNumberOfDatafields();
 		if (dataFieldsStringArray.length < nbrOfDataFields) {
-			throw new ECSpecValidationException("Too less data fields '" + dataFieldsString + "' in pattern '" +
+			throw new ECSpecValidationExceptionResponse("Too less data fields '" + dataFieldsString + "' in pattern '" +
 					pattern +"'. Pattern Format '" + type + "' expects " + nbrOfDataFields + " data fields.");
 		} else if (dataFieldsStringArray.length > nbrOfDataFields) {
-			throw new ECSpecValidationException("Too many data fields '" + dataFieldsString + "' in pattern '" +
+			throw new ECSpecValidationExceptionResponse("Too many data fields '" + dataFieldsString + "' in pattern '" +
 					pattern + "'. Pattern Format '" + type + "' expects " + nbrOfDataFields + " data fields.");
 		}
 		
