@@ -22,11 +22,11 @@
 			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
 		</LRSpec>
 	</LogicalReader>
-	<LogicalReader name="CompositeReader2">
+	<LogicalReader name="CompositeReader1">
 		<LRSpec isComposite="true" readerType="org.accada.ale.server.readers.CompositeReader">
 			<LRProperty name="Description" value="My first composite reader consisting of LogicalReader1 and LogicalReader2"/>
 			<readers>LogicalReader1</readers>
-			<readers>CompositeReader1</readers>
+			<readers>LogicalReader2</readers>
 		</LRSpec>
 	</LogicalReader>	
 </LogicalReaders>

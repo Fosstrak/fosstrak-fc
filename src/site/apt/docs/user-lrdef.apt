@@ -21,7 +21,22 @@ Users guide - Logical Reader Definitions
 
 	This guide shall introduce Logical Readers and how 
 	they can be declared to be used in the ALE.
+	
+	There are two different types of Logical Reader Definitions that 
+	should not be confused! 
+	
+	* Dynamic Logical Reader Definitions:
+	
+		Dynamic Logical Reader Definitions are read by the fc-client 
+		and the fc-webclient. If you want to specify a logical reader 
+		at runtime through the Logical Reader API you need to use 
+		a Dynamic Logical Reader. 
 
+	* Static Logical Reader Definitions:
+	
+		Static Logical Reader Definitions are read/written by the Logical 
+		Reader Manager upon ALE deployment. They contain additional 
+		information for the Logical Reader Manager. 	
 
 * {LogicalReaders}
 
@@ -44,6 +59,84 @@ Users guide - Logical Reader Definitions
 +---+
 example: <?xml version="1.0" encoding="UTF-8"?>
 +---+
+
+
+** Dynamic Definition:
+
+	* The xml must contain exactly one LRSpec defintions.
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+</ns3:LRSpec>	
++---+	
+	
+	* You must define whether the reader is composite or not. 
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+</ns3:LRSpec>	
++---+	
+
+	* The reader must contain at least the LRProperty of the ReaderType.
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+</ns3:LRSpec>
++---+
+
+	* If your reader is a composite reader, you must provide the list 
+		of the "subreaders".
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>true</isComposite>
+    <readers>
+        <reader>LogicalReader1</reader>
+    </readers>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.CompositeReader</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+		
+
+
+** Static Definition:
 
 	* The xml must contain exactly one LogicalReaders tag.
 	
@@ -88,6 +181,9 @@ example:
 	our xsd schema ({{{../files/LogicalReaders.xsd}LogicalReaders.xsd}}).
 
 
+	
+	
+	
 
 * {Example1} - A Reader Protocol LogicalReader
 
@@ -99,9 +195,56 @@ example:
 	
 	The Example shows the definition of one RP LogicalReader.
 	
+	
+** Dynamic Definition:	
+
+	You can download the xml 
+	{{{../files/RPReader.xml}RPReader.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.rp.RPAdaptor</value>
+        </property>
+	<property>
+	    <name>Description</name>
+	    <value>This Logical Reader consists of shelf 1 and 
+	    	shelf 2,3,4 of the physical reader named MyReader</value>
+	</property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PhysicalReaderSource</name>
+            <value>Shelf1,Shelf2,Shelf3,Shelf4</value>
+        </property>
+        <property>
+            <name>NotificationPoint</name>
+            <value>http://localhost:9090</value>
+        </property>
+        <property>
+            <name>ConnectionPoint</name>
+            <value>http://localhost:8000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static Definition:
+	
 	You can download the xml 
 	{{{../files/users-guide-example1.xml}users-guide-example1.xml}}.
-	
+
 +---+
 <?xml version="1.0" encoding="UTF-8"?>
 <LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -119,8 +262,6 @@ example:
 			<LRProperty name="ReadTimeInterval" value="200"/>
 			<LRProperty name="AdaptorClass" 
 				value="ReaderProtocol"/>
-			<LRProperty name="ImplClass" 
-			   value="org.accada.ale.server.readers.rp.RPAdaptor"/>
 			<LRProperty name="PhysicalReaderName" 
 				value="MyReader"/>
 			<LRProperty name="PhysicalReaderSource" 
@@ -129,6 +270,7 @@ example:
 	</LogicalReader>
 </LogicalReaders>
 +---+
+
 
 * {Example2} - A HAL Protocol LogicalReader
 
@@ -139,6 +281,43 @@ example:
 	"Implement an Adaptor"}}.
 	
 	The Example shows the definition of one HAL LogicalReader.
+	
+** Dynamic Definition:
+
+	You can download the xml {{{../files/HALReader.xml}
+	HALReader.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>My first HAL device reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader1</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PropertiesFile</name>
+            <value>/props/SimulatorController.xml</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static Definition:
 	
 	You can download the xml {{{../files/users-guide-example2.xml}
 	users-guide-example2.xml}}.
@@ -153,8 +332,6 @@ example:
 			<LRProperty name="Description" 
 				value="My first HAL device reader"/>
 			<LRProperty name="AdaptorClass" value="HAL"/>
-			<LRProperty name="ImplClass" 
-			  value="org.accada.ale.server.readers.hal.HALAdaptor"/>
 			<LRProperty name="PhysicalReaderName" value="MyReader"/>
 			<LRProperty name="ReadTimeInterval" value="1000"/>
 			<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
@@ -181,6 +358,34 @@ example:
 	This Example shows one HAL reader and one RP reader that then will be 
 	part of one CompositeReader.
 	
+** Dynamic Defintion:
+
+	Make sure that you defined the two readers "LogicalReader1" and 
+	"LogicalReader2" in advance. Otherwise the creation of the composite 
+	reader will fail!
+	
+	You can download the xml {{{../files/CompositeReader1.xml}
+	CompositeReader1.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>true</isComposite>
+    <readers>
+        <reader>LogicalReader1</reader>
+        <reader>LogicalReader2</reader>
+    </readers>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.CompositeReader</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static Definition:
+	
 	You can download the xml {{{../files/users-guide-example3.xml}
 	users-guide-example3.xml}}.
 	
@@ -201,8 +406,6 @@ example:
 			<LRProperty name="ReadTimeInterval" value="200"/>
 			<LRProperty name="AdaptorClass" 
 				value="ReaderProtocol"/>
-			<LRProperty name="ImplClass" 
-			   value="org.accada.ale.server.readers.rp.RPAdaptor"/>
 			<LRProperty name="PhysicalReaderName" 
 				value="MyReader"/>
 			<LRProperty name="PhysicalReaderSource" 
@@ -215,8 +418,6 @@ example:
 			<LRProperty name="Description" 
 				value="My first HAL device reader"/>
 			<LRProperty name="AdaptorClass" value="HAL"/>
-			<LRProperty name="ImplClass" 
-			  value="org.accada.ale.server.readers.hal.HALAdaptor"/>
 			<LRProperty name="PhysicalReaderName" 
 				value="MyReader"/>
 			<LRProperty name="ReadTimeInterval" value="1000"/>
@@ -225,14 +426,14 @@ example:
 				value="/props/SimulatorController.xml"/>
 		</LRSpec>
 	</LogicalReader>
-	<LogicalReader name="CompositeReader2">
+	<LogicalReader name="CompositeReader1">
 		<LRSpec isComposite="true" 
 		   readerType="org.accada.ale.server.readers.CompositeReader">
 			<LRProperty name="Description" 
 				value="My first composite reader consisting 
 					of LogicalReader1 and LogicalReader2"/>
 			<readers>LogicalReader1</readers>
-			<readers>CompositeReader1</readers>
+			<readers>LogicalReader2</readers>
 		</LRSpec>
 	</LogicalReader>	
 </LogicalReaders>
