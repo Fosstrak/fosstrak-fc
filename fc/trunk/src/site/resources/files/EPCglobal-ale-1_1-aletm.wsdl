@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ALETMSERVICE DEFINITIONS -->
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ale="urn:epcglobal:ale:xsd:1"
+                  xmlns:impl="urn:epcglobal:aletm:wsdl:1"
+                  targetNamespace="urn:epcglobal:aletm:wsdl:1">
+  <!-- ALETMSERVICE TYPES -->
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:epcglobal:aletm:wsdl:1">
+      <xsd:import namespace="urn:epcglobal:ale:xsd:1"
+                  schemaLocation="EPCglobal-ale-1_1-aletm.xsd"/>
+      <!-- ALETMSERVICE MESSAGE WRAPPERS -->
+
+      <xsd:element name="DefineTMSpec" type="impl:DefineTMSpec"/>
+      <xsd:complexType name="DefineTMSpec">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+          <xsd:element name="spec" type="ale:TMSpec"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineTMSpecResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UndefineTMSpec" type="impl:UndefineTMSpec"/>
+      <xsd:complexType name="UndefineTMSpec">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineTMSpecResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetTMSpec" type="impl:GetTMSpec"/>
+      <xsd:complexType name="GetTMSpec">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetTMSpecResult" type="ale:TMSpec"/>
+
+      <xsd:element name="GetTMSpecNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetTMSpecNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="GetStandardVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetStandardVersionResult" type="xsd:string"/>
+
+      <xsd:element name="GetVendorVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetVendorVersionResult" type="xsd:string"/>
+
+      <xsd:element name="ALEException" type="impl:ALEException"/>
+      <xsd:complexType name="ALEException">
+        <xsd:sequence>
+          <xsd:element name="reason" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="SecurityException" type="impl:SecurityException"/>
+      <xsd:complexType name="SecurityException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicateNameException" type="impl:DuplicateNameException"/>
+      <xsd:complexType name="DuplicateNameException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="TMSpecValidationException"
+                   type="impl:TMSpecValidationException"/>
+      <xsd:complexType name="TMSpecValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchNameException" type="impl:NoSuchNameException"/>
+      <xsd:complexType name="NoSuchNameException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ImplementationException" type="impl:ImplementationException"/>
+      <xsd:complexType name="ImplementationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException">
+            <xsd:sequence>
+              <xsd:element name="severity" type="impl:ImplementationExceptionSeverity"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element name="string" type="xsd:string" minOccurs="0"
+                       maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- The ImplementationExceptionSeverity type is an enumerated type.
+           The following strings are legal values for this type:
+             ERROR
+             SEVERE
+            -->
+      <xsd:simpleType name="ImplementationExceptionSeverity">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+
+      <xsd:complexType name="EmptyParms"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!-- ALETMSERVICE MESSAGES -->
+
+  <wsdl:message name="defineTMSpecRequest">
+    <wsdl:part name="parms" element="impl:DefineTMSpec"/>
+  </wsdl:message>
+  <wsdl:message name="defineTMSpecResponse">
+    <wsdl:part name="defineTMSpecReturn" element="impl:DefineTMSpecResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineTMSpecRequest">
+    <wsdl:part name="parms" element="impl:UndefineTMSpec"/>
+  </wsdl:message>
+  <wsdl:message name="undefineTMSpecResponse">
+    <wsdl:part name="undefineTMSpecReturn" element="impl:UndefineTMSpecResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getTMSpecRequest">
+    <wsdl:part name="parms" element="impl:GetTMSpec"/>
+  </wsdl:message>
+  <wsdl:message name="getTMSpecResponse">
+    <wsdl:part name="getTMSpecReturn" element="impl:GetTMSpecResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getTMSpecNamesRequest">
+    <wsdl:part name="parms" element="impl:GetTMSpecNames"/>
+  </wsdl:message>
+  <wsdl:message name="getTMSpecNamesResponse">
+    <wsdl:part name="getTMSpecNamesReturn" element="impl:GetTMSpecNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getStandardVersionRequest">
+    <wsdl:part name="parms" element="impl:GetStandardVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getStandardVersionResponse">
+    <wsdl:part name="getStandardVersionReturn" element="impl:GetStandardVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getVendorVersionRequest">
+    <wsdl:part name="parms" element="impl:GetVendorVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getVendorVersionResponse">
+    <wsdl:part name="getVendorVersionReturn" element="impl:GetVendorVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="SecurityExceptionResponse">
+    <wsdl:part name="fault" element="impl:SecurityException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateNameExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicateNameException"/>
+  </wsdl:message>
+
+  <wsdl:message name="TMSpecValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:TMSpecValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchNameExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchNameException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ImplementationExceptionResponse">
+    <wsdl:part name="fault" element="impl:ImplementationException"/>
+  </wsdl:message>
+  <!-- ALETMSERVICE PORTTYPE -->
+
+  <wsdl:portType name="ALETMServicePortType">
+
+    <wsdl:operation name="defineTMSpec">
+      <wsdl:input message="impl:defineTMSpecRequest" name="defineTMSpecRequest"/>
+      <wsdl:output message="impl:defineTMSpecResponse" name="defineTMSpecResponse"/>
+      <wsdl:fault message="impl:DuplicateNameExceptionResponse"
+                  name="DuplicateNameExceptionFault"/>
+      <wsdl:fault message="impl:TMSpecValidationExceptionResponse"
+                  name="TMSpecValidationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineTMSpec">
+      <wsdl:input message="impl:undefineTMSpecRequest" name="undefineTMSpecRequest"/>
+      <wsdl:output message="impl:undefineTMSpecResponse" name="undefineTMSpecResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getTMSpec">
+      <wsdl:input message="impl:getTMSpecRequest" name="getTMSpecRequest"/>
+      <wsdl:output message="impl:getTMSpecResponse" name="getTMSpecResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getTMSpecNames">
+      <wsdl:input message="impl:getTMSpecNamesRequest" name="getTMSpecNamesRequest"/>
+      <wsdl:output message="impl:getTMSpecNamesResponse" name="getTMSpecNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdl:input message="impl:getStandardVersionRequest"
+                  name="getStandardVersionRequest"/>
+      <wsdl:output message="impl:getStandardVersionResponse"
+                   name="getStandardVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdl:input message="impl:getVendorVersionRequest" name="getVendorVersionRequest"/>
+      <wsdl:output message="impl:getVendorVersionResponse"
+                   name="getVendorVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- ALETMSERVICE BINDING -->
+
+  <wsdl:binding name="ALETMServiceBinding" type="impl:ALETMServicePortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="defineTMSpec">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineTMSpecRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineTMSpecResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DuplicateNameExceptionFault">
+        <wsdlsoap:fault name="DuplicateNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="TMSpecValidationExceptionFault">
+        <wsdlsoap:fault name="TMSpecValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineTMSpec">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineTMSpecRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineTMSpecResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getTMSpec">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getTMSpecRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTMSpecResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getTMSpecNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getTMSpecNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTMSpecNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getStandardVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStandardVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getVendorVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVendorVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- ALETMSERVICE -->
+  <wsdl:service name="ALETMService">
+    <wsdl:port binding="impl:ALETMServiceBinding" name="ALETMServicePort">
+      <!-- The value of the location attribute below is an example only;
+           Implementations are free to choose any appropriate URL. -->
+      <wsdlsoap:address location="http://localhost:8080/services/ALETMService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

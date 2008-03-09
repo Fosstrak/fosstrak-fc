@@ -56,7 +56,8 @@ Users guide - A complete Example
    
    * an ECSpec. eg. {{{../files/ECSpec_current.xml}ECSpec_current.xml}}
    
-   * a logical reader definition xml. eg {{{../files/RPReader.xml}RPReader.xml}}
+   * a logical reader definition xml. eg {{{../files/HALReader.xml}HALReader.xml}} 
+   	or {{{../files/RPReader.xml}RPReader.xml}}
    
    []
    
@@ -117,21 +118,37 @@ http://localhost:8080/fc-webclient-0.3.0-SNAPSHOT/services/ALEWebClient.jsp
 
 * {Set} the connection endpoint
 
-  Set the endpoint where the ALE fc-server is located by the method
-  "setEndpoint(String endPointName)". Click "Invoke" to execute the command.
+  You need to connect 2 endpoints. One for the "Filtering and Collection API" 
+  and the other for the "Logical Reader API":
+
+  Set the endpoint to the Accada fc-server by the method
+  "setEndpoint(String endPointName)" in the "Filtering and Collection API". 
+  Click "Invoke" to execute the command.
   
 +--------------+
-endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALEServicePort
+endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALEService
 
 example: 
-http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEServicePort
+http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService
 +--------------+
 
   Verify the connection between the webclient and the server by 
   clicking on "getVendorVersion()". A version number should be returned.
   
+  Set the endpoint to the Accdada Logical Reader API by the method 
+  "setEndPoint(String endPointName)" in the "LogicalReader API).
+  Click "Invoke" to execute the command.
   
-  
++--------------+
+endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALELRService
+
+example: 
+http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALELRService
++--------------+
+
+  Verify the connection between the webclient and the server by 
+  clicking on "getVendorVersion()". A version number should be returned.
+    
 * {Install} a logical reader
   
   The next step is to setup a reader. Therefor click on "define(String readerName, LRSpec spec)" 

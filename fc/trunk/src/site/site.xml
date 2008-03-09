@@ -59,13 +59,13 @@
 	</item>
 	
 	<item name="Developers guide" href="docs/developer-index.html" collapse="false">
-		<item name="Application Layer Events" href="docs/developer-ale.html"/>
+		<item name="ALE Service Binding" href="docs/developer-ale.html"/>
+		<item name="ALE LR Service Binding" href="docs/developer-alelr.html"/>
 		<item name="Event Cycle" href="docs/developer-eventcycle.html"/>
 		<item name="Reports generation" href="docs/developer-reports-generator.html"/>
 		<item name="Reports notification" href="docs/developer-reports-notification.html"/>
 		<item name="Logical Reader concept" href="docs/developer-reader-concept.html"/>
 		<item name="Implement an Adaptor" href="docs/developer-adaptor.html"/>
-		<item name="Logical Reader Management" href="docs/developer-logical-reader-manager.html"/>
 	</item>
 	
     </menu>

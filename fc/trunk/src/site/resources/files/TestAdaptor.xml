@@ -5,23 +5,23 @@
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+            <value>org.accada.ale.server.readers.test.TestAdaptor</value>
         </property>
         <property>
             <name>Description</name>
-            <value>My first HAL device reader</value>
+            <value>Test Adaptor to test performance</value>
         </property>
         <property>
-            <name>PhysicalReaderName</name>
-            <value>MyReader1</value>
-        </property>
-        <property>
-            <name>ReadTimeInterval</name>
+            <name>tps</name>
             <value>1000</value>
         </property>
         <property>
-            <name>PropertiesFile</name>
-            <value>/props/SimulatorController.xml</value>
+            <name>gain</name>
+            <value>0</value>
+        </property>
+        <property>
+            <name>wt</name>
+            <value>5000</value>
         </property>
     </properties>
 </ns3:LRSpec>

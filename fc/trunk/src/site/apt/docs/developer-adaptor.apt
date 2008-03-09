@@ -22,9 +22,29 @@ How to implement an Adaptor
 * {Objective}
 
 	This guide is intented for developers who wish to integrate a 
-	tag reader into to the Logical Reader API of the accada ALE.
+	tag reader into to the Logical Reader API of the accada ALE. The guide 
+	gives three examples to three existing Adaptors. In the second part 
+	a more detailed explanation about how to implement your own adaptor is 
+	given.
+	
+	There are two different types of Logical Reader Definitions that 
+	should not be confused! 
+	
+	* Dynamic Logical Reader Definitions:
+	
+		Dynamic Logical Reader Definitions are read by the fc-client 
+		and the fc-webclient. If you want to specify a logical reader 
+		at runtime through the Logical Reader API you need to use 
+		a Dynamic Logical Reader. 
 
+	* Static Logical Reader Definitions:
+	
+		Static Logical Reader Definitions are read/written by the Logical 
+		Reader Manager upon ALE deployment. They contain additional 
+		information for the Logical Reader Manager. 
 
+	[]
+	
 
 
 * {HALAdaptor}
@@ -32,93 +52,8 @@ How to implement an Adaptor
 	The HALAdaptor provides an adaptor to the Hardware Abstraction Layer 
 	(HAL).
 	
-	The following list will show the required LRProperties that have to be 
-	provided through an LRSpec when a new HAL reader shall be constructed.
+** Schematic
 	
-	* ImplClass: The full path to the type of the reader. For a HALAdaptor 
-		this is always "org.accada.ale.server.readers.hal.HALAdaptor".
-
-	[]
-	
-+---+
-<LRProperty name="ImplClass" 
-	value="org.accada.ale.server.readers.hal.HALAdaptor"/>
-+---+
-	
-	* PhysicalReadername: The name of the HAL reader.
-	
-	[]
-	
-+---+
-<LRProperty name="PhysicalReaderName" value="MyReader"/>
-+---+	
-
-	* ReadTimeInterval: The interval in which a HAL device shall inform the 
-		HALAdaptor about new tags. If the HAL device does not provide an 
-		auto-polling mechanism, the HALAdaptor will automatically create 
-		a polling thread that will poll the HAL device in a regular 
-		interval. The interval is in miliseconds
-		
-		Syntax: integer
-		
-	[]
-	
-+---+
-<LRProperty name="ReadTimeInterval" value="2000"/>
-+---+
-	
-	* PropertiesFile: All HAL devices that are currently supported, need a 
-		properties file.
-
-	[]
-	
-+---+
-<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
-+---+
-
-	* Description: This gives a general human readable description to the 
-		adaptor.
-	
-	[]
-	
-+---+
-<LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
-+---+	
-
-	* ReadPoints: If you specify the ReadPoints, you can restrict the 
-		logical reader to specific shelfs on the HAL reader. If you do 
-		not specify the ReadPoints, all available ReadPoints on the 
-		device are used.
-
-	[]
-
-+---+
-<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
-+---+
-	
-	[]
-	
-	A sample configuration for a HALAdaptor
-
-+---+
-<LogicalReader name="LogicalReader1">
-	<LRSpec isComposite="false" 
-		readerType="org.accada.ale.server.readers.hal.HALAdaptor">
-		<LRProperty name="Description" 
-			value="HAL reader created during system startup"/>
-		<LRProperty name="AdaptorClass" value="HAL"/>
-		<LRProperty name="ImplClass" 
-			value="org.accada.ale.server.readers.hal.HALAdaptor"/>
-		<LRProperty name="PhysicalReaderName" value="MyReader"/>
-		<LRProperty name="ReadTimeInterval" value="1000"/>
-		<LRProperty name="PropertiesFile" 
-			value="/props/SimulatorController.xml"/>
-		<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
-	</LRSpec>
-</LogicalReader>
-+---+
-	
-	[]
 	Currently the HALAdaptor creates a SimulatorController object. This object 
 	in turn then sets up the HAL device as requested by the properties file. 
 
@@ -139,6 +74,88 @@ How to implement an Adaptor
 	that polls the HAL device in a regular time interval.
 	
 [../images/readerAPI/HALAdaptorPolling.png]
+	
+	[]
+	
+** Required parameters	
+	
+	You need to provide all the following parameters to the HALAdaptor:
+	
+	* isComposite: is the reader a composite reader (false).
+	
+	* ReaderType: the class name of the implementor 
+		(org.accada.ale.server.readers.hal.HALAdaptor)
+	
+	* PhysicalReaderName: the name of the underlying physical reader.
+	
+	* ReadTimeInterval: how often to read from the reader.
+	
+	* PropertiesFile: the properties file for the HAL reader.
+	
+	[]
+	
+	The xml definitions slightly differ for the dynamic and the static 
+	definition. Two full examples are given to illustrate where the 
+	parameters are defined.
+	
+** Dynamic definition
+
++---+
+Sample Configuration for a HALAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>My first HAL device reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader1</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PropertiesFile</name>
+            <value>/props/SimulatorController.xml</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static definition	
+
+	In addition to the dynamic definition you must provide the reader name!
+	
++---+
+Sample Configuration for a HALAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+		<LRProperty name="Description" 
+			value="HAL reader created during system startup"/>
+		<LRProperty name="AdaptorClass" value="HAL"/>
+		<LRProperty name="PhysicalReaderName" value="MyReader"/>
+		<LRProperty name="ReadTimeInterval" value="1000"/>
+		<LRProperty name="PropertiesFile" 
+			value="/props/SimulatorController.xml"/>
+		<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
+	</LRSpec>
+</LogicalReader>
++---+
+	
+	[]
 
 
 
@@ -153,103 +170,9 @@ How to implement an Adaptor
 * {RPAdaptor}
 
 	The RPAdaptor provides an adaptor to the reader protokoll (RP). 
-	
-	The following list will show the required LRProperties that 
-	have to be provided through an LRSpec when a new RP reader shall 
-	be constructed.
-	
-	* ConnectionPoint: the connection point is needed to connect to the 
-		reader. The rp-proxy will connect to this url.
-		
-		Syntax: "proto://ip:port"
-		
-		[]
-		
-+---+
-<LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
-+---+	
-	
-	* NotificationPoint: the notification point is used to communicate 
-		from the reader to the RPAdaptor. All tags read by the reader 
-		are returned over this channel.
-		
-		Syntax: "proto://ip:port"
 
-		[]		
-		
-+---+
-<LRProperty name="NotificationPoint" value="http://localhost:9090"/>
-+---+
-	
-	* ReadTimeInterval: the read time interval specifies how often the 
-		reader informs the RPAdaptor about new tag events. The interval 
-		is in miliseconds.
-		
-		Syntax: integer
+** Schematic
 
-		[]
-		
-+---+
-<LRProperty name="ReadTimeInterval" value="2000"/>
-+---+
-	
-	* ImplClass: the full path to the type of the reader. For a RPAdaptor 
-		this is always "org.accada.ale.server.readers.rp.RPAdaptor".
-	
-		[]
-		
-+---+
-<LRProperty name="ImplClass" 
-	value="org.accada.ale.server.readers.rp.RPAdaptor"/>
-+---+
-	
-	* PhysicalReaderName: The name of the physical reader.
-	
-	* PhysicalReaderSource: This is a list of physical sources on the reader 
-		device that shall send tags. 
-		
-		Syntax: "Antenna1,Antenna2,Antenna3"
-
-		[]
-		
-+---+
-<LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3"/>
-+---+	
-	
-	* Description: This gives a general human readable description to the 
-		adaptor.
-		
-		[]
-		
-+---+
-<LRProperty name="Description" value="This is my new physical reader xyz.uvw"/>
-+---+
-	
-	[]
-	A sample configuration for a RPAdaptor
-	
-+---+
-<LogicalReader name="LogicalReader1">
-	<LRSpec isComposite="false" 
-		readerType="org.accada.ale.server.readers.rp.RPAdaptor">
-		<LRProperty name="Description" value="My physical Reader"/>
-		<LRProperty name="ConnectionPoint" 
-			value="http://localhost:8000"/>
-		<LRProperty name="NotificationPoint" 
-			value="http://localhost:9090"/>
-		<LRProperty name="ReadTimeInterval" value="200"/>
-		<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
-		<LRProperty name="ImplClass" 
-			value="org.accada.ale.server.readers.rp.RPAdaptor"/>
-		<LRProperty name="PhysicalReaderName" value="MyReader"/>
-		<LRProperty name="PhysicalReaderSource" 
-			value="Shelf1,Shelf2,Shelf3,Shelf4"/>
-	</LRSpec>
-</LogicalReader>
-+---+
-
-		
-	[]
 	The RPAdaptor provides a default constructor and an initializer method. 
 	Both are called in the construction phase of the LogicalReader. The 
 	RPAdaptor implements all methods that are required by the logical 
@@ -285,6 +208,102 @@ How to implement an Adaptor
 	
 [../images/readerAPI/RPAdaptorPolling.png]
 	
+
+** Required parameters
+
+	You need to provide all the following parameters to the RPAdaptor:
+	
+	* isComposite: is the reader a composite reader (false).
+	
+	* ReaderType: the class name of the implementor 
+		(org.accada.ale.server.readers.hal.HALAdaptor)
+	
+	* PhysicalReaderName: the name of the underlying physical reader.
+	
+	* ReadTimeInterval: how often to read from the reader.
+	
+	* PhysicalReaderSource: the sources where to read from (one rp reader 
+		can have several different sources).
+		
+	* NotificationPoint: The notification point where to send notifications.
+	
+	* ConnectionPoint: The controll connection point.
+	
+	[]
+	
+	The xml definitions slightly differ for the dynamic and the static 
+	definition. Two full examples are given to illustrate where the 
+	parameters are defined.
+
+** Dynamic definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.rp.RPAdaptor</value>
+        </property>
+	<property>
+	    <name>Description</name>
+	    <value>This Logical Reader consists of shelf 1 
+	    	and shelf 2,3,4 of the physical 
+		reader named MyReader</value>
+	</property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PhysicalReaderSource</name>
+            <value>Shelf1,Shelf2,Shelf3,Shelf4</value>
+        </property>
+        <property>
+            <name>NotificationPoint</name>
+            <value>http://localhost:9090</value>
+        </property>
+        <property>
+            <name>ConnectionPoint</name>
+            <value>http://localhost:8000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		<LRProperty name="Description" value="My physical Reader"/>
+		<LRProperty name="ConnectionPoint" 
+			value="http://localhost:8000"/>
+		<LRProperty name="NotificationPoint" 
+			value="http://localhost:9090"/>
+		<LRProperty name="ReadTimeInterval" value="200"/>
+		<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
+		<LRProperty name="PhysicalReaderName" value="MyReader"/>
+		<LRProperty name="PhysicalReaderSource" 
+			value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+	</LRSpec>
+</LogicalReader>
++---+
+
+		
+	[]
 	
 	
 	
@@ -303,43 +322,60 @@ How to implement an Adaptor
 	* tps: this value indicates the "tags per shot", meaning how many
 		tags get fired in each iteration
 		
-		[]
-		
-+---+
-<LRProperty name="tps" value="100"/>
-+---+	
-
 	* wt: this value indicates the "wait time", meaning how long 
 		to wait between two shots
 		
-		[]
-		
-+---+
-<LRProperty name="wt" value="100"/>
-+---+	
-
 	* gain: this value indicates the increase of the tags per shot. 
 		ATTENTION: this rapidly increases the tps!
 		
-		[]
-		
-+---+
-<LRProperty name="gain" value="0"/>
-+---+	
+** Dynamic Definition
 
-	[]
-	A sample configuration for a TestAdaptor
-	
 +---+
+Sample Configuration for a RPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.accada.ale.server.readers.test.TestAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>Test Adaptor to test performance</value>
+        </property>
+        <property>
+            <name>tps</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>gain</name>
+            <value>0</value>
+        </property>
+        <property>
+            <name>wt</name>
+            <value>5000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static Definition
+
++---+
+Sample Configuration for a RPAdaptor
+
 <LogicalReader name="LogicalReader1">
 	<LRSpec isComposite="false" 
 		readerType="org.accada.ale.server.readers.test.TestAdaptor">
-		<LRProperty name="Description" value="My test reader"/>
+		<LRProperty name="Description"
+			value="Test Adaptor to test performance"/>
 		<LRProperty name="tps" value="100"/>
 		<LRProperty name="wt" value="3000"/>
 		<LRProperty name="gain" value="0"/>
-		<LRProperty name="ImplClass" 
-	   	   value="org.accada.ale.server.readers.test.TestAdaptor"/>
 	</LRSpec>
 </LogicalReader>
 +---+
