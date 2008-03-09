@@ -129,6 +129,31 @@ public class SerializerUtil {
 	}
 	
 	/**
+	 * This method serializes an LRSpec to an xml and writes it into a file.
+	 * @param spec the LRSpec to be written into a file
+	 * @param pathName the file where to store
+	 * @param pretty flag whether well-formed xml or not
+	 * @throws IOException whenever an io problem occurs
+	 */
+	public static void serializeLRSpec(LRSpec spec, Writer writer) throws IOException {
+		try {
+			String JAXB_CONTEXT = "org.accada.ale.wsdl.ale.epcglobal";
+			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
+			Marshaller marshaller = context.createMarshaller();
+	
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
+
+			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			JAXBElement<LRSpec> thespec = objFactory.createLRSpec(spec);
+					
+			// store the file to the file path
+			marshaller.marshal(thespec, writer);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Serializes an SetProperties to xml and stores this xml into a file.
 	 * @param props the SetProperties to be serialized.
 	 * @param pathName the path to the file where to store the xml.
