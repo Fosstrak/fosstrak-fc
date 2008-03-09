@@ -10,7 +10,7 @@ Test Scenarios
 
    [[2]] {{{#Basic}Basic Tests}}
 
-   [[3]] {{{#Filtering}Filtering Tests}}
+~~   [[3]] {{{#Filtering}Filtering Tests}}
 
    [[4]] {{{#Compatibility}Compatibility Tests}}
 
@@ -116,88 +116,88 @@ Test Scenarios
 
 
 
-* {Filtering} Tests
-
- The ECFilterSpec implements a flexible filtering scheme based on two pattern lists.
- Each list contains zero or more EPC patterns. Each EPC pattern denotes a single EPC, a
- range of EPCs, or some other set of EPCs. An EPC is included in the final report if (a) the EPC does not match any
- pattern in the excludePatterns list, and (b) the EPC does match at least one pattern
- in the includePatterns list. The (b) test is omitted if the includePatterns list
- is empty.
-
-  Filtering tests with this ReaderSimulator: 
-
-
-  ReaderAPI
-
-  * {{{../testfiles/simpletests/SimpleAPI.xml} SimpleAPI}} : One HALReader with LogicalReader1 connecting to it.  
-
-[]
-
-  ECspecs
-
-   * {{{../testfiles/filtertests/ExcludeECSpec.xml} ExcludeECSpec}},
-   
-   * {{{../testfiles/filtertests/IncludeECSpec.xml} IncludeECSpec}},
-
-   * {{{../testfiles/filtertests/GroupECSpec.xml} GroupECSpec}}
-
-  []
-
-  Test Scenario:
-  
-  [[]] Exclude Pattern
-	
-*--+--+
-| Define the ExcludeECSpec |  |
-*--+--+
-| Define a subscriber, which subscribes to the ExcludeECSpec |  |
-*--+--+
-| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
-	| Tag must not appear in the following Reports |
-*--+--+
-| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
-	| Tag must appear in the following Reports |
-*--+--+
-
-
-
-  [[]] Include Pattern
-
-*--+--+
-| Define the IncludeECSpec |  |
-*--+--+
-| Define a subscriber, which subscribes to the IncludeECSpec  |  |
-*--+--+
-| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
-	| Tag must not appear in the following Reports |
-*--+--+
-| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
-	| Tag must appear in the following Reports |
-*--+--+
-
-
-
-  [[]] Group Pattern
-
-*--+--+
-| Define the GroupECSpec |  |
-*--+--+
-| Define a subscriber, which subscribes to the GroupECSpec  |  |
-*--+--+
-| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
-	| Tag must appear in the following Reports in the group with the group name 9204F0004B000000|
-*--+--+
-| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
-	| Tag must appear in the following Reports in the default group|
-*--+--+
-
-
-
-  []
-
-  
-  
+~~ * {Filtering} Tests
+~~
+~~ The ECFilterSpec implements a flexible filtering scheme based on two pattern lists.
+~~ Each list contains zero or more EPC patterns. Each EPC pattern denotes a single EPC, a
+~~ range of EPCs, or some other set of EPCs. An EPC is included in the final report if (a) the EPC does not match any
+~~ pattern in the excludePatterns list, and (b) the EPC does match at least one pattern
+~~ in the includePatterns list. The (b) test is omitted if the includePatterns list
+~~ is empty.
+~~
+~~  Filtering tests with this ReaderSimulator: 
+~~
+~~
+~~  ReaderAPI
+~~
+~~  * {{{../testfiles/simpletests/SimpleAPI.xml} SimpleAPI}} : One HALReader with LogicalReader1 connecting to it.  
+~~
+~~ []
+~~
+~~  ECspecs
+~~
+~~   * {{{../testfiles/filtertests/ExcludeECSpec.xml} ExcludeECSpec}},
+~~   
+~~   * {{{../testfiles/filtertests/IncludeECSpec.xml} IncludeECSpec}},
+~~
+~~   * {{{../testfiles/filtertests/GroupECSpec.xml} GroupECSpec}}
+~~
+~~  []
+~~
+~~  Test Scenario:
+~~  
+~~  [[]] Exclude Pattern
+~~	
+~~*--+--+
+~~| Define the ExcludeECSpec |  |
+~~*--+--+
+~~| Define a subscriber, which subscribes to the ExcludeECSpec |  |
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
+~~	| Tag must not appear in the following Reports |
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
+~~	| Tag must appear in the following Reports |
+~~*--+--+
+~~
+~~
+~~
+~~  [[]] Include Pattern
+~~
+~~*--+--+
+~~| Define the IncludeECSpec |  |
+~~*--+--+
+~~| Define a subscriber, which subscribes to the IncludeECSpec  |  |
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
+~~	| Tag must not appear in the following Reports |
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
+~~	| Tag must appear in the following Reports |
+~~*--+--+
+~~
+~~
+~~
+~~  [[]] Group Pattern
+~~
+~~*--+--+
+~~| Define the GroupECSpec |  |
+~~*--+--+
+~~| Define a subscriber, which subscribes to the GroupECSpec  |  |
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000000 on Shelf1 of the HALReader 
+~~	| Tag must appear in the following Reports in the group with the group name 9204F0004B000000|
+~~*--+--+
+~~| Put one Tag with id 9204F0004B000010 on Shelf1 of the HALReader 
+~~	| Tag must appear in the following Reports in the default group|
+~~*--+--+
+~~
+~~
+~~
+~~  []
+~~
+~~  
+ 
   
 * {Compatibility} Tests
 
@@ -441,11 +441,11 @@ Test Scenarios
 
   * LogicalReaders: LogicalReader1
 
-  * <duration unit="MS" xsi:type="ns1:ECTime">5000</duration>
+  * duration: 5000ms
 
-  * <repeatPeriod unit="MS" xsi:type="ns1:ECTime">6000</repeatPeriod>
+  * repeatPeriod: 6000ms
 
-  * ReportName: Fast
+  * ReportName: FastAdd, FastDel
 
   * reportSet set="ADDITIONS"
 
@@ -458,9 +458,9 @@ Test Scenarios
 
   * LogicalReaders: LogicalReader1
 
-  * <duration unit="MS" xsi:type="ns1:ECTime">3000</duration>
+  * duration: 3000ms
 
-  * <repeatPeriod unit="MS" xsi:type="ns1:ECTime">60000</repeatPeriod>
+  * repeatPeriod: 60000ms
 
   * ReportName: Slow
 
@@ -472,9 +472,9 @@ Test Scenarios
 
   * LogicalReaders: LogicalReader1
 
-  * <duration unit="MS" xsi:type="ns1:ECTime">50000</duration>
+  * duration:50000ms
 
-  * <repeatPeriod unit="MS" xsi:type="ns1:ECTime">70000</repeatPeriod>
+  * repeatPeriod: 70000ms
 
   * ReportName: Long
 

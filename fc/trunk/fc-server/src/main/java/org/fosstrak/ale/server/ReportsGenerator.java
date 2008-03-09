@@ -574,9 +574,11 @@ public class ReportsGenerator implements Runnable {
 		// check if two ECReportSpec instances have identical names
 		Set<String> reportSpecNames = new HashSet<String>();
 		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
-			if (!reportSpecNames.add(reportSpec.getReportName())) {
+			if (reportSpecNames.contains(reportSpec.getReportName())) {
 				throw new ECSpecValidationExceptionResponse("Two ReportSpecs instances have identical names '" +
 						reportSpec.getReportName() + "'.");
+			} else {
+				reportSpecNames.add(reportSpec.getReportName());
 			}
 		}
 		
