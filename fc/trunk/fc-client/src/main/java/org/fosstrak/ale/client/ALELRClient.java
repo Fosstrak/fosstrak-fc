@@ -60,30 +60,25 @@ import javax.xml.namespace.QName;
 
 import org.accada.ale.util.DeserializerUtil;
 import org.accada.ale.util.SerializerUtil;
-import org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType;
-import org.accada.ale.wsdl.ale.epcglobal.Define;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.EmptyParms;
-import org.accada.ale.wsdl.ale.epcglobal.GetECSpec;
-import org.accada.ale.wsdl.ale.epcglobal.GetSubscribers;
-import org.accada.ale.wsdl.ale.epcglobal.Immediate;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.Poll;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.Subscribe;
-import org.accada.ale.wsdl.ale.epcglobal.Undefine;
-import org.accada.ale.wsdl.ale.epcglobal.Unsubscribe;
-import org.accada.ale.wsdl.ale.epcglobal.ArrayOfString;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
+import org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType;
+import org.accada.ale.wsdl.alelr.epcglobal.AddReaders;
+import org.accada.ale.wsdl.alelr.epcglobal.ArrayOfString;
+import org.accada.ale.wsdl.alelr.epcglobal.Define;
+import org.accada.ale.wsdl.alelr.epcglobal.EmptyParms;
+import org.accada.ale.wsdl.alelr.epcglobal.GetLRSpec;
+import org.accada.ale.wsdl.alelr.epcglobal.GetPropertyValue;
+import org.accada.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.ImplementationExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.RemoveReaders;
+import org.accada.ale.wsdl.alelr.epcglobal.SecurityExceptionResponse;
+import org.accada.ale.wsdl.alelr.epcglobal.SetProperties;
+import org.accada.ale.wsdl.alelr.epcglobal.SetReaders;
+import org.accada.ale.wsdl.alelr.epcglobal.Undefine;
+import org.accada.ale.wsdl.alelr.epcglobal.Update;
+import org.accada.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.log4j.PropertyConfigurator;
 
 
 /**
@@ -93,10 +88,9 @@ import org.apache.log4j.PropertyConfigurator;
  * is the parameter endpoint, which specifies the address of the ale webservice which runs
  * on the server. 
  * 
- * @author regli
  * @author sawielan
  */
-public class ALEClient extends JFrame {
+public class ALELRClient extends JFrame {
 
 	/** serial version uid */
 	private static final long serialVersionUID = 1L;
@@ -106,14 +100,14 @@ public class ALEClient extends JFrame {
 	private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 	
 	/** properties file path */
-	private static final String PROPERTIES_FILE_LOCATION = "/props/ALEClient.properties";
+	private static final String PROPERTIES_FILE_LOCATION = "/props/ALELRClient.properties";
 	/** properties */
 	private final Properties props = new Properties();
 	/** resource bundle containing all user visible texts in specified language */
 	private PropertyResourceBundle guiText;
 
-	/** ale proxy */
-	private ALEServicePortType aleProxy = null;
+	/** alelr service */
+	private ALELRServicePortType aleProxy = null;
 	
 	/** command panel */
 	private final JPanel commandPanel = new JPanel();
@@ -129,12 +123,14 @@ public class ALEClient extends JFrame {
 	private JPanel execButtonPanel = null;
 	/** combobox which contains all defined specification names */
 	private JComboBox specNameComboBox;
-	/** text field which contains the notification uri */
-	private JTextField notificationUriField;
+	/** text field which contains the property value name */
+	private JTextField propertyValueField;
+	/** text field which contains the reader name */
+	private JTextField readerNameValueField;
 	/** text field which contains the file path */
 	private JTextField filePathField;
 	
-	private static final QName SERVICE_NAME = new QName("urn:epcglobal:ale:wsdl:1", "ALEService");
+	private static final QName SERVICE_NAME = new QName("urn:epcglobal:alelr:wsdl:1", "ALELRService");
 	
 	/**
 	 * This method initializes the class, by loading properties, texts and setting the endpoint.
@@ -155,17 +151,17 @@ public class ALEClient extends JFrame {
 		
 		// try to get language form property file
 		if (props.containsKey("Language")) {
-			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + props.getProperty("Language") + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALELRClient_" + props.getProperty("Language") + ".lang");
 		}
 		
 		// try system default language
 		if (languageStream == null) {
-			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + SYSTEM_DEFAULT_LOCALE.getLanguage() + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALELRClient_" + SYSTEM_DEFAULT_LOCALE.getLanguage() + ".lang");
 		}
 		
 		// try default language
 		if (languageStream == null) {
-			languageStream = this.getClass().getResourceAsStream("/props/ALEClient_" + DEFAULT_LOCALE.getLanguage() + ".lang");
+			languageStream = this.getClass().getResourceAsStream("/props/ALELRClient_" + DEFAULT_LOCALE.getLanguage() + ".lang");
 		}
 		
 		if (languageStream == null) {
@@ -175,14 +171,14 @@ public class ALEClient extends JFrame {
 
 		//--------------------
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setServiceClass(ALEServicePortType.class);
+        factory.setServiceClass(ALELRServicePortType.class);
         String address = props.getProperty("EndPoint");
         if (address == null) {
             System.out.println("using default address " + address);
-        	address = "http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService";
+        	address = "http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALELRService";
         }
         factory.setAddress(address);
-        aleProxy = (ALEServicePortType) factory.create();
+        aleProxy = (ALELRServicePortType) factory.create();
         
 		initializeGUI();
 		
@@ -224,7 +220,7 @@ public class ALEClient extends JFrame {
 		JPanel selectionPanel = new JPanel();
 		selectionPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(guiText.getString("SelectionPanelTitle")), BorderFactory.createEmptyBorder(5,5,5,5)));
 		
-		commandSelection.setMaximumRowCount(12);
+		commandSelection.setMaximumRowCount(13);
 		
 		commandSelection.addItem(null);
 		for (String item : getCommands()) {
@@ -265,42 +261,43 @@ public class ALEClient extends JFrame {
 
 		switch(command) {
 		
-			case 4: //getECSpecNames
-			case 10: // getStandardVersion
-			case 11: // getVendorVersion
+			case 4: //getLRSpecNames
+			case 11: // getStandardVersion
+			case 12: // getVendorVersion
 				commandPanel.setLayout(new GridLayout(1, 1, 5, 0));
 				break;
-				
+	
 			case 2: // undefine
-			case 3: // getECSpec
-			case 7: // poll
-			case 9: // getSubscribers
+			case 5: // getLRSpec
 				commandPanel.setLayout(new GridLayout(5, 1, 5, 0));
-				addECSpecNameComboBox(commandPanel);
+				addLRSpecNamesComboBox(commandPanel);
 				addSeparator(commandPanel);
 				break;
-				
-			case 5: // subscribe
-			case 6: // unsubscribe
+
+			case 10: // getPropertyValue
 				commandPanel.setLayout(new GridLayout(7, 1, 5, 0));
-				addECSpecNameComboBox(commandPanel);
-				addNotificationURIField(commandPanel);
+				addLRSpecNamesComboBox(commandPanel);
+				addPropertyValueField(commandPanel);
 				addSeparator(commandPanel);
 				break;
 				
-			case 8: // immediate
-				commandPanel.setLayout(new GridLayout(6, 1, 5, 0));
+			case 3: // update
+			case 6: // addReaders
+			case 7: // setReaders
+			case 8: // removeReaders
+			case 9: // setProperties
+				commandPanel.setLayout(new GridLayout(8, 1, 5, 0));
+				addLRSpecNamesComboBox(commandPanel);
 				addChooseFileField(commandPanel);
 				addSeparator(commandPanel);
 				break;
 				
 			case 1: // define
 				commandPanel.setLayout(new GridLayout(8, 1, 5, 0));
-				addECSpecNameComboBox(commandPanel);
+				addReaderNameValueField(commandPanel); 
 				addChooseFileField(commandPanel);
 				addSeparator(commandPanel);
 				break;
-				
 		}
 		
 		addExecuteButton(commandPanel);
@@ -327,17 +324,17 @@ public class ALEClient extends JFrame {
 	 * 
 	 * @param panel to which the specification name combobox should be added
 	 */
-	private void addECSpecNameComboBox(JPanel panel) {
+	private void addLRSpecNamesComboBox(JPanel panel) {
 		
 		specNameComboBox = new JComboBox();
 		specNameComboBox.setEditable(true);
 		specNameComboBox.addItem(null);
 		
-		List<String> ecSpecNames;
+		List<String> lrSpecNames;
 		try {
-			ecSpecNames = aleProxy.getECSpecNames(new EmptyParms()).getString();
-			if (ecSpecNames != null && ecSpecNames.size() > 0) {
-				for (String specName : ecSpecNames) {
+			lrSpecNames = aleProxy.getLogicalReaderNames(new EmptyParms()).getString();
+			if (lrSpecNames != null && lrSpecNames.size() > 0) {
+				for (String specName : lrSpecNames) {
 					specNameComboBox.addItem(specName);
 				}
 			} else {
@@ -353,18 +350,32 @@ public class ALEClient extends JFrame {
 	}
 	
 	/**
-	 * This method adds a notification uri field to the panel.
+	 * This method adds a notification property value field to the panel.
 	 * 
-	 * @param panel to which the norification uri field should be added
+	 * @param panel to which the property value field should be added
 	 */
-	private void addNotificationURIField(JPanel panel) {
+	private void addPropertyValueField(JPanel panel) {
 		
-		notificationUriField = new JTextField();
+		propertyValueField = new JTextField();
 		
-		panel.add(new JLabel(guiText.getString("NotificationURILabel")));
-		panel.add(notificationUriField);
-		
+		panel.add(new JLabel(guiText.getString("PropertyNameLabel")));
+		panel.add(propertyValueField);
 	}
+	
+	/**
+	 * This method adds a notification property value field to the panel.
+	 * 
+	 * @param panel to which the property value field should be added
+	 */
+	private void addReaderNameValueField(JPanel panel) {
+		
+		readerNameValueField = new JTextField();
+		
+		panel.add(new JLabel(guiText.getString("ReaderNameLabel")));
+		panel.add(readerNameValueField);
+	}
+	
+	
 	
 	/**
 	 * This method adds a choose file field to the panel.
@@ -441,28 +452,25 @@ public class ALEClient extends JFrame {
 		
 		Object result = null;
 		String specName = null;
-		String notificationURI = null;
-		
+		String textParameter = null;
 		try {
 			
 			switch(commandSelection.getSelectedIndex()) {
 			
-				case 4: //getECSpecNames
-					result = aleProxy.getECSpecNames(new EmptyParms());
+				case 4: //getLogicalReaderNames
+					result = aleProxy.getLogicalReaderNames(new EmptyParms());
 					break;
 					
-				case 10: // getStandardVersion
+				case 11: // getStandardVersion
 					result = aleProxy.getStandardVersion(new EmptyParms());
 					break;
 					
-				case 11: // getVendorVersion
+				case 12: // getVendorVersion
 					result = aleProxy.getVendorVersion(new EmptyParms());
 					break;
-			
+		
 				case 2: // undefine
-				case 3: // getECSpec
-				case 7: // poll
-				case 9: // getSubscribers
+				case 5: // getLRSpec
 					// get specName
 					specName = (String)specNameComboBox.getSelectedItem();
 					if (specName == null || "".equals(specName)) {
@@ -472,77 +480,51 @@ public class ALEClient extends JFrame {
 					
 					switch(commandSelection.getSelectedIndex()) {
 					
-					case 2: // undefine
-						Undefine undefineParms = new Undefine();
-						undefineParms.setSpecName(specName);
-						aleProxy.undefine(undefineParms);
-						result = guiText.getString("SuccessfullyUndefinedMessage");
-						break;
-						
-					case 3: // getECSpec
-						GetECSpec getECSpecParms = new GetECSpec();
-						getECSpecParms.setSpecName(specName);
-						result = aleProxy.getECSpec(getECSpecParms);
-						break;
-						
-					case 7: // poll
-						Poll pollParms = new Poll();
-						pollParms.setSpecName(specName);
-						result = aleProxy.poll(pollParms);
-						break;
-						
-					case 9: // getSubscribers
-						GetSubscribers getSubscribersParms = new GetSubscribers();
-						getSubscribersParms.setSpecName(specName);
-						result = aleProxy.getSubscribers(getSubscribersParms);
-						break;
+						case 2: // undefine
+							Undefine undefineParms = new Undefine();
+							undefineParms.setName(specName);
+							aleProxy.undefine(undefineParms);
+							result = guiText.getString("SuccessfullyUndefinedMessage");
+							break;
+							
+						case 5: // getLRSpec
+							GetLRSpec getLRSpecParms = new GetLRSpec();
+							getLRSpecParms.setName(specName);
+							result = aleProxy.getLRSpec(getLRSpecParms);
+							break;
 						
 					}
 					
 					break;
 					
-				case 5: // subscribe
-				case 6: // unsubscribe
+				case 10: // getPropertyValue
 					// get specName
+					
+					// get the l
+					textParameter = propertyValueField.getText();
+					
 					specName = (String)specNameComboBox.getSelectedItem();
+					
 					if (specName == null || "".equals(specName)) {
 						showExcpetionDialog(guiText.getString("SpecNameNotSpecifiedDialog"));
 						break;
 					}
-					
-					// get notificationURI
-					notificationURI = notificationUriField.getText();
-					if (notificationURI == null || "".equals(notificationURI)) {
-						showExcpetionDialog(guiText.getString("NotificationUriNotSpecifiedDialog"));
-						break;
-					}
-					
-					switch (commandSelection.getSelectedIndex()) {
-					
-					case 5:
-						Subscribe subscribeParms = new Subscribe();
-						subscribeParms.setSpecName(specName);
-						subscribeParms.setNotificationURI(notificationURI);
-						aleProxy.subscribe(subscribeParms);
-						result = guiText.getString("SuccessfullySubscribedMessage");
-						break;
-						
-					case 6:
-						Unsubscribe unsubscribeParms = new Unsubscribe();
-						unsubscribeParms.setSpecName(specName);
-						unsubscribeParms.setNotificationURI(notificationURI);
-						aleProxy.unsubscribe(unsubscribeParms);
-						result = guiText.getString("SuccessfullyUnsubscribedMessage");
-						break;
-						
-					}
+				
+					GetPropertyValue getPropertyValue = new GetPropertyValue();
+					getPropertyValue.setName(specName);
+					getPropertyValue.setPropertyName(textParameter);
+					result = aleProxy.getPropertyValue(getPropertyValue);
 					
 					break;
 					
+				case 3: // update
+				case 6: // addReaders
+				case 7: // setReaders
+				case 8: // removeReaders
+				case 9: // setProperties
 				case 1: // define
-				case 8: // immediate
 
-					if (commandSelection.getSelectedIndex() == 1) {
+					if (commandSelection.getSelectedIndex() != 1) {
 						// get specName
 						specName = (String)specNameComboBox.getSelectedItem();
 						if (specName == null || "".equals(specName)) {
@@ -557,11 +539,55 @@ public class ALEClient extends JFrame {
 						showExcpetionDialog(guiText.getString("FilePathNotSpecifiedDialog"));
 						break;
 					}
-					
-					// get ecSpec
-					ECSpec ecSpec;
 					try {
-						ecSpec = getECSpecFromFile(filePath);
+						switch (commandSelection.getSelectedIndex()) {
+						case 1: // define
+						case 3: // update
+							// get the LRSpec
+							LRSpec spec = getLRSpecFromFile(filePath);
+							if (commandSelection.getSelectedIndex() == 1) {
+								textParameter = readerNameValueField.getText();
+								Define define = new Define();
+								define.setName(textParameter);
+								define.setSpec(spec);
+								aleProxy.define(define);
+								result = guiText.getString("SuccessfullyDefinedMessage");
+							} else {
+								Update update = new Update();
+								update.setName(specName);
+								update.setSpec(spec);
+								aleProxy.update(update);
+								result = guiText.getString("SuccessfullyUpdateMessage");
+							}
+							break;
+							
+						case 6: // addReaders
+							AddReaders addReaders = DeserializerUtil.deserializeAddReaders(filePath);
+							addReaders.setName(specName);
+							aleProxy.addReaders(addReaders);
+							result = guiText.getString("SuccessfullyAddReadersMessage");
+							break;
+						case 7: // setReaders
+							SetReaders setReaders = DeserializerUtil.deserializeSetReaders(filePath);
+							setReaders.setName(specName);
+							aleProxy.setReaders(setReaders);
+							result = guiText.getString("SuccessfullySetReadersMessage");
+							break;
+						case 8: // removeReaders
+							RemoveReaders removeReaders = DeserializerUtil.deserializeRemoveReaders(filePath);
+							removeReaders.setName(specName);
+							aleProxy.removeReaders(removeReaders);
+							result = guiText.getString("SuccessfullyRemoveReadersMessage");
+							break;
+						case 9: // setProperties
+							SetProperties setProperties = DeserializerUtil.deserializeSetProperties(filePath);
+							setProperties.setName(specName);
+							aleProxy.setProperties(setProperties);
+							result = guiText.getString("SuccessfullySetPropertiesMessage");
+							break;
+							
+						}
+						
 					} catch(FileNotFoundException e) {
 						showExcpetionDialog(guiText.getString("FileNotFoundDialog"));
 						break;
@@ -569,61 +595,41 @@ public class ALEClient extends JFrame {
 						showExcpetionDialog(guiText.getString("UnexpectedFileFormatDialog"));
 						break;
 					}
-					
-					if (commandSelection.getSelectedIndex() == 1) {
-						Define defineParms = new Define();
-						defineParms.setSpecName(specName);
-						defineParms.setSpec(ecSpec);
-						aleProxy.define(defineParms);
-						result = guiText.getString("SuccessfullyDefinedMessage");
-					} else {
-						Immediate immediateParms = new Immediate();
-						immediateParms.setSpec(ecSpec);
-						result = aleProxy.immediate(immediateParms);
-					}
 					break;
-				
 			}
-			
 		} catch (Exception e) {
+			e.printStackTrace();		
 			String reason = e.getMessage();
-			if (e instanceof DuplicateNameExceptionResponse) {
-				showExcpetionDialog(guiText.getString("DuplicateNameExceptionDialog"), reason);
-			} else if (e instanceof DuplicateSubscriptionExceptionResponse) {
-				showExcpetionDialog(guiText.getString("DuplicateSubscriptionExceptionDialog"), reason);
-			} else if (e instanceof ECSpecValidationExceptionResponse) {
-				showExcpetionDialog(guiText.getString("ECSpecValidationExceptionDialog"), reason);
-			} else if (e instanceof ImplementationExceptionResponse) {
+			if (e instanceof ImplementationExceptionResponse) {
 				showExcpetionDialog(guiText.getString("ImplementationExceptionDialog"), reason);
-			} else if (e instanceof InvalidURIExceptionResponse) {
-				showExcpetionDialog(guiText.getString("InvalidURIExceptionDialog"), reason);
-			} else if (e instanceof NoSuchNameExceptionResponse) {
-				showExcpetionDialog(guiText.getString("NoSuchNameExceptionDialog"), reason);
-			} else if (e instanceof NoSuchSubscriberExceptionResponse) {
-				showExcpetionDialog(guiText.getString("NoSuchSubscriberExceptionDialog"), reason);
 			} else if (e instanceof SecurityExceptionResponse) {
 				showExcpetionDialog(guiText.getString("SecurityExceptionDialog"), reason);
+			} else if (e instanceof InUseExceptionResponse) {
+				showExcpetionDialog(guiText.getString("InUseExceptionDialog"), reason);
+			} else if (e instanceof NoSuchNameExceptionResponse) {
+				showExcpetionDialog(guiText.getString("NoSuchNameExceptionDialog"), reason);
+			} else if (e instanceof ImmutableReaderExceptionResponse) {
+				showExcpetionDialog(guiText.getString("ImmutableReaderExceptionDialog"), reason);
 			}
-		}
+		} 
 		
 		showResult(result);
 		
 		// update spec name combobox
-		List<String> ecSpecNames = null;
+		List<String> logicalReaderNames = null;
 		try {
-			ecSpecNames = aleProxy.getECSpecNames(new EmptyParms()).getString();
+			logicalReaderNames = aleProxy.getLogicalReaderNames(new EmptyParms()).getString();
 		} catch (Exception e) {}
-		if (ecSpecNames != null && specNameComboBox != null && specNameComboBox.getSelectedObjects() != null && specNameComboBox.getSelectedObjects().length > 0) {
+		if (logicalReaderNames != null && specNameComboBox != null && specNameComboBox.getSelectedObjects() != null && specNameComboBox.getSelectedObjects().length > 0) {
 			String current = (String)specNameComboBox.getSelectedObjects()[0];
 			specNameComboBox.removeAllItems();
-			if (ecSpecNames != null && ecSpecNames.size() > 0) {
-				for (String name : ecSpecNames) {
+			if (logicalReaderNames != null && logicalReaderNames.size() > 0) {
+				for (String name : logicalReaderNames) {
 					specNameComboBox.addItem(name);
 				}
 			}
 			specNameComboBox.setSelectedItem(current);
 		}
-
 	}
 	
 	/**
@@ -690,9 +696,9 @@ public class ALEClient extends JFrame {
 	 * @return ec specification
 	 * @throws Exception if specification could not be loaded
 	 */
-	private ECSpec getECSpecFromFile(String filename) throws Exception {
+	private LRSpec getLRSpecFromFile(String filename) throws Exception {
 		FileInputStream inputStream = new FileInputStream(filename);
-		return DeserializerUtil.deserializeECSpec(inputStream);
+		return DeserializerUtil.deserializeLRSpec(inputStream);
 		
 	}
 
@@ -716,23 +722,15 @@ public class ALEClient extends JFrame {
 					resultTextArea.append("\n");
 				}
 			}
-		} else if (result instanceof ECSpec) {
+		} else if (result instanceof LRSpec) {
 			CharArrayWriter writer = new CharArrayWriter();
 			try {
-				SerializerUtil.serializeECSpec((ECSpec)result, writer);
+				SerializerUtil.serializeLRSpec((LRSpec)result, writer);
 			} catch (IOException e) {
 				showExcpetionDialog(guiText.getString("SerializationExceptionMessage"));
 			}
 			resultTextArea.append(writer.toString());
 
-		} else if (result instanceof ECReports) {
-			CharArrayWriter writer = new CharArrayWriter();
-			try {
-				SerializerUtil.serializeECReports((ECReports)result, writer);
-			} catch (IOException e) {
-				showExcpetionDialog(guiText.getString("SerializationExceptionMessage"));
-			}
-			resultTextArea.append(writer.toString());
 		}
 	}
 
@@ -743,8 +741,8 @@ public class ALEClient extends JFrame {
 	 */
 	private String[] getCommands() {
 		
-		String[] commands = new String[11];
-		for (int i = 1; i < 12; i++) {
+		String[] commands = new String[12];
+		for (int i = 1; i < 13; i++) {
 			commands[i - 1] = guiText.getString("Command" + i);			
 		}
 		return commands;
@@ -806,26 +804,6 @@ public class ALEClient extends JFrame {
 			}
 		}
 		throw new NumberFormatException(error);
-		
-	}
-	
-	/**
-	 * This method starts the ale client.
-	 * 
-	 * @param args no args
-	 * @throws IOException if the client could not be initialized properly
-	 */
-	public static void main(String[] args) throws IOException {
-		
-		// configure Logger with properties file
-		PropertyConfigurator.configure(ALEClient.class.getResource("/props/log4j.properties"));
-		PropertyConfigurator.configure(ALELRClient.class.getResource("/props/log4j.properties"));
-		
-		ALEClient client = new ALEClient();
-		client.initialize();
-		
-		ALELRClient lrclient = new ALELRClient();
-		lrclient.initialize();
 		
 	}
 
