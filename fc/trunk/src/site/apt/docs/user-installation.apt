@@ -122,12 +122,13 @@ readerAPI = /LogicalReaders.xml
 		are loaded during startup of the ALE.
 		
 		For a short introduction to the parameters you need 
-		to specify in the xml refer to {{{#LogicalReaders}LogicalReaders}}.
+		to specify in the xml refer to {{{#user-lrdef}Logical Reader 
+		Definitions}}.
 		
 	[]
 	
-	After a restart of the webserver the Accada ALE is available 
-	and ready to accept clients.
+	After a restart of the webserver the Accada Filtering and Collection is 
+	available and ready to accept clients.
 	
 	
 	

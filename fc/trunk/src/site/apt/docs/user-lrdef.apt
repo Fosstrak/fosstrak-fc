@@ -20,7 +20,7 @@ Users guide - Logical Reader Definitions
 * Objective
 
 	This guide shall introduce Logical Readers and how 
-	they can be declared to be used in the ALE.
+	they can be declared to be used in the Filtering and Collection server.
 	
 	There are two different types of Logical Reader Definitions that 
 	should not be confused! 
@@ -35,8 +35,8 @@ Users guide - Logical Reader Definitions
 	* Static Logical Reader Definitions:
 	
 		Static Logical Reader Definitions are read/written by the Logical 
-		Reader Manager upon ALE deployment. They contain additional 
-		information for the Logical Reader Manager. 	
+		Reader Manager upon Filtering and Collection server deployment. 
+		They contain additional	information for the Logical Reader Manager. 	
 
 * {LogicalReaders}
 
