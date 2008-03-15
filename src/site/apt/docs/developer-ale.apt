@@ -22,17 +22,13 @@ Application Layer Events Service Binding
 
 	[[]] {{{#Status}Status}}
 	
-	
-* Objective
-
-	This document shall give a short overview to the ALE class from the 
-	Accada filtering and collection , to the ALEServicePort and 
-	to the ALEServiceBinding.
-
 
 * {Overview}
-
-	The Ale is the responsible class for the communication with the 
+	This document shall give a short overview to the ALE class from the 
+	Accada filtering and collection, to the ALEServicePort and 
+	to the ALEServiceBinding.
+	
+	The ALE is the responsible class for the communication with the 
 	applications of the Layer above. It provides: 
 	 
 	* Interface for the definition and modification of EventCycles
@@ -49,8 +45,9 @@ Application Layer Events Service Binding
 	* Serialization and deserialization of ECSpecs and other control 
 		messages.
 	
-	* Binding from the interface to the actual implementation 
-		of the ALE.
+	* Binding from the ALE interface to the actual implementation 
+		of the Filtering and Collection.
+		
 	[]
 	
 * {EventCycle} modification
