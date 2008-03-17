@@ -21,6 +21,7 @@
 package org.accada.ale.server;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -44,6 +45,10 @@ import org.accada.ale.xsd.ale.epcglobal.ECTime;
 import org.accada.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.accada.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.Logger;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl;
+
+
 
 
 /**
@@ -189,8 +194,9 @@ public class EventCycle implements Runnable, Observer {
 		reports.setSpecName(generator.getName());
 		
 		// set date
-		// FIXME FIXME FIXME
-		//reports.setDate(new XMLGregorianCalendar());
+		reports.setDate(
+				new DatatypeFactoryImpl().newXMLGregorianCalendar(
+						new GregorianCalendar()));
 
 		// set ale id
 		reports.setALEID(ALEID);
