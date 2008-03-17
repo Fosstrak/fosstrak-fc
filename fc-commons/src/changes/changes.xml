@@ -1,0 +1,21 @@
+<document>
+    <properties>
+        <title>Changes fc-commons</title>
+    </properties>
+    <body>
+        <release version="0.3.0" date="2008-03-??"
+            description="Feature release: ALE 1.1">
+            <!-- general changes -->
+            <action dev="sawielan" type="add">
+               new serializer method for the fc-client.
+            </action>
+            <action dev="sawielan" type="update">
+               fc-commons are now mostly generated automatically from wsdl.
+            </action>
+        </release>
+        <release version="0.2.0" date="2007-04-27"
+            description="Initial release">
+            <action type="add">Initial code release.</action>
+        </release>
+    </body>
+</document>
