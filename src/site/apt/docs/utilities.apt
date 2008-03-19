@@ -1,0 +1,230 @@
+       ------
+                                    Filtering and Collection Utilities
+                                    ------
+                                    ------
+
+
+Filtering and Collection Utilities
+
+* Contents
+	
+	[[]] {{{#Overview}Overview}}
+	
+	[[]] {{{#Serializer}Serializer Utitilities}}
+	
+	[[]] {{{#Deserializer}Deserializer Utitilities}}
+	
+~~	[[]] {{{#CaptureApp}EPCIS CaptureApp}}
+
+
+* {Overview}
+
+	Accada offers you some utilities to simplify the handling of the 
+	serialization and the deserialization of several xml-specifications. 
+	This guide will give you a short overview to the methods available.
+	
+	Aside the serialization/deserialization helpers, Accada offers you a 
+	small sample of a EPCIS Capture app.
+
+		
+* {Serializer} Utilities
+
+	The Accada serializer utilities provide a simple way how you can write 
+	an xml-specification into an xml-file.
+	
+	The Accada serializer utilities can be found in the package 
+	<org.accada.ale.util> in the class <SerializerUtil>.
+
+	Existing serializers for the classes:
+	
+	* ECReports
+	
+	* ECSpec
+	
+	* LRSpec
+	
+	* RemoveReaders
+	
+	* SetProperties
+	
+	* SetReaders
+	
+	[]
+	
+	For a detailed discussion refer to the api documentation.
+
+* {Deserializer} Utilities
+	
+	The Accada deserializer utilities provide a simple way how you can 
+	retrieve a specification from an xml-file.
+	
+	The Accada deserializer utilities can be found in the package 
+	<org.accada.ale.util> in the class <DeserializerUtil>.
+	
+	Existing deserializers for the classes:
+	
+	* AddReaders
+	
+	* ECReports
+	
+	* ECSpec
+	
+	* LRProperty
+	
+	* LRSpec
+	
+	* RemoveReaders
+	
+	* SetProperties
+	
+	* SetReaders
+	
+	[]
+	
+	For a detailed discussion refer to the api documentation.
+	
+~~ * EPCIS {CaptureApp}
+~~	
+~~	From an event notification from the Accada Filtering and Collection 
+~~	server you can easily create an event for the EPCIS repository. The 
+~~	following client gives you an impression how you can use the 
+~~	serializer/deserializer utilities to perform such a job.
+~~
+~~	download the jar file: {{{#missing.jar}missing.jar}}
+~~	
+~~	Source-Code:
+~~	
+~~ +---+
+~~ import java.io.BufferedReader;
+~~ import java.io.ByteArrayInputStream;
+~~ import java.io.CharArrayWriter;
+~~ import java.io.IOException;
+~~ import java.io.InputStream;
+~~ import java.io.InputStreamReader;
+~~ import java.net.ServerSocket;
+~~ import java.net.Socket;
+~~ import java.util.List;
+~~ 
+~~ import org.accada.ale.util.DeserializerUtil;
+~~ import org.accada.ale.util.SerializerUtil;
+~~ import org.accada.ale.xsd.ale.epcglobal.ECReport;
+~~ import org.accada.ale.xsd.ale.epcglobal.ECReports;
+~~ import org.accada.epcis.captureclient.CaptureClient;
+~~ import org.apache.log4j.Logger;
+~~ 
+~~ public class CaptureApp {
+~~ 	
+~~ 	private static int DEFAULT_PORT = 9999;
+~~ 	
+~~ 	private int port;
+~~ 	
+~~ 	private CaptureClient client = null;
+~~ 	
+~~ 	/**	logger. */
+~~ 	public static final Logger LOG = Logger.getLogger(CaptureApp.class);
+~~ 	
+~~ 	public CaptureApp(int port) {
+~~ 		this.port = port;
+~~ 	}
+~~ 
+~~ 	public CaptureApp() {
+~~ 		this(DEFAULT_PORT);
+~~ 	}
+~~ 	
+~~ 	private void handleReports(ECReports reports) throws IOException {
+~~ 		System.out.println("Handling incomming reports");
+~~ 		
+~~ 		String resultXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+~~ 		resultXML += "<epcis:EPCISDocument " +
+~~ 				"xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" " + 
+~~ 				"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+~~ 				"creationDate=\"2005-07-11T11:30:47.0Z\" " +
+~~ 				"schemaVersion=\"1\">\n" +
+~~ 				
+~~ 				"<EPCISBody><EventList>";
+~~ 		List<ECReport> theReports = reports.getReports().getReport();
+~~ 		if (theReports != null) {
+~~ 			for (ECReport report : theReports) {
+~~ 				// FIXME: need to prepare the xml for epcis query
+~~ 			}
+~~ 		}
+~~ 		
+~~ 		resultXML += "</EventList></EPCISBody></epcis:EPCISDocument>";
+~~ 		
+~~ 		// for debugging
+~~ 		CharArrayWriter writer = new CharArrayWriter();
+~~ 		try {
+~~ 			SerializerUtil.serializeECReports((ECReports)reports, writer);
+~~ 		} catch (IOException e) {
+~~ 			e.printStackTrace();
+~~ 		}
+~~ 		
+~~ 		System.out.println(writer.toString());
+~~ 		
+~~ 		InputStream epcisStream = new ByteArrayInputStream(resultXML.getBytes());
+~~ 		client.capture(epcisStream);
+~~ 	}
+~~ 	
+~~ 	public void run() {
+~~ 		client = new CaptureClient();
+~~ 				
+~~ 		ServerSocket ss = null;
+~~ 		try {
+~~ 		 	ss = new ServerSocket(port);
+~~ 			while(true) {
+~~ 				try {
+~~ 					Socket s = ss.accept();
+~~ 					BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+~~ 				   
+~~ 					String data = in.readLine();
+~~ 					String buf = "";
+~~ 					// ignore the http header
+~~ 					data = in.readLine();
+~~ 					data = in.readLine();
+~~ 					data = in.readLine();
+~~ 					data = in.readLine();
+~~ 					
+~~ 					while (data != null) {
+~~ 						buf += data;
+~~ 						data = in.readLine();
+~~ 					}
+~~ 					System.out.println(buf);
+~~ 					
+~~ 					// create a stream from the buf
+~~ 					InputStream parseStream = new ByteArrayInputStream(buf.getBytes());
+~~ 					
+~~ 					// parse the string
+~~ 					
+~~ 					ECReports reports = DeserializerUtil.deserializeECReports(parseStream);
+~~ 					if (reports != null) {
+~~ 						handleReports(reports);
+~~ 					}
+~~ 
+~~ 				} catch (Exception e) {
+~~ 					System.out.println("ERROR: " + e.getMessage());
+~~ 				}
+~~ 			}
+~~ 		} catch (IOException e1) {
+~~ 			System.out.println(e1.getMessage());
+~~ 		}
+~~ 	}
+~~ 	
+~~ 	/**
+~~ 	 * starts the CaptureApp.
+~~ 	 * 
+~~ 	 * @param args the first command line parameter is the TCP port. if omitted port 9999 is used.
+~~ 	 */
+~~ 	public static void main(String[] args) {
+~~      CaptureApp client;
+~~         int port;
+~~         // check if args[0] is tcp-port
+~~         if (args.length == 1){
+~~         	port = Integer.parseInt(args[0]);
+~~             client = new CaptureApp(port);
+~~         } else
+~~         	client = new CaptureApp();
+~~         
+~~         client.run();
+~~ 	}
+~~ }
+~~ +---+	

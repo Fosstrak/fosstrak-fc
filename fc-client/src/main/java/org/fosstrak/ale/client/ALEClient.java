@@ -81,7 +81,6 @@ import org.accada.ale.wsdl.ale.epcglobal.Unsubscribe;
 import org.accada.ale.wsdl.ale.epcglobal.ArrayOfString;
 import org.accada.ale.xsd.ale.epcglobal.ECReports;
 import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.log4j.PropertyConfigurator;
 
