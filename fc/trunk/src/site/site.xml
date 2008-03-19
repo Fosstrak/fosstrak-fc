@@ -68,6 +68,8 @@
 		<item name="Implement an Adaptor" href="docs/developer-adaptor.html"/>
 	</item>
 	
+	<item name="Filtering &amp; Collection Utilities" href="docs/utilities.html" collapse="true"/>
+	
     </menu>
     
     <menu name="Filtering and Collection Project Modules" inherit="none">
