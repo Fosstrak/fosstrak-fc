@@ -299,4 +299,22 @@
     </plugins>
   </build>
 
+
+  <!-- =========================================================== -->
+  <!-- Repositories                                                -->
+  <!-- =========================================================== -->
+
+  <repositories>
+    <!-- inherited from parent pom -->
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <!-- for getting the cxf-codegen-plugin libraries -->
+      <id>apache-plugin-incubating</id>
+      <name>Apache Plugin Incubating Repository</name>
+      <url>http://people.apache.org/repo/m2-incubating-repository</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+
 </project>
