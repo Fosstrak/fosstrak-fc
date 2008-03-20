@@ -63,7 +63,7 @@ Download
 * System Requirements
 
 *---------------------+---------+
- <<JDK>>              | 1.5.x
+ <<JDK>>              | 1.6.x
 *---------------------+---------+
  <<Memory>>           | No minimum requirements.
 *---------------------+---------+
