@@ -32,7 +32,7 @@
     <dependency>
       <groupId>org.accada.reader</groupId>
       <artifactId>reader-rprm-core</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.accada.reader</groupId>
       <artifactId>reader-rp-proxy</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -79,7 +79,6 @@
 	</dependency>
   </dependencies>
 
-
   <!-- =========================================================== -->
   <!-- Build settings                                              -->
   <!-- =========================================================== -->
@@ -104,6 +103,13 @@
           </execution>
         </executions>
       </plugin>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-war-plugin</artifactId>
+		<configuration>
+			<warSourceExcludes>WEB-INF/lib/xerces-1.2.3.jar</warSourceExcludes>
+		</configuration>
+	</plugin>
     </plugins>
   </build>
 
