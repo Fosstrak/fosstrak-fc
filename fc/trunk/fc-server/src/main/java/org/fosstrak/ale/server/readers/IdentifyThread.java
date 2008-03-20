@@ -30,7 +30,7 @@
 
 package org.accada.ale.server.readers;
 
-import org.accada.reader.hal.HardwareException;
+import org.accada.hal.HardwareException;
 import org.accada.hal.Observation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
