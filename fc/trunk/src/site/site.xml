@@ -56,6 +56,7 @@
 		<item name="Test clients" href="docs/user-testclients.html"/>
 		<item name="A complete Example" href="docs/user-example.html"/>
 		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
+		<item name="Capture App Example" href="docs/user-captureapp.html"/>
 	</item>
 	
 	<item name="Developers guide" href="docs/developer-index.html" collapse="false">
@@ -66,10 +67,8 @@
 		<item name="Reports notification" href="docs/developer-reports-notification.html"/>
 		<item name="Logical Reader concept" href="docs/developer-reader-concept.html"/>
 		<item name="Implement an Adaptor" href="docs/developer-adaptor.html"/>
+		<item name="Serializers and Deserializers" href="docs/developer-serializers.html"/>
 	</item>
-	
-	<item name="Filtering &amp; Collection Utilities" href="docs/utilities.html" collapse="true"/>
-	
     </menu>
     
     <menu name="Filtering and Collection Project Modules" inherit="none">
