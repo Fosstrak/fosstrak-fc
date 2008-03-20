@@ -34,6 +34,23 @@ Capture App Example
 	error handling.
 	
 	download the source code: {{{../files/CaptureApp.java}CaptureApp.java}}
+	
+	To run the capture app you will need the following packages in your 
+	classpath:
+	
+	* jaxb-api (eg. jaxb-api-2.0.jar)
+	
+	* jaxb-impl (eg. jaxb-impl-2.0.1.jar)
+	
+	* fc-commons (eg. fc-commons-0.3.0.jar)
+	
+	* epcis-captureclient (eg. epcis-captureclient-0.3.0.jar)
+	
+	* epcis-commons (eg. epcis-commons-0.3.0.jar)
+	
+	* xml-apis (eg. xml-apis-1.3.03.jar from javax)
+	
+	* log4j (eg. log4j-1.2.12.jar)
 
 * {Retrieve} ECReports
 
@@ -150,15 +167,22 @@ List<EPC> epcs = new LinkedList<EPC>();
 if (theReports != null) {
 	for (ECReport report : theReports) {
 		if (report.getGroup() != null) {
-			try {
-				for (ECReportGroup group : report.getGroup()) {
+			for (ECReportGroup group : report.getGroup()) {
+				if (group.getGroupList() != null) {
 					for (ECReportGroupListMember member : group.getGroupList().getMember()) {
-						epcs.add(member.getEpc());
-					}
+						if (member.getRawDecimal() != null) {
+							epcs.add(member.getRawDecimal());
+						}
+					}							
 				}
-			} catch (Exception e) {}
+			}
 		}
 	}
+}
+
+if (epcs.size() == 0) {
+	System.out.println("no epc received - generating no event");
+	return;
 }
 +---+
 
@@ -191,7 +215,10 @@ EPCISDocumentType epcisDoc = new EPCISDocumentType();
 // ... (code in between)
 
 // send the event to the repository
-client.capture(epcisDoc);
+int httpResponseCode = client.capture(epcisDoc);
+if (httpResponseCode != 200) {
+    System.out.println("The event could NOT be captured!");
+}
 +---+
 
 	
@@ -259,15 +286,22 @@ public class CaptureApp {
 		if (theReports != null) {
 			for (ECReport report : theReports) {
 				if (report.getGroup() != null) {
-					try {
-						for (ECReportGroup group : report.getGroup()) {
-							for (ECReportGroupListMember member :group.getGroupList().getMember()) {
-								epcs.add(member.getEpc());
-							}
+					for (ECReportGroup group : report.getGroup()) {
+						if (group.getGroupList() != null) {
+							for (ECReportGroupListMember member : group.getGroupList().getMember()) {
+								if (member.getRawDecimal() != null) {
+									epcs.add(member.getRawDecimal());
+								}
+							}							
 						}
-					} catch (Exception e) {}
+					}
 				}
 			}
+		}
+		
+		if (epcs.size() == 0) {
+			System.out.println("no epc received - generating no event");
+			return;
 		}
 		
 		// create the ecpis event
@@ -331,7 +365,10 @@ public class CaptureApp {
 		epcisDoc.setSchemaVersion(new BigDecimal("1.0"));
 		epcisDoc.setCreationDate(now);
 				
-		client.capture(epcisDoc);
+		int httpResponseCode = client.capture(epcisDoc);
+		if (httpResponseCode != 200) {
+		    System.out.println("The event could NOT be captured!");
+		}
 	}
 	
 	public void run() {

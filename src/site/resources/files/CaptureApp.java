@@ -54,15 +54,22 @@ public class CaptureApp {
 		if (theReports != null) {
 			for (ECReport report : theReports) {
 				if (report.getGroup() != null) {
-					try {
-						for (ECReportGroup group : report.getGroup()) {
-							for (ECReportGroupListMember member :group.getGroupList().getMember()) {
-								epcs.add(member.getEpc());
-							}
+					for (ECReportGroup group : report.getGroup()) {
+						if (group.getGroupList() != null) {
+							for (ECReportGroupListMember member : group.getGroupList().getMember()) {
+								if (member.getRawDecimal() != null) {
+									epcs.add(member.getRawDecimal());
+								}
+							}							
 						}
-					} catch (Exception e) {}
+					}
 				}
 			}
+		}
+		
+		if (epcs.size() == 0) {
+			System.out.println("no epc received - generating no event");
+			return;
 		}
 		
 		// create the ecpis event
@@ -126,7 +133,10 @@ public class CaptureApp {
 		epcisDoc.setSchemaVersion(new BigDecimal("1.0"));
 		epcisDoc.setCreationDate(now);
 				
-		client.capture(epcisDoc);
+		int httpResponseCode = client.capture(epcisDoc);
+		if (httpResponseCode != 200) {
+		    System.out.println("The event could NOT be captured!");
+		}
 	}
 	
 	public void run() {
