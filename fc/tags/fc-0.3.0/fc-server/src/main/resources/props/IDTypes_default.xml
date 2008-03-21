@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- List of EPCclass1Gen2 tag chip properties -->
+<!-- Code, Identifier and ID as hexadecimal encoded number, e.g. '0xAB' -->
+<!-- Size in bytes as number, e.g. '2' -->
+<!-- Read and Write as boolean, e.g. 'true' and 'false' -->
+<properties>
+
+   <!-- EPC -->
+   <type>
+      <idType>EPC</idType>
+      <description>EPC as tag id</description>
+   </type>
+
+   <!-- ISO15693 -->
+   <type>
+      <idType>ISO15693</idType>
+      <description>ID of a ISO 15693 compliant tag</description>
+   </type>
+
+   <!-- Philips ICode1 -->
+   <type>
+      <idType>ICode1</idType>
+      <description>ID of a Philips ICode1 tag</description>
+   </type>
+
+   <!-- Philips ICodeUID -->
+   <type>
+      <idType>ICodeUID</idType>
+      <description>ID of a Philips ICodeUID tag</description>
+   </type>
+
+   <!-- Unknown type -->
+   <type>
+      <idType>Unknown</idType>
+      <description>Unknown tag</description>
+   </type>
+
+</properties>

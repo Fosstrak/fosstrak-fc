@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+
+   <!-- language -->
+   <Language>en</Language>
+
+   <!-- rfid reader -->
+   <ReaderImage>images/rfid-reader.png</ReaderImage>
+   <ReaderWidth>141</ReaderWidth>
+   <ReaderHeight>100</ReaderHeight>
+   <ReaderLabelSize>10</ReaderLabelSize>
+   <ReaderLabelFont>Verdana</ReaderLabelFont>
+
+   <!-- rfid antenna -->
+   <AntennasPerRow>4</AntennasPerRow>
+   <AntennaImage>images/rfid-antenna_0.png</AntennaImage>
+   <!-- <AntennaImage>/images/rfid-antenna_1.png</AntennaImage> -->
+   <!-- <AntennaImage>/images/rfid-antenna_2.png</AntennaImage> -->
+   <AntennaLabelFont>Verdana</AntennaLabelFont>
+   <AntennaLabelSize>10</AntennaLabelSize>
+   <AntennaWidth>100</AntennaWidth>
+   <AntennaHeight>110</AntennaHeight>
+   <HorizontalInterAntennaPadding>120</HorizontalInterAntennaPadding>
+   <VerticalInterAntennaPadding>60</VerticalInterAntennaPadding>
+
+   <!-- rfid tag -->
+   <TagImage>images/rfid-tag.png</TagImage>
+   <TagLabelFont>Verdana</TagLabelFont>
+   <TagLabelSize>10</TagLabelSize>
+   <TagWidth>100</TagWidth>
+   <TagHeight>20</TagHeight>
+   <InterTagPadding>10</InterTagPadding>
+   <!-- <TagPrefix>A1B4F537D3</TagPrefix> -->
+   <TagPrefix>9204F0004B0</TagPrefix>
+
+   <!-- paddings -->
+   <FramePadding>50</FramePadding>
+   <HorizontalPadding>50</HorizontalPadding>
+   <VerticalPadding>50</VerticalPadding>
+
+   <!-- dialog windows -->
+   <DialogWindowWidth>800</DialogWindowWidth>
+   <DialogWindowHeight>120</DialogWindowHeight>
+
+</properties>
