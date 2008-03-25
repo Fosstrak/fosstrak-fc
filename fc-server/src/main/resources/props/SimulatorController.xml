@@ -3,12 +3,12 @@
 
    <!-- SimulatorType to be loaded dynamically -->
    <!-- currently only org.accada.hal.impl.sim.GraphicSimulator is supported -->
-   <!-- <simType>org.accada.hal.impl.sim.GraphicSimulator</simType> -->
-   <simType>org.accada.hal.impl.sim.BatchSimulator</simType>
+   <simType>org.accada.hal.impl.sim.GraphicSimulator</simType>
+   <!-- <simType>org.accada.hal.impl.sim.BatchSimulator</simType> -->
    <!-- <simType>org.accada.hal.impl.sim.CmdLineSim</simType> -->
    <!-- <simType>org.accada.hal.impl.sim.SimulatorClient</simType> -->
-   <!-- <simTypePropFile>/props/GraphicSimulator.xml</simTypePropFile> -->
-   <simTypePropFile>/props/BatchSimulator.xml</simTypePropFile>
+   <simTypePropFile>/props/GraphicSimulator.xml</simTypePropFile>
+   <!-- <simTypePropFile>/props/BatchSimulator.xml</simTypePropFile> -->
    
    <!-- The EPC transponder models configuration file -->
    <epcTransponderModelsConfig>/props/EPCTransponderModels_default.xml</epcTransponderModelsConfig>
@@ -25,5 +25,4 @@
    <readPoint_2>Shelf2</readPoint_2>
    <readPoint_3>Shelf3</readPoint_3>
    <readPoint_4>Shelf4</readPoint_4>
-
 </properties>
