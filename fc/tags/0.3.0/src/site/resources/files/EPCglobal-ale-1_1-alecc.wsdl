@@ -1,0 +1,1762 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ALECCSERVICE DEFINITIONS -->
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ale="urn:epcglobal:ale:xsd:1"
+                  xmlns:impl="urn:epcglobal:alecc:wsdl:1"
+                  targetNamespace="urn:epcglobal:alecc:wsdl:1">
+  <!-- ALECCSERVICE TYPES -->
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:epcglobal:alecc:wsdl:1">
+      <xsd:import namespace="urn:epcglobal:ale:xsd:1"
+                  schemaLocation="EPCglobal-ale-1_1-alecc.xsd"/>
+      <!-- ALECCSERVICE MESSAGE WRAPPERS -->
+
+      <xsd:element name="Define" type="impl:Define"/>
+      <xsd:complexType name="Define">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+          <xsd:element name="spec" type="ale:CCSpec"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="Undefine" type="impl:Undefine"/>
+      <xsd:complexType name="Undefine">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetCCSpec" type="impl:GetCCSpec"/>
+      <xsd:complexType name="GetCCSpec">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetCCSpecResult" type="ale:CCSpec"/>
+
+      <xsd:element name="GetCCSpecNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetCCSpecNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="Subscribe" type="impl:Subscribe"/>
+      <xsd:complexType name="Subscribe">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+          <xsd:element name="notificationURI" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SubscribeResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="Unsubscribe" type="impl:Unsubscribe"/>
+      <xsd:complexType name="Unsubscribe">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+          <xsd:element name="notificationURI" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UnsubscribeResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="Poll" type="impl:Poll"/>
+      <xsd:complexType name="Poll">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+          <xsd:element name="params" type="ale:CCParameterList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="PollResult" type="ale:CCReports"/>
+
+      <xsd:element name="Immediate" type="impl:Immediate"/>
+      <xsd:complexType name="Immediate">
+        <xsd:sequence>
+          <xsd:element name="spec" type="ale:CCSpec"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ImmediateResult" type="ale:CCReports"/>
+
+      <xsd:element name="GetSubscribers" type="impl:GetSubscribers"/>
+      <xsd:complexType name="GetSubscribers">
+        <xsd:sequence>
+          <xsd:element name="specName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetSubscribersResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="GetStandardVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetStandardVersionResult" type="xsd:string"/>
+
+      <xsd:element name="GetVendorVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetVendorVersionResult" type="xsd:string"/>
+
+      <xsd:element name="DefineEPCCache" type="impl:DefineEPCCache"/>
+      <xsd:complexType name="DefineEPCCache">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+          <xsd:element name="spec" type="ale:EPCCacheSpec"/>
+          <xsd:element name="replenishment" type="ale:EPCPatternList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineEPCCacheResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UndefineEPCCache" type="impl:UndefineEPCCache"/>
+      <xsd:complexType name="UndefineEPCCache">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineEPCCacheResult" type="ale:EPCPatternList"/>
+
+      <xsd:element name="GetEPCCache" type="impl:GetEPCCache"/>
+      <xsd:complexType name="GetEPCCache">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetEPCCacheResult" type="ale:EPCCacheSpec"/>
+
+      <xsd:element name="GetEPCCacheNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetEPCCacheNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="ReplenishEPCCache" type="impl:ReplenishEPCCache"/>
+      <xsd:complexType name="ReplenishEPCCache">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+          <xsd:element name="replenishment" type="ale:EPCPatternList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="ReplenishEPCCacheResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="DepleteEPCCache" type="impl:DepleteEPCCache"/>
+      <xsd:complexType name="DepleteEPCCache">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DepleteEPCCacheResult" type="ale:EPCPatternList"/>
+
+      <xsd:element name="GetEPCCacheContents" type="impl:GetEPCCacheContents"/>
+      <xsd:complexType name="GetEPCCacheContents">
+        <xsd:sequence>
+          <xsd:element name="cacheName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetEPCCacheContentsResult" type="ale:EPCPatternList"/>
+
+      <xsd:element name="DefineAssocTable" type="impl:DefineAssocTable"/>
+      <xsd:complexType name="DefineAssocTable">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="spec" type="ale:AssocTableSpec"/>
+          <xsd:element name="entries" type="ale:AssocTableEntryList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineAssocTableResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UndefineAssocTable" type="impl:UndefineAssocTable"/>
+      <xsd:complexType name="UndefineAssocTable">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineAssocTableResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetAssocTableNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetAssocTableNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="GetAssocTable" type="impl:GetAssocTable"/>
+      <xsd:complexType name="GetAssocTable">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetAssocTableResult" type="ale:AssocTableSpec"/>
+
+      <xsd:element name="PutAssocTableEntries" type="impl:PutAssocTableEntries"/>
+      <xsd:complexType name="PutAssocTableEntries">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="entries" type="ale:AssocTableEntryList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="PutAssocTableEntriesResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetAssocTableValue" type="impl:GetAssocTableValue"/>
+      <xsd:complexType name="GetAssocTableValue">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="epc" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetAssocTableValueResult" type="xsd:string"/>
+
+      <xsd:element name="GetAssocTableEntries" type="impl:GetAssocTableEntries"/>
+      <xsd:complexType name="GetAssocTableEntries">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="patList" type="ale:EPCPatternList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetAssocTableEntriesResult" type="ale:AssocTableEntryList"/>
+
+      <xsd:element name="RemoveAssocTableEntry" type="impl:RemoveAssocTableEntry"/>
+      <xsd:complexType name="RemoveAssocTableEntry">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="epc" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="RemoveAssocTableEntryResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="RemoveAssocTableEntries" type="impl:RemoveAssocTableEntries"/>
+      <xsd:complexType name="RemoveAssocTableEntries">
+        <xsd:sequence>
+          <xsd:element name="tableName" type="xsd:string"/>
+          <xsd:element name="patList" type="ale:EPCPatternList"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="RemoveAssocTableEntriesResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="DefineRNG" type="impl:DefineRNG"/>
+      <xsd:complexType name="DefineRNG">
+        <xsd:sequence>
+          <xsd:element name="rngName" type="xsd:string"/>
+          <xsd:element name="rngSpec" type="ale:RNGSpec"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineRNGResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UndefineRNG" type="impl:UndefineRNG"/>
+      <xsd:complexType name="UndefineRNG">
+        <xsd:sequence>
+          <xsd:element name="rngName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineRNGResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetRNGNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetRNGNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="GetRNG" type="impl:GetRNG"/>
+      <xsd:complexType name="GetRNG">
+        <xsd:sequence>
+          <xsd:element name="rngName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetRNGResult" type="ale:RNGSpec"/>
+
+      <xsd:element name="ALEException" type="impl:ALEException"/>
+      <xsd:complexType name="ALEException">
+        <xsd:sequence>
+          <xsd:element name="reason" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="SecurityException" type="impl:SecurityException"/>
+      <xsd:complexType name="SecurityException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicateNameException" type="impl:DuplicateNameException"/>
+      <xsd:complexType name="DuplicateNameException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="CCSpecValidationException"
+                   type="impl:CCSpecValidationException"/>
+      <xsd:complexType name="CCSpecValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="InvalidURIException" type="impl:InvalidURIException"/>
+      <xsd:complexType name="InvalidURIException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchNameException" type="impl:NoSuchNameException"/>
+      <xsd:complexType name="NoSuchNameException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchSubscriberException"
+                   type="impl:NoSuchSubscriberException"/>
+      <xsd:complexType name="NoSuchSubscriberException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicateSubscriptionException"
+                   type="impl:DuplicateSubscriptionException"/>
+      <xsd:complexType name="DuplicateSubscriptionException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ParameterException" type="impl:ParameterException"/>
+      <xsd:complexType name="ParameterException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ParameterForbiddenException"
+                   type="impl:ParameterForbiddenException"/>
+      <xsd:complexType name="ParameterForbiddenException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ImplementationException" type="impl:ImplementationException"/>
+      <xsd:complexType name="ImplementationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException">
+            <xsd:sequence>
+              <xsd:element name="severity" type="impl:ImplementationExceptionSeverity"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="EPCCacheSpecValidationException"
+                   type="impl:EPCCacheSpecValidationException"/>
+      <xsd:complexType name="EPCCacheSpecValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="InvalidPatternException" type="impl:InvalidPatternException"/>
+      <xsd:complexType name="InvalidPatternException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="InUseException" type="impl:InUseException"/>
+      <xsd:complexType name="InUseException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="AssocTableValidationException"
+                   type="impl:AssocTableValidationException"/>
+      <xsd:complexType name="AssocTableValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="InvalidEPCException" type="impl:InvalidEPCException"/>
+      <xsd:complexType name="InvalidEPCException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="InvalidAssocTableEntryException"
+                   type="impl:InvalidAssocTableEntryException"/>
+      <xsd:complexType name="InvalidAssocTableEntryException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="RNGValidationException" type="impl:RNGValidationException"/>
+      <xsd:complexType name="RNGValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element name="string" type="xsd:string" minOccurs="0"
+                       maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- The ImplementationExceptionSeverity type is an enumerated type.
+           The following strings are legal values for this type:
+             ERROR
+             SEVERE
+            -->
+      <xsd:simpleType name="ImplementationExceptionSeverity">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+
+      <xsd:complexType name="EmptyParms"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!-- ALECCSERVICE MESSAGES -->
+
+  <wsdl:message name="defineRequest">
+    <wsdl:part name="parms" element="impl:Define"/>
+  </wsdl:message>
+  <wsdl:message name="defineResponse">
+    <wsdl:part name="defineReturn" element="impl:DefineResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineRequest">
+    <wsdl:part name="parms" element="impl:Undefine"/>
+  </wsdl:message>
+  <wsdl:message name="undefineResponse">
+    <wsdl:part name="undefineReturn" element="impl:UndefineResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getCCSpecRequest">
+    <wsdl:part name="parms" element="impl:GetCCSpec"/>
+  </wsdl:message>
+  <wsdl:message name="getCCSpecResponse">
+    <wsdl:part name="getCCSpecReturn" element="impl:GetCCSpecResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getCCSpecNamesRequest">
+    <wsdl:part name="parms" element="impl:GetCCSpecNames"/>
+  </wsdl:message>
+  <wsdl:message name="getCCSpecNamesResponse">
+    <wsdl:part name="getCCSpecNamesReturn" element="impl:GetCCSpecNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="subscribeRequest">
+    <wsdl:part name="parms" element="impl:Subscribe"/>
+  </wsdl:message>
+  <wsdl:message name="subscribeResponse">
+    <wsdl:part name="subscribeReturn" element="impl:SubscribeResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="unsubscribeRequest">
+    <wsdl:part name="parms" element="impl:Unsubscribe"/>
+  </wsdl:message>
+  <wsdl:message name="unsubscribeResponse">
+    <wsdl:part name="unsubscribeReturn" element="impl:UnsubscribeResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="pollRequest">
+    <wsdl:part name="parms" element="impl:Poll"/>
+  </wsdl:message>
+  <wsdl:message name="pollResponse">
+    <wsdl:part name="pollReturn" element="impl:PollResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="immediateRequest">
+    <wsdl:part name="parms" element="impl:Immediate"/>
+  </wsdl:message>
+  <wsdl:message name="immediateResponse">
+    <wsdl:part name="immediateReturn" element="impl:ImmediateResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getSubscribersRequest">
+    <wsdl:part name="parms" element="impl:GetSubscribers"/>
+  </wsdl:message>
+  <wsdl:message name="getSubscribersResponse">
+    <wsdl:part name="getSubscribersReturn" element="impl:GetSubscribersResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getStandardVersionRequest">
+    <wsdl:part name="parms" element="impl:GetStandardVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getStandardVersionResponse">
+    <wsdl:part name="getStandardVersionReturn" element="impl:GetStandardVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getVendorVersionRequest">
+    <wsdl:part name="parms" element="impl:GetVendorVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getVendorVersionResponse">
+    <wsdl:part name="getVendorVersionReturn" element="impl:GetVendorVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="defineEPCCacheRequest">
+    <wsdl:part name="parms" element="impl:DefineEPCCache"/>
+  </wsdl:message>
+  <wsdl:message name="defineEPCCacheResponse">
+    <wsdl:part name="defineEPCCacheReturn" element="impl:DefineEPCCacheResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineEPCCacheRequest">
+    <wsdl:part name="parms" element="impl:UndefineEPCCache"/>
+  </wsdl:message>
+  <wsdl:message name="undefineEPCCacheResponse">
+    <wsdl:part name="undefineEPCCacheReturn" element="impl:UndefineEPCCacheResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getEPCCacheRequest">
+    <wsdl:part name="parms" element="impl:GetEPCCache"/>
+  </wsdl:message>
+  <wsdl:message name="getEPCCacheResponse">
+    <wsdl:part name="getEPCCacheReturn" element="impl:GetEPCCacheResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getEPCCacheNamesRequest">
+    <wsdl:part name="parms" element="impl:GetEPCCacheNames"/>
+  </wsdl:message>
+  <wsdl:message name="getEPCCacheNamesResponse">
+    <wsdl:part name="getEPCCacheNamesReturn" element="impl:GetEPCCacheNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="replenishEPCCacheRequest">
+    <wsdl:part name="parms" element="impl:ReplenishEPCCache"/>
+  </wsdl:message>
+  <wsdl:message name="replenishEPCCacheResponse">
+    <wsdl:part name="replenishEPCCacheReturn" element="impl:ReplenishEPCCacheResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="depleteEPCCacheRequest">
+    <wsdl:part name="parms" element="impl:DepleteEPCCache"/>
+  </wsdl:message>
+  <wsdl:message name="depleteEPCCacheResponse">
+    <wsdl:part name="depleteEPCCacheReturn" element="impl:DepleteEPCCacheResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getEPCCacheContentsRequest">
+    <wsdl:part name="parms" element="impl:GetEPCCacheContents"/>
+  </wsdl:message>
+  <wsdl:message name="getEPCCacheContentsResponse">
+    <wsdl:part name="getEPCCacheContentsReturn"
+               element="impl:GetEPCCacheContentsResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="defineAssocTableRequest">
+    <wsdl:part name="parms" element="impl:DefineAssocTable"/>
+  </wsdl:message>
+  <wsdl:message name="defineAssocTableResponse">
+    <wsdl:part name="defineAssocTableReturn" element="impl:DefineAssocTableResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineAssocTableRequest">
+    <wsdl:part name="parms" element="impl:UndefineAssocTable"/>
+  </wsdl:message>
+  <wsdl:message name="undefineAssocTableResponse">
+    <wsdl:part name="undefineAssocTableReturn" element="impl:UndefineAssocTableResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getAssocTableNamesRequest">
+    <wsdl:part name="parms" element="impl:GetAssocTableNames"/>
+  </wsdl:message>
+  <wsdl:message name="getAssocTableNamesResponse">
+    <wsdl:part name="getAssocTableNamesReturn" element="impl:GetAssocTableNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getAssocTableRequest">
+    <wsdl:part name="parms" element="impl:GetAssocTable"/>
+  </wsdl:message>
+  <wsdl:message name="getAssocTableResponse">
+    <wsdl:part name="getAssocTableReturn" element="impl:GetAssocTableResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="putAssocTableEntriesRequest">
+    <wsdl:part name="parms" element="impl:PutAssocTableEntries"/>
+  </wsdl:message>
+  <wsdl:message name="putAssocTableEntriesResponse">
+    <wsdl:part name="putAssocTableEntriesReturn"
+               element="impl:PutAssocTableEntriesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getAssocTableValueRequest">
+    <wsdl:part name="parms" element="impl:GetAssocTableValue"/>
+  </wsdl:message>
+  <wsdl:message name="getAssocTableValueResponse">
+    <wsdl:part name="getAssocTableValueReturn" element="impl:GetAssocTableValueResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getAssocTableEntriesRequest">
+    <wsdl:part name="parms" element="impl:GetAssocTableEntries"/>
+  </wsdl:message>
+  <wsdl:message name="getAssocTableEntriesResponse">
+    <wsdl:part name="getAssocTableEntriesReturn"
+               element="impl:GetAssocTableEntriesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="removeAssocTableEntryRequest">
+    <wsdl:part name="parms" element="impl:RemoveAssocTableEntry"/>
+  </wsdl:message>
+  <wsdl:message name="removeAssocTableEntryResponse">
+    <wsdl:part name="removeAssocTableEntryReturn"
+               element="impl:RemoveAssocTableEntryResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="removeAssocTableEntriesRequest">
+    <wsdl:part name="parms" element="impl:RemoveAssocTableEntries"/>
+  </wsdl:message>
+  <wsdl:message name="removeAssocTableEntriesResponse">
+    <wsdl:part name="removeAssocTableEntriesReturn"
+               element="impl:RemoveAssocTableEntriesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="defineRNGRequest">
+    <wsdl:part name="parms" element="impl:DefineRNG"/>
+  </wsdl:message>
+  <wsdl:message name="defineRNGResponse">
+    <wsdl:part name="defineRNGReturn" element="impl:DefineRNGResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineRNGRequest">
+    <wsdl:part name="parms" element="impl:UndefineRNG"/>
+  </wsdl:message>
+  <wsdl:message name="undefineRNGResponse">
+    <wsdl:part name="undefineRNGReturn" element="impl:UndefineRNGResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getRNGNamesRequest">
+    <wsdl:part name="parms" element="impl:GetRNGNames"/>
+  </wsdl:message>
+  <wsdl:message name="getRNGNamesResponse">
+    <wsdl:part name="getRNGNamesReturn" element="impl:GetRNGNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getRNGRequest">
+    <wsdl:part name="parms" element="impl:GetRNG"/>
+  </wsdl:message>
+  <wsdl:message name="getRNGResponse">
+    <wsdl:part name="getRNGReturn" element="impl:GetRNGResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="SecurityExceptionResponse">
+    <wsdl:part name="fault" element="impl:SecurityException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateNameExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicateNameException"/>
+  </wsdl:message>
+
+  <wsdl:message name="CCSpecValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:CCSpecValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="InvalidURIExceptionResponse">
+    <wsdl:part name="fault" element="impl:InvalidURIException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchNameExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchNameException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchSubscriberExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchSubscriberException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateSubscriptionExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicateSubscriptionException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ParameterExceptionResponse">
+    <wsdl:part name="fault" element="impl:ParameterException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ParameterForbiddenExceptionResponse">
+    <wsdl:part name="fault" element="impl:ParameterForbiddenException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ImplementationExceptionResponse">
+    <wsdl:part name="fault" element="impl:ImplementationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="EPCCacheSpecValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:EPCCacheSpecValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="InvalidPatternExceptionResponse">
+    <wsdl:part name="fault" element="impl:InvalidPatternException"/>
+  </wsdl:message>
+
+  <wsdl:message name="InUseExceptionResponse">
+    <wsdl:part name="fault" element="impl:InUseException"/>
+  </wsdl:message>
+
+  <wsdl:message name="AssocTableValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:AssocTableValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="InvalidEPCExceptionResponse">
+    <wsdl:part name="fault" element="impl:InvalidEPCException"/>
+  </wsdl:message>
+
+  <wsdl:message name="InvalidAssocTableEntryExceptionResponse">
+    <wsdl:part name="fault" element="impl:InvalidAssocTableEntryException"/>
+  </wsdl:message>
+
+  <wsdl:message name="RNGValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:RNGValidationException"/>
+  </wsdl:message>
+  <!-- ALECCSERVICE PORTTYPE -->
+
+  <wsdl:portType name="ALECCServicePortType">
+
+    <wsdl:operation name="define">
+      <wsdl:input message="impl:defineRequest" name="defineRequest"/>
+      <wsdl:output message="impl:defineResponse" name="defineResponse"/>
+      <wsdl:fault message="impl:DuplicateNameExceptionResponse"
+                  name="DuplicateNameExceptionFault"/>
+      <wsdl:fault message="impl:CCSpecValidationExceptionResponse"
+                  name="CCSpecValidationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefine">
+      <wsdl:input message="impl:undefineRequest" name="undefineRequest"/>
+      <wsdl:output message="impl:undefineResponse" name="undefineResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getCCSpec">
+      <wsdl:input message="impl:getCCSpecRequest" name="getCCSpecRequest"/>
+      <wsdl:output message="impl:getCCSpecResponse" name="getCCSpecResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getCCSpecNames">
+      <wsdl:input message="impl:getCCSpecNamesRequest" name="getCCSpecNamesRequest"/>
+      <wsdl:output message="impl:getCCSpecNamesResponse" name="getCCSpecNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="subscribe">
+      <wsdl:input message="impl:subscribeRequest" name="subscribeRequest"/>
+      <wsdl:output message="impl:subscribeResponse" name="subscribeResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidURIExceptionResponse"
+                  name="InvalidURIExceptionFault"/>
+      <wsdl:fault message="impl:DuplicateSubscriptionExceptionResponse"
+                  name="DuplicateSubscriptionExceptionFault"/>
+      <wsdl:fault message="impl:ParameterForbiddenExceptionResponse"
+                  name="ParameterForbiddenExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="unsubscribe">
+      <wsdl:input message="impl:unsubscribeRequest" name="unsubscribeRequest"/>
+      <wsdl:output message="impl:unsubscribeResponse" name="unsubscribeResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchSubscriberExceptionResponse"
+                  name="NoSuchSubscriberExceptionFault"/>
+      <wsdl:fault message="impl:InvalidURIExceptionResponse"
+                  name="InvalidURIExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="poll">
+      <wsdl:input message="impl:pollRequest" name="pollRequest"/>
+      <wsdl:output message="impl:pollResponse" name="pollResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:ParameterExceptionResponse"
+                  name="ParameterExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="immediate">
+      <wsdl:input message="impl:immediateRequest" name="immediateRequest"/>
+      <wsdl:output message="impl:immediateResponse" name="immediateResponse"/>
+      <wsdl:fault message="impl:CCSpecValidationExceptionResponse"
+                  name="CCSpecValidationExceptionFault"/>
+      <wsdl:fault message="impl:ParameterForbiddenExceptionResponse"
+                  name="ParameterForbiddenExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getSubscribers">
+      <wsdl:input message="impl:getSubscribersRequest" name="getSubscribersRequest"/>
+      <wsdl:output message="impl:getSubscribersResponse" name="getSubscribersResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdl:input message="impl:getStandardVersionRequest"
+                  name="getStandardVersionRequest"/>
+      <wsdl:output message="impl:getStandardVersionResponse"
+                   name="getStandardVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdl:input message="impl:getVendorVersionRequest" name="getVendorVersionRequest"/>
+      <wsdl:output message="impl:getVendorVersionResponse"
+                   name="getVendorVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineEPCCache">
+      <wsdl:input message="impl:defineEPCCacheRequest" name="defineEPCCacheRequest"/>
+      <wsdl:output message="impl:defineEPCCacheResponse" name="defineEPCCacheResponse"/>
+      <wsdl:fault message="impl:DuplicateNameExceptionResponse"
+                  name="DuplicateNameExceptionFault"/>
+      <wsdl:fault message="impl:EPCCacheSpecValidationExceptionResponse"
+                  name="EPCCacheSpecValidationExceptionFault"/>
+      <wsdl:fault message="impl:InvalidPatternExceptionResponse"
+                  name="InvalidPatternExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineEPCCache">
+      <wsdl:input message="impl:undefineEPCCacheRequest" name="undefineEPCCacheRequest"/>
+      <wsdl:output message="impl:undefineEPCCacheResponse"
+                   name="undefineEPCCacheResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InUseExceptionResponse" name="InUseExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCache">
+      <wsdl:input message="impl:getEPCCacheRequest" name="getEPCCacheRequest"/>
+      <wsdl:output message="impl:getEPCCacheResponse" name="getEPCCacheResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCacheNames">
+      <wsdl:input message="impl:getEPCCacheNamesRequest" name="getEPCCacheNamesRequest"/>
+      <wsdl:output message="impl:getEPCCacheNamesResponse"
+                   name="getEPCCacheNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="replenishEPCCache">
+      <wsdl:input message="impl:replenishEPCCacheRequest"
+                  name="replenishEPCCacheRequest"/>
+      <wsdl:output message="impl:replenishEPCCacheResponse"
+                   name="replenishEPCCacheResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidPatternExceptionResponse"
+                  name="InvalidPatternExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="depleteEPCCache">
+      <wsdl:input message="impl:depleteEPCCacheRequest" name="depleteEPCCacheRequest"/>
+      <wsdl:output message="impl:depleteEPCCacheResponse"
+                   name="depleteEPCCacheResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCacheContents">
+      <wsdl:input message="impl:getEPCCacheContentsRequest"
+                  name="getEPCCacheContentsRequest"/>
+      <wsdl:output message="impl:getEPCCacheContentsResponse"
+                   name="getEPCCacheContentsResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineAssocTable">
+      <wsdl:input message="impl:defineAssocTableRequest" name="defineAssocTableRequest"/>
+      <wsdl:output message="impl:defineAssocTableResponse"
+                   name="defineAssocTableResponse"/>
+      <wsdl:fault message="impl:DuplicateNameExceptionResponse"
+                  name="DuplicateNameExceptionFault"/>
+      <wsdl:fault message="impl:AssocTableValidationExceptionResponse"
+                  name="AssocTableValidationExceptionFault"/>
+      <wsdl:fault message="impl:InvalidAssocTableEntryExceptionResponse"
+                  name="InvalidAssocTableEntryExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineAssocTable">
+      <wsdl:input message="impl:undefineAssocTableRequest"
+                  name="undefineAssocTableRequest"/>
+      <wsdl:output message="impl:undefineAssocTableResponse"
+                   name="undefineAssocTableResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InUseExceptionResponse" name="InUseExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableNames">
+      <wsdl:input message="impl:getAssocTableNamesRequest"
+                  name="getAssocTableNamesRequest"/>
+      <wsdl:output message="impl:getAssocTableNamesResponse"
+                   name="getAssocTableNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTable">
+      <wsdl:input message="impl:getAssocTableRequest" name="getAssocTableRequest"/>
+      <wsdl:output message="impl:getAssocTableResponse" name="getAssocTableResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="putAssocTableEntries">
+      <wsdl:input message="impl:putAssocTableEntriesRequest"
+                  name="putAssocTableEntriesRequest"/>
+      <wsdl:output message="impl:putAssocTableEntriesResponse"
+                   name="putAssocTableEntriesResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidAssocTableEntryExceptionResponse"
+                  name="InvalidAssocTableEntryExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableValue">
+      <wsdl:input message="impl:getAssocTableValueRequest"
+                  name="getAssocTableValueRequest"/>
+      <wsdl:output message="impl:getAssocTableValueResponse"
+                   name="getAssocTableValueResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidEPCExceptionResponse"
+                  name="InvalidEPCExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableEntries">
+      <wsdl:input message="impl:getAssocTableEntriesRequest"
+                  name="getAssocTableEntriesRequest"/>
+      <wsdl:output message="impl:getAssocTableEntriesResponse"
+                   name="getAssocTableEntriesResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidPatternExceptionResponse"
+                  name="InvalidPatternExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeAssocTableEntry">
+      <wsdl:input message="impl:removeAssocTableEntryRequest"
+                  name="removeAssocTableEntryRequest"/>
+      <wsdl:output message="impl:removeAssocTableEntryResponse"
+                   name="removeAssocTableEntryResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidEPCExceptionResponse"
+                  name="InvalidEPCExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeAssocTableEntries">
+      <wsdl:input message="impl:removeAssocTableEntriesRequest"
+                  name="removeAssocTableEntriesRequest"/>
+      <wsdl:output message="impl:removeAssocTableEntriesResponse"
+                   name="removeAssocTableEntriesResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InvalidPatternExceptionResponse"
+                  name="InvalidPatternExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineRNG">
+      <wsdl:input message="impl:defineRNGRequest" name="defineRNGRequest"/>
+      <wsdl:output message="impl:defineRNGResponse" name="defineRNGResponse"/>
+      <wsdl:fault message="impl:DuplicateNameExceptionResponse"
+                  name="DuplicateNameExceptionFault"/>
+      <wsdl:fault message="impl:RNGValidationExceptionResponse"
+                  name="RNGValidationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineRNG">
+      <wsdl:input message="impl:undefineRNGRequest" name="undefineRNGRequest"/>
+      <wsdl:output message="impl:undefineRNGResponse" name="undefineRNGResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:InUseExceptionResponse" name="InUseExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRNGNames">
+      <wsdl:input message="impl:getRNGNamesRequest" name="getRNGNamesRequest"/>
+      <wsdl:output message="impl:getRNGNamesResponse" name="getRNGNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRNG">
+      <wsdl:input message="impl:getRNGRequest" name="getRNGRequest"/>
+      <wsdl:output message="impl:getRNGResponse" name="getRNGResponse"/>
+      <wsdl:fault message="impl:NoSuchNameExceptionResponse"
+                  name="NoSuchNameExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- ALECCSERVICE BINDING -->
+
+  <wsdl:binding name="ALECCServiceBinding" type="impl:ALECCServicePortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="define">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DuplicateNameExceptionFault">
+        <wsdlsoap:fault name="DuplicateNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CCSpecValidationExceptionFault">
+        <wsdlsoap:fault name="CCSpecValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefine">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getCCSpec">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getCCSpecRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCCSpecResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getCCSpecNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getCCSpecNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCCSpecNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="subscribe">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="subscribeRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="subscribeResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidURIExceptionFault">
+        <wsdlsoap:fault name="InvalidURIExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="DuplicateSubscriptionExceptionFault">
+        <wsdlsoap:fault name="DuplicateSubscriptionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ParameterForbiddenExceptionFault">
+        <wsdlsoap:fault name="ParameterForbiddenExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="unsubscribe">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="unsubscribeRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="unsubscribeResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchSubscriberExceptionFault">
+        <wsdlsoap:fault name="NoSuchSubscriberExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidURIExceptionFault">
+        <wsdlsoap:fault name="InvalidURIExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="poll">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="pollRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pollResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ParameterExceptionFault">
+        <wsdlsoap:fault name="ParameterExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="immediate">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="immediateRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="immediateResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CCSpecValidationExceptionFault">
+        <wsdlsoap:fault name="CCSpecValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ParameterForbiddenExceptionFault">
+        <wsdlsoap:fault name="ParameterForbiddenExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getSubscribers">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getSubscribersRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubscribersResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getStandardVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStandardVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getVendorVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVendorVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineEPCCache">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineEPCCacheRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineEPCCacheResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DuplicateNameExceptionFault">
+        <wsdlsoap:fault name="DuplicateNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="EPCCacheSpecValidationExceptionFault">
+        <wsdlsoap:fault name="EPCCacheSpecValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidPatternExceptionFault">
+        <wsdlsoap:fault name="InvalidPatternExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineEPCCache">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineEPCCacheRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineEPCCacheResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InUseExceptionFault">
+        <wsdlsoap:fault name="InUseExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCache">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getEPCCacheRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEPCCacheResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCacheNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getEPCCacheNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEPCCacheNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="replenishEPCCache">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="replenishEPCCacheRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="replenishEPCCacheResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidPatternExceptionFault">
+        <wsdlsoap:fault name="InvalidPatternExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="depleteEPCCache">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="depleteEPCCacheRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="depleteEPCCacheResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getEPCCacheContents">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getEPCCacheContentsRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEPCCacheContentsResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineAssocTable">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineAssocTableRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineAssocTableResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DuplicateNameExceptionFault">
+        <wsdlsoap:fault name="DuplicateNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="AssocTableValidationExceptionFault">
+        <wsdlsoap:fault name="AssocTableValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidAssocTableEntryExceptionFault">
+        <wsdlsoap:fault name="InvalidAssocTableEntryExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineAssocTable">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineAssocTableRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineAssocTableResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InUseExceptionFault">
+        <wsdlsoap:fault name="InUseExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getAssocTableNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAssocTableNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTable">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getAssocTableRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAssocTableResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="putAssocTableEntries">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="putAssocTableEntriesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="putAssocTableEntriesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidAssocTableEntryExceptionFault">
+        <wsdlsoap:fault name="InvalidAssocTableEntryExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableValue">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getAssocTableValueRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAssocTableValueResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidEPCExceptionFault">
+        <wsdlsoap:fault name="InvalidEPCExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getAssocTableEntries">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getAssocTableEntriesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAssocTableEntriesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidPatternExceptionFault">
+        <wsdlsoap:fault name="InvalidPatternExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeAssocTableEntry">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="removeAssocTableEntryRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeAssocTableEntryResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidEPCExceptionFault">
+        <wsdlsoap:fault name="InvalidEPCExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeAssocTableEntries">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="removeAssocTableEntriesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeAssocTableEntriesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidPatternExceptionFault">
+        <wsdlsoap:fault name="InvalidPatternExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineRNG">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineRNGRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineRNGResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DuplicateNameExceptionFault">
+        <wsdlsoap:fault name="DuplicateNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="RNGValidationExceptionFault">
+        <wsdlsoap:fault name="RNGValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineRNG">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineRNGRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineRNGResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InUseExceptionFault">
+        <wsdlsoap:fault name="InUseExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRNGNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getRNGNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRNGNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRNG">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getRNGRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRNGResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchNameExceptionFault">
+        <wsdlsoap:fault name="NoSuchNameExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- ALECCSERVICE -->
+  <wsdl:service name="ALECCService">
+    <wsdl:port binding="impl:ALECCServiceBinding" name="ALECCServicePort">
+      <!-- The value of the location attribute below is an example only;
+           Implementations are free to choose any appropriate URL. -->
+      <wsdlsoap:address location="http://localhost:8080/services/ALECCService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

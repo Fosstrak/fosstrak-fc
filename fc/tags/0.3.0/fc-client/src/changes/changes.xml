@@ -1,0 +1,24 @@
+<document>
+    <properties>
+        <title>Changes fc-client</title>
+    </properties>
+    <body>
+        <release version="0.3.0" date="2008-03-??"
+            description="Feature release: ALE 1.1">
+            <!-- general changes -->
+            <action dev="sawielan" type="add">
+               fc-client now supports the full logical reader api.
+            </action>
+            <action dev="sawielan" type="update">
+               adapted fc-client to the new fc-commons.
+            </action>
+	    <action dev="sawielan" type="add">
+               modified documentation according to the schema in epcis.
+            </action>
+        </release>
+        <release version="0.2.0" date="2007-04-27"
+            description="Initial release">
+            <action type="add">Initial code release.</action>
+        </release>
+    </body>
+</document>

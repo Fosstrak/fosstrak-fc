@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Properties file for BatchSimulator -->
+<properties>
+	<batchfile>/props/batchfile.txt</batchfile>
+	<iterations>3</iterations>
+</properties>
