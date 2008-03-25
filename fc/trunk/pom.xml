@@ -80,7 +80,21 @@
             <source>1.5</source>
             <target>1.5</target>
           </configuration>
+	</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <!-- Lock to this version in order to prevent generating corrupted
+               menu structures for sub-modules when running site:site from the
+               parent module. See http://jira.codehaus.org/browse/MSITE-270 for
+               details on this issue. -->
+          <version>2.0-beta-5</version>
+          <configuration>
+            <locales>en</locales>
+            <publishDate position="left" format="yyyy-MM-dd hh:mm:ss" />
+          </configuration>
         </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
@@ -137,7 +151,6 @@
 	    </snapshots>
     </repository>
   </repositories>
-
 
   <!-- =========================================================== -->
   <!-- Infrastructure                                              -->
