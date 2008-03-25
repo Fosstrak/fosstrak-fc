@@ -177,8 +177,7 @@ public class ALEClient extends JFrame {
         factory.setServiceClass(ALEServicePortType.class);
         String address = props.getProperty("EndPoint");
         if (address == null) {
-            System.out.println("using default address " + address);
-        	address = "http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService";
+        	 throw new IOException("no endpoint defined!");
         }
         factory.setAddress(address);
         aleProxy = (ALEServicePortType) factory.create();
