@@ -158,9 +158,9 @@
 
   <scm>
     <!-- keep empty tags here to avoid release:prepare crashes -->
-    <connection>/tags/0.3.0</connection>
-    <developerConnection>scm:svn:https://svn.accada.org/repos/fc/tags/0.3.0</developerConnection>
-    <url>/tags/0.3.0</url>
+    <connection></connection>
+    <developerConnection>scm:svn:https://svn.accada.org/repos/fc</developerConnection>
+    <url></url>
   </scm>
   <distributionManagement>
     <repository>

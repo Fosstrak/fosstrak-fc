@@ -7,7 +7,7 @@
 
   <groupId>org.accada.fc</groupId>
   <artifactId>fc-webclient</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.2-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
     <groupId>org.accada.fc</groupId>
