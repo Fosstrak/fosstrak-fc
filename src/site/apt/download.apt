@@ -20,6 +20,8 @@ Download
 *--------+----------+
  Filtering and Collection Server 0.3.0 with dependencies (tar.gz) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.3.0/fc-server-0.3.0-bin-with-dependencies.tar.gz}fc-server-0.3.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
+ Filtering and Collection Server 0.3.0 with dependencies (war) | {{{http://maven-repository.accada.org/releases/org/accada/fc/fc-server/0.3.0/fc-server-0.3.0.war}fc-server-0.3.0.war}}
+*--------+----------+
 
 
 * Accada Filtering and Collection Testclient (Swing)
@@ -73,4 +75,4 @@ Download
 
 * Installation and Usage Instructions
 
-  Please consult the {{{docs/user-guide.html} User Guide}} for installation and usage instructions.
+  Please consult the {{{docs/user-index.html} User Guide}} for installation and usage instructions.
