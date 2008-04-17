@@ -84,7 +84,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 /**
  * This class implements a graphical user interface for the application level events client.
  * The client send all commands as SOAP messages to the ale server. The configuration
- * of this class is described in the file ALEClient.properties. The most important parameter
+ * of this class is described in the file ALELRClient.properties. The most important parameter
  * is the parameter endpoint, which specifies the address of the ale webservice which runs
  * on the server. 
  * 
@@ -189,6 +189,7 @@ public class ALELRClient extends JFrame {
 	private void initializeGUI() {
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocation(getProperty("WindowWidth"), 0);
 		this.setSize(getProperty("WindowWidth"), getProperty("WindowHeight"));
 		this.setTitle(guiText.getString("ApplicationTitle"));
 		this.setJMenuBar(createMenuBar());
