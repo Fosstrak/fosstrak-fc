@@ -1,4 +1,4 @@
-ApplicationTitle = ALELR Client
+ApplicationTitle = ALE Client - Logical Reader API
 
 FileMenu = File
 QuitMenuItem = Quit
