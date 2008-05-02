@@ -10,7 +10,7 @@ Variant 1: Tomcat is started through the Service Manager (System tray)<br/>
 	<li>Start the Service Manager</li>
 	<li>Select "Configure...".</li>
 	<li>Select tab "Log On".</li>
-	<li>Choose "This account" and modify the username and the password to the current user.</li>
+	<li>Enable the checkbox "Allow service to interact with desktop".</li>
 	<li>Start Apache Tomcat.</li>
 </ol>
 Variant 2: Tomcat is started through the command line<br/>
@@ -18,10 +18,14 @@ Variant 2: Tomcat is started through the command line<br/>
 	<li>In the Windows system settings select the "Services" within "Administrative Control".</li>
 	<li>Select Apache Tomcat</li>
 	<li>Select tab "Log On".</li>
-	<li>Choose "This account" and modify the username and the password to the current user.</li>
+	<li>Enable the checkbox "Allow service to interact with desktop".</li>
 	<li>Start Apache Tomcat.</li>
 </ol>
 </answer>
+</faq>
+<faq>
+<question>In Windows Vista the graphical HAL Simulator apears on a different desktop (with black background).</question>
+<answer>This is a caused by the security profile. Simply run tomcat as Administrator. (right mouse click on the executable and select "run as Administrator").</answer>
 </faq>
 <faq>
 <question>Is this a reference implementation of the EPCglobal Reader Protocol Version 1.1?</question>
