@@ -199,6 +199,7 @@
         <!-- this plugin generates the java stubs (POJOs) from the WSDL file -->
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-codegen-plugin</artifactId>
+	<version>2.0.4-incubator</version>
         <executions>
 	  
           <execution>
@@ -221,7 +222,6 @@
                   </extraargs>
                 </wsdlOption>
 
-	      
 		<wsdlOption>
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-aleac.wsdl</wsdl>
                   <extraargs>
