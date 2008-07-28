@@ -21,10 +21,10 @@ Users guide - Installation and configuration
 * {Overview}
 
 	In order to use the Filtering and Collection, you need a running 
-	copy of the Accada fc-server. There are basically two ways how 
+	copy of the Fosstrak fc-server. There are basically two ways how 
 	you can get one:
 	 
-	* You obtain a checkout from the accada repository. (Where 
+	* You obtain a checkout from the fosstrak repository. (Where 
 	you need to compile the service on your own)
 	
 	* You can download a running copy from the website. If you 
@@ -34,7 +34,7 @@ Users guide - Installation and configuration
 
 * {Compilation}
 	
-	You need a copy of the fc-server sources from the accada 
+	You need a copy of the fc-server sources from the fosstrak 
 	svn repository.
 	To compile the sources run the following command in a shell.
 	
@@ -99,7 +99,7 @@ example: /var/lib/tomcat/webapps/fc-server-0.3.0-SNAPSHOT/WEB-INF/classes
 +-------------------------------------------------------------------+
 		
 	* InputGenerators.properties: This propertie-file is the main 
-		config for the Accada ALE. You will find it in the 
+		config for the Fosstrak ALE. You will find it in the 
 		Folder WEB-INF/classes.
 		
 		It allows only one parameter to be changed, namely 
@@ -127,7 +127,7 @@ readerAPI = /LogicalReaders.xml
 		
 	[]
 	
-	After a restart of the webserver the Accada Filtering and Collection is 
+	After a restart of the webserver the Fosstrak Filtering and Collection is 
 	available and ready to accept clients.
 	
 	

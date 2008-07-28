@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.util;
+package org.fosstrak.ale.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,14 +31,14 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.accada.ale.wsdl.alelr.epcglobal.AddReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.RemoveReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.SetProperties;
-import org.accada.ale.wsdl.alelr.epcglobal.SetReaders;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.LRProperty;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -62,7 +62,7 @@ public class DeserializerUtil {
 	public static ECSpec deserializeECSpec(InputStream inputStream) throws Exception {
 		ECSpec spec = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.xsd.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -98,7 +98,7 @@ public class DeserializerUtil {
 	public static LRSpec deserializeLRSpec(InputStream inputStream) throws Exception {
 		LRSpec spec = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -135,7 +135,7 @@ public class DeserializerUtil {
 		// FIXME : throws Exception
 		LRProperty prop = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -159,7 +159,7 @@ public class DeserializerUtil {
 	public static SetProperties deserializeSetProperties(String pathName) throws IOException {
 		SetProperties props = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -183,7 +183,7 @@ public class DeserializerUtil {
 	public static RemoveReaders deserializeRemoveReaders(String pathName) throws IOException {
 		RemoveReaders readers = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -207,7 +207,7 @@ public class DeserializerUtil {
 	public static SetReaders deserializeSetReaders(String pathName) throws IOException {
 		SetReaders readers = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -231,7 +231,7 @@ public class DeserializerUtil {
 	public static AddReaders deserializeAddReaders(String pathName) throws IOException {
 		AddReaders readers = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -255,7 +255,7 @@ public class DeserializerUtil {
 	public static ECReports deserializeECReports(InputStream in) throws IOException {
 		ECReports reports = null;
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.xsd.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
 			
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);

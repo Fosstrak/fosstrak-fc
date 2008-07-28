@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.client;
+package org.fosstrak.ale.client;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -58,29 +58,29 @@ import javax.swing.JTextField;
 import javax.xml.namespace.QName;
 
 
-import org.accada.ale.util.DeserializerUtil;
-import org.accada.ale.util.SerializerUtil;
-import org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType;
-import org.accada.ale.wsdl.ale.epcglobal.Define;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.EmptyParms;
-import org.accada.ale.wsdl.ale.epcglobal.GetECSpec;
-import org.accada.ale.wsdl.ale.epcglobal.GetSubscribers;
-import org.accada.ale.wsdl.ale.epcglobal.Immediate;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.Poll;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.Subscribe;
-import org.accada.ale.wsdl.ale.epcglobal.Undefine;
-import org.accada.ale.wsdl.ale.epcglobal.Unsubscribe;
-import org.accada.ale.wsdl.ale.epcglobal.ArrayOfString;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.util.DeserializerUtil;
+import org.fosstrak.ale.util.SerializerUtil;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortType;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Define;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.EmptyParms;
+import org.fosstrak.ale.wsdl.ale.epcglobal.GetECSpec;
+import org.fosstrak.ale.wsdl.ale.epcglobal.GetSubscribers;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Immediate;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Poll;
+import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Subscribe;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Undefine;
+import org.fosstrak.ale.wsdl.ale.epcglobal.Unsubscribe;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ArrayOfString;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.log4j.PropertyConfigurator;
 

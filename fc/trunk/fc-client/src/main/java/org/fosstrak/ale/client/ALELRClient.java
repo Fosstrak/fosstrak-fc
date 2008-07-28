@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.client;
+package org.fosstrak.ale.client;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -58,26 +58,26 @@ import javax.swing.JTextField;
 import javax.xml.namespace.QName;
 
 
-import org.accada.ale.util.DeserializerUtil;
-import org.accada.ale.util.SerializerUtil;
-import org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType;
-import org.accada.ale.wsdl.alelr.epcglobal.AddReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.ArrayOfString;
-import org.accada.ale.wsdl.alelr.epcglobal.Define;
-import org.accada.ale.wsdl.alelr.epcglobal.EmptyParms;
-import org.accada.ale.wsdl.alelr.epcglobal.GetLRSpec;
-import org.accada.ale.wsdl.alelr.epcglobal.GetPropertyValue;
-import org.accada.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.RemoveReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.SecurityExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.SetProperties;
-import org.accada.ale.wsdl.alelr.epcglobal.SetReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.Undefine;
-import org.accada.ale.wsdl.alelr.epcglobal.Update;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec;
+import org.fosstrak.ale.util.DeserializerUtil;
+import org.fosstrak.ale.util.SerializerUtil;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ArrayOfString;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.Define;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.EmptyParms;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.GetLRSpec;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.GetPropertyValue;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SecurityExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.Undefine;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.Update;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 

@@ -91,11 +91,11 @@ java -jar reader-rprm-core-0.4.0-SNAPSHOT.jar
 
 +--------------+
 java -cp <READER_RP_CLIENT_VERSION>.jar \ 
-	org.accada.reader.rp.client.EventSinkUI <PORT>
+	org.fosstrak.reader.rp.client.EventSinkUI <PORT>
 
 example:
 java -cp reader-rp-client-0.3.1.jar \ 
-	org.accada.reader.rp.client.EventSinkUI 9999
+	org.fosstrak.reader.rp.client.EventSinkUI 9999
 +--------------+
 
 
@@ -103,8 +103,8 @@ java -cp reader-rp-client-0.3.1.jar \
 
 * {Connect} to the webclient
 
-  Now it's time to run Accada filtering and collection. Start your favorite 
-  webbrowser and point it to the address of the Accada webclient.
+  Now it's time to run Fosstrak filtering and collection. Start your favorite 
+  webbrowser and point it to the address of the Fosstrak webclient.
   
 +--------------+
 http://<SERVER>:<PORT>/<WEBCLIENT_VERSION>/services/ALEWebClient.jsp
@@ -121,7 +121,7 @@ http://localhost:8080/fc-webclient-0.3.0-SNAPSHOT/services/ALEWebClient.jsp
   You need to connect 2 endpoints. One for the "Filtering and Collection API" 
   and the other for the "Logical Reader API":
 
-  Set the endpoint to the Accada fc-server by the method
+  Set the endpoint to the Fosstrak fc-server by the method
   "setEndpoint(String endPointName)" in the "Filtering and Collection API". 
   Click "Invoke" to execute the command.
   

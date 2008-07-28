@@ -1,4 +1,4 @@
-# Example batch file for Accada BatchSimulator
+# Example batch file for Fosstrak BatchSimulator
 # Author: Jonas Haller
 #
 # Lines beginning wich '#' are not processed (comments)

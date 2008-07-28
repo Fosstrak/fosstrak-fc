@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Accada Filtering and Collection">
+<project name="Fosstrak Filtering and Collection">
 <body>
     <menu name="Filtering and Collection Project Modules">
       <item name="FC Client" href="../fc-client/project-reports.html" collapse="true">

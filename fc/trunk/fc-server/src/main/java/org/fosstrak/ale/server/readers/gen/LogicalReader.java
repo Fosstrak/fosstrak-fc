@@ -6,7 +6,7 @@
 //
 
 
-package org.accada.ale.server.readers.gen;
+package org.fosstrak.ale.server.readers.gen;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

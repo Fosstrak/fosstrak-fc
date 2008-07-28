@@ -7,7 +7,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
 <jaxws:endpoint id="ALEService"
-    implementor="org.accada.ale.wsdl.ale.epcglobal.ALEServicePortTypeImpl"
+    implementor="org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortTypeImpl"
     endpointName="e:ALEServicePortType"
     serviceName="s:ALEService"
     address="/ALEService"
@@ -15,7 +15,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
     xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
 
 <jaxws:endpoint id="ALELRService"
-    implementor="org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortTypeImpl"
+    implementor="org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortTypeImpl"
     endpointName="e:ALELRServicePortType"
     serviceName="s:ALELRService"
     address="/ALELRService"

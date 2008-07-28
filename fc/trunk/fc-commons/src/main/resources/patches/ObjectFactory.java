@@ -1,32 +1,32 @@
 
-package org.accada.ale.xsd.ale.epcglobal;
+package org.fosstrak.ale.xsd.ale.epcglobal;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
-import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpecExtension.StartTriggerList;
-import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpecExtension.StopTriggerList;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterListMember.PatList;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec.ExcludePatterns;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec.IncludePatterns;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterSpecExtension.FilterList;
-import org.accada.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSpecExtension.StatProfileNames;
-import org.accada.ale.xsd.ale.epcglobal.ECReports.Reports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
-import org.accada.ale.xsd.ale.epcglobal.ECSpecExtension.PrimaryKeyFields;
-import org.accada.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec.Properties;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec.Readers;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpecExtension.StartTriggerList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpecExtension.StopTriggerList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterListMember.PatList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.ExcludePatterns;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.IncludePatterns;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpecExtension.FilterList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpecExtension.StatProfileNames;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpecExtension.PrimaryKeyFields;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec.Properties;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec.Readers;
 
 
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the org.accada.ale.xsd.ale.epcglobal package. 
+ * generated in the org.fosstrak.ale.xsd.ale.epcglobal package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -47,7 +47,7 @@ public class ObjectFactory {
     private final static QName _LRSpec_QNAME = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.accada.ale.xsd.ale.epcglobal
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.fosstrak.ale.xsd.ale.epcglobal
      * 
      */
     public ObjectFactory() {
@@ -94,11 +94,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList }
+     * Create an instance of {@link org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList }
      * 
      */
-    public org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList createECReportGroupListMemberExtensionFieldList() {
-        return new org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList();
+    public org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList createECReportGroupListMemberExtensionFieldList() {
+        return new org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList();
     }
 
     /**
@@ -462,11 +462,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList }
+     * Create an instance of {@link org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList }
      * 
      */
-    public org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList createECReportOutputSpecExtensionFieldList() {
-        return new org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList();
+    public org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList createECReportOutputSpecExtensionFieldList() {
+        return new org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension.FieldList();
     }
 
     /**

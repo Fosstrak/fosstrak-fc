@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.server;
+package org.fosstrak.ale.server;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,29 +28,29 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.accada.ale.server.EventCycle;
-import org.accada.ale.server.Report;
-import org.accada.ale.server.ReportsGenerator;
-import org.accada.ale.server.readers.gen.LogicalReader;
-import org.accada.ale.util.ECReportSetEnum;
-import org.accada.ale.util.ECTimeUnit;
-import org.accada.ale.util.HexUtil;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECGroupSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReport;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
-import org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSetSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.reader.rprm.core.msg.notification.TagType;
+import org.fosstrak.ale.server.EventCycle;
+import org.fosstrak.ale.server.Report;
+import org.fosstrak.ale.server.ReportsGenerator;
+import org.fosstrak.ale.server.readers.gen.LogicalReader;
+import org.fosstrak.ale.util.ECReportSetEnum;
+import org.fosstrak.ale.util.ECTimeUnit;
+import org.fosstrak.ale.util.HexUtil;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSetSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
+import org.fosstrak.reader.rprm.core.msg.notification.TagType;
 import org.apache.log4j.PropertyConfigurator;
 
 /**

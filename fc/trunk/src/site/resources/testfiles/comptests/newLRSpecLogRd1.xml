@@ -5,7 +5,7 @@
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
         </property>
         <property>
             <name>Description</name>

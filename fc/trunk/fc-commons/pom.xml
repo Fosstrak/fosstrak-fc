@@ -5,12 +5,12 @@
   <!-- Basics                                                      -->
   <!-- =========================================================== -->
 
-  <groupId>org.accada.fc</groupId>
+  <groupId>org.fosstrak.fc</groupId>
   <artifactId>fc-commons</artifactId>
   <version>0.3.1-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
-    <groupId>org.accada.fc</groupId>
+    <groupId>org.fosstrak.fc</groupId>
     <version>0.3.1-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
@@ -214,11 +214,11 @@
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-ale.wsdl</wsdl>
                   <extraargs>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
 		    <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:wsdl:1=org.accada.ale.wsdl.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:wsdl:1=org.fosstrak.ale.wsdl.ale.epcglobal</extraarg>
                   </extraargs>
                 </wsdlOption>
 
@@ -226,11 +226,11 @@
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-aleac.wsdl</wsdl>
                   <extraargs>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
 		    <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:aleac:wsdl:1=org.accada.ale.wsdl.aleac.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:aleac:wsdl:1=org.fosstrak.ale.wsdl.aleac.epcglobal</extraarg>
                   </extraargs>
                 </wsdlOption>
 		
@@ -238,22 +238,22 @@
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-alecc.wsdl</wsdl>
                   <extraargs>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
 		    <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:alecc:wsdl:1=org.accada.ale.wsdl.alecc.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:alecc:wsdl:1=org.fosstrak.ale.wsdl.alecc.epcglobal</extraarg>
                   </extraargs>
                 </wsdlOption>
 		<wsdlOption>
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-alelr.wsdl</wsdl>
                   <extraargs>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
 		    <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:alelr:wsdl:1=org.accada.ale.wsdl.alelr.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:alelr:wsdl:1=org.fosstrak.ale.wsdl.alelr.epcglobal</extraarg>
                   </extraargs>
                 </wsdlOption>
 		
@@ -261,11 +261,11 @@
                   <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-aletm.wsdl</wsdl>
                   <extraargs>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
 		    <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
                     <extraarg>-p</extraarg>
-                    <extraarg>urn:epcglobal:aletm:wsdl:1=org.accada.ale.wsdl.aletm.epcglobal</extraarg>
+                    <extraarg>urn:epcglobal:aletm:wsdl:1=org.fosstrak.ale.wsdl.aletm.epcglobal</extraarg>
                   </extraargs>
                 </wsdlOption>
 			
@@ -286,8 +286,8 @@
               <tasks>
 		 <echo message="Replacing erroneous ObjectFactory by correct one" />
 		 <!-- we need to delete the file first, as on windows we cannot overwrite a existing file ... -->
-		 <delete file="target/generated-sources/main/java/org/accada/ale/xsd/ale/epcglobal/ObjectFactory.java" />
-		 <copy file="src/main/resources/patches/ObjectFactory.java" tofile="target/generated-sources/main/java/org/accada/ale/xsd/ale/epcglobal/ObjectFactory.java" failonerror="true" verbose="false" />
+		 <delete file="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" />
+		 <copy file="src/main/resources/patches/ObjectFactory.java" tofile="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" failonerror="true" verbose="false" />
               </tasks>
             </configuration>
             <goals>

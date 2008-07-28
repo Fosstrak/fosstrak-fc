@@ -1,50 +1,50 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.server;
+package org.fosstrak.ale.server;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.accada.ale.server.readers.LogicalReaderManager;
-import org.accada.ale.server.readers.rp.InputGenerator;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.InvalidURIException;
-import org.accada.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.readers.rp.InputGenerator;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 

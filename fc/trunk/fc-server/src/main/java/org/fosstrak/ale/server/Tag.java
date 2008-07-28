@@ -1,8 +1,8 @@
-package org.accada.ale.server;
+package org.fosstrak.ale.server;
 
-import org.accada.ale.util.HexUtil;
-import org.accada.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.util.HexUtil;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.apache.log4j.Logger;
 
 /**

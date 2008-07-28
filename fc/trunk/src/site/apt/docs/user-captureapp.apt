@@ -19,7 +19,7 @@ Capture App Example
 
 * {Overview}
 
-	From an event notification from the Accada Filtering and Collection 
+	From an event notification from the Fosstrak Filtering and Collection 
 	server you can easily create an event for the EPCIS repository. The 
 	following code example gives you an impression how you can use the 
 	serializer/deserializer utilities to perform such a job.
@@ -101,10 +101,10 @@ while (true) {
 +---+
 
 	After this step the ECReports are stored in the String <buf>. Now we 
-	have to deserialize the xml into an instance of an ECReports. Accada 
+	have to deserialize the xml into an instance of an ECReports. Fosstrak 
 	offers you some helper methods that will do that job for you. You 
 	can find the whole serializer/deserializer methods in the packge 
-	<org.accada.ale.util> in the classes <DeserializerUtil> and 
+	<org.fosstrak.ale.util> in the classes <DeserializerUtil> and 
 	<SerializerUtil> respectively.
 	
 	For a detailed discussion of the serializer/deserializer utilties you 
@@ -197,7 +197,7 @@ if (epcs.size() == 0) {
 EPCListType epcList = new EPCListType();
 // add the epcs
 for (EPC epc : epcs) {
-	org.accada.epcis.model.EPC nepc = new org.accada.epcis.model.EPC(); 
+	org.fosstrak.epcis.model.EPC nepc = new org.fosstrak.epcis.model.EPC(); 
 	nepc.setValue(epc.getValue());
 	epcList.getEpc().add(nepc);
 }
@@ -248,21 +248,21 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.accada.ale.util.DeserializerUtil;
-import org.accada.ale.xsd.ale.epcglobal.ECReport;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.epcglobal.EPC;
-import org.accada.epcis.captureclient.CaptureClient;
-import org.accada.epcis.model.ActionType;
-import org.accada.epcis.model.BusinessLocationType;
-import org.accada.epcis.model.EPCISBodyType;
-import org.accada.epcis.model.EPCISDocumentType;
-import org.accada.epcis.model.EPCListType;
-import org.accada.epcis.model.EventListType;
-import org.accada.epcis.model.ObjectEventType;
-import org.accada.epcis.model.ReadPointType;
+import org.fosstrak.ale.util.DeserializerUtil;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.epcglobal.EPC;
+import org.fosstrak.epcis.captureclient.CaptureClient;
+import org.fosstrak.epcis.model.ActionType;
+import org.fosstrak.epcis.model.BusinessLocationType;
+import org.fosstrak.epcis.model.EPCISBodyType;
+import org.fosstrak.epcis.model.EPCISDocumentType;
+import org.fosstrak.epcis.model.EPCListType;
+import org.fosstrak.epcis.model.EventListType;
+import org.fosstrak.epcis.model.ObjectEventType;
+import org.fosstrak.epcis.model.ReadPointType;
 
 public class CaptureApp {
 	
@@ -330,7 +330,7 @@ public class CaptureApp {
 		EPCListType epcList = new EPCListType();
 		// add the epcs
 		for (EPC epc : epcs) {
-			org.accada.epcis.model.EPC nepc = new org.accada.epcis.model.EPC(); 
+			org.fosstrak.epcis.model.EPC nepc = new org.fosstrak.epcis.model.EPC(); 
 			nepc.setValue(epc.getValue());
 			epcList.getEpc().add(nepc);
 		}
@@ -340,19 +340,19 @@ public class CaptureApp {
 		objEvent.setAction(ActionType.ADD);
 
 		// set bizStep
-		objEvent.setBizStep("urn:accada:demo:bizstep:testing");
+		objEvent.setBizStep("urn:fosstrak:demo:bizstep:testing");
 
 		// set disposition
-		objEvent.setDisposition("urn:accada:demo:disp:testing");
+		objEvent.setDisposition("urn:fosstrak:demo:disp:testing");
 
 		// set readPoint
 		ReadPointType readPoint = new ReadPointType();
-		readPoint.setId("urn:accada:demo:rp:1.1");
+		readPoint.setId("urn:fosstrak:demo:rp:1.1");
 		objEvent.setReadPoint(readPoint);
 
 		// set bizLocation
 		BusinessLocationType bizLocation = new BusinessLocationType();
-		bizLocation.setId("urn:accada:demo:loc:1.1");
+		bizLocation.setId("urn:fosstrak:demo:loc:1.1");
 		objEvent.setBizLocation(bizLocation);
 
 		// create the EPCISDocument containing a single ObjectEvent

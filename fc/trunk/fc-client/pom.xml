@@ -5,12 +5,12 @@
   <!-- Basics                                                      -->
   <!-- =========================================================== -->
 
-  <groupId>org.accada.fc</groupId>
+  <groupId>org.fosstrak.fc</groupId>
   <artifactId>fc-client</artifactId>
   <version>0.3.1-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
-    <groupId>org.accada.fc</groupId>
+    <groupId>org.fosstrak.fc</groupId>
     <version>0.3.1-SNAPSHOT</version>
   </parent>
   <packaging>jar</packaging>
@@ -24,13 +24,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.accada.fc</groupId>
+      <groupId>org.fosstrak.fc</groupId>
       <artifactId>fc-commons</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.accada.reader</groupId>
+      <groupId>org.fosstrak.reader</groupId>
       <artifactId>reader-rp-proxy</artifactId>
       <version>0.4.0</version>
       <scope>compile</scope>
@@ -71,7 +71,7 @@
               <Class-Path>.</Class-Path>
             </manifestEntries>
             <manifest>
-              <mainClass>org.accada.ale.client.ALEClient</mainClass>
+              <mainClass>org.fosstrak.ale.client.ALEClient</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix>./lib</classpathPrefix>
             </manifest>

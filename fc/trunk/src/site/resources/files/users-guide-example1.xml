@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
-		<LRSpec isComposite="false" readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
 			<LRProperty name="Description" value="This Logical Reader consists of shelf 1,2,3,4"/>
 			<LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
 			<LRProperty name="NotificationPoint" value="http://localhost:9090"/>
 			<LRProperty name="ReadTimeInterval" value="200"/>
 			<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
-			<LRProperty name="ImplClass" value="org.accada.ale.server.readers.rp.RPAdaptor"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.rp.RPAdaptor"/>
 			<LRProperty name="PhysicalReaderName" value="MyReader"/>
 			<LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3,Shelf4"/>
 		</LRSpec>

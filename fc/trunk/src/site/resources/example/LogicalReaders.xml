@@ -1,4 +1,4 @@
-<!-- Accada Filtering and Collection Properties -->
+<!-- Fosstrak Filtering and Collection Properties -->
 <?xml version="1.0" encoding="UTF-8"?>
 <logicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="LogicalReaders.xsd">
 	<logicalReader name="LogicalReader1">

@@ -1,7 +1,7 @@
-Accada Filtering and Collection Server
+Fosstrak Filtering and Collection Server
 ======================================
 
-The objective of the Accada Filtering and Collection Server module is to provide an implementation
+The objective of the Fosstrak Filtering and Collection Server module is to provide an implementation
 of the EPCglobal Application Level Event (ALE) specification. In the current release ALE 1.0 is 
 implemented.
 
@@ -23,4 +23,4 @@ or Webclient module.
 3. The configuration of the server can be changed in the property files InputGenerators.properties
 and LogicalReaders.xml.
 
-For more information,  please see http://www.accada.org/fc/
+For more information,  please see http://www.fosstrak.org/fc/

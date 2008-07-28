@@ -25,11 +25,11 @@ Developers guide
 		
 * {Overview}
 
-	From a global view one can split the Accada Filtering and 
+	From a global view one can split the Fosstrak Filtering and 
 	Collection framework into 3 layers that are built on top 
 	of each other.
 	
-	* org.accada.ale.server: This layer provides the interface 
+	* org.fosstrak.ale.server: This layer provides the interface 
 		to the client through the class ALE. This includes:
 	  
 	  	* Tag filtering and reports generation
@@ -38,14 +38,14 @@ Developers guide
 			
 		* Client subscription/unsubscription
 	
-	* org.accada.ale.server.readers: This layer models the logical 
+	* org.fosstrak.ale.server.readers: This layer models the logical 
 		reader API. This includes:
 	  
 	  	* Tag aggregation
 			
 		* Reader management
 		
-	* org.accada.ale.server.readers.XYZ: This layer acts as the 
+	* org.fosstrak.ale.server.readers.XYZ: This layer acts as the 
 		layer to the physical hardware. This includes:
 	  	
 		* Aquiring of the tags

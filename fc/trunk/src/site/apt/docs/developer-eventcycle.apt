@@ -29,7 +29,7 @@ Event Cycle
 	during which tags are read.
 		
 	This document shall provide an overview to the implementation 
-	of an EventCycle in the Accada ALE.
+	of an EventCycle in the Fosstrak ALE.
 
 
 * {Implementation}

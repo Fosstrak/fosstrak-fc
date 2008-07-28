@@ -1,4 +1,4 @@
-package org.accada.ale.util;
+package org.fosstrak.ale.util;
 
 /**
  * For backwards compatibility this class provides a 

@@ -1,35 +1,35 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.util;
+package org.fosstrak.ale.util;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 
 
-import org.accada.ale.wsdl.alelr.epcglobal.AddReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.RemoveReaders;
-import org.accada.ale.wsdl.alelr.epcglobal.SetProperties;
-import org.accada.ale.wsdl.alelr.epcglobal.SetReaders;
-import org.accada.ale.xsd.ale.epcglobal.*;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
+import org.fosstrak.ale.xsd.ale.epcglobal.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -112,13 +112,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeLRSpec(LRSpec spec, String pathName, boolean pretty) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.ale.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 	
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
-			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 			JAXBElement<LRSpec> thespec = objFactory.createLRSpec(spec);
 					
 			// store the file to the file path
@@ -137,13 +137,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeLRSpec(LRSpec spec, Writer writer) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.ale.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 	
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
-			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 			JAXBElement<LRSpec> thespec = objFactory.createLRSpec(spec);
 					
 			// store the file to the file path
@@ -161,13 +161,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeSetProperties(SetProperties props, String pathName) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 			
-			org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory();
+			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
 			JAXBElement<SetProperties> theprops = objFactory.createSetProperties(props);
 			
 			// store the file to the file path
@@ -186,13 +186,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeRemoveReaders(RemoveReaders readers, String pathName) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 			
-			org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory();			
+			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();			
 			JAXBElement<RemoveReaders> theReaders = objFactory.createRemoveReaders(readers);
 			
 			// store the file to the file path
@@ -211,13 +211,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeSetReaders(SetReaders readers, String pathName) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 			
-			org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory();
+			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
 			JAXBElement<SetReaders> theReaders = objFactory.createSetReaders(readers);
 			
 			// store the file to the file path
@@ -236,13 +236,13 @@ public class SerializerUtil {
 	 */
 	public static void serializeAddReaders(AddReaders readers, String pathName) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.wsdl.alelr.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 			
-			org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.accada.ale.wsdl.alelr.epcglobal.ObjectFactory();
+			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
 			JAXBElement<AddReaders> theReaders = objFactory.createAddReaders(readers);
 			
 			// store the file to the file path
@@ -268,13 +268,13 @@ public class SerializerUtil {
 	 */
 	private static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer, boolean pretty) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.xsd.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 			
-			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 			JAXBElement<ECSpec> theSpec = objFactory.createECSpec(ecSpec);
 			
 			// store the file to the file path
@@ -294,14 +294,14 @@ public class SerializerUtil {
 	 */
 	public static void serializeECSpec(ECSpec ecSpec, Writer writer) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.xsd.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
-			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 			JAXBElement<ECSpec> theSpec = objFactory.createECSpec(ecSpec);			
 			
 			// store the file to the file path
@@ -323,13 +323,13 @@ public class SerializerUtil {
 	 */
 	private static void serializeECReports(ECReports ecReports, Writer writer, boolean pretty) throws IOException {
 		try {
-			String JAXB_CONTEXT = "org.accada.ale.xsd.ale.epcglobal";
+			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
 			Marshaller marshaller = context.createMarshaller();
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
-			org.accada.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.accada.ale.xsd.ale.epcglobal.ObjectFactory();
+			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 			JAXBElement<ECReports> theReports = objFactory.createECReports(ecReports);
 			
 			// store the file to the file path

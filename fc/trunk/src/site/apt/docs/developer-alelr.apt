@@ -21,7 +21,7 @@ Application Layer Events Logical Reader Service Binding
 
 * {Overview}
 
-	The Accada Filtering and Collection middleware provides an abstraction 
+	The Fosstrak Filtering and Collection middleware provides an abstraction 
 	from the physical reader devices. The Logical Reader Management is an 
 	interface through which	clients may define logical reader names for 
 	use with the Reading API, which maps to one or more sources/actuators 
@@ -71,7 +71,7 @@ Application Layer Events Logical Reader Service Binding
 	
 	* update(String name, LRSpec spec): changes the LRSpec of the given reader
 	
-	* define(String name, org.accada.ale.server.readers.gen.LRSpec spec): creates a logical 
+	* define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec): creates a logical 
 	reader from the loaded .xml file.
 	
 	* define(String name, LRSpec spec): creates a logical reader after initialisation.
@@ -115,7 +115,7 @@ Application Layer Events Logical Reader Service Binding
 			that shall be serialized.
 			
 		* Add a specific serializer/deserializer to the SerializerUtils 
-			(see org.accada.ale.util.SerializerUtil).
+			(see org.fosstrak.ale.util.SerializerUtil).
 		
 		* Call that serializer/deserializer and look at the xml 
 			that is generated.
@@ -150,9 +150,9 @@ Application Layer Events Logical Reader Service Binding
 	
 +---+
 wsdl2java -impl -v 
-	-p urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal 
-	-p urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal 
-	-p urn:epcglobal:alelr:wsdl:1=org.accada.ale.wsdl.alelr.epcglobal 
+	-p urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal 
+	-p urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal 
+	-p urn:epcglobal:alelr:wsdl:1=org.fosstrak.ale.wsdl.alelr.epcglobal 
 	EPCglobal-ale-1_1-alelr.wsdl
 +---+
 
@@ -169,7 +169,7 @@ wsdl2java -impl -v
 	To implement the service binding you need to implement the 
 	java class ALELRServicePortTypeImpl.
 	
-	In the Accada Filtering and Collection most parts of the wsdl are 
+	In the Fosstrak Filtering and Collection most parts of the wsdl are 
 	auto-generated and you need not to change anything (see the pom.xml if 
 	you are interested). 
 	
@@ -209,7 +209,7 @@ public java.lang.String getStandardVersion(EmptyParms parms)
 	
 	try {
 		return LogicalReaderManager.getStandardVersion();
-	} catch (org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
+	} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
 		e.printStackTrace();
 		throw new ImplementationExceptionResponse(e.getMessage());
 	}

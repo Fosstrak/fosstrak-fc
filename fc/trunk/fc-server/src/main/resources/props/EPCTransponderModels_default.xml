@@ -189,10 +189,10 @@
       <userWrite>false</userWrite>
    </tag>
 
-   <!-- Accada Simulator -->
+   <!-- Fosstrak Simulator -->
    <tag>
       <type>EPCclass1Gen2</type>
-      <manufacturer>Accada</manufacturer>
+      <manufacturer>Fosstrak</manufacturer>
       <modelName>Simulator</modelName>
       <modelID>0x000</modelID>
       <reservedSize>8</reservedSize>
@@ -269,7 +269,7 @@
    </manufacturer>
 
    <manufacturer>
-      <name>Accada</name>
+      <name>Fosstrak</name>
       <classIdentifier>0xE2</classIdentifier>
       <maskDesignerIdentifier>0xFFF</maskDesignerIdentifier>
    </manufacturer>

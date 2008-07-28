@@ -1,7 +1,7 @@
-Accada Filtering and Collection Webclient
+Fosstrak Filtering and Collection Webclient
 =========================================
 
-The objective of the Accada Filtering and Collection Webclient module is to provide 
+The objective of the Fosstrak Filtering and Collection Webclient module is to provide 
 a Web-based test client to execute Application Level Event specification (ALE)
 commands on a reader or component that implements the ALE specification.
 
@@ -22,4 +22,4 @@ How to use the Filtering and Collection Webclient
    (e.g. http://localhost:8080/fc-server-VERSION/services/ALEServicePort)
 
 
-For more information,  please see http://www.accada.org/fc
+For more information,  please see http://www.fosstrak.org/fc

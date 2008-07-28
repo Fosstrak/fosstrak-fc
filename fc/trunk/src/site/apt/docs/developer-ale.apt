@@ -26,7 +26,7 @@ Application Layer Events Service Binding
 * {Overview}
 
 	This document shall give a short overview to the ALE class from the 
-	Accada filtering and collection, to the ALEServicePort and 
+	Fosstrak filtering and collection, to the ALEServicePort and 
 	to the ALEServiceBinding.
 	
 	The ALE is the responsible class for the communication with the 
@@ -119,7 +119,7 @@ Application Layer Events Service Binding
 			that shall be serialized.
 			
 		* Add a specific serializer/deserializer to the SerializerUtils 
-			(see org.accada.ale.util.SerializerUtil).
+			(see org.fosstrak.ale.util.SerializerUtil).
 		
 		* Call that serializer/deserializer and look at the xml 
 			that is generated.
@@ -154,9 +154,9 @@ Application Layer Events Service Binding
 	
 +---+
 wsdl2java -impl -v 
-	-p urn:epcglobal:xsd:1=org.accada.ale.xsd.epcglobal 
-	-p urn:epcglobal:ale:xsd:1=org.accada.ale.xsd.ale.epcglobal 
-	-p urn:epcglobal:ale:wsdl:1=org.accada.ale.wsdl.ale.epcglobal 
+	-p urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal 
+	-p urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal 
+	-p urn:epcglobal:ale:wsdl:1=org.fosstrak.ale.wsdl.ale.epcglobal 
 	EPCglobal-ale-1_1-ale.wsdl
 +---+
 
@@ -173,7 +173,7 @@ wsdl2java -impl -v
 	To implement the service binding you need to implement the 
 	java class ALEServicePortTypeImpl.
 	
-	In the Accada Filtering and Collection most parts of the wsdl are 
+	In the Fosstrak Filtering and Collection most parts of the wsdl are 
 	auto-generated and you need not to change anything (see the pom.xml if 
 	you are interested). 
 	
