@@ -17,7 +17,7 @@ Serializers and Deserializers
 
 * {Overview}
 
-	Accada offers you some utilities to simplify the handling of the 
+	Fosstrak offers you some utilities to simplify the handling of the 
 	serialization and the deserialization of several xml-specifications. 
 	This guide will give you a short overview to the methods available.
 	
@@ -27,11 +27,11 @@ Serializers and Deserializers
 		
 * {Serializer} Utilities
 
-	The Accada serializer utilities provide a simple way how you can write 
+	The Fosstrak serializer utilities provide a simple way how you can write 
 	an xml-specification into an xml-file.
 	
-	The Accada serializer utilities can be found in the package 
-	<org.accada.ale.util> in the class <SerializerUtil>.
+	The Fosstrak serializer utilities can be found in the package 
+	<org.fosstrak.ale.util> in the class <SerializerUtil>.
 
 	Existing serializers for the classes:
 	
@@ -53,11 +53,11 @@ Serializers and Deserializers
 
 * {Deserializer} Utilities
 	
-	The Accada deserializer utilities provide a simple way how you can 
+	The Fosstrak deserializer utilities provide a simple way how you can 
 	retrieve a specification from an xml-file.
 	
-	The Accada deserializer utilities can be found in the package 
-	<org.accada.ale.util> in the class <DeserializerUtil>.
+	The Fosstrak deserializer utilities can be found in the package 
+	<org.fosstrak.ale.util> in the class <DeserializerUtil>.
 	
 	Existing deserializers for the classes:
 	

@@ -7,14 +7,14 @@ if (lrmethod == null) {
 	lrmethodID = -1;
 }
 
-org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType lrservice = null;
+org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType lrservice = null;
 if (request.getParameter("lrendpoint") != null && request.getParameter("lrendpoint").length() > 0) {
-	lrfactory.setServiceClass(org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType.class);
+	lrfactory.setServiceClass(org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType.class);
 	lrfactory.setAddress(request.getParameter("lrendpoint"));
-	lrservice = (org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType) lrfactory.create();
+	lrservice = (org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType) lrfactory.create();
 
 } else if (lrfactory.getAddress() != null) {
-	lrservice = (org.accada.ale.wsdl.alelr.epcglobal.ALELRServicePortType) lrfactory.create();
+	lrservice = (org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType) lrfactory.create();
 } else {
 	lrmethodID = -1;
 }
@@ -35,11 +35,11 @@ case 305:
 	java.lang.String specFilePath = request.getParameter("specFilePath");
 	%>
 <jsp:useBean id="dR1" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.Define" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.Define" />
 <%
 	dR1.setName(readerName);
-	dR1.setSpec(org.accada.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
-	org.accada.ale.wsdl.alelr.epcglobal.DefineResult defineReaderRes  = lrservice.define(dR1);
+	dR1.setSpec(org.fosstrak.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.DefineResult defineReaderRes  = lrservice.define(dR1);
 	%>
 <%=defineReaderRes%>
 <%
@@ -50,10 +50,10 @@ case 306:
 	gotMethod = true;
 	%>
 <jsp:useBean id="undefineReader1" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.Undefine" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.Undefine" />
 <%
 	undefineReader1.setName(request.getParameter("readerName"));
-	org.accada.ale.wsdl.alelr.epcglobal.UndefineResult undefineReaderRes = lrservice.undefine(undefineReader1);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.UndefineResult undefineReaderRes = lrservice.undefine(undefineReader1);
 	%>
 <%=undefineReaderRes%>
 <%
@@ -66,11 +66,11 @@ case 307:
 	specFilePath = request.getParameter("specFilePath");
 	%>
 <jsp:useBean id="updateReader1"
-	class="org.accada.ale.wsdl.alelr.epcglobal.Update" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.Update" />
 <%
 	updateReader1.setName(readerName);
-	updateReader1.setSpec(org.accada.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
-	org.accada.ale.wsdl.alelr.epcglobal.UpdateResult updateReaderRes = lrservice.update(updateReader1);
+	updateReader1.setSpec(org.fosstrak.ale.util.DeserializerUtil.deserializeLRSpec(specFilePath));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.UpdateResult updateReaderRes = lrservice.update(updateReader1);
 	%>
 <%=updateReaderRes%>
 <%
@@ -81,9 +81,9 @@ case 308:
 	gotMethod = true;
 	%>
 <jsp:useBean id="gLRN1" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.EmptyParms" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.EmptyParms" />
 <%
-	org.accada.ale.wsdl.alelr.epcglobal.ArrayOfString readersArray = lrservice.getLogicalReaderNames(gLRN1);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.ArrayOfString readersArray = lrservice.getLogicalReaderNames(gLRN1);
 	if (readersArray == null) {
 	%>
 <%=readersArray%>
@@ -103,17 +103,17 @@ case 309:
 	gotMethod = true;
 	%>
 <jsp:useBean id="getLRSpec1" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.GetLRSpec" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.GetLRSpec" />
 <%
 	getLRSpec1.setName(request.getParameter("readerName"));
- 	org.accada.ale.xsd.ale.epcglobal.LRSpec lrSpecGetLRSpec = lrservice.getLRSpec(getLRSpec1);
+ 	org.fosstrak.ale.xsd.ale.epcglobal.LRSpec lrSpecGetLRSpec = lrservice.getLRSpec(getLRSpec1);
 	if (lrSpecGetLRSpec == null) {
 		%>
 <%=lrSpecGetLRSpec%>
 <%
 	} else {
 		boolean getLRSpecIsComposite = lrSpecGetLRSpec.isIsComposite();
-		java.util.List<org.accada.ale.xsd.ale.epcglobal.LRProperty> getLRSpecProperties = null;
+		java.util.List<org.fosstrak.ale.xsd.ale.epcglobal.LRProperty> getLRSpecProperties = null;
 		if (lrSpecGetLRSpec.getProperties() != null) {
 			getLRSpecProperties = lrSpecGetLRSpec.getProperties().getProperty();
 		}
@@ -125,7 +125,7 @@ case 309:
 		if (getLRSpecReaders != null) {
 			getLRSpecReadersString = java.util.Arrays.asList(getLRSpecReaders).toString();
 		}
-		org.accada.ale.xsd.ale.epcglobal.LRSpecExtension getLRSpecExtension = lrSpecGetLRSpec.getExtension();
+		org.fosstrak.ale.xsd.ale.epcglobal.LRSpecExtension getLRSpecExtension = lrSpecGetLRSpec.getExtension();
 		%>
 <table border="0">
 	<tr>
@@ -150,7 +150,7 @@ case 309:
 			</tr>
 			<%
 			if (getLRSpecProperties != null) {
-				for (org.accada.ale.xsd.ale.epcglobal.LRProperty prop : getLRSpecProperties) {
+				for (org.fosstrak.ale.xsd.ale.epcglobal.LRProperty prop : getLRSpecProperties) {
 					%>
 			<tr>
 				<td style="border-right: 1px solid black; text-align: left;"><%=prop.getName()%></td>
@@ -176,9 +176,9 @@ case 309:
 //addReaders(String readerName, String[] readers);
 case 310:
 	gotMethod = true;
-	org.accada.ale.wsdl.alelr.epcglobal.AddReaders addReaders = org.accada.ale.util.DeserializerUtil.deserializeAddReaders(request.getParameter("filePath"));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders addReaders = org.fosstrak.ale.util.DeserializerUtil.deserializeAddReaders(request.getParameter("filePath"));
 	addReaders.setName(request.getParameter("readerName"));
-	org.accada.ale.wsdl.alelr.epcglobal.AddReadersResult addReadersRes = lrservice.addReaders(addReaders);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.AddReadersResult addReadersRes = lrservice.addReaders(addReaders);
 	%>
 <%=addReadersRes%>
 <%	
@@ -187,9 +187,9 @@ case 310:
 //setReaders(String readerName, String[] readers);
 case 311:
 	gotMethod = true;
-	org.accada.ale.wsdl.alelr.epcglobal.SetReaders setReaders = org.accada.ale.util.DeserializerUtil.deserializeSetReaders(request.getParameter("filePath"));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders setReaders = org.fosstrak.ale.util.DeserializerUtil.deserializeSetReaders(request.getParameter("filePath"));
 	setReaders.setName(request.getParameter("readerName"));
-	org.accada.ale.wsdl.alelr.epcglobal.SetReadersResult setReadersRes = lrservice.setReaders(setReaders);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.SetReadersResult setReadersRes = lrservice.setReaders(setReaders);
 	%>
 <%=setReadersRes%>
 <%	
@@ -198,9 +198,9 @@ case 311:
 //removeReaders(String readerName, String[] readers);
 case 312:
 	gotMethod = true;
-	org.accada.ale.wsdl.alelr.epcglobal.RemoveReaders removeReaders = org.accada.ale.util.DeserializerUtil.deserializeRemoveReaders(request.getParameter("filePath"));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders removeReaders = org.fosstrak.ale.util.DeserializerUtil.deserializeRemoveReaders(request.getParameter("filePath"));
 	removeReaders.setName(request.getParameter("readerName"));
-	org.accada.ale.wsdl.alelr.epcglobal.RemoveReadersResult remReaderRes = lrservice.removeReaders(removeReaders);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReadersResult remReaderRes = lrservice.removeReaders(removeReaders);
 	%>
 <%=remReaderRes%>
 <%	
@@ -209,9 +209,9 @@ case 312:
 	// setProperties(String readerName, LRProperty[] readers);
 case 313:
 	gotMethod = true;
-	org.accada.ale.wsdl.alelr.epcglobal.SetProperties setProperties1 = org.accada.ale.util.DeserializerUtil.deserializeSetProperties(request.getParameter("filePath"));
+	org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties setProperties1 = org.fosstrak.ale.util.DeserializerUtil.deserializeSetProperties(request.getParameter("filePath"));
 	setProperties1.setName(request.getParameter("readerName"));
-	org.accada.ale.wsdl.alelr.epcglobal.SetPropertiesResult setPropRes = lrservice.setProperties(setProperties1);
+	org.fosstrak.ale.wsdl.alelr.epcglobal.SetPropertiesResult setPropRes = lrservice.setProperties(setProperties1);
 	%>
 <%=setPropRes%>
 <%	
@@ -222,7 +222,7 @@ case 314:
 	gotMethod = true;
 	%>
 <jsp:useBean id="gPropertyValue1" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.GetPropertyValue" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.GetPropertyValue" />
 <%
 	gPropertyValue1.setName(request.getParameter("readerName"));
 	gPropertyValue1.setPropertyName(request.getParameter("propertyName"));
@@ -236,7 +236,7 @@ case 314:
 case 315:
 	%>
 <jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_493id" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.EmptyParms" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.EmptyParms" />
 <%
 	java.lang.String getStandardVersion2963mtemp = lrservice.getStandardVersion(_11wsdl1ale1epcglobal1EmptyParms_493id);
 	if(getStandardVersion2963mtemp == null){
@@ -256,7 +256,7 @@ case 315:
 case 316:
 	%>
 <jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_503id" scope="session"
-	class="org.accada.ale.wsdl.alelr.epcglobal.EmptyParms" />
+	class="org.fosstrak.ale.wsdl.alelr.epcglobal.EmptyParms" />
 <%
 	java.lang.String getVendorVersion3012mtemp = lrservice.getVendorVersion(_11wsdl1ale1epcglobal1EmptyParms_503id);
 	if(getVendorVersion3012mtemp == null){

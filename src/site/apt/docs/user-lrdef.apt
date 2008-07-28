@@ -105,7 +105,7 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
         </property>
 </ns3:LRSpec>
 +---+
@@ -128,7 +128,7 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.CompositeReader</value>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
         </property>
     </properties>
 </ns3:LRSpec>
@@ -165,7 +165,7 @@ example:
 	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
 		<LRSpec isComposite="false" 
-		   readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
 		</LRSpec>
 	</LogicalReader>
 </LogicalReaders>	
@@ -209,7 +209,7 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.rp.RPAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
         </property>
 	<property>
 	    <name>Description</name>
@@ -251,7 +251,7 @@ example:
 	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
 		<LRSpec isComposite="false" 
-		   readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
 			<LRProperty name="Description" 
 				value="This Logical Reader consists 
 					of shelf 1,2,3,4"/>
@@ -295,7 +295,7 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
         </property>
         <property>
             <name>Description</name>
@@ -328,7 +328,7 @@ example:
 	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
 		<LRSpec isComposite="false" 
-		   readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
 			<LRProperty name="Description" 
 				value="My first HAL device reader"/>
 			<LRProperty name="AdaptorClass" value="HAL"/>
@@ -378,7 +378,7 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.CompositeReader</value>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
         </property>
     </properties>
 </ns3:LRSpec>
@@ -395,7 +395,7 @@ example:
    xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
 		<LRSpec isComposite="false" 
-		   readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
 			<LRProperty name="Description" 
 				value="This Logical Reader consists 
 					of shelf 1,2,3,4"/>
@@ -414,7 +414,7 @@ example:
 	</LogicalReader>
 	<LogicalReader name="LogicalReader2">
 		<LRSpec isComposite="false" 
-		   readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
 			<LRProperty name="Description" 
 				value="My first HAL device reader"/>
 			<LRProperty name="AdaptorClass" value="HAL"/>
@@ -428,7 +428,7 @@ example:
 	</LogicalReader>
 	<LogicalReader name="CompositeReader1">
 		<LRSpec isComposite="true" 
-		   readerType="org.accada.ale.server.readers.CompositeReader">
+		   readerType="org.fosstrak.ale.server.readers.CompositeReader">
 			<LRProperty name="Description" 
 				value="My first composite reader consisting 
 					of LogicalReader1 and LogicalReader2"/>

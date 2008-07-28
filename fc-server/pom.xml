@@ -5,12 +5,12 @@
   <!-- Basics                                                      -->
   <!-- =========================================================== -->
 
-  <groupId>org.accada.fc</groupId>
+  <groupId>org.fosstrak.fc</groupId>
   <artifactId>fc-server</artifactId>
   <version>0.3.1-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
-    <groupId>org.accada.fc</groupId>
+    <groupId>org.fosstrak.fc</groupId>
     <version>0.3.1-SNAPSHOT</version>
   </parent>
   <packaging>war</packaging>
@@ -24,31 +24,31 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.accada.fc</groupId>
+      <groupId>org.fosstrak.fc</groupId>
       <artifactId>fc-commons</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.accada.reader</groupId>
+      <groupId>org.fosstrak.reader</groupId>
       <artifactId>reader-rprm-core</artifactId>
       <version>0.4.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.accada.hal</groupId>
+      <groupId>org.fosstrak.hal</groupId>
       <artifactId>hal-commons</artifactId>
       <version>0.4.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.accada.hal</groupId>
+      <groupId>org.fosstrak.hal</groupId>
       <artifactId>hal-impl-sim</artifactId>
       <version>0.4.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.accada.reader</groupId>
+      <groupId>org.fosstrak.reader</groupId>
       <artifactId>reader-rp-proxy</artifactId>
       <version>0.4.0</version>
       <scope>compile</scope>

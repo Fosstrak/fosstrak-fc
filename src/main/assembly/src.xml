@@ -8,10 +8,10 @@
   <moduleSets>
     <moduleSet>
       <includes>
-        <include>org.accada.fc:fc-commons</include>
-        <include>org.accada.fc:fc-server</include>
-        <include>org.accada.fc:fc-client</include>
-        <include>org.accada.fc:fc-webclient</include>
+        <include>org.fosstrak.fc:fc-commons</include>
+        <include>org.fosstrak.fc:fc-server</include>
+        <include>org.fosstrak.fc:fc-client</include>
+        <include>org.fosstrak.fc:fc-webclient</include>
       </includes>
       <sources>
         <fileSets>

@@ -5,7 +5,7 @@
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.rp.RPAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
         </property>
 	<property>
 	    <name>Description</name>

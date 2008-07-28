@@ -1,53 +1,53 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.server.readers.rp;
+package org.fosstrak.ale.server.readers.rp;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.accada.ale.server.Tag;
-import org.accada.ale.util.HexUtil;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.reader.rprm.core.EventType;
-import org.accada.reader.rprm.core.FieldName;
-import org.accada.reader.rprm.core.msg.notification.Notification;
-import org.accada.reader.rprm.core.msg.reply.ReadReportType;
-import org.accada.reader.rprm.core.msg.reply.TagEventType;
-import org.accada.reader.rprm.core.msg.reply.TagType;
-import org.accada.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
-import org.accada.reader.rp.proxy.DataSelector;
-import org.accada.reader.rp.proxy.NotificationChannel;
-import org.accada.reader.rp.proxy.NotificationChannelEndPoint;
-import org.accada.reader.rp.proxy.NotificationChannelListener;
-import org.accada.reader.rp.proxy.RPProxyException;
-import org.accada.reader.rp.proxy.ReadReport;
-import org.accada.reader.rp.proxy.ReaderDevice;
-import org.accada.reader.rp.proxy.Source;
-import org.accada.reader.rp.proxy.Trigger;
-import org.accada.reader.rp.proxy.factories.DataSelectorFactory;
-import org.accada.reader.rp.proxy.factories.NotificationChannelFactory;
-import org.accada.reader.rp.proxy.factories.ReaderDeviceFactory;
-import org.accada.reader.rp.proxy.factories.TriggerFactory;
-import org.accada.reader.rp.proxy.msg.Handshake;
+import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.util.HexUtil;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.reader.rprm.core.EventType;
+import org.fosstrak.reader.rprm.core.FieldName;
+import org.fosstrak.reader.rprm.core.msg.notification.Notification;
+import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType;
+import org.fosstrak.reader.rprm.core.msg.reply.TagEventType;
+import org.fosstrak.reader.rprm.core.msg.reply.TagType;
+import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
+import org.fosstrak.reader.rp.proxy.DataSelector;
+import org.fosstrak.reader.rp.proxy.NotificationChannel;
+import org.fosstrak.reader.rp.proxy.NotificationChannelEndPoint;
+import org.fosstrak.reader.rp.proxy.NotificationChannelListener;
+import org.fosstrak.reader.rp.proxy.RPProxyException;
+import org.fosstrak.reader.rp.proxy.ReadReport;
+import org.fosstrak.reader.rp.proxy.ReaderDevice;
+import org.fosstrak.reader.rp.proxy.Source;
+import org.fosstrak.reader.rp.proxy.Trigger;
+import org.fosstrak.reader.rp.proxy.factories.DataSelectorFactory;
+import org.fosstrak.reader.rp.proxy.factories.NotificationChannelFactory;
+import org.fosstrak.reader.rp.proxy.factories.ReaderDeviceFactory;
+import org.fosstrak.reader.rp.proxy.factories.TriggerFactory;
+import org.fosstrak.reader.rp.proxy.msg.Handshake;
 import org.apache.log4j.Logger;
 
 /**

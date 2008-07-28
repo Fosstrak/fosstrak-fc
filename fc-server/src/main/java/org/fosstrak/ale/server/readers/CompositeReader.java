@@ -1,34 +1,34 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.server.readers;
+package org.fosstrak.ale.server.readers;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.accada.ale.server.Tag;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec;
+import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
  * @author sawielan
  *
  */
-public class CompositeReader extends org.accada.ale.server.readers.LogicalReader implements Observer  {
+public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalReader implements Observer  {
 
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(CompositeReader.class);

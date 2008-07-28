@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<faqs title="Accada Reader- Frequently Asked Questions">
+<faqs title="Fosstrak Reader- Frequently Asked Questions">
 
 <part id="about">
 <faq>
@@ -38,7 +38,7 @@ easy-to-use library that abstracts from the message and transport bindings.
 If you are just looking for a graphical user interface to generate some Reader Protocol commands, you might want to consider our <a href="readerTestClient.html">ReaderTestClient</a>.</answer>
 </faq>
 <faq>
-<question>I have a reader, but Accada does not support its proprietary protocol.</question>
+<question>I have a reader, but Fosstrak does not support its proprietary protocol.</question>
 <answer>Implement a wrapper as shown  <a href="status.html">here </a> and contribute your implementation to our project. As a benefit you will get all the filtering, event generation, messaging and tool support we already implemented for free.</answer>
 </faq>
 <faq>

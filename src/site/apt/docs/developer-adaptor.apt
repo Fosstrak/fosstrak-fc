@@ -22,7 +22,7 @@ How to implement an Adaptor
 * {Objective}
 
 	This guide is intented for developers who wish to integrate a 
-	tag reader into to the Logical Reader API of the accada ALE. The guide 
+	tag reader into to the Logical Reader API of the fosstrak ALE. The guide 
 	gives three examples to three existing Adaptors. In the second part 
 	a more detailed explanation about how to implement your own adaptor is 
 	given.
@@ -68,7 +68,7 @@ How to implement an Adaptor
 
 
 	[]
-	The HAL devices from the Accada project currently do not provide a 
+	The HAL devices from the Fosstrak project currently do not provide a 
 	polling mechanism. To retrieve Tags from these devices we therefor need 
 	a mechanism to periodically poll the device. We chose an identifyThread 
 	that polls the HAL device in a regular time interval.
@@ -84,7 +84,7 @@ How to implement an Adaptor
 	* isComposite: is the reader a composite reader (false).
 	
 	* ReaderType: the class name of the implementor 
-		(org.accada.ale.server.readers.hal.HALAdaptor)
+		(org.fosstrak.ale.server.readers.hal.HALAdaptor)
 	
 	* PhysicalReaderName: the name of the underlying physical reader.
 	
@@ -111,7 +111,7 @@ Sample Configuration for a HALAdaptor
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.hal.HALAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
         </property>
         <property>
             <name>Description</name>
@@ -142,7 +142,7 @@ Sample Configuration for a HALAdaptor
 
 <LogicalReader name="LogicalReader1">
 	<LRSpec isComposite="false" 
-		readerType="org.accada.ale.server.readers.hal.HALAdaptor">
+		readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
 		<LRProperty name="Description" 
 			value="HAL reader created during system startup"/>
 		<LRProperty name="AdaptorClass" value="HAL"/>
@@ -216,7 +216,7 @@ Sample Configuration for a HALAdaptor
 	* isComposite: is the reader a composite reader (false).
 	
 	* ReaderType: the class name of the implementor 
-		(org.accada.ale.server.readers.hal.HALAdaptor)
+		(org.fosstrak.ale.server.readers.hal.HALAdaptor)
 	
 	* PhysicalReaderName: the name of the underlying physical reader.
 	
@@ -248,7 +248,7 @@ Sample Configuration for a RPAdaptor
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.rp.RPAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
         </property>
 	<property>
 	    <name>Description</name>
@@ -287,7 +287,7 @@ Sample Configuration for a RPAdaptor
 
 <LogicalReader name="LogicalReader1">
 	<LRSpec isComposite="false" 
-		readerType="org.accada.ale.server.readers.rp.RPAdaptor">
+		readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
 		<LRProperty name="Description" value="My physical Reader"/>
 		<LRProperty name="ConnectionPoint" 
 			value="http://localhost:8000"/>
@@ -341,7 +341,7 @@ Sample Configuration for a RPAdaptor
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.test.TestAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.test.TestAdaptor</value>
         </property>
         <property>
             <name>Description</name>
@@ -370,7 +370,7 @@ Sample Configuration for a RPAdaptor
 
 <LogicalReader name="LogicalReader1">
 	<LRSpec isComposite="false" 
-		readerType="org.accada.ale.server.readers.test.TestAdaptor">
+		readerType="org.fosstrak.ale.server.readers.test.TestAdaptor">
 		<LRProperty name="Description"
 			value="Test Adaptor to test performance"/>
 		<LRProperty name="tps" value="100"/>
@@ -451,14 +451,14 @@ Sample Configuration for a RPAdaptor
 	sample code of an empty reader adaptor:
 	 
 +---+
-package org.accada.ale.server.readers.myreader;
+package org.fosstrak.ale.server.readers.myreader;
 
-import org.accada.ale.server.Tag;
-import org.accada.ale.server.readers.BaseReader;
-import org.accada.ale.server.readers.LRSpec;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.reader.hal.HardwareException;
-import org.accada.reader.hal.Observation;
+import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.server.readers.BaseReader;
+import org.fosstrak.ale.server.readers.LRSpec;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.reader.hal.HardwareException;
+import org.fosstrak.reader.hal.Observation;
 
 public class MyReaderAdaptor extends BaseReader {
 

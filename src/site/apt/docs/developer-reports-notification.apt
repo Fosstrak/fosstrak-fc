@@ -17,7 +17,7 @@ Reports Notification
 	
 * {Objective}
 
-	The Accada Filtering and Collection middleware notifies its subscribers 
+	The Fosstrak Filtering and Collection middleware notifies its subscribers 
 	with the desired reports.
 	This guide should give you a brief overview how the subscribers are 
 	notified. There are three variants of notification:

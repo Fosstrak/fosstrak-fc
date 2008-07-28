@@ -8,7 +8,7 @@
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.accada.ale.server.readers.CompositeReader</value>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
         </property>
     </properties>
 </ns3:LRSpec>

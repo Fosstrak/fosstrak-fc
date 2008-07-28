@@ -1,19 +1,19 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -23,23 +23,23 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.accada.ale.util.ECReportSetEnum;
-import org.accada.ale.util.ECTimeUnit;
-import org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec;
-import org.accada.ale.xsd.ale.epcglobal.ECFilterSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECGroupSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReport;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroup;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupCount;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupList;
-import org.accada.ale.xsd.ale.epcglobal.ECReportGroupListMember;
-import org.accada.ale.xsd.ale.epcglobal.ECReportOutputSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSetSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReportSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECReports;
-import org.accada.ale.xsd.ale.epcglobal.ECSpec;
-import org.accada.ale.xsd.ale.epcglobal.ECTime;
-import org.accada.ale.xsd.epcglobal.EPC;
+import org.fosstrak.ale.util.ECReportSetEnum;
+import org.fosstrak.ale.util.ECTimeUnit;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupCount;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSetSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
+import org.fosstrak.ale.xsd.epcglobal.EPC;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;

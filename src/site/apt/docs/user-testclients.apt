@@ -27,7 +27,7 @@ Users guide - Test clients
 
 * {Clients}
 
- Accada comes with two different testclients that allow to interactively use a Filtering and
+ Fosstrak comes with two different testclients that allow to interactively use a Filtering and
   Collection Server instance. While the first client is a standalone Java application with a
   Swing GUI, the second client is a web application that can be accessed with any web browser.
   
@@ -126,7 +126,7 @@ Users guide - Test clients
 	
 * {Displaying} reports
 
-   For testing purposes, the class org.accada.reader.rp.client.EventSinkUI from the Accada Reader Client module
+   For testing purposes, the class org.fosstrak.reader.rp.client.EventSinkUI from the Fosstrak Reader Client module
    can be used to receive and display reports.
 
    The following steps show how to install and execute the EventSinkUI class:
@@ -138,7 +138,7 @@ Users guide - Test clients
    * Make sure a JRE 1.5 or higher is installed and it is added to the path variable.
    
    * Start the class in the jar file with the following command:
-     java -cp reader-rp-client-VERSION.jar org.accada.reader.rp.client.EventSinkUI [port]
+     java -cp reader-rp-client-VERSION.jar org.fosstrak.reader.rp.client.EventSinkUI [port]
 
    * As the port use the TCP port to which the filtering and collection module is sending the reports.
      The port is specified when subscribing for a specification in the notification URI.

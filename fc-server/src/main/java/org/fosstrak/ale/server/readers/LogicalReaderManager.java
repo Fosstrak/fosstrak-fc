@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2007 ETH Zurich
  *
- * This file is part of Accada (www.accada.org).
+ * This file is part of Fosstrak (www.fosstrak.org).
  *
- * Accada is free software; you can redistribute it and/or
+ * Fosstrak is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
  *
- * Accada is distributed in the hope that it will be useful,
+ * Fosstrak is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with Accada; if not, write to the Free
+ * License along with Fosstrak; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
 
-package org.accada.ale.server.readers;
+package org.fosstrak.ale.server.readers;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -35,24 +35,24 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 
 
-import org.accada.ale.server.ALE;
-import org.accada.ale.server.readers.gen.LogicalReaders;
-import org.accada.ale.server.readers.gen.ObjectFactory;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameException;
-import org.accada.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.accada.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameException;
-import org.accada.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.accada.ale.wsdl.ale.epcglobal.SecurityException;
-import org.accada.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.NonCompositeReaderExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.ReaderLoopExceptionResponse;
-import org.accada.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
-import org.accada.ale.xsd.ale.epcglobal.LRProperty;
-import org.accada.ale.xsd.ale.epcglobal.LRSpec;
+import org.fosstrak.ale.server.ALE;
+import org.fosstrak.ale.server.readers.gen.LogicalReaders;
+import org.fosstrak.ale.server.readers.gen.ObjectFactory;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameException;
+import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityException;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.NonCompositeReaderExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ReaderLoopExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
 /**
@@ -67,7 +67,7 @@ public class LogicalReaderManager {
 	private static final Logger LOG = Logger.getLogger(LogicalReaderManager.class);
 	
 	/** package containing the generated jaxb classes. */
-	private static final String JAXB_CONTEXT = "org.accada.ale.server.readers.gen";
+	private static final String JAXB_CONTEXT = "org.fosstrak.ale.server.readers.gen";
 	
 	/** default path to file which contains the initial logical reader configuration. */
 	private static final String LOAD_FILEPATH = "/LogicalReaders.xml";
@@ -327,7 +327,7 @@ public class LogicalReaderManager {
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 */
-	public static void define(String name, org.accada.ale.server.readers.gen.LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public static void define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		
 		LRSpec thespec = new LRSpec();
 		
@@ -342,7 +342,7 @@ public class LogicalReaderManager {
 		
 		// set the properties 
 		thespec.setProperties(new LRSpec.Properties());
-		for (org.accada.ale.server.readers.gen.LRProperty prop : spec.getLRProperty()) {
+		for (org.fosstrak.ale.server.readers.gen.LRProperty prop : spec.getLRProperty()) {
 			LRProperty property = new LRProperty();
 			property.setName(prop.getName());
 			property.setValue(prop.getValue());
@@ -411,7 +411,7 @@ public class LogicalReaderManager {
 		
 		// try to parse reader configuration file
 		LOG.debug("Parse configuration file :" + loadFilePath);
-		List<org.accada.ale.server.readers.gen.LogicalReader> genLogicalReaders;
+		List<org.fosstrak.ale.server.readers.gen.LogicalReader> genLogicalReaders;
 		try {
 			// initialize jaxb context and unmarshaller
 			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
@@ -433,12 +433,12 @@ public class LogicalReaderManager {
 		}
 		
 		// iterate over logical readers
-		for (org.accada.ale.server.readers.gen.LogicalReader logicalReader : genLogicalReaders) {
+		for (org.fosstrak.ale.server.readers.gen.LogicalReader logicalReader : genLogicalReaders) {
 			
 			// get logical reader name
 			String logName = "";
 			logName = logicalReader.getName();
-			org.accada.ale.server.readers.gen.LRSpec spec = logicalReader.getLRSpec();
+			org.fosstrak.ale.server.readers.gen.LRSpec spec = logicalReader.getLRSpec();
 			define(logName, spec);	
 		}
 			
@@ -487,10 +487,10 @@ public class LogicalReaderManager {
 			for (String name : names){
 				LogicalReader logRd = logicalReaders.get(name);
 				LRSpec spec = logRd.getLRSpec();
-				org.accada.ale.server.readers.gen.LogicalReader genLogRd = objFactory.createLogicalReader();
+				org.fosstrak.ale.server.readers.gen.LogicalReader genLogRd = objFactory.createLogicalReader();
 				genLogRd.setName(logRd.getName());
 				genLogRd.setName(name);
-				org.accada.ale.server.readers.gen.LRSpec genSpec = objFactory.createLRSpec();
+				org.fosstrak.ale.server.readers.gen.LRSpec genSpec = objFactory.createLRSpec();
 				genSpec.setIsComposite(spec.isIsComposite());
 				if (genSpec.isIsComposite()){
 					if (spec.getReaders() != null) {
@@ -503,7 +503,7 @@ public class LogicalReaderManager {
 				else {
 					Iterator<LRProperty> it = logRd.getProperties().iterator();
 					while(it.hasNext()){
-						org.accada.ale.server.readers.gen.LRProperty genProp = objFactory.createLRProperty();
+						org.fosstrak.ale.server.readers.gen.LRProperty genProp = objFactory.createLRProperty();
 						genProp.setName(it.next().getName());
 						genProp.setValue(it.next().getValue());
 						genSpec.getLRProperty().add(genProp);

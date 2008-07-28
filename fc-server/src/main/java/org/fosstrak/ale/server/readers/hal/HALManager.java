@@ -1,10 +1,10 @@
-package org.accada.ale.server.readers.hal;
+package org.fosstrak.ale.server.readers.hal;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.accada.hal.HardwareAbstraction;
-import org.accada.hal.impl.sim.SimulatorController;
+import org.fosstrak.hal.HardwareAbstraction;
+import org.fosstrak.hal.impl.sim.SimulatorController;
 import org.apache.log4j.Logger;
 
 /**

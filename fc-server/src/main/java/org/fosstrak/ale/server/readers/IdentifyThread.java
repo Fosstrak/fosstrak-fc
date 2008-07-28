@@ -28,10 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.accada.ale.server.readers;
+package org.fosstrak.ale.server.readers;
 
-import org.accada.hal.HardwareException;
-import org.accada.hal.Observation;
+import org.fosstrak.hal.HardwareException;
+import org.fosstrak.hal.Observation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -126,7 +126,7 @@ public class IdentifyThread implements Runnable {
 			Observation[] obs = null;
 			try {
 				obs = this.adapter.identify(sourceIds);
-			} catch (org.accada.hal.HardwareException e1) {
+			} catch (org.fosstrak.hal.HardwareException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}

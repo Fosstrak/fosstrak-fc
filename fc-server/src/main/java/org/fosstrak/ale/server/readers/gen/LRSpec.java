@@ -6,7 +6,7 @@
 //
 
 
-package org.accada.ale.server.readers.gen;
+package org.fosstrak.ale.server.readers.gen;
 
 import java.util.ArrayList;
 import java.util.List;

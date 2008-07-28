@@ -1,19 +1,19 @@
 <!--
  Copyright (C) 2007 ETH Zurich
 
- This file is part of Accada (www.accada.org).
+ This file is part of Fosstrak (www.fosstrak.org).
 
- Accada is free software; you can redistribute it and/or
+ Fosstrak is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License version 2.1, as published by the Free Software Foundation.
 
- Accada is distributed in the hope that it will be useful,
+ Fosstrak is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  Lesser General Public License for more details.
 
  You should have received a copy of the GNU Lesser General Public
- License along with Accada; if not, write to the Free
+ License along with Fosstrak; if not, write to the Free
  Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  Boston, MA  02110-1301  USA
 -->
@@ -40,13 +40,13 @@ if (method == null) {
 	methodID = -1;
 }
 
-org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType service = null;
+org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortType service = null;
 if (request.getParameter("endpoint") != null && request.getParameter("endpoint").length() > 0) {
-	factory.setServiceClass(org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType.class);
+	factory.setServiceClass(org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortType.class);
 	factory.setAddress(request.getParameter("endpoint"));
-	service = (org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType) factory.create();
+	service = (org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortType) factory.create();
 } else if (factory.getAddress() != null) {
-	service = (org.accada.ale.wsdl.ale.epcglobal.ALEServicePortType) factory.create();
+	service = (org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortType) factory.create();
 } else {
 	methodID = -1;
 }
@@ -74,11 +74,11 @@ case 14:
 	gotMethod = true;
 
 %>
-    <jsp:useBean id="Define14" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.Define" />
+    <jsp:useBean id="Define14" scope="session" class="org.fosstrak.ale.wsdl.ale.epcglobal.Define" />
 <%
-	Define14.setSpec(org.accada.ale.util.DeserializerUtil.deserializeECSpec(request.getParameter("specFilePath")));
+	Define14.setSpec(org.fosstrak.ale.util.DeserializerUtil.deserializeECSpec(request.getParameter("specFilePath")));
 	Define14.setSpecName(request.getParameter("specName"));
-	org.accada.ale.wsdl.ale.epcglobal.VoidHolder define14 = service.define(Define14);
+	org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder define14 = service.define(Define14);
 %>
 	<%=define14%>
 <%
@@ -90,9 +90,9 @@ break;
 case 50:
 	gotMethod = true;
 	
-	org.accada.ale.wsdl.ale.epcglobal.Undefine undefineSpec = new org.accada.ale.wsdl.ale.epcglobal.Undefine();
+	org.fosstrak.ale.wsdl.ale.epcglobal.Undefine undefineSpec = new org.fosstrak.ale.wsdl.ale.epcglobal.Undefine();
 	undefineSpec.setSpecName(request.getParameter("specName55"));
-	org.accada.ale.wsdl.ale.epcglobal.VoidHolder undefSpecRes = service.undefine(undefineSpec);
+	org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder undefSpecRes = service.undefine(undefineSpec);
 	%>
 	<%=undefSpecRes %>
 	<%
@@ -107,10 +107,10 @@ case 57:
     String specName_21id=  request.getParameter("specName102");
     java.lang.String specName_21idTemp  = specName_21id;
 	%>
-	<jsp:useBean id="_11wsdl1ale1epcglobal1GetECSpec_20id" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.GetECSpec" />
+	<jsp:useBean id="_11wsdl1ale1epcglobal1GetECSpec_20id" scope="session" class="org.fosstrak.ale.wsdl.ale.epcglobal.GetECSpec" />
 	<%
 	    _11wsdl1ale1epcglobal1GetECSpec_20id.setSpecName(specName_21idTemp);
-	    org.accada.ale.xsd.ale.epcglobal.ECSpec getECSpec57mtemp = service.getECSpec(_11wsdl1ale1epcglobal1GetECSpec_20id);
+	    org.fosstrak.ale.xsd.ale.epcglobal.ECSpec getECSpec57mtemp = service.getECSpec(_11wsdl1ale1epcglobal1GetECSpec_20id);
 	if(getECSpec57mtemp == null){
 	%>
 	<%=getECSpec57mtemp%>
@@ -150,9 +150,9 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
 	if(tebece0 != null){
-	org.accada.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getRepeatPeriod();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getRepeatPeriod();
 	if(tebece1 != null){
 	%>
 	<%=tebece1.getValue()%><%
@@ -171,7 +171,7 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
 	if(tebece0 != null){
 	java.lang.String tebece1=tebece0.getStartTrigger();
 	%>
@@ -192,7 +192,7 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
 	if(tebece0 != null){
 	java.lang.String tebece1=tebece0.getStopTrigger();
 	%>
@@ -213,9 +213,9 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
 	if(tebece0 != null){
-	org.accada.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getDuration();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getDuration();
 	if(tebece1 != null){
 	%>
 	<%=tebece1.getValue()%><%
@@ -234,9 +234,9 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	org.accada.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec tebece0=getECSpec57mtemp.getBoundarySpec();
 	if(tebece0 != null){
-	org.accada.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getStableSetInterval();
+	org.fosstrak.ale.xsd.ale.epcglobal.ECTime tebece1=tebece0.getStableSetInterval();
 	if(tebece1 != null){
 	%>
 	<%=tebece1.getValue()%><%
@@ -260,7 +260,7 @@ case 57:
 	<TD>
 	<%
 	if(getECSpec57mtemp != null){
-	java.util.List<org.accada.ale.xsd.ale.epcglobal.ECReportSpec> typereportSpecs92 = getECSpec57mtemp.getReportSpecs().getReportSpec();
+	java.util.List<org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec> typereportSpecs92 = getECSpec57mtemp.getReportSpecs().getReportSpec();
 	java.util.List listreportSpecs92= java.util.Arrays.asList(typereportSpecs92);
 	String tempreportSpecs92 = listreportSpecs92.toString();
 	%>
@@ -281,9 +281,9 @@ break;
 case 104:
     gotMethod = true;
 %>
-    <jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_22id" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.EmptyParms" />
+    <jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_22id" scope="session" class="org.fosstrak.ale.wsdl.ale.epcglobal.EmptyParms" />
     <%
-         org.accada.ale.wsdl.ale.epcglobal.ArrayOfString getECSpecNames104mtemp = service.getECSpecNames(_11wsdl1ale1epcglobal1EmptyParms_22id);
+         org.fosstrak.ale.wsdl.ale.epcglobal.ArrayOfString getECSpecNames104mtemp = service.getECSpecNames(_11wsdl1ale1epcglobal1EmptyParms_22id);
      		if (getECSpecNames104mtemp == null) {
      			%>
      		<%=getECSpecNames104mtemp%>
@@ -297,10 +297,10 @@ case 104:
      		break;
 // subscribe(String specName, String url)
 case 109:
-	org.accada.ale.wsdl.ale.epcglobal.Subscribe subscribe = new org.accada.ale.wsdl.ale.epcglobal.Subscribe();
+	org.fosstrak.ale.wsdl.ale.epcglobal.Subscribe subscribe = new org.fosstrak.ale.wsdl.ale.epcglobal.Subscribe();
 	subscribe.setNotificationURI(request.getParameter("notificationURI114"));
 	subscribe.setSpecName(request.getParameter("specName116"));
-	org.accada.ale.wsdl.ale.epcglobal.VoidHolder subscribeRes = service.subscribe(subscribe);
+	org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder subscribeRes = service.subscribe(subscribe);
 	%>
 	<%=subscribeRes %>
 	<%
@@ -310,10 +310,10 @@ case 109:
 // unsubscribe(String specName, String url)
 case 118:
 	gotMethod = true;
-	org.accada.ale.wsdl.ale.epcglobal.Unsubscribe unsubscribe = new org.accada.ale.wsdl.ale.epcglobal.Unsubscribe();
+	org.fosstrak.ale.wsdl.ale.epcglobal.Unsubscribe unsubscribe = new org.fosstrak.ale.wsdl.ale.epcglobal.Unsubscribe();
 	unsubscribe.setNotificationURI(request.getParameter("notificationURI123"));
 	unsubscribe.setSpecName(request.getParameter("specName125"));
-	org.accada.ale.wsdl.ale.epcglobal.VoidHolder unsubscribeRes = service.unsubscribe(unsubscribe);
+	org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder unsubscribeRes = service.unsubscribe(unsubscribe);
 	%>
 	<%=unsubscribeRes %>
 	<%
@@ -323,13 +323,13 @@ case 118:
 // poll(String specName)
 case 127:
 	gotMethod = true;
-	org.accada.ale.wsdl.ale.epcglobal.Poll poll = new org.accada.ale.wsdl.ale.epcglobal.Poll();
+	org.fosstrak.ale.wsdl.ale.epcglobal.Poll poll = new org.fosstrak.ale.wsdl.ale.epcglobal.Poll();
 	poll.setSpecName(request.getParameter("specName192"));
-	org.accada.ale.xsd.ale.epcglobal.ECReports pollResult = service.poll(poll);
+	org.fosstrak.ale.xsd.ale.epcglobal.ECReports pollResult = service.poll(poll);
 	
 	if (pollResult != null) {
 		java.io.CharArrayWriter pollwriter = new java.io.CharArrayWriter();
-		org.accada.ale.util.SerializerUtil.serializeECReports(pollResult, pollwriter);
+		org.fosstrak.ale.util.SerializerUtil.serializeECReports(pollResult, pollwriter);
 		java.lang.String pollResultStr = pollwriter.toString();
 		%>
  		<%=pollResultStr%>
@@ -345,13 +345,13 @@ case 127:
 // immediate(String specFilePath);
 case 194:
 	gotMethod = true;
-	org.accada.ale.wsdl.ale.epcglobal.Immediate immediate = new org.accada.ale.wsdl.ale.epcglobal.Immediate();
-	immediate.setSpec(org.accada.ale.util.DeserializerUtil.deserializeECSpec(request.getParameter("specFilePath")));
-	org.accada.ale.xsd.ale.epcglobal.ECReports immediateResult = service.immediate(immediate);
+	org.fosstrak.ale.wsdl.ale.epcglobal.Immediate immediate = new org.fosstrak.ale.wsdl.ale.epcglobal.Immediate();
+	immediate.setSpec(org.fosstrak.ale.util.DeserializerUtil.deserializeECSpec(request.getParameter("specFilePath")));
+	org.fosstrak.ale.xsd.ale.epcglobal.ECReports immediateResult = service.immediate(immediate);
 	
 	if (immediateResult != null) {
 		java.io.CharArrayWriter writer = new java.io.CharArrayWriter();
-		org.accada.ale.util.SerializerUtil.serializeECReports(immediateResult, writer);
+		org.fosstrak.ale.util.SerializerUtil.serializeECReports(immediateResult, writer);
 		java.lang.String immediateResultStr = writer.toString();
 		%>
  		<%=immediateResultStr%>
@@ -367,9 +367,9 @@ case 194:
 // getSubscribers(String specName)
 case 289:
 	gotMethod = true;
-	org.accada.ale.wsdl.ale.epcglobal.GetSubscribers getSubscribers = new org.accada.ale.wsdl.ale.epcglobal.GetSubscribers();
+	org.fosstrak.ale.wsdl.ale.epcglobal.GetSubscribers getSubscribers = new org.fosstrak.ale.wsdl.ale.epcglobal.GetSubscribers();
 	getSubscribers.setSpecName(request.getParameter("specName294"));
-	org.accada.ale.wsdl.ale.epcglobal.ArrayOfString getSubscribersRes = service.getSubscribers(getSubscribers);
+	org.fosstrak.ale.wsdl.ale.epcglobal.ArrayOfString getSubscribersRes = service.getSubscribers(getSubscribers);
 	if (getSubscribersRes == null) {
 	%>
 	<%=getSubscribersRes%>
@@ -387,7 +387,7 @@ case 289:
 case 296:
     gotMethod = true;
 %>
-<jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_49id" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.EmptyParms" />
+<jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_49id" scope="session" class="org.fosstrak.ale.wsdl.ale.epcglobal.EmptyParms" />
 <%
 java.lang.String getStandardVersion296mtemp = service.getStandardVersion(_11wsdl1ale1epcglobal1EmptyParms_49id);
 if(getStandardVersion296mtemp == null){
@@ -406,7 +406,7 @@ break;
 case 301:
     gotMethod = true;
 %>
-<jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_50id" scope="session" class="org.accada.ale.wsdl.ale.epcglobal.EmptyParms" />
+<jsp:useBean id="_11wsdl1ale1epcglobal1EmptyParms_50id" scope="session" class="org.fosstrak.ale.wsdl.ale.epcglobal.EmptyParms" />
 <%
 java.lang.String getVendorVersion301mtemp = service.getVendorVersion(_11wsdl1ale1epcglobal1EmptyParms_50id);
 if(getVendorVersion301mtemp == null){

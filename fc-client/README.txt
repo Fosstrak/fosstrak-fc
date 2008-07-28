@@ -1,7 +1,7 @@
-Accada Filtering and Collection Client
+Fosstrak Filtering and Collection Client
 ======================================
 
-The objective of the Accada Filtering and Collection Client module is to provide a 
+The objective of the Fosstrak Filtering and Collection Client module is to provide a 
 Java Swing based test client to execute Application Level Event specification (ALE)
 commands on a reader or component that implements the ALE specification.
 
@@ -20,7 +20,7 @@ Starting Filtering and Collection Client:
 3. Start the client: java -jar fc-client-VERSION.jar
 
 4. Start the reader client EventSinkUI to receive and display reports:
-java -cp reader-rp-client-VERSION.jar org.accada.reader.rp.client.EventSinkUI [port]
+java -cp reader-rp-client-VERSION.jar org.fosstrak.reader.rp.client.EventSinkUI [port]
 
 
-For more information,  please see http://www.accada.org/fc
+For more information,  please see http://www.fosstrak.org/fc
