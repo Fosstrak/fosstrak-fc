@@ -1,0 +1,135 @@
+       ------
+                                    Users guide - Installation and configuration
+                                    ------
+                                    ------
+
+
+Users guide - Installation and configuration
+
+* Content
+	
+	[[1]] {{{#Overview}Overview}}
+	
+	[[2]] {{{#Compilation}Compilation}}
+	
+	[[3]] {{{#Deployment}Deployment}}
+	
+	[[4]] {{{#Configuration}Configuration}}
+	
+	
+
+* {Overview}
+
+	In order to use the Filtering and Collection, you need a running 
+	copy of the Fosstrak fc-server. There are basically two ways how 
+	you can get one:
+	 
+	* You obtain a checkout from the fosstrak repository. (Where 
+	you need to compile the service on your own)
+	
+	* You can download a running copy from the website. If you 
+	prefere this way you can skip the chapter {{{#Compilation}Compilation}} and jump 
+	directly to {{{#Deployment}Deployment}}.
+	
+
+* {Compilation}
+	
+	You need a copy of the fc-server sources from the fosstrak 
+	svn repository.
+	To compile the sources run the following command in a shell.
+	
++-------------------------------------------------------------------+
+under windows:
+	cd <PATH_TO_CHECKOUT>\fc\fc-server
+	
+	mvn compile
+	mvn package
+
+under linux/unix:
+	cd <PATH_TO_CHECKOUT>/fc/fc-server
+	
+	mvn compile && mvn package
++-------------------------------------------------------------------+
+
+	When everything went fine you should have a new folder target 
+	in the fc-server folder that contains the war-file for the 
+	webserver. Make sure that the war file was created.
+
++-------------------------------------------------------------------+
+under windows:
+	dir target
+
+under linux/unix:
+	ls target
+	
+example output: fc-server-0.3.0-SNAPSHOT.war
++-------------------------------------------------------------------+
+
+
+* {Deployment}
+	
+	Copy the war-file into the webapps-folder of your server and 
+	start the server. The war-file will be deployed into a new 
+	folder.
+
+	Under windows you will usually find the webapps folder inside 
+	the tomcat installation directory (c:\Programme\Apache Tomcat 
+	\webapps). Under linux/unix this will depend on your 
+	distribution. Some possible locations: 
+	 
+	 	* /var/lib/tomcat/webapps
+		
+		* /usr/local/lib/tomcat/webapps
+		
+		
+	The fc-server is now ready to be configured at your needs.
+
+
+
+
+* {Configuration}
+
+	This chapter will give a short overview to the configuration 
+	files available. These files allow you to adapt the fc-server 
+	to your needs. You will find these configuration files inside 
+	the folder <TOMCAT_DIRECTORY>/webapps/fc-<VERSION>/WEB-INF/classes.
+
++-------------------------------------------------------------------+
+example: /var/lib/tomcat/webapps/fc-server-0.3.0-SNAPSHOT/WEB-INF/classes
++-------------------------------------------------------------------+
+		
+	* InputGenerators.properties: This propertie-file is the main 
+		config for the Fosstrak ALE. You will find it in the 
+		Folder WEB-INF/classes.
+		
+		It allows only one parameter to be changed, namely 
+		the xml-file that provides the logical reader API 
+		with the initial readers available at startup.
+		
+		Sample InputGenerators.properties:
+		
++-------------------------------------------------------------------+
+# you can specify your initial readers file here
+# eg
+readerAPI = /LogicalReaders.xml
++-------------------------------------------------------------------+
+
+		Make sure that the specified file is placed into 
+		the same folder as InputGenerators.properties. 
+		Otherwise your ALE will not startup correctly.
+	
+	* LogicalReaders.xml: This file specifies the readers that 
+		are loaded during startup of the ALE.
+		
+		For a short introduction to the parameters you need 
+		to specify in the xml refer to {{{#user-lrdef}Logical Reader 
+		Definitions}}.
+		
+	[]
+	
+	After a restart of the webserver the Fosstrak Filtering and Collection is 
+	available and ready to accept clients.
+	
+	
+	
+

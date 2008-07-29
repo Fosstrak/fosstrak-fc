@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
+        </property>
+	<property>
+	    <name>Description</name>
+	    <value>This Logical Reader consists of shelf 1 and shelf 2,3,4 of the physical reader named MyReader</value>
+	</property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PhysicalReaderSource</name>
+            <value>Shelf1,Shelf2,Shelf3,Shelf4</value>
+        </property>
+        <property>
+            <name>NotificationPoint</name>
+            <value>http://localhost:9090</value>
+        </property>
+        <property>
+            <name>ConnectionPoint</name>
+            <value>http://localhost:8000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>

@@ -1,0 +1,62 @@
+ApplicationTitle = ALE Client - Logical Reader API
+
+FileMenu = File
+QuitMenuItem = Quit
+
+SelectionPanelTitle = Select Command
+ResultPanelTitle = Result
+
+SpecNameLabel = ReaderName
+FilePathLabel = Specification File Path
+ChooseFileButtonLabel = Choose File
+PropertyNameLabel = PropertyName
+ReaderNameLabel = Readername
+
+ExecuteButtonLabel = execute
+OkButtonLabel = OK
+
+SuccessfullyDefinedMessage = The reader is successfully defined.
+SuccessfullyUndefinedMessage = The reader is successfully undefined.
+SuccessfullyUpdateMessage = The reader is successfully updated.
+SuccessfullyAddReadersMessage = The readers have been added successfully.
+SuccessfullySetReadersMessage = The readers have been set successfully.
+SuccessfullyRemoveReadersMessage = The readers have been removed successfully.
+SuccessfullySetPropertiesMessage = The properties have been set successfully.
+NoSpecDefinedMessage = There are no specifications defined.
+NoSubscribersMessage = There are no subscribers subscribed.
+EmptyArray = There are no result items.
+
+ExceptionDialogTitle = Exception
+ConnectionExceptionDialog = Could not connect to the specified endpoint.
+SpecNameNotSpecifiedDialog = Please specify the specification name.
+FilePathNotSpecifiedDialog = Please specify the specification file path. 
+NotificationUriNotSpecifiedDialog = Please specify the notification uri.
+FileNotFoundDialog = The specified file does not exist.
+UnexpectedFileFormatDialog = The specified file has an unexpected format.
+DuplicateNameExceptionDialog = The specified specification name does already exist. 
+DuplicateSubscriptionExceptionDialog = The specified notification URI is already subscribed.
+ECSpecValidationExceptionDialog = The specification is invalid.
+ImplementationExceptionDialog = An implementation exception occured.
+InvalidURIExceptionDialog = The specified URI is invalid.
+NoSuchNameExceptionDialog = The specified specification name does not exist.
+NoSuchSubscriberExceptionDialog = The specified subscriber does not exist.
+SecurityExceptionDialog = A security exception occured.
+UnknownExceptionDialog = An unknown exception occured.
+SerializationExceptionMessage = Could not serialize the result.
+DetailsPanelTitle = Exception Details
+InUseExceptionDialog = The specified reader is still in use.
+SecurityExceptionDialog = The command triggered a SecurityException.
+ImmutableReaderExceptionDialog = This reader is immutable.
+
+Command1 = define
+Command2 = undefine
+Command3 = update
+Command4 = getLogicalReaderNames
+Command5 = getLRSpec
+Command6 = addReaders
+Command7 = setReaders
+Command8 = removeReaders
+Command9 = setProperties
+Command10 = getPropertyValue
+Command11 = getStandardVersion
+Command12 = getVendorVersion

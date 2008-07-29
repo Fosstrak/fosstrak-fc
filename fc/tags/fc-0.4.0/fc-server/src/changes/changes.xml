@@ -1,0 +1,83 @@
+<document>
+    <properties>
+        <title>Changes fc-webclient</title>
+    </properties>
+    <body>
+        <release version="0.4.0" date="2008-07-29"
+            description="Project name changed to Fosstrak">
+            <action dev="roduner" type="update">
+                Renamed packages from org.accada to org.fosstrak.
+            </action>
+        </release>
+        <release version="0.3.0" date="2008-03-??"
+            description="Feature release: ALE 1.1">
+            <!-- general changes -->
+            <action dev="sawielan" type="add">
+               fc-server now supports the full logical reader api.
+            </action>
+            <action dev="sawielan" type="update">
+               adapted fc-webclient to the new fc-commons.
+            </action>
+	    <action dev="sawielan" type="add">
+               modified documentation according to the schema in epcis.
+            </action>
+	    <action dev="sawielan" type="fix" issue="1892541">
+	    	fixed sf bug 1892541. a HALAdaptor now supports 
+		several logical readers onto one physical hal device.
+	    </action>
+	    <action dev="sawielan" type="add">
+	    Added a TestAdaptor to the project.
+            </action>
+	   <action dev="sawielan" type="fix" issue="1876633">
+		    fixed tag filtering (now additions and deletions work properly for 
+		    hal and reader protocoll). A nullpointer exception could be caused 
+		    in Report.java as input was not properly checked. EventCycle.java 
+		    does no more write tags to the Report.java. Report.java gets the 
+		    tags from the EventCycle.java when computing the report.
+            </action>
+	    <action dev="sawielan" type="fix" issue="1873580">
+		    EventCycle crashes by nullpointer exception after one run.
+            </action>
+	    <action dev="sawielan" type="update">
+	    	Adapted the new config-file loader from the HAL.
+            </action>
+	    <action dev="sawielan" type="add">
+	    	RPAdaptor now uses an identifyThread to poll the available tags 
+		on the reader in a regular interval. the poll will return all 
+		tags, this means filtering needs to be done inside the logical 
+		reader API (eg Report.java).
+            </action>
+	    <action dev="sawielan" type="update">
+	    removed physicalSourceStub.
+	    removed physicalReaderStub.
+	    The stubs are no more needed. The InputGenerator contacts the 
+	    	rp-proxy directly.
+	    </action>
+	    <action dev="sawielan" type="update">
+	    Adapted to changed HAL interface.
+            </action>
+	    <action dev="sawielan" type="update">
+	    Adapted to new EventCycle.
+            </action>
+	    <action dev="sawielan" type="add">
+	    Adaptor for a reader protocol device. with this adaptor you can use 
+	    a rp-device inside the LogicalReader API as a LogicalReader.
+            </action>
+	    <action dev="sawielan" type="add">
+	    added jaxb accessors to xml.
+            </action>
+	    <action dev="sawielan" type="add">
+	    Adaptor for a HAL device. with this adaptor you can use a 
+	    hal-device inside the LogicalReader API as a LogicalReader.
+            </action>
+	    <action dev="sawielan" type="add">
+	    New Logical Reader API is used to support CompositeReaders 
+	    according the EPC Standard, LogicalReaderAPI chapter (10.3 ff).
+            </action>
+        </release>
+        <release version="0.2.0" date="2007-04-27"
+            description="Initial release">
+            <action type="add">Initial code release.</action>
+        </release>
+    </body>
+</document>

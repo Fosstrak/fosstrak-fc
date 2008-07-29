@@ -1,0 +1,47 @@
+       ------
+                                    Filtering and Collection
+                                    ------
+                                    ------
+
+
+
+Welcome to the Fosstrak Filtering and Collection Project
+
+
+* Objective
+
+     The objective of the <<Filtering and Collection>> Project is to implement 
+     the Filtering and Collection role in the EPC Network and to develop the 
+     appropriate tools that facilitate communication with the Filtering and 
+     Collection instance. 
+
+* Organization
+
+[images/FilteringCollectionProjectOverview.png]
+
+    The Fosstrak <<Filtering and Collection>> Project comprises basically two 
+    separate modules:	
+
+   *   the <<Filtering and Collection>> implementation itself
+
+   *   the <<ALE Test Client>> and the <<ALE Web Client>>
+
+    Both implement the ALE Specification defined by EPCglobal and its 
+    members. 
+
+
+* How can the Fosstrak Filtering and Collection Project help you?
+ 
+  This project allows you to:
+
+     * Interact with an RFID middleware that implements the Filtering and 
+     	Collection role and which supports the Application-Level-Events 
+	Specification using our ALE Test Client.
+     
+     []
+
+     * Deploy an RFID Middleware that implements the Filtering and Collection 
+     	role and supports the reader protocol and ALE specification.
+     
+     []
+ 

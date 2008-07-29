@@ -1,0 +1,95 @@
+       ------
+                                    ALE Features
+                                    ------
+                                    ------
+
+
+ALE features
+
+* Content
+
+	[[]] {{{#Objective}Objective}}
+	
+	[[]] {{{#Modules}Fosstrak ALE Modules}}
+	
+	[[]] {{{#Detailed}Detailed Feature List}}
+
+* {Objective}
+
+	The following outlines the features available in Fosstrak's ALE 1.1
+	implementation. 
+	
+	The Fosstrak Filtering and Collection Server currently does not implement 
+	the ALE 1.1 specification in full. The main features of the current 
+	implementation are the Logical Reader API and the EventCycle. For a 
+	detailed overview refer to the table {{{#Detailed}Detailed Feature 
+	List}}.
+
+
+* Fosstrak Filtering and Collection {Modules}
+
+	The Fosstrak ALE Project comprises three separate modules:
+	
+	* a Filtering and Collection Server implementation
+	
+	* an interactive ALE Client
+	
+	* an interactive ALE WebClient
+	
+	[]
+	
+	The modules implement the ALE Specification defined by EPCglobal and 
+	its members. 
+	
+** Fosstrak Filtering and Collection Server Features
+
+	Our implementation features the Filtering and Collection server as 
+	defined by EPCglobal ALE standard. We 
+	provide a HTTP binding for the webclient and a SOAP for the client. Our 
+	webclient implementation requires Apache Tomcat 5.5 or higher.
+	
+** Fosstrak ALE Client Features
+
+	The Fosstrak ALE client provides an intuitive graphical user interface to 
+	define ECSpecs and Endpoints. Further one can subscribe and unsubscribe 
+	to the generated reports. The Client is able to access the Logical 
+	Reader API. This API provides the ability to define logical readers and 
+	to modify them according to Logical Reader Specifications (LRSpec).
+	
+	
+** Fosstrak ALE Webclient
+
+	The Fosstrak ALE webclient provides the same functionality as the Fosstrak 
+	ALE client. The webclient is able to access the Logical 
+	Reader API. This API provides the ability to define logical readers and 
+	to modify them according to Logical Reader Specifications (LRSpec).
+ 
+	
+* {Detailed} Feature List
+
+	The list below shows which features of EPCglobal's filtering and 
+	collection interface (ALE) Specification, Version 1.1 are implemented 
+	in the current version of Fosstrak Filtering and Collection. 
+	
+	* X means that the feature is available.
+	
+	* - means the feature is not available.
+	
+	[]
+
+*-----------+----------+---+
+ Feature | Described in ALE Specification 1.1 | Supported in Fosstrak Filtering and Collection
+*-----------+----------+---+
+ ALE reading API | Sect. 8 | X
+ ALE writing API | Sect. 9 | -
+ ALE LogicalReader API | Sect. 10 | X
+ Access Control API | Sect. 11 | - 
+ ECSpec | Sect. 8.2 | X
+ ECSpec | Sect. 8.2 | X
+ ECReports | Sect. 8.3 | X
+ Event Cycles | Sect. 5.2 | X
+ LRSpec | Sect. 10.4 | X
+ LRProperty | Sect. 10.5 | X
+ Tag Smoothing | Sect. 10.6 | -
+*-----------+----------+---+
+
