@@ -9,18 +9,18 @@
 
 Download
 
-  The current version of Fosstrak Filtering and Collection is 0.3.0.
+  The current version of Fosstrak Filtering and Collection is 0.4.0.
 
 * Fosstrak Filtering and Collection Server
 
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Server 0.3.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.3.0/fc-server-0.3.0-bin-with-dependencies.zip}fc-server-0.3.0-bin-with-dependencies.zip}}
+ Filtering and Collection Server 0.4.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.4.0/fc-server-0.4.0-bin-with-dependencies.zip}fc-server-0.4.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Server 0.3.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.3.0/fc-server-0.3.0-bin-with-dependencies.tar.gz}fc-server-0.3.0-bin-with-dependencies.tar.gz}}
+ Filtering and Collection Server 0.4.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.4.0/fc-server-0.4.0-bin-with-dependencies.tar.gz}fc-server-0.4.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
- Filtering and Collection Server 0.3.0 with dependencies (war) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.3.0/fc-server-0.3.0.war}fc-server-0.3.0.war}}
+ Filtering and Collection Server 0.4.0 with dependencies (war) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/0.4.0/fc-server-0.4.0.war}fc-server-0.4.0.war}}
 *--------+----------+
 
 
@@ -29,9 +29,9 @@ Download
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Testclient 0.3.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/0.3.0/fc-client-0.3.0-bin-with-dependencies.zip}fc-client-0.3.0-bin-with-dependencies.zip}}
+ Filtering and Collection Testclient 0.4.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/0.4.0/fc-client-0.4.0-bin-with-dependencies.zip}fc-client-0.4.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Testclient 0.3.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/0.3.0/fc-client-0.3.0-bin-with-dependencies.tar.gz}fc-client-0.3.0-bin-with-dependencies.tar.gz}}
+ Filtering and Collection Testclient 0.4.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/0.4.0/fc-client-0.4.0-bin-with-dependencies.tar.gz}fc-client-0.4.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
 
 
@@ -40,9 +40,9 @@ Download
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Testclient 0.3.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/0.3.0/fc-webclient-0.3.0-bin-with-dependencies.zip}fc-webclient-0.3.0-bin-with-dependencies.zip}}
+ Filtering and Collection Testclient 0.4.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/0.4.0/fc-webclient-0.4.0-bin-with-dependencies.zip}fc-webclient-0.4.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Testclient 0.3.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/0.3.0/fc-webclient-0.3.0-bin-with-dependencies.tar.gz}fc-webclient-0.3.0-bin-with-dependencies.tar.gz}}
+ Filtering and Collection Testclient 0.4.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/0.4.0/fc-webclient-0.4.0-bin-with-dependencies.tar.gz}fc-webclient-0.4.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
 
 
@@ -51,9 +51,9 @@ Download
 *--------+----------+
          | Sources  |
 *--------+----------+
- Filtering and Collection Source 0.3.0 (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/0.3.0/fc-0.3.0-src.zip}fc-0.3.0-src.zip}}
+ Filtering and Collection Source 0.4.0 (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/0.4.0/fc-0.4.0-src.zip}fc-0.4.0-src.zip}}
 *--------+----------+
- Filtering and Collection Source 0.3.0 (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/0.3.0/fc-0.3.0-src.tar.gz}fc-0.3.0-src.tar.gz}}
+ Filtering and Collection Source 0.4.0 (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/0.4.0/fc-0.4.0-src.tar.gz}fc-0.4.0-src.tar.gz}}
 *--------+----------+
 
 
