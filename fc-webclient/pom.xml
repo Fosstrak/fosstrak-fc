@@ -7,11 +7,11 @@
 
   <groupId>org.fosstrak.fc</groupId>
   <artifactId>fc-webclient</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1-SNAPSHOT</version>
   <parent>
     <artifactId>fc</artifactId>
     <groupId>org.fosstrak.fc</groupId>
-    <version>0.4.0</version>
+    <version>0.4.1-SNAPSHOT</version>
   </parent>
   <packaging>war</packaging>
   <modelVersion>4.0.0</modelVersion>
