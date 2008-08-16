@@ -98,6 +98,41 @@ How to implement an Adaptor
 	definition. Two full examples are given to illustrate where the 
 	parameters are defined.
 	
+** Load HAL other than SimulatorController
+
+	If you want to load a HAL implementation not contained in the 
+	simulator framework (eg. impinj or feig implementation) you 
+	need to specify the corresponding implementation in the 
+	configuration file.
+
+	<<ATTENTION>>: Make sure that your implementation of the 
+	HardwareAbstraction interface provides a public 
+	constructor of the form <XYZ(String halName, String configFile)>.
+	
++---+
+Example 1: for the impinj hal from fosstrak
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.impinj.ImpinjTCPIPController</value>
+</property
+
+Example 2: for the feig hal from fosstrak
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.feig.FeigTCPIPController</value>
+</property>
+
+Example 3: for the simulator controller (default)
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.sim.SimulatorController</value>
+</property
+
++---+
+
 ** Dynamic definition
 
 +---+

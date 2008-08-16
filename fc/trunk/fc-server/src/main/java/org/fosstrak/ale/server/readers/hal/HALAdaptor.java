@@ -48,6 +48,9 @@ public class HALAdaptor extends BaseReader {
 	/** the readpoints where shall be read from. */
 	private String [] readPoints = null;
 	
+	/** the name of the default implementing class to be chosen. */
+	public static final String DEFAULT_IMPLCLASS = "org.fosstrak.hal.impl.sim.SimulatorController";
+
 	/**
 	 * constructor for the HAL adaptor.
 	 */
@@ -78,8 +81,19 @@ public class HALAdaptor extends BaseReader {
 		propertiesFile = logicalReaderProperties.get("PropertiesFile");
 		URL url = this.getClass().getResource(propertiesFile);
 		propertiesFile = url.getFile();
-				
-		hal = HALManager.getInstance().define(halName, propertiesFile);
+		
+		// get the implementing class
+		String implClass = logicalReaderProperties.get("ImplementingClass");
+		if (implClass == null) {
+			// the implementing class is missing, 
+			// therefore set to the default implementor
+			implClass = DEFAULT_IMPLCLASS;
+
+			LOG.error(String.format("The implementing class is missing, therefore using the default class '%s'", 
+				DEFAULT_IMPLCLASS));
+		}
+
+		hal = HALManager.getInstance().define(halName, propertiesFile, implClass);
 
 		setDisconnected();
 		setStopped();
