@@ -2,7 +2,6 @@
 <properties>
 
    <!-- SimulatorType to be loaded dynamically -->
-   <!-- currently only org.fosstrak.hal.impl.sim.GraphicSimulator is supported -->
    <simType>org.fosstrak.hal.impl.sim.GraphicSimulator</simType>
    <!-- <simType>org.fosstrak.hal.impl.sim.BatchSimulator</simType> -->
    <!-- <simType>org.fosstrak.hal.impl.sim.CmdLineSim</simType> -->
