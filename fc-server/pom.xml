@@ -34,6 +34,12 @@
       <artifactId>reader-rprm-core</artifactId>
       <version>0.5.0</version>
       <scope>compile</scope>
+      <exclusions>
+      	<exclusion>
+	  <groupId>xerces</groupId>
+	  <artifactId>xerces</artifactId>
+	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.fosstrak.hal</groupId>
@@ -47,11 +53,38 @@
       <version>0.5.0</version>
       <scope>compile</scope>
     </dependency>
+		<dependency>
+      <groupId>org.fosstrak.tdt</groupId>
+      <artifactId>tdt</artifactId>
+      <version>0.4.0</version>
+    </dependency>
+     <!-- bug by ltk pulls in wrong jdom version otherwise -->
+		 <!-- not active yet as llrp-adaptor not available on the website yet -->
+		 <!--
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.fosstrak.llrp</groupId>
+      <artifactId>llrp-adaptor</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+		-->
     <dependency>
       <groupId>org.fosstrak.reader</groupId>
       <artifactId>reader-rp-proxy</artifactId>
       <version>0.5.0</version>
       <scope>compile</scope>
+      <exclusions>
+      	<exclusion>
+	  <groupId>xerces</groupId>
+	  <artifactId>xerces</artifactId>
+	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -71,12 +104,11 @@
       <version>2.5</version>
       <scope>provided</scope>
     </dependency>
-	<dependency>
-		<groupId>xerces</groupId>
-		<artifactId>xercesImpl</artifactId>
-		<version>2.8.0</version>
-		<scope>runtime</scope>
-	</dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.8.0</version>
+    </dependency>
   </dependencies>
 
   <!-- =========================================================== -->
@@ -103,13 +135,22 @@
           </execution>
         </executions>
       </plugin>
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-war-plugin</artifactId>
-		<configuration>
-			<warSourceExcludes>WEB-INF/lib/xerces-1.2.3.jar</warSourceExcludes>
-		</configuration>
-	</plugin>
+			<!-- expand tdt content for tag translation -->
+			<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <overlays>
+            <overlay>
+              <groupId>org.fosstrak.tdt</groupId>
+              <artifactId>tdt</artifactId>
+							<type>jar</type>
+							<targetPath>WEB-INF/classes</targetPath>
+            </overlay>
+          </overlays>
+        </configuration>
+       </plugin>
+
     </plugins>
   </build>
 
