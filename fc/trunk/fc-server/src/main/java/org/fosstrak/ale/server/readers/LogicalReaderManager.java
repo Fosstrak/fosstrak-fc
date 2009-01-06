@@ -455,7 +455,7 @@ public class LogicalReaderManager {
 	/**
 	 * This method stores the current setting of logicalreaders to a .xml file.
 	 * 
-	 * @param configurationFilePath to initialize
+	 * @param storeFilePath configurationFilePath to initialize
 	 * @throws ImplementationException whenever something goes wrong inside the implementation 
 	 * @throws SecurityException the operation was not permitted due to access restrictions
 	 * @throws DuplicateNameException when a reader name is already defined

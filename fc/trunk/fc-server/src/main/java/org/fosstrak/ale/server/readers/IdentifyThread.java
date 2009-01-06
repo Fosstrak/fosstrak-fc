@@ -30,53 +30,43 @@
 
 package org.fosstrak.ale.server.readers;
 
-import org.fosstrak.hal.HardwareException;
-import org.fosstrak.hal.Observation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
-
 /**
- * An IdentifyThread encapsulates all the methods necessary for polling the device. The identification process
- * itself is based on the method <code>identify()</code> of the associated <code>AutoIdController</code>. 
+ * An IdentifyThread encapsulates all the methods necessary for polling the 
+ * device. The identification process itself is based on the method 
+ * <code>identify()</code> of the associated <code>AutoIdController</code>. 
  * 
- * @version 19.01.2004
  * @author Stefan Schlegel (schlstef@student.ethz.ch)
- * 
- * @uml stereotypes = {"thread"}
+ * @author sawielan
  */
-
 public class IdentifyThread implements Runnable {
-	/**
-	 *@uml property=adapter associationEnd={multiplicity={(1 1)} inverse={identifyThread:ch.mlab.rfidframework.hal.ContinuousIdentifyAdapter}}  
-	 */
-	//---------------fields----------------------------------------------------------------//
+	
 	/** the polling thread. */
 	private Thread identification;
+	
 	/** indicates if the thread shall be suspended. */
 	private boolean suspendThread = true;
+	
 	/** indicates if the thread is running. */
 	private boolean isRunning = false;
+	
 	/** the controller instance associated with this thread. */
 	private BaseReader adapter;
-	/** reference to ObservationBuffer */
-	//private ObservationBuffer buffer;
+	
 	/** the logger. */
-	private static Log log = LogFactory.getLog(IdentifyThread.class); 
-	/** the frequency in millisecons the thread has to poll the device with. */
+	private static Log log = LogFactory.getLog(IdentifyThread.class);
+	
+	/** the frequency in milliseconds the thread has to poll the device with. */
 	private long frequency;
-	/** the parameters for the identify method... */
-	private String prefix;
-	private int estimateNoTags;
-	private String mode;
-	private String diagnostic;
 	
-	/** sourceIds are used for continuousIdentifying with a Multi-antenna reader (Multiplexer). 
-	 * With a single antenna reader it should be: "sourceIds" = null .*/
+	/** 
+	 * sourceIds are used for continuousIdentifying with a Multi-antenna 
+	 * reader (Multiplexer). With a single antenna reader it should be: 
+	 * "sourceIds" = null . 
+	 */
 	private String[] sourceIds;
-	
-	//------------------constructors------------------------------------------------------//
 	
 	/**
 	 * Constructs an instance of IdentifyThread.
@@ -85,26 +75,17 @@ public class IdentifyThread implements Runnable {
 		super();
 	}
 	
-	
 	/**
 	 * Constructs an instance of IdentifyThread.
-	 * 
 	 * @param adapter the associated controller
-	 *@param buffer the buffer to put in the observations
 	 */
 	public IdentifyThread(BaseReader adapter) {
-//	public IdentifyThread(ContinuousIdentifyAdapter adapter, ObservationBuffer buffer) {
 		super();
 		this.adapter = adapter;
-		//this.buffer=buffer;
 	}
 	
-	//------------------methods-----------------------------------------------------------------//
-	
 	/**
-	 * Polls the RFID hardware for RFID tags in the
-	 * fields.
-	 * 
+	 * Polls the RFID hardware for RFID tags in the fields.
 	 */
 	public void run() {
 		Thread thisThread = Thread.currentThread();
@@ -116,19 +97,20 @@ public class IdentifyThread implements Runnable {
 					try {
 						wait();
 					} catch (Exception e) {
-						//TODO handle Exception
+						log.error(e.getMessage());
 						this.stopIdentify();
 					}
 				}
 			}
 			// Do work
 			log.debug("Continuous identify...");
-			Observation[] obs = null;
 			try {
-				obs = this.adapter.identify(sourceIds);
+				synchronized (this.adapter) {
+					this.adapter.identify(sourceIds);	
+				}
+				
 			} catch (org.fosstrak.hal.HardwareException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				log.debug(e1.getMessage());
 			}
 			try {
 				if (this.frequency > 0){
@@ -136,27 +118,13 @@ public class IdentifyThread implements Runnable {
 					Thread.sleep(this.frequency);
 				}
 			} catch (InterruptedException e){
-				//TODO handle Exception
+				log.debug(e.getMessage());
 			}
 		}
-	}
-	
-	
-	/**
-	 * Initializes the polling thread.
-	 *
-	 */
-	public void initPolling(String prefix, int estimateNoTags, String mode, String diagnostic){
-	 this.prefix = prefix;
-	 this.estimateNoTags = estimateNoTags;
-	 this.mode = mode;
-	 this.diagnostic = diagnostic;
-	}
-	
+	}	
 	
 	/**
-	 * Starts an instance of IdentifyThread
-	 *
+	 * Starts an instance of IdentifyThread.
 	 */
 	public void start(){
 		this.identification=new Thread(this);
@@ -166,19 +134,16 @@ public class IdentifyThread implements Runnable {
 		
 	}
 	
-	
 	/**
-	 * Suspends the IdentifyThread
-	 *
+	 * Suspends the IdentifyThread.
 	 */
 	public synchronized void suspendIdentify(){
 		this.suspendThread=true;
 		this.isRunning=false;
 	}
 	
-	
 	/**
-	 * Resumes the IdentifyThread
+	 * Resumes the IdentifyThread.
 	 */
 	public synchronized void resumeIdentify(){
 		this.suspendThread=false;
@@ -187,10 +152,8 @@ public class IdentifyThread implements Runnable {
 		notify();
 	}
 	
-	
 	/**
-	 * Stops the Thread 
-	 *
+	 * Stops the Thread.
 	 */
 	public synchronized void stopIdentify(){
 		log.debug("Scanning stopped...");
@@ -198,51 +161,44 @@ public class IdentifyThread implements Runnable {
 		this.isRunning=false;
 	}
 	
-	
 	/**
-	 * Gets the current polling frequency
-	 * 
+	 * Gets the current polling frequency.
 	 * @return the current polling frequency
 	 */
 	public long getPollingFrequency() {
 		return frequency;
 	}
 
-
 	/**
-	 * Sets the polling frequency.
-	 * The frequency is given in milliseconds indicating
-	 * how long the thread has to sleep between two executions.
-	 * 
+	 * Sets the polling frequency. The frequency is given in milliseconds 
+	 * indicating how long the thread has to sleep between two executions.
 	 * @param frequency the polling frequency in milliseconds.
 	 */
 	public void setPollingFrequency(long frequency) {
 		this.frequency = frequency;
 	}
 	
+	/**
+	 * set the sources to poll.
+	 * @param sourceIds an array of source ids to be polled on the reader.
+	 */
 	public void setSourceIds(String[] sourceIds){
 		this.sourceIds = sourceIds;
 	}
 	
-	
 	/**
-	 * Returns true if the thread is currently running, false 
-	 * if it is not.
-	 * 
-	 * @return boolean indicating if the thread is currently 
-	 * running or not
+	 * Returns true if the thread is currently running, false otherwise. 
+	 * @return boolean indicating if the thread is currently running or not.
 	 */
 	public boolean isRunning(){
 		return this.isRunning;
 	}
-
 	
 	/**
 	 * Gets the Controller instance associated with this IdentificationThread.
-	 * 
+	 * @return the reader polled through this polling thread.
 	 */
 	public BaseReader getAdapter() {
 		return this.adapter;
 	}
-
 }

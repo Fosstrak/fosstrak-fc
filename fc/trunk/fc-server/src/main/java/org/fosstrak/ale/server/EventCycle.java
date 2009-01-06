@@ -48,11 +48,9 @@ import org.apache.log4j.Logger;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl;
 
-
-
-
 /**
- * This class represents an event cycle. It collects the tags and manages the reports.
+ * This class represents an event cycle. It collects the tags and manages the 
+ * reports.
  * 
  * @author regli
  * @author sawielan
@@ -64,25 +62,28 @@ public class EventCycle implements Runnable, Observer {
 
 	/** random numbers generator. */
 	private static final Random rand = new Random(System.currentTimeMillis());
+	
 	/** ale id. */
 	private static final String ALEID = "ETHZ-ALE" + rand.nextInt();
+	
 	/** number of this event cycle. */
 	private static int number = 0;
 	
 	/** name of this event cycle. */
 	private final String name;
+	
 	/** report generator which contains this event cycle. */
 	private final ReportsGenerator generator;
-	/** last event cycle of the same ec specification. */
-	//private final EventCycle lastEventCycle;
+	
 	/** thread. */
 	private final Thread thread;
 	
-	/** ec specfication for this event cycle. */
+	/** event cycle specification for this event cycle. */
 	private final ECSpec spec;
 	
 	/** set of logical readers which deliver tags for this event cycle. */
-	private final Set<LogicalReader> logicalReaders = new HashSet<LogicalReader>();
+	private final Set<LogicalReader> logicalReaders = 
+		new HashSet<LogicalReader>();
 	
 	/** set of reports for this event cycle. */
 	private final Set<Report> reports = new HashSet<Report>();
@@ -95,10 +96,19 @@ public class EventCycle implements Runnable, Observer {
 	
 	/** indicates if this event cycle is terminated or not .*/
 	private boolean isTerminated = false;
+	
+	/** lock for thread synchronization between reports generator and this. */
+	private Integer lock = new Integer(1000);
+	
+	/** flag whether the event cycle has passed through or not. */ 
+	private boolean roundOver = false;
+	
 	/** the duration of collecting tags for this event cycle in milliseconds. */
 	private long durationValue;
+	
 	/** the total time this event cycle runs in milliseconds. */
 	private long totalTime;
+	
 	/** the termination condition of this event cycle. */
 	private String terminationCondition = null;
 
@@ -117,7 +127,8 @@ public class EventCycle implements Runnable, Observer {
 	 * @param generator to which this event cycle belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public EventCycle(ReportsGenerator generator) throws ImplementationExceptionResponse {
+	public EventCycle(ReportsGenerator generator) 
+		throws ImplementationExceptionResponse {
 		
 		// set name
 		name = generator.getName() + "_" + number++;
@@ -147,13 +158,16 @@ public class EventCycle implements Runnable, Observer {
 		LOG.debug("adding logicalReaders to EventCycle");
 		// get LogicalReaderStubs
 		if (spec.getLogicalReaders() != null) {
-			List<String> logicalReaderNames = spec.getLogicalReaders().getLogicalReader();
+			List<String> logicalReaderNames = 
+				spec.getLogicalReaders().getLogicalReader();
 			for (String logicalReaderName : logicalReaderNames) {
 				LOG.debug("retrieving logicalReader " + logicalReaderName);
-				LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(logicalReaderName);
+				LogicalReader logicalReader = 
+					LogicalReaderManager.getLogicalReader(logicalReaderName);
 				
 				if (logicalReader != null) {
-					LOG.debug("adding logicalReader " + logicalReader.getName() + " to EventCycle " + name);
+					LOG.debug("adding logicalReader " + 
+							logicalReader.getName() + " to EventCycle " + name);
 					logicalReaders.add(logicalReader);
 				}
 			}
@@ -164,7 +178,10 @@ public class EventCycle implements Runnable, Observer {
 		for (LogicalReader logicalReader : logicalReaders) {
 			
 			// subscribe this event cycle to the logical readers
-			LOG.debug("registering EventCycle " + name + " on reader " + logicalReader.getName());
+			LOG.debug(
+					"registering EventCycle " + name + " on reader " + 
+					logicalReader.getName());
+			
 			logicalReader.addObserver(this);
 		}
 		
@@ -183,9 +200,11 @@ public class EventCycle implements Runnable, Observer {
 	 * 
 	 * @return ec reports
 	 * @throws ECSpecValidationException if the tags of the report are not valid
-	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ImplementationException if an implementation exception occurs.
 	 */
-	private ECReports getECReports() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	private ECReports getECReports() 
+		throws ECSpecValidationExceptionResponse, 
+		ImplementationExceptionResponse {
 		
 		// create ECReports
 		ECReports reports = new ECReports();
@@ -217,7 +236,6 @@ public class EventCycle implements Runnable, Observer {
 		reports.getReports().getReport().addAll(getReportList());
 		
 		return reports;
-		
 	}	
 
 	/**
@@ -235,22 +253,26 @@ public class EventCycle implements Runnable, Observer {
 	 * This method adds a tag to this event cycle.
 	 * 
 	 * @param tag to add
-	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ImplementationException if an implementation exception occurs
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public synchronized void addTag(Tag tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
+	public synchronized void addTag(Tag tag) 
+		throws ImplementationExceptionResponse, 
+		ECSpecValidationExceptionResponse {
+		
 		if (!isAcceptingTags()) {
 			return;
 		}
 		
 		// add event only if EventCycle is still running
 		if (thread.isAlive()) {
-			LOG.debug("EventCycle '" + name + "' add Tag '" + tag.getTagIDAsPureURI() + "'.");
+			LOG.debug(
+					"EventCycle '" + name + "' add Tag '" + 
+					tag.getTagIDAsPureURI() + "'.");
 			
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(tag)) {
-					//LOG.debug("Tag " + tag.getTagIDAsPureURI() + "already in the list");
 					return;
 				}
 			}
@@ -266,7 +288,9 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occures
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public void addTag(TagType tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
+	public void addTag(TagType tag) 
+		throws ImplementationExceptionResponse, 
+		ECSpecValidationExceptionResponse {
 		
 		Tag newTag = new Tag();
 		newTag.setTagID(tag.getTagID());
@@ -274,12 +298,13 @@ public class EventCycle implements Runnable, Observer {
 		
 		// add event only if EventCycle is still running
 		if (thread.isAlive()) {
-			LOG.debug("EventCycle '" + name + "' add Tag '" + newTag.getTagIDAsPureURI() + "'.");
+			LOG.debug(
+					"EventCycle '" + name + "' add Tag '" + 
+					newTag.getTagIDAsPureURI() + "'.");
 			
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(newTag)) {
-					//LOG.debug("Tag " + tag.getTagIDAsTagURI() + "already in the list");
 					return;
 				}
 			}
@@ -334,13 +359,11 @@ public class EventCycle implements Runnable, Observer {
 	 * This method stops the thread.
 	 */
 	public void stop() {
-
 		// unsubscribe this event cycle from logical readers
 		for (LogicalReader logicalReader : logicalReaders) {
 			//logicalReader.unsubscribeEventCycle(this);
 			logicalReader.deleteObserver(this);
 		}
-
 		
 		if (thread.isAlive()) {
 			thread.interrupt();
@@ -353,8 +376,7 @@ public class EventCycle implements Runnable, Observer {
 		
 		synchronized (this) {
 			this.notifyAll();
-		}
-		
+		}		
 	}
 	
 	/**
@@ -363,9 +385,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @return name of event cycle
 	 */
 	public String getName() {
-		
-		return name;
-		
+		return name;	
 	}
 	
 	/**
@@ -374,9 +394,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @return true if this event cycle is terminated and false otherwise
 	 */
 	public boolean isTerminated() {
-		
 		return isTerminated;
-		
 	}
 	
 	/**
@@ -400,6 +418,9 @@ public class EventCycle implements Runnable, Observer {
 		
 		while (running) {
 			rounds ++;
+			synchronized (lock) {
+				roundOver = false;
+			}
 			LOG.info("EventCycle "+ getName() + ": Starting (Round " + rounds + ").");
 			
 			// set start time
@@ -413,14 +434,17 @@ public class EventCycle implements Runnable, Observer {
 				
 				if (durationValue > 0) {
 					
-					// if durationValue is specified and larger than zero, wait for notify or durationValue elapsed.
+					// if durationValue is specified and larger than zero, 
+					// wait for notify or durationValue elapsed.
 					synchronized (this) {
-						this.wait(Math.max(1, durationValue - (System.currentTimeMillis() - startTime)));
+						long dt = (System.currentTimeMillis() - startTime);
+						this.wait(Math.max(1, durationValue - dt));
 						terminationCondition = ECTerminationCondition.DURATION;
 					}
 				} else {
 					
-					// if durationValue is not specified or smaller than zero, wait for notify.
+					// if durationValue is not specified or smaller than zero, 
+					// wait for notify.
 					synchronized (this) {
 						this.wait();
 					}
@@ -428,21 +452,23 @@ public class EventCycle implements Runnable, Observer {
 			
 			} catch (InterruptedException e) {
 				
-				// if Thread is stopped with method stop(), then return without notify subscribers.
+				// if Thread is stopped with method stop(), 
+				// then return without notify subscribers.
 				return;
-				
 			}
 			
 			// dont accept tags anymore
 			setAcceptTags(false);
-			//-------------------------------------------------- generate the reports
+			//------------------------ generate the reports
 			
 			// get reports
 			try {
 				// compute total time
 				totalTime = System.currentTimeMillis() - startTime;
 				
-				LOG.info("EventCycle "+ getName() + ": Number of Tags read in the current EventCyle.java: " + tags.size());
+				LOG.info("EventCycle "+ getName() + 
+						": Number of Tags read in the current EventCyle.java: " 
+						+ tags.size());
 				
 				ECReports ecReports = getECReports();
 				
@@ -458,17 +484,26 @@ public class EventCycle implements Runnable, Observer {
 				tags = new HashSet<Tag>();
 				
 			} catch (ECSpecValidationExceptionResponse e) {
-				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
+				LOG.error("EventCycle "+ getName() + 
+						": Could not create ECReports (" + e.getMessage() + ")");
 			} catch (ImplementationExceptionResponse e) {
-				LOG.error("EventCycle "+ getName() + ": Could not create ECReports (" + e.getMessage() + ")");
+				LOG.error("EventCycle "+ getName() + 
+						": Could not create ECReports (" + e.getMessage() + ")");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 			
-			LOG.info("EventCycle "+ getName() + ": EventCycle finished (Round " + rounds + ").");
+			LOG.info("EventCycle "+ getName() + 
+					": EventCycle finished (Round " + rounds + ").");
 			try {
-				synchronized (this) {
+				// inform possibly waiting workers about the finish
+				synchronized (lock) {
+					roundOver = true;
+					lock.notifyAll();
+				}
+				// wait until reschedule.
+				synchronized (this) {	
 					this.wait();
 				}
 			} catch (InterruptedException e) {
@@ -492,18 +527,16 @@ public class EventCycle implements Runnable, Observer {
 		}
 	}
 	
-	//
-	// private methods
-	//
-	
 	/**
-	 * This method returns all reports of this event cycle as ec reports.
-	 * 
+	 * This method returns all reports of this event cycle as event cycle 
+	 * reports. 
 	 * @return array of ec reports
 	 * @throws ECSpecValidationException if a tag of this report is not valid
-	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ImplementationException if an implementation exception occurs.
 	 */
-	private List<ECReport> getReportList() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	private List<ECReport> getReportList() 
+		throws ECSpecValidationExceptionResponse, 
+		ImplementationExceptionResponse {
 
 		ArrayList<ECReport> ecReports = new ArrayList<ECReport>();
 		for (Report report : reports) {
@@ -514,8 +547,8 @@ public class EventCycle implements Runnable, Observer {
 	}
 	
 	/**
-	 * This method returns the duration value extracted from the ec specification.
-	 * 
+	 * This method returns the duration value extracted from the event cycle 
+	 * specification. 
 	 * @return duration value in milliseconds
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
@@ -526,7 +559,8 @@ public class EventCycle implements Runnable, Observer {
 				if (duration.getUnit().compareToIgnoreCase(ECTimeUnit.MS) == 0) {
 					return duration.getValue();
 				} else {
-					throw new ImplementationExceptionResponse("The only ECTimeUnit allowed is milliseconds (MS).");
+					throw new ImplementationExceptionResponse(
+							"The only ECTimeUnit allowed is milliseconds (MS).");
 				}
 			}
 		}
@@ -567,8 +601,26 @@ public class EventCycle implements Runnable, Observer {
 		this.lastEventCycleTags = tags;
 	}
 
+	/**
+	 * @return the number of rounds this event cycle has already run through.
+	 */
 	public int getRounds() {
 		return rounds;
+	}
+	
+	/**
+	 * thread synchronizer for the end of this event cycle. if the event cycle 
+	 * has already finished, then the method returns immediately. otherwise the 
+	 * thread waits for the finish.
+	 * @throws InterruptedException
+	 */
+	public void join() throws InterruptedException {
+		synchronized (lock) {
+			if (roundOver) {
+				return;
+			}
+			lock.wait();
+		}
 	}
 
 }
