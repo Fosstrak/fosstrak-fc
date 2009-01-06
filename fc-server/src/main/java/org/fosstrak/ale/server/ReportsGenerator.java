@@ -263,7 +263,7 @@ public class ReportsGenerator implements Runnable {
 		for (Subscriber listener : subscribers.values()) {
 			try {
 				listener.notify(reports);
-			} catch (ImplementationExceptionResponse e) {
+			} catch (Exception e) {
 				LOG.error("Could not notifiy subscriber '" + 
 						listener.getURI() 
 						+ "' (" + e.getMessage() + ")");
