@@ -274,7 +274,12 @@ public class Tag {
 			if (null == engine) {
 				String root = Tag.class.getResource("/").toString();
 				root = root.replaceAll("%20", " ");
-				root = root.replaceFirst("file:/", "");
+				if (System.getProperty("os.name").startsWith("Windows")) {
+					root = root.replaceFirst("file:/", "");
+				} else {
+					root = root.replaceFirst("file:", "");
+				}
+				
 				log.info(String.format(
 						"start tdt with schema folder: %s", 
 						root)
