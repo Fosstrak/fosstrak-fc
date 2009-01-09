@@ -536,11 +536,6 @@ public class LogicalReaderManager {
 			if (!reader.isStarted()) {
 				reader.start();
 			}
-		} else {
-			LOG.error("reader " + readerName + " not contained in LogicalReaderManager");
-			for(LogicalReader logicalreader: logicalReaders.values()){
-				LOG.error(logicalreader.getName());
-			}
 		}
 		return reader;
 	}

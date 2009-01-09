@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 public abstract class LogicalReader extends Observable{
 
 	/** logger. */
-	private static final Logger LOG = Logger.getLogger(LogicalReader.class);
+	private static final Logger log = Logger.getLogger(LogicalReader.class);
 	
 	/** name of the reader. */
 	protected String readerName;
@@ -164,6 +164,7 @@ public abstract class LogicalReader extends Observable{
 		// first test if reader is already in the LogicalReaderManager
 		LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(name);
 		if (logicalReader != null) {
+			log.debug("using already defined reader.");
 			return logicalReader;
 		}
 		
@@ -195,7 +196,7 @@ public abstract class LogicalReader extends Observable{
 			}
 			
 		} catch (Throwable e) {
-			System.out.println("could not dynamically reflect the reader type");
+			log.error("could not dynamically reflect the reader type");
 			e.printStackTrace();
 			throw new ImplementationExceptionResponse();
 		}
