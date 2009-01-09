@@ -1,16 +1,33 @@
 package org.fosstrak.ale.server;
 
+import java.io.FileNotFoundException;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.LinkedList;
+
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.fosstrak.ale.util.HexUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.tdt.TDTEngine;
+import org.fosstrak.tdt.TDTException;
+import org.fosstrak.tdt.types.LevelTypeList;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
  * represents a tag that has been read on one of the readers in the Logical Reader API.
  * @author sawielan
+ * @author alessio orlando
+ * @author roberto vergallo
  *
  */
 public class Tag {
+	
+	/** logger. */
+	private static final Logger log = Logger.getLogger(Tag.class);
 	
 	/** name of the (composite) reader where the tag has been read. */
 	private String reader = null;
@@ -23,6 +40,9 @@ public class Tag {
 	
 	/** id as pure uri*/
 	private String tagIDAsPureURI = null;
+	
+	/** id as binary string. */
+	private String binary = null;
 	
 	/** trace where the tag passed through the ALE.  */
 	private String trace = null;
@@ -146,13 +166,15 @@ public class Tag {
 	 * prints a pretty print to the provided logger.
 	 * @param log log facility to write the pretty print to
 	 */
-	public void prettyPrint(Logger log) {
-		log.debug(String.format("--------------------------------\n"));
-		log.debug(String.format("ReaderName: %s\n", getReader()));
-		log.debug(String.format("OriginName: %s\n", getOrigin()));
-		log.debug(String.format("Timestamp: %d\n", getTimestamp()));
-		log.debug(String.format("Tag id: %s\n", getTagID()));
-		log.debug(String.format("Trace: %s\n:", getTrace()));
+	public void prettyPrint(Logger log, Level level) {
+		log.log(level, String.format("--------------------------------\n"));
+		log.log(level, String.format("ReaderName: %s\n", getReader()));
+		log.log(level, String.format("OriginName: %s\n", getOrigin()));
+		log.log(level, String.format("Timestamp: %d\n", getTimestamp()));
+		log.log(level, String.format("Tag id: %s\n", getTagID()));
+		log.log(level, String.format("Trace: %s\n:", getTrace()));
+		log.log(level, String.format("Binary: %s\n:", getTagAsBinary()));
+		log.log(level, String.format("PureID: %s\n:", getTagIDAsPureURI()));
 	}
 
 	/**
@@ -224,5 +246,119 @@ public class Tag {
 	 */
 	public void setTagIDAsPureURI(String tagIDAsPureURI) {
 		this.tagIDAsPureURI = tagIDAsPureURI;
+	}
+	
+	/**
+	 * sets the tag in binary format.
+	 * @param binary the tag in binary format.
+	 */
+	public void setTagAsBinary(String binary) {
+		this.binary = binary;
+	}
+	
+	/**
+	 * @return the tag in binary format.
+	 */
+	public String getTagAsBinary() {
+		return binary;
+	}
+		
+	/** instance of the tdt engine used for tag conversion. */
+	private static TDTEngine engine = null;
+	
+	/**
+	 * start the tdt engine.
+	 */
+	private static synchronized void startTDTEngine() {
+		try {
+			if (null == engine) {
+				String root = Tag.class.getResource("/").toString();
+				root = root.replaceAll("%20", " ");
+				root = root.replaceFirst("file:/", "");
+				log.info(String.format(
+						"start tdt with schema folder: %s", 
+						root)
+						);
+				engine = new TDTEngine(root);		
+			}
+		} catch (Exception e) {
+			log.error(
+					"exception when creating the tdt engine: " + e.getMessage()
+					);
+		}
+	}
+	
+	/**
+	 * run the actual tdt conversion.
+	 * @param input the tag to convert in binary format or in TAG_ENCODING.
+	 * @param extraparms conversion parameters.
+	 * @param outputLevel the destination format.
+	 * @return the converted tag.
+	 * @throws TDTException whenever a tag conversion error occurs.
+	 * @throws NullPointerException when there is some other error...
+	 */
+	private static synchronized String convert(
+			String input,
+			HashMap<String, String> extraparms,
+			LevelTypeList outputLevel) 
+	
+		throws TDTException, NullPointerException {
+		
+		if (null == engine) {
+			startTDTEngine();
+		}
+		return engine.convert(input, extraparms, outputLevel);		
+	}
+	
+	/**
+	 * converts a given tag through tdt into LEGACY format.
+	 * @param tagLength the inbound taglength must be specified as "64" or "96".
+	 * @param filter the inbound filter value must be specified - range 
+	 * depends on coding scheme.
+	 * @param companyPrefixLength length of the EAN.UCC Company Prefix must be 
+	 * specified for GS1 coding schemes. if set to null paramter is ignored.
+	 * @param tag the tag to convert in binary format or in TAG_ENCODING.
+	 * @return a converted tag or null if exception during conversion.
+	 */
+	public static synchronized String convert_to_LEGACY(
+			String tagLength,
+			String filter,
+			String companyPrefixLength,
+			String tag) {
+		
+		LevelTypeList outputLevel = LevelTypeList.LEGACY;
+		HashMap<String, String> extraparms = new HashMap<String, String> ();
+		extraparms.put("taglength", tagLength);
+		extraparms.put("filter", filter);
+		if (null != companyPrefixLength) {
+			extraparms.put("companyprefixlength", companyPrefixLength);
+		}
+		return convert(tag, extraparms, outputLevel);
+	}
+	
+	/**
+	 * converts a given tag through tdt into PURE_IDENTITY format.
+	 * @param tagLength the inbound taglength must be specified as "64" or "96".
+	 * @param filter the inbound filter value must be specified - range 
+	 * depends on coding scheme.
+	 * @param companyPrefixLength length of the EAN.UCC Company Prefix must be 
+	 * specified for GS1 coding schemes. if set to null paramter is ignored.
+	 * @param tag the tag to convert in binary format or in TAG_ENCODING.
+	 * @return a converted tag or null if exception during conversion.
+	 */
+	public static synchronized String convert_to_PURE_IDENTITY(
+			String tagLength,
+			String filter,
+			String companyPrefixLength,
+			String tag) {
+		
+		LevelTypeList outputLevel = LevelTypeList.PURE_IDENTITY;
+		HashMap<String, String> extraparms = new HashMap<String, String> ();
+		extraparms.put("taglength", tagLength);
+		extraparms.put("filter", filter);
+		if (null != companyPrefixLength) {
+			extraparms.put("companyprefixlength", companyPrefixLength);
+		}
+		return convert(tag, extraparms, outputLevel);		
 	}
 }
