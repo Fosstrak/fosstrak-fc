@@ -258,9 +258,23 @@ public class InputGenerator implements NotificationChannelListener {
 								if (tagEvents != null) {
 									for (TagEventType tagEvent : tagEvents) {
 										String eventType = tagEvent.getEventType();
-										LOG.debug("Tag '" + tag.getTagIDAsPureURI() + "' fired Event of type '" + eventType + "'");
+										//LOG.debug("Tag '" + tag.getTagIDAsPureURI() + "' fired Event of type '" + eventType + "'");
 										if (EventType.EV_OBSERVED.equals(eventType)) {
-											tagsToNotify.add(new Tag(adaptor.getName(), tag.getTagID(), tag.getTagIDAsPureURI(), System.currentTimeMillis()));
+											// somehow rp delivers binary instead 
+											// pure uri
+											String binary = tag.getTagIDAsPureURI();
+											Tag nt = new Tag(
+													adaptor.getName(), 
+													tag.getTagID(), 
+													Tag.convert_to_PURE_IDENTITY(
+															"64",
+															"1",
+															"7",
+															binary), 
+													System.currentTimeMillis());
+
+											nt.setTagAsBinary(binary);
+											tagsToNotify.add(nt);
 										}
 									}
 								}

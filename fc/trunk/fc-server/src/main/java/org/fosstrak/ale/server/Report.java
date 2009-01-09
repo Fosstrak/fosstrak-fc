@@ -20,6 +20,7 @@
 
 package org.fosstrak.ale.server;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -432,8 +433,13 @@ public class Report {
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
 		if (reportSpec.getOutput().isIncludeRawDecimal()) {
+			String val = tag.getTagIDAsPureURI();
+			if (null != tag.getTagAsBinary()) {
+				BigInteger dec = new BigInteger(tag.getTagAsBinary(), 2);
+				val = dec.toString();
+			}
 			EPC epc = new EPC();
-			epc.setValue(tag.getTagIDAsPureURI());
+			epc.setValue(val);
 			groupMember.setRawDecimal(epc);
 		}
 		if (reportSpec.getOutput().isIncludeTag()) {

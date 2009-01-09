@@ -1,5 +1,6 @@
 package org.fosstrak.ale.server.readers.hal;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -285,12 +286,14 @@ public class HALAdaptor extends BaseReader {
 		Observation[] observations = null;
 		if (countObservers() > 0) {
 			
-			// if there are no readPoints specified through the 
-			// lrspec, just use all available readPoints
-			if (readPoints == null) {
-				observations = hal.identify(hal.getReadPointNames());	
-			} else {
-				observations = hal.identify(readPoints);
+			synchronized (hal) {
+				// if there are no readPoints specified through the 
+				// lrspec, just use all available readPoints
+				if (readPoints == null) {
+					observations = hal.identify(hal.getReadPointNames());	
+				} else {
+					observations = hal.identify(readPoints);
+				}
 			}
 			
 			// only process if there are tags
@@ -301,7 +304,38 @@ public class HALAdaptor extends BaseReader {
 					// For each tag create a new Tag
 					for (String tagobserved : observation.getIds()) {
 						Tag tag = new Tag(getName());
-						tag.setTagIDAsPureURI(tagobserved);
+						
+						String bin = new BigInteger(
+								tagobserved.toLowerCase(), 16).toString(2);
+						
+						tag.setTagAsBinary(bin);
+						// 64 bit tag length
+						if (bin.length() <= 64) {
+							tag.setTagIDAsPureURI(
+									Tag.convert_to_PURE_IDENTITY(
+											"64",
+											"1",
+											"7",
+											bin)
+									);
+						} // 96 bit length
+							else if (bin.length() <= 96) {
+								
+							// leading 00 gets truncated away by the big int. 
+							if (bin.startsWith("1") && 
+									(bin.length() < 96)) {
+								
+								bin = "00" + bin;
+							}
+								
+							tag.setTagIDAsPureURI(
+									Tag.convert_to_PURE_IDENTITY(
+											"96",
+											"3",
+											null,
+											bin)
+									);
+						}
 						tag.setTimestamp(observation.getTimestamp());
 						tags.add(tag);
 					}

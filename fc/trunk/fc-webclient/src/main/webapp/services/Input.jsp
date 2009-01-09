@@ -60,7 +60,7 @@ valid = false;
 <TR>
 <TD COLSPAN="1" ALIGN="LEFT">endpoint:</TD>
 <TD ALIGN="left"><INPUT TYPE="TEXT" NAME="endpoint" style="width:450px;"><br/>
-example: http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService</TD>
+example: http://localhost:8080/fc-server-0.4.2/services/ALEService</TD>
 </TR>
 </TABLE>
 <BR>
@@ -312,7 +312,7 @@ case 317:
 	<TR>
 	<TD COLSPAN="1" ALIGN="LEFT">endpoint:</TD>
 	<TD ALIGN="left"><INPUT TYPE="TEXT" NAME="lrendpoint" style="width:450px;"><br/>
-	example: http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALELRService
+	example: http://localhost:8080/fc-server-0.4.2/services/ALELRService
 	</TD>
 	</TR>
 	</TABLE>
