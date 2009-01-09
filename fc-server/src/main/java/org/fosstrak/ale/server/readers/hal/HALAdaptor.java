@@ -286,16 +286,25 @@ public class HALAdaptor extends BaseReader {
 		Observation[] observations = null;
 		if (countObservers() > 0) {
 			
-			synchronized (hal) {
-				// if there are no readPoints specified through the 
-				// lrspec, just use all available readPoints
-				if (readPoints == null) {
-					observations = hal.identify(hal.getReadPointNames());	
-				} else {
-					observations = hal.identify(readPoints);
+			try {
+				synchronized (hal) {
+					// if there are no readPoints specified through the 
+					// lrspec, just use all available readPoints
+					if (readPoints == null) {
+						observations = hal.identify(hal.getReadPointNames());	
+					} else {
+						observations = hal.identify(readPoints);
+					}
 				}
+			} catch (Exception e) {
+				LOG.error(String.format(
+						"caught exception from hal. %s",
+						e.getMessage()));
 			}
-			
+			// dont process if observations are null.
+			if (null == observations) {
+				return null;
+			}
 			// only process if there are tags
 			if (observations.length > 0) {
 				List<Tag> tags = new LinkedList<Tag>();

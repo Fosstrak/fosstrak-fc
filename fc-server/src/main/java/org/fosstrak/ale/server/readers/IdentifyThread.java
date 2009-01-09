@@ -109,7 +109,7 @@ public class IdentifyThread implements Runnable {
 					this.adapter.identify(sourceIds);	
 				}
 				
-			} catch (org.fosstrak.hal.HardwareException e1) {
+			} catch (Exception e1) {
 				log.debug(e1.getMessage());
 			}
 			try {
