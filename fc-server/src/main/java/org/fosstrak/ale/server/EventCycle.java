@@ -269,16 +269,18 @@ public class EventCycle implements Runnable, Observer {
 			LOG.debug(
 					"EventCycle '" + name + "' add Tag '" + 
 					tag.getTagIDAsPureURI() + "'.");
-			
+			/*
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(tag)) {
 					return;
 				}
-			}
+			}*/
 			
 			// add tag to tags
-			tags.add(tag);			
+			if (!tags.add(tag)) {
+				LOG.debug("tag already contained, therefor not adding.");
+			}
 		}
 	}
 	
@@ -301,16 +303,19 @@ public class EventCycle implements Runnable, Observer {
 			LOG.debug(
 					"EventCycle '" + name + "' add Tag '" + 
 					newTag.getTagIDAsPureURI() + "'.");
-			
+			/*
 			for (Tag atag : tags) {
 				// do not add the tag it is already in the list
 				if (atag.equals(newTag)) {
 					return;
 				}
 			}
-			
+			*/
 			// add tag to tags
-			tags.add(newTag);
+			//tags.add(newTag);
+			if (!tags.add(newTag)) {
+				LOG.debug("tag already contained, therefor not adding.");
+			}
 		}
 	}
 
@@ -506,7 +511,9 @@ public class EventCycle implements Runnable, Observer {
 				synchronized (this) {	
 					this.wait();
 				}
+				LOG.debug("eventcycle continues");
 			} catch (InterruptedException e) {
+				LOG.error("eventcycle got interrupted");
 			}			
 		}
 			

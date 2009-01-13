@@ -231,6 +231,22 @@ public class Tag {
 	public boolean equals(Tag tag) {
 		return equalsTag(tag);
 	}
+	
+	public boolean equals(Object obj) {
+		if (obj instanceof Tag) {
+			return equalsTag((Tag)obj);
+		}
+		return false;
+	}
+	
+	public int hashCode() {
+		String val = getTagAsBinary();
+		if (null != val) {
+			BigInteger dec = new BigInteger(val, 2);
+			return dec.getLowestSetBit();
+		}
+		return super.hashCode();
+	}
 
 	/**
 	 * returns the id of this tag as pure uri.
