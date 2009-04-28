@@ -29,6 +29,10 @@ import java.util.Observer;
 import java.util.Random;
 import java.util.Set;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.util.ECTerminationCondition;
@@ -44,9 +48,6 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.reader.rprm.core.msg.notification.TagType;
-import org.apache.log4j.Logger;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl;
 
 /**
  * This class represents an event cycle. It collects the tags and manages the 
@@ -213,9 +214,11 @@ public class EventCycle implements Runnable, Observer {
 		reports.setSpecName(generator.getName());
 		
 		// set date
-		reports.setDate(
-				new DatatypeFactoryImpl().newXMLGregorianCalendar(
-						new GregorianCalendar()));
+		try {
+			reports.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+		} catch (DatatypeConfigurationException e) {
+			LOG.error("Could not create date: " + e.getMessage());
+		}
 
 		// set ale id
 		reports.setALEID(ALEID);
