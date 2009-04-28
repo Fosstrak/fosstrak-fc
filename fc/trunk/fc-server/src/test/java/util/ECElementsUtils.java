@@ -390,8 +390,9 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		assertEquals(expected, actual);
-		
+		if (!expected.equals(actual)) {
+			throw new AssertionFailedError();
+		}
 	}
 	
 	public static void assertEquals(ECReportSpec[] expected, ECReportSpec[] actual) {
@@ -510,6 +511,7 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
+		
 		assertEquals(expected.getALEID(), actual.getALEID());
 		assertEquals(expected.getSchemaURL(), actual.getSchemaURL());
 		assertEquals(expected.getSpecName(), actual.getSpecName());
@@ -517,10 +519,9 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getDate(), actual.getDate());
 		assertEquals(expected.getECSpec(), actual.getECSpec());
 		assertEquals(expected.getExtension(), actual.getExtension());
-		assertEquals(expected.getReports().getReport(), actual.getReports().getReport());
+		assertEqualsReports(expected.getReports().getReport(), actual.getReports().getReport());
 		assertEquals(expected.getTerminationCondition(), actual.getTerminationCondition());
 		assertEquals(expected.getTotalMilliseconds(), actual.getTotalMilliseconds());
-
 	}
 	
 	public static void assertEqualsReports(List<ECReport> expected, List<ECReport> actual) {
@@ -547,7 +548,6 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		
 	}
 	
 	public static void assertEquals(ECReport expected, ECReport actual) {
@@ -562,7 +562,7 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getReportName(), actual.getReportName());
 		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
-		
+
 		List<ECReportGroup> expectedGroups = expected.getGroup();
 		List<ECReportGroup> actualGroups = actual.getGroup();
 		
@@ -582,7 +582,6 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		
 	}
 	
 	public static void assertEquals(ECReportGroup expected, ECReportGroup actual) {
@@ -599,7 +598,6 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getGroupCount(), actual.getGroupCount());
 		assertEquals(expected.getGroupList(), actual.getGroupList());
 		assertEquals(expected.getGroupName(), actual.getGroupName());
-		
 	}
 	
 	public static void assertEquals(ECReportGroupCount expected, ECReportGroupCount actual) {
@@ -633,7 +631,7 @@ public class ECElementsUtils extends Assert {
 		List<ECReportGroupListMember> actualMembers = actual.getMember();
 		
 		assertEquals(expectedMembers.size(), actualMembers.size());
-		
+
 		for (ECReportGroupListMember expectedMember : expectedMembers) {
 			boolean contains = false;
 			for (ECReportGroupListMember actualMember : actualMembers) {
@@ -648,7 +646,24 @@ public class ECElementsUtils extends Assert {
 				throw new AssertionFailedError();
 			}
 		}
-		
+	}
+	
+	public static void assertEquals(EPC expected, EPC actual) {
+		if (expected == null || actual == null) {
+			if (expected == null && actual == null) {
+				return;
+			} else {
+				throw new AssertionFailedError();
+			}
+		}
+		if (expected.getValue() == null || actual.getValue() == null) {
+			if (expected.getValue() == null && actual.getValue() == null) {
+				return;
+			} else {
+				throw new AssertionFailedError();
+			}
+		}
+		assertTrue(expected.getValue().equals(actual.getValue()));
 	}
 	
 	public static void assertEquals(ECReportGroupListMember expected, ECReportGroupListMember actual) {
@@ -666,7 +681,6 @@ public class ECElementsUtils extends Assert {
 		assertEquals(expected.getTag(), actual.getTag());
 		assertEquals(expected.getAny(), actual.getAny());
 		assertEquals(expected.getExtension(), actual.getExtension());
-		
 	}
 	
 	public static void assertEqualsString(List<String> expected, List<String> actual) {

@@ -233,8 +233,7 @@ public class NotificationListenerTest extends TestCase {
 		ECReports resultReports = DeserializerUtil.deserializeECReports(new FileInputStream(notificationFile));
 		
 		// check result
-		// FIXME
-		//ECElementsUtils.assertEquals(reports, resultReports);
+		ECElementsUtils.assertEquals(reports, resultReports);
 				
 	}
 	
@@ -262,9 +261,7 @@ public class NotificationListenerTest extends TestCase {
 		socketListener.stop();
 		
 		// check result
-		// FIXME
-		//ECElementsUtils.assertEquals(reports, resultReports);
-		
+		ECElementsUtils.assertEquals(reports, resultReports);
 	}
 	
 	public void testNotify_Http() throws Exception {
@@ -292,9 +289,7 @@ public class NotificationListenerTest extends TestCase {
 		socketListener.stop();
 		
 		// check result
-		// FIXME
-		//ECElementsUtils.assertEquals(reports, resultReports);
-		
+		ECElementsUtils.assertEquals(reports, resultReports);
 	}
 	
 	private String readHtmlHeaderFromInputStream(InputStream inputStream) throws IOException {
@@ -302,6 +297,7 @@ public class NotificationListenerTest extends TestCase {
 		boolean newLine = false;
 		byte[] buf = new byte[1];
 		StringBuffer header = new StringBuffer();
+		assertNotNull(inputStream);
 		while (inputStream.read(buf) > 0) {
 			String newString = new String(buf);
 			if (buf[0] == 10) {
