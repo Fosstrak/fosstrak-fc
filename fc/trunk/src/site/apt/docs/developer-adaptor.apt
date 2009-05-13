@@ -13,10 +13,12 @@ How to implement an Adaptor
    [[2]] {{{#HALAdaptor}HALAdaptor}}
    
    [[3]] {{{#RPAdaptor}RPAdaptor}}
-   
-   [[4]] {{{#TestAdaptor}TestAdaptor}}
 
-   [[5]] {{{#A}A new Adaptor}}
+   [[4]] {{{#LLRPAdaptor}LLRPAdaptor}}
+   
+   [[5]] {{{#TestAdaptor}TestAdaptor}}
+
+   [[6]] {{{#A}A new Adaptor}}
 
 
 * {Objective}
@@ -342,7 +344,111 @@ Sample Configuration for a RPAdaptor
 	
 	
 	
+
+
+* {LLRPAdaptor}
+
+	Fosstrak supports the integration of LLRP enabled readers through 
+	the Fosstrak LLRP Commander project. The LLRP Commander enables you 
+	to configure and manage your LLRP readers through a simple and 
+	intuitive eclipse GUI. For a detailed discussion how to use the 
+	Fosstrak LLRP Commander please refer to the respective project 
+	documentation website at Fosstrak.
+
+	For the integration of an LLRP enabled reader into the filtering 
+	and collection framework, Fosstrak implements a simple bridge to 
+	the reader management module of the Fosstrak LLRP Commander. 
+ 
+	The following list shall give an overview to all available parameters 
+	that can be passed to filtering and collection through an LRSpec.
 	
+	* ReaderType: (Mandatory) The reader type is mandatory and HAS to be set 
+	to <org.fosstrak.ale.server.readers.llrp.LLRPAdaptor>
+	
+	* PhysicalReaderName: (Mandatory) Within the LLRP GUI Client component 
+	each LLRP reader has a unique name. This parameter refers to this name. 
+	You can create several logical readers that point to the same 
+	physical reader.
+	
+	* ip: (optional) If you specify an ip within the LRSpec fc checks if 
+	the reader "PhysicalReaderName" is already registered. If not fc tries 
+	to establish a new connection to the specified ip. If the reader 
+	does not exist and no ip is provided an exception is triggered.
+	
+	* port: (optional) if you omit the port parameter the default 
+	port is used to establish the reader connection (5084).
+	
+	* clientInitiated: (optional) if you specify the parameter 
+	ip you have to specify this parameter to either true or false. This 
+	parameter specifies the connection profile to choose for the LLRP 
+	reader connection (please refer to the LLRP GUI Client documentation 
+	for a more detailed explanation). Most profiles will use "true" and 
+	therefore the adaptor default is set to "true".
+	
+	* Description: (optional) parameter with a textual description of the 
+	logical reader.
+	
+	
+	
+** Dynamic definition
+
++---+
+Sample Configuration for a LLRPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.llrp.LLRPAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>my llrp reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>ethzReader</value>
+        </property>
+        <property>
+            <name>ip</name>
+            <value>127.0.0.1</value>
+        </property>
+        <property>
+            <name>port</name>
+            <value>5084</value>
+        </property>
+        <property>
+            <name>clientInitiated</name>
+            <value>true</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static definition
+
++---+
+Sample Configuration for a LLRPAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+		<LRProperty name="Description" value="my llrp reader"/>
+		<LRProperty name="PhysicalReaderName" 
+			value="ethzReader"/>
+		<LRProperty name="ip" 
+			value="127.0.0.1"/>
+		<LRProperty name="port" value="5084"/>
+		<LRProperty name="clientInitiated" value="true"/>
+	</LRSpec>
+</LogicalReader>
++---+
+
+		
+	[]
 	
 
 * {TestAdaptor}
