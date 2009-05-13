@@ -3,6 +3,26 @@
         <title>Changes fc-webclient</title>
     </properties>
     <body>
+    	<release version="0.4.2" date="2009-01-XX" 
+	    description="Feature and bugfix release">
+	    <action dev="sawielan" type="add">
+	    	add llrp support through LLRPAdaptor. together with 
+				fosstrak LLRP Commander LLRP enabled reader can be 
+				configured and maintained.
+	    </action>
+			<action dev="sawielan" type="fix" issue="2481005">
+				in eventcycle when repeatPeriod and durationValue were the 
+				same value, the eventcycle missed tags.
+	    </action>
+	    <action dev="sawielan" type="update">
+	    	update from apache-cxf-2.0.4-incubator to the stable 
+				apache-cxf-2.0.9.
+	    </action>
+	    <action dev="sawielan" type="fix">
+	    	fixed issue with war packaging and wrong xerces 
+				version (1.2.3 instead of 2.8.0).
+	    </action>
+	</release>
         <release version="0.4.1" date="2008-07-29"
             description="Feature and bugfix release">
             <action dev="sawielan" type="fix" issue="2054573">
