@@ -197,34 +197,34 @@ public class LLRPManager implements LLRPExceptionHandler, Repository {
 	}
 
 	public void clearAll() {
-		log.info("placeholder method. will never be implemented");
+		log.debug("placeholder method. will never be implemented");
 	}
 
 	public void close() {
-		log.info("placeholder method. will never be implemented");	
+		log.debug("placeholder method. will never be implemented");	
 	}
 
 	public LLRPMessageItem get(String arg0) {
-		log.info("placeholder method. will never be implemented. ATTENTION: returning null");
+		log.debug("placeholder method. will never be implemented. ATTENTION: returning null");
 		return null;
 	}
 
 	public void open() {
-		log.info("placeholder method. will never be implemented");
+		log.debug("placeholder method. will never be implemented");
 	}
 
 	public void put(LLRPMessageItem arg0) {
-		log.info("placeholder method. will never be implemented");
+		log.debug("placeholder method. will never be implemented");
 	}
 
 	public ArrayList<LLRPMessageItem> get(String arg0, String arg1, int arg2,
 			boolean arg3) {
-		log.info("placeholder method. will never be implemented. ATTENTION: returning null");
+		log.debug("placeholder method. will never be implemented. ATTENTION: returning null");
 		return null;
 	}
 
 	public int count(String adaptor, String reader) {
-		log.info("placeholder method. will never be implemented. ATTENTION: returning 0");
+		log.debug("placeholder method. will never be implemented. ATTENTION: returning 0");
 		return 0;
 	}
 
