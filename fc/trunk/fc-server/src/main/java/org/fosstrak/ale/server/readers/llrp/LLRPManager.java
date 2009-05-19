@@ -15,7 +15,8 @@ import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 import org.fosstrak.llrp.client.LLRPExceptionHandler;
 import org.fosstrak.llrp.client.LLRPExceptionHandlerTypeMap;
 import org.fosstrak.llrp.client.LLRPMessageItem;
-import org.fosstrak.llrp.client.Repository;
+import org.fosstrak.llrp.client.MessageHandler;
+import org.llrp.ltk.types.LLRPMessage;
 
 
 /**
@@ -27,7 +28,7 @@ import org.fosstrak.llrp.client.Repository;
  * @author sawielan
  *
  */
-public class LLRPManager implements LLRPExceptionHandler, Repository {
+public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	
 	/** the path to the configuration file. */
 	public static final String CONFIGURATION_FILE = "/llrpAdaptorConfiguration.properties";
@@ -196,36 +197,9 @@ public class LLRPManager implements LLRPExceptionHandler, Repository {
 		e.printStackTrace();
 	}
 
-	public void clearAll() {
-		log.debug("placeholder method. will never be implemented");
-	}
-
-	public void close() {
-		log.debug("placeholder method. will never be implemented");	
-	}
-
-	public LLRPMessageItem get(String arg0) {
-		log.debug("placeholder method. will never be implemented. ATTENTION: returning null");
-		return null;
-	}
-
-	public void open() {
-		log.debug("placeholder method. will never be implemented");
-	}
-
-	public void put(LLRPMessageItem arg0) {
-		log.debug("placeholder method. will never be implemented");
-	}
-
-	public ArrayList<LLRPMessageItem> get(String arg0, String arg1, int arg2,
-			boolean arg3) {
-		log.debug("placeholder method. will never be implemented. ATTENTION: returning null");
-		return null;
-	}
-
-	public int count(String adaptor, String reader) {
-		log.debug("placeholder method. will never be implemented. ATTENTION: returning 0");
-		return 0;
+	public void handle(String adaptorName, String readerName,
+			LLRPMessage message) {
+		log.debug("placeholder. NEVER IMPLEMENTED.");		
 	}
 
 
