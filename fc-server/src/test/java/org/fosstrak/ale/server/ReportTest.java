@@ -20,6 +20,7 @@
 
 package org.fosstrak.ale.server;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -84,21 +85,28 @@ public class ReportTest extends TestCase {
 	private static final byte[] TAG_ID = new byte[] {1, 2, 3};
 	private static final String TAG_PURE_URI = "urn:epc:pat:gid-96:1.2.3";
 	private static final String TAG_TAG_URI = "urn:epc:pat:gid-96:1.2.3";
-	
+	private static final String TAG_RAW_DECIMAL = "66051";
+	private static final String TAG_RAW_HEX = "10203";
 	// default group tag parameters
 	private static final byte[] DEFAULT_GROUP_TAG_ID = new byte[] {1, 11, 3};
 	private static final String DEFAULT_GROUP_TAG_PURE_URI = "urn:epc:pat:gid-96:1.11.3";
 	private static final String DEFAULT_GROUP_TAG_TAG_URI = "urn:epc:pat:gid-96:1.11.3";
+	private static final String DEFAULT_GROUP_TAG_RAW_DECIMAL = "68355";
+	private static final String DEFAULT_GROUP_TAG_RAW_HEX = "10b03";
 	
 	// last event cycle default tag parameters
 	private static final byte[] LAST_CYCLE_TAG_ID = new byte[] {1, 3, 3};
 	private static final String LAST_CYCLE_TAG_PURE_URI = "urn:epc:pat:gid-96:1.3.3";
 	private static final String LAST_CYCLE_TAG_TAG_URI = "urn:epc:pat:gid-96:1.3.3";
+	private static final String LAST_CYCLE_TAG_RAW_DECIMAL = "66307";
+	private static final String LAST_CYCLE_TAG_RAW_HEX = "10303";
 	
 	// last event cycle default group tag parameters
 	private static final byte[] LAST_CYCLE_DEFAULT_GROUP_TAG_ID = new byte[] {1, 12, 3};
 	private static final String LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI = "urn:epc:pat:gid-96:1.12.3";
 	private static final String LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI = "urn:epc:pat:gid-96:1.12.3";
+	private static final String LAST_CYCLE_DEFAULT_GROUP_RAW_DECIMAL = "68611";
+	private static final String LAST_CYCLE_DEFAULT_GROUP_RAW_HEX = "10c03";
 	
 	// not included tag parameters
 	private static final byte[] EXCLUDED_TAG_ID = new byte[] {5, 2, 3};
@@ -170,8 +178,8 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+				assertEquals(DEFAULT_GROUP_TAG_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(DEFAULT_GROUP_TAG_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
@@ -188,8 +196,8 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().getValue());
+				assertEquals(TAG_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(TAG_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
@@ -237,8 +245,9 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+
+				assertEquals(DEFAULT_GROUP_TAG_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(DEFAULT_GROUP_TAG_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
@@ -255,8 +264,9 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(TAG_ID), member.getRawHex().getValue());
+				
+				assertEquals(TAG_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(TAG_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
@@ -328,8 +338,8 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_DEFAULT_GROUP_TAG_ID), member.getRawHex().getValue());
+				assertEquals(LAST_CYCLE_DEFAULT_GROUP_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(LAST_CYCLE_DEFAULT_GROUP_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(LAST_CYCLE_DEFAULT_GROUP_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				//assertEquals("unkown", member.getEpc());
@@ -346,8 +356,8 @@ public class ReportTest extends TestCase {
 				
 				// test member
 				ECReportGroupListMember member = members.get(0);
-				assertEquals(LAST_CYCLE_TAG_PURE_URI, member.getRawDecimal().getValue());
-				assertEquals(HexUtil.byteArrayToHexString(LAST_CYCLE_TAG_ID), member.getRawHex().getValue());
+				assertEquals(LAST_CYCLE_TAG_RAW_DECIMAL, member.getRawDecimal().getValue());
+				assertEquals(LAST_CYCLE_TAG_RAW_HEX, member.getRawHex().getValue());
 				assertEquals(LAST_CYCLE_TAG_TAG_URI, member.getTag().getValue());
 				// TODO: test epc
 				// assertEquals("unkown", member.getEpc());
@@ -374,22 +384,17 @@ public class ReportTest extends TestCase {
 		ECReport ecReport = report.getECReport();
 
 		// test report name
-		assertEquals(REPORT_NAME, ecReport.getReportName());
-
-		// test groups
-		assertEquals(ecReport.getGroup().size(), 0);
-		
+		assertEquals(REPORT_NAME, ecReport.getReportName());		
 	}
 	
-	private TagType createTag(byte[] tag_id, String tag_pure_uri, String tag_tag_uri) {
-		
-		TagType tag = new TagType();
+	private Tag createTag(byte[] tag_id, String tag_pure_uri, String tag_tag_uri) {
+		BigInteger b = new BigInteger(tag_id);
+		Tag tag = new Tag();
+		tag.setTagAsBinary(b.toString(2));
 		tag.setTagID(tag_id);
 		tag.setTagIDAsPureURI(tag_pure_uri);
-		tag.setTagIDAsTagURI(tag_tag_uri);
 		
-		return tag;
-		
+		return tag;		
 	}
 
 	private ECReportSpec createECReportSpec() {
@@ -473,15 +478,18 @@ public class ReportTest extends TestCase {
 		Set<Tag> tags = new HashSet<Tag>();
 		Tag tag1 = new Tag();
 		tag1.setTagIDAsPureURI(LAST_CYCLE_TAG_PURE_URI);
+		tag1.setTagAsBinary(new BigInteger(LAST_CYCLE_TAG_ID).toString(2));
 		tag1.setTagID(LAST_CYCLE_TAG_ID);
 		tags.add(tag1);
 		Tag tag2 = new Tag();
 		tag2.setTagIDAsPureURI(LAST_CYCLE_DEFAULT_GROUP_TAG_PURE_URI);
 		tag2.setTagID(LAST_CYCLE_DEFAULT_GROUP_TAG_ID);
+		tag2.setTagAsBinary(new BigInteger(LAST_CYCLE_DEFAULT_GROUP_TAG_ID).toString(2));
 		tags.add(tag2);
 		Tag tag3 = new Tag();
 		tag3.setTagIDAsPureURI(EXCLUDED_TAG_PURE_URI);
 		tag3.setTagID(EXCLUDED_TAG_ID);
+		tag3.setTagAsBinary(new BigInteger(EXCLUDED_TAG_ID).toString(2));
 		tags.add(tag3);
 		
 		

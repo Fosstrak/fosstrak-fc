@@ -450,7 +450,8 @@ public class Report {
 		if (reportSpec.getOutput().isIncludeRawHex()) {
 			if (tag.getTagID() != null) {
 				EPC epc = new EPC();
-				epc.setValue(HexUtil.byteArrayToHexString(tag.getTagID()));
+				BigInteger hex = new BigInteger(tag.getTagAsBinary(), 2);
+				epc.setValue(hex.toString(16));
 				groupMember.setRawHex(epc);
 			}
 		}
