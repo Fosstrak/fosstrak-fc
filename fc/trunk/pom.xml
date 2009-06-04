@@ -191,13 +191,6 @@
       <post>accada-ale-user@lists.sourceforge.net</post>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-user</archive>
     </mailingList>
-    <mailingList>
-      <name>Filtering and Collection developer mailing list</name>
-      <subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-developer</subscribe>
-      <unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-developer</unsubscribe>
-      <post>accada-ale-developer@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-developer</archive>
-    </mailingList>
   </mailingLists>
 
 
@@ -308,7 +301,7 @@
   <licenses>
     <license>
       <name>GNU Lesser General Public License (LGPL)</name>
-      <url>http://www.gnu.org/licenses/lgpl.txt</url>
+      <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
     </license>
   </licenses>
 
