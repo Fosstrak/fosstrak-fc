@@ -5,43 +5,28 @@
 
 
 
-Welcome to the Fosstrak Filtering and Collection Project
+Fosstrak ALE Middleware with LLRP Support: Filter and Collect RFID Data from RFID Readers
 
-
-* Objective
-
-     The objective of the <<Filtering and Collection>> Project is to implement 
+     The objective of the <<Fosstrak ALE Middleware>> is to implement 
      the Filtering and Collection role in the EPC Network and to develop the 
      appropriate tools that facilitate communication with the Filtering and 
      Collection instance. 
 
-* Organization
-
 [images/FilteringCollectionProjectOverview.png]
 
-    The Fosstrak <<Filtering and Collection>> Project comprises basically two 
+    The Fosstrak <<Filtering and Collection>> Middleware comprises basically two 
     separate modules:	
 
-   *   the <<Filtering and Collection>> implementation itself
+   *   the <<Filtering and Collection>> implementation itself based on the ALE 1.1 protocol
 
-   *   the <<ALE Test Client>> and the <<ALE Web Client>>
+   *   two client <<ALE Clients>> (web-based and standalone application)
 
-    Both implement the ALE Specification defined by EPCglobal and its 
-    members. 
+    Both implement the ALE Specification defined by EPCglobal.
 
-
-* How can the Fosstrak Filtering and Collection Project help you?
+	To communicate with RFID readers, the Fosstrak ALE Middleware uses LLRP. 
+	For readers that do not support LLRP, the ALE Middleware uses the Fosstrak Hardware Abstraction Layer (HAL).
+	
+	The Fosstrak LLRP Commander is used to configure RFID readers that support LLRP. 
  
-  This project allows you to:
 
-     * Interact with an RFID middleware that implements the Filtering and 
-     	Collection role and which supports the Application-Level-Events 
-	Specification using our ALE Test Client.
-     
-     []
-
-     * Deploy an RFID Middleware that implements the Filtering and Collection 
-     	role and supports the reader protocol and ALE specification.
-     
-     []
  

@@ -13,26 +13,20 @@
   <poweredBy>
     <logo img="images/logos/supportedByAutoid4.png" name="Auto-ID" href="http://www.autoidlabs.org/" />
   </poweredBy>
-  <publishDate position="left" format="MMM d, yyyy HH:mm:ss z"/>
+  <publishDate position="none"/>
 
   <body>
     <links>
-      <item name="Fosstrak" href="../index.html" />
-      <item name="Reader" href="../reader/index.html"/>
-      <item name="Filtering and Collection" href="index.html"/>
-      <item name="EPCIS" href="../epcis/index.html"/>
-      <item name="Tag Data Translation" href="../tdt/index.html"/>
-      <item name="HAL" href="../hal/index.html"/>
+      <item name="EPCIS Repository" href="../epcis/index.html"/>
+	  <item name="TDT Engine" href="../tdt/index.html"/>
+      <item name="ALE Middleware" href="index.html"/>
+	  <item name="LLRP Commander" href="../llrp/index.html"/>
     </links>
 
 
     <!-- =========================================================== -->
     <!-- Navigation Menu                                             -->
     <!-- =========================================================== -->
-
-    <menu name="Fosstrak" inherit="top">
-      <item name="Home" href="../index.html"/>
-    </menu>
      
     <menu name="Filtering and Collection Project" inherit="top">
       <item name="Overview" href="index.html"/>
@@ -47,16 +41,16 @@
     </menu>
 
     <menu name="Guides &amp;amp; Documentation" inherit="top">
-	<item name="Users guide" href="docs/user-index.html" collapse="false">
-		<item name="Installation &amp; configuration" href="docs/user-installation.html"/>
-		<item name="Logical Reader Definitions" href="docs/user-lrdef.html"/>
-		<item name="Test clients" href="docs/user-testclients.html"/>
-		<item name="A complete Example" href="docs/user-example.html"/>
+	<item name="User guide" href="docs/user-index.html" collapse="false">
+	    <item name="Quick Start" href="docs/user-example.html"/>
+		<item name="Install fc-server" href="docs/user-installation.html"/>
+		<item name="Define Logical Reader" href="docs/user-lrdef.html"/>
+		<item name="Use ALE clients" href="docs/user-testclients.html"/>
 		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
 		<item name="Capture App Example" href="docs/user-captureapp.html"/>
 	</item>
 	
-	<item name="Developers guide" href="docs/developer-index.html" collapse="false">
+	<item name="Developers guide" href="docs/developer-index.html" collapse="true">
 		<item name="ALE Service Binding" href="docs/developer-ale.html"/>
 		<item name="ALE LR Service Binding" href="docs/developer-alelr.html"/>
 		<item name="Event Cycle" href="docs/developer-eventcycle.html"/>
