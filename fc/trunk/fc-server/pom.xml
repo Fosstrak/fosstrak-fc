@@ -53,10 +53,10 @@
       <version>0.5.0</version>
       <scope>compile</scope>
     </dependency>
-		<dependency>
+    <dependency>
       <groupId>org.fosstrak.tdt</groupId>
       <artifactId>tdt</artifactId>
-      <version>0.4.0</version>
+      <version>0.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.fosstrak.llrp</groupId>
@@ -125,22 +125,6 @@
           </execution>
         </executions>
       </plugin>
-			<!-- expand tdt content for tag translation -->
-			<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <overlays>
-            <overlay>
-              <groupId>org.fosstrak.tdt</groupId>
-              <artifactId>tdt</artifactId>
-							<type>jar</type>
-							<targetPath>WEB-INF/classes</targetPath>
-            </overlay>
-          </overlays>
-        </configuration>
-       </plugin>
-
     </plugins>
   </build>
 
