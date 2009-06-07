@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.fosstrak.llrp</groupId>
       <artifactId>llrp-adaptor</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.0-RC1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
