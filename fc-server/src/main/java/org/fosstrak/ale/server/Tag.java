@@ -1,21 +1,13 @@
 package org.fosstrak.ale.server;
 
-import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedList;
 
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
-import org.fosstrak.ale.util.HexUtil;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.tdt.TDTEngine;
-import org.fosstrak.tdt.TDTException;
-import org.fosstrak.tdt.types.LevelTypeList;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.epcglobalinc.tdt.LevelTypeList;
+import org.fosstrak.tdt.TDTEngine;
+import org.fosstrak.tdt.TDTException;
 
 /**
  * represents a tag that has been read on one of the readers in the Logical Reader API.
@@ -279,28 +271,16 @@ public class Tag {
 		return binary;
 	}
 		
-	/** instance of the tdt engine used for tag conversion. */
+	/** instance of the TDT engine used for tag conversion. */
 	private static TDTEngine engine = null;
 	
 	/**
-	 * start the tdt engine.
+	 * start the TDT engine.
 	 */
 	private static synchronized void startTDTEngine() {
 		try {
 			if (null == engine) {
-				String root = Tag.class.getResource("/").toString();
-				root = root.replaceAll("%20", " ");
-				if (System.getProperty("os.name").startsWith("Windows")) {
-					root = root.replaceFirst("file:/", "");
-				} else {
-					root = root.replaceFirst("file:", "");
-				}
-				
-				log.info(String.format(
-						"start tdt with schema folder: %s", 
-						root)
-						);
-				engine = new TDTEngine(root);		
+				engine = new TDTEngine();
 			}
 		} catch (Exception e) {
 			log.error(
