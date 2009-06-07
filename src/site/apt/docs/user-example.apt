@@ -25,6 +25,8 @@ Users guide - A complete Example
 	[[8]] {{{#Define}Define an EventCycle}}
 	
 	[[9]] {{{#Subscribe}Subscribe an event sink}}
+	
+	[[10]] {{{#Configure}Configure the LLRP reader to collect EPC tags}}
 		
 	
 
@@ -45,23 +47,26 @@ Users guide - A complete Example
 
    You need the following files ready at hand:
    
-   * a copy of the fc-server. eg. fc-server-0.3.0-SNAPSHOT.war
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/}fc-server}}. eg. fc-server-0.4.1.war (<notice> that LLRP support requires >= 0.4.1).
    
-   * a copy of the fc-webclient. eg. fc-webclient-0.3.0-SNAPSHOT.war
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/}fc-webclient}}. eg. fc-webclient-0.4.1.war
    
-   * a copy of the reader protocol client. this package provides us with a 
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/reader/reader-rp-client/}reader protocol client}}. this package provides us with a 
    	graphical event sink for the event reports. eg. reader-client-0.3.1.jar
    
-   * a copy of the rp reader simulator. eg. reader-rprm-core-0.4.0-SNAPSHOT.jar
+   * a copy of the {{{http://rifidi.org/}Rifidi reader simulator}}.
+   
+   * a copy of the LLRP {{{../files/ROSPEC_example.llrp}RO_SPEC}}
    
    * an ECSpec. eg. {{{../files/ECSpec_current.xml}ECSpec_current.xml}}
    
-   * a logical reader definition xml. eg {{{../files/HALReader.xml}HALReader.xml}} 
-   	or {{{../files/RPReader.xml}RPReader.xml}}
+   * a logical reader definition xml. {{{../files/LLRPReader.xml}LLRPReader.xml}} 
    
    []
    
-   We assume that you installed an instance of apache tomcat on the localhost
+   We assume that you installed an instance of apache tomcat on the localhost. If you did not install the Rifidi reader simulator yet, then do so now.
+   
+   We also require you, to install the {{{http://fosstrak.org/llrp}Fosstrak LLRP Commander}} to configure the LLRP reader.
 
 
 
@@ -76,18 +81,9 @@ Users guide - A complete Example
    
 * {Reader} simulator and event sink preparations
 
-   To simplify this demo we use a software reader to generate tags. We therefore 
-   need to start the rp reader simulator
-   
-+--------------+
-java -jar <RPRM_CORE_VERSION>.jar
-
-example:
-java -jar reader-rprm-core-0.4.0-SNAPSHOT.jar
-+--------------+
-
-   To retrieve the reports from the EventCycle we start an graphical event sink.
-   Make sure the provided port is not used by some other application.
+   To simplify this demo we use a software reader to generate tags. We therefore need to start the Rifidi reader simulator. Create and start a new LLRP reader that listens on the server port 5084. 
+      
+   To retrieve the reports from the EventCycle we start an graphical event sink. Make sure the provided port is not used by some other application.
 
 +--------------+
 java -cp <READER_RP_CLIENT_VERSION>.jar \ 
@@ -110,7 +106,7 @@ java -cp reader-rp-client-0.3.1.jar \
 http://<SERVER>:<PORT>/<WEBCLIENT_VERSION>/services/ALEWebClient.jsp
 
 example:
-http://localhost:8080/fc-webclient-0.3.0-SNAPSHOT/services/ALEWebClient.jsp
+http://localhost:8080/fc-webclient-0.4.1/services/ALEWebClient.jsp
 +--------------+
 
 
@@ -129,13 +125,13 @@ http://localhost:8080/fc-webclient-0.3.0-SNAPSHOT/services/ALEWebClient.jsp
 endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALEService
 
 example: 
-http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService
+http://localhost:8080/fc-server-0.4.1/services/ALEService
 +--------------+
 
   Verify the connection between the webclient and the server by 
   clicking on "getVendorVersion()". A version number should be returned.
   
-  Set the endpoint to the Accdada Logical Reader API by the method 
+  Set the endpoint to the Fosstrak Logical Reader API by the method 
   "setEndPoint(String endPointName)" in the "LogicalReader API).
   Click "Invoke" to execute the command.
   
@@ -143,18 +139,17 @@ http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALEService
 endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALELRService
 
 example: 
-http://localhost:8080/fc-server-0.3.0-SNAPSHOT/services/ALELRService
+http://localhost:8080/fc-server-0.4.1/services/ALELRService
 +--------------+
 
   Verify the connection between the webclient and the server by 
   clicking on "getVendorVersion()". A version number should be returned.
     
-* {Install} a logical reader
   
-  The next step is to setup a reader. Therefor click on "define(String readerName, LRSpec spec)" 
-  in the section LogicalReader API. DO NOT CONFUSE the define method for an EventCycle 
-  with the define method for a logical reader! For this tutorial name your reader 
-  "LogicalReader1" and use the RPReader.xml as LRSpec.
+  
+* {Install} a ALE logical reader
+  
+  The next step is to setup a reader. Therefor click on "define(String readerName, LRSpec spec)" in the section LogicalReader API. DO NOT CONFUSE the define method for an EventCycle with the define method for a logical reader! For this tutorial name your reader "LogicalReader1" and use the LLRPReader.xml as LRSpec.
   
 +--------------+
 readerName:  <READERNAME>
@@ -162,12 +157,10 @@ specFilePath: <PATH_TO_SPEC>\<SPEC_NAME>.xml
 
 example:
 readerName: LogicalReader1
-specFilePath: c:\epc\RPReader.xml
+specFilePath: c:\epc\LLRPReader.xml
 +--------------+
 
-  Verify that the reader has been created by clicking on "getLogicalReaderNames()".
-  The call should return a list of logical readers in brackets. Make sure that 
-  your reader is contained in this list.
+  Verify that the reader has been created by clicking on "getLogicalReaderNames()". The call should return a list of logical readers in brackets. Make sure that  your reader is contained in this list.  In the Rifidi simulator you should see, that the ALE exchanges control messages with the virtual reader.
   
   You can inspect the logical reader specification LRSpec by the method "getLRSpec(String readerName)".
   
@@ -175,10 +168,7 @@ specFilePath: c:\epc\RPReader.xml
   
 * {Define} an EventCycle
   
-  In the next step you will install/define an EventCycle. invoke the method 
-  "define(String specName, String specFilePath)". DO NOT CONFUSE the define
-  method for an EventCycle with the define method for a logical reader! For this 
-  tutorial name your EventCycle "specCURRENT".
+  In the next step you will install/define an EventCycle. invoke the method  "define(String specName, String specFilePath)". DO NOT CONFUSE the define method for an EventCycle with the define method for a logical reader! For this tutorial name your EventCycle "specCURRENT".
 
 +--------------+
 specName: <SPEC_NAME>
@@ -189,20 +179,15 @@ specName: specCURRENT
 specFilePath: c:\epc\ECSpec_current.xml
 +--------------+
   
-  Verify the installation of your EventCycle by invoking the method "getECSpecNames()".
-  You should get a list of EventCycle names in brackets. Make sure that your 
-  EventCycle is contained in this list.
+  Verify the installation of your EventCycle by invoking the method "getECSpecNames()". You should get a list of EventCycle names in brackets. Make sure that your EventCycle is contained in this list.
 
   
   
 * {Subscribe} an event sink
 
-  When there is no subscriber for an EventCycle, the EventCycle won't do anything 
-  and stay in the idle status. We therefor subscribe our event sink to the 
-  EventCycle "specCURRENT".
+  When there is no subscriber for an EventCycle, the EventCycle won't do anything and stay in the idle status. We therefor subscribe our event sink to the EventCycle "specCURRENT".
   
-  Invoke "subscribe(String specName, String notificationUri)" and register the 
-  event sink.
+  Invoke "subscribe(String specName, String notificationUri)" and register the event sink.
   
 +--------------+
 notificationURI: http://<SERVER>:<PORT>
@@ -213,6 +198,13 @@ notificationURI: http://localhost:9999
 specName: specCURRENT
 +--------------+
 
-  Now you can place a tag on one of the shelfs in the reader simulator. After 
-  a complete run of the EventCycle your tag will appear in the ECReport displayed 
-  in the event sink.
+	The ALE starts sending empty reports to the EventSink as the reader is not configured to send EPC tags yet.
+	
+
+* {Configure} the LLRP reader to collect EPC tags
+
+	Start the LLRP Commander and connect to the remote adapter instance running on the ALE. Check, if you can send and retrieve messages from the reader by sending a GET_READER_CAPABILITIES message.
+	
+	Create a new LLRP message and replace the content by the content from the LLRP {{{../files/ROSPEC_example.llrp}RO_SPEC}}. Send the message to the reader. From the context menu (right-click on the reader), select a ENABLE_RO_SPEC message to instruct the reader to start the ro spec.
+	
+	Now the virtual reader is ready to deliver tags to the ALE. Switch to the Rifidi reader simulator and create 1 tags (SGTIN96, GEN2). When you place them on the reader, after a full cycle of the EventCycle, the tags will be delivered to the EventSink.
