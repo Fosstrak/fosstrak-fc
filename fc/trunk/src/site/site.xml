@@ -45,12 +45,12 @@
 	    <item name="Quick Start" href="docs/user-example.html"/>
 		<item name="Install fc-server" href="docs/user-installation.html"/>
 		<item name="Define Logical Reader" href="docs/user-lrdef.html"/>
-		<item name="Use ALE clients" href="docs/user-testclients.html"/>
+		<item name="Use ALE Clients" href="docs/user-testclients.html"/>
 		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
 		<item name="Capture App Example" href="docs/user-captureapp.html"/>
 	</item>
 	
-	<item name="Developers Guide" href="docs/developer-index.html" collapse="true">
+	<item name="Developer Guide" href="docs/developer-index.html" collapse="true">
 		<item name="ALE Service Binding" href="docs/developer-ale.html"/>
 		<item name="ALE LR Service Binding" href="docs/developer-alelr.html"/>
 		<item name="Event Cycle" href="docs/developer-eventcycle.html"/>
