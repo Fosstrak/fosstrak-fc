@@ -10,9 +10,9 @@ User guide - Logical Reader Definitions
 	
 	[[1]] {{{#LogicalReaders}LogicalReaders}}
 	
-	[[2]] {{{#Example1}Example1 - A Reader Protocol LogicalReader}}
+	[[2]] {{{#Example1}Example1 - A LLRP Protocol LogicalReader}}
 	
-	[[3]] {{{#Example2}Example2 - A HAL Protocol LogicalReader}}
+	[[3]] {{{#Example2}Example2 - A HAL Protocol LogicalReader (example Feig Reader)}}
 	
 	[[4]] {{{#Example3}Example3 - A Complete Example with a CompositeReader}}
 	
@@ -165,7 +165,7 @@ example:
 	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
 		<LRSpec isComposite="false" 
-		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
+		   readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
 		</LRSpec>
 	</LogicalReader>
 </LogicalReaders>	
@@ -185,21 +185,17 @@ example:
 	
 	
 
-* {Example1} - A Reader Protocol LogicalReader
+* {Example1} - An LLRP LogicalReader
 
-	In the Reader Protocol (RP) the reader needs special 
-	parameters for the connection between the physical reader 
-	and the LogicalReader. For a detailed introduction of these 
-	parameters refer to the developers-guide - section 
-	{{{developer-adaptor.html}"Implement an Adaptor"}}.
+	In LLRP the reader needs special arameters for the connection between the physical reader and the LogicalReader. For a detailed introduction of these parameters refer to the developers-guide - section  {{{developer-adaptor.html}"Implement an Adaptor"}}.
 	
-	The Example shows the definition of one RP LogicalReader.
+	The Example shows the definition of one LLRP LogicalReader.
 	
 	
 ** Dynamic Definition:	
 
 	You can download the xml 
-	{{{../files/RPReader.xml}RPReader.xml}}.
+	{{{../files/LLRPReader.xml}LLRPReader.xml}}.
 	
 +---+
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -209,32 +205,27 @@ example:
     <properties>
         <property>
             <name>ReaderType</name>
-            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
+            <value>org.fosstrak.ale.server.readers.llrp.LLRPAdaptor</value>
         </property>
-	<property>
-	    <name>Description</name>
-	    <value>This Logical Reader consists of shelf 1 and 
-	    	shelf 2,3,4 of the physical reader named MyReader</value>
-	</property>
+        <property>
+            <name>Description</name>
+            <value>LLRP reader</value>
+        </property>
         <property>
             <name>PhysicalReaderName</name>
-            <value>MyReader</value>
+            <value>LogicalReader1</value>
         </property>
         <property>
-            <name>ReadTimeInterval</name>
-            <value>1000</value>
+            <name>ip</name>
+            <value>localhost</value>
         </property>
         <property>
-            <name>PhysicalReaderSource</name>
-            <value>Shelf1,Shelf2,Shelf3,Shelf4</value>
+            <name>port</name>
+            <value>5084</value>
         </property>
         <property>
-            <name>NotificationPoint</name>
-            <value>http://localhost:9090</value>
-        </property>
-        <property>
-            <name>ConnectionPoint</name>
-            <value>http://localhost:8000</value>
+            <name>clientInitiated</name>
+            <value>true</value>
         </property>
     </properties>
 </ns3:LRSpec>
@@ -247,32 +238,23 @@ example:
 
 +---+
 <?xml version="1.0" encoding="UTF-8"?>
-<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
-		<LRSpec isComposite="false" 
-		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
-			<LRProperty name="Description" 
-				value="This Logical Reader consists 
-					of shelf 1,2,3,4"/>
-			<LRProperty name="ConnectionPoint" 
-				value="http://localhost:8000"/>
-			<LRProperty name="NotificationPoint" 
-				value="http://localhost:9090"/>
-			<LRProperty name="ReadTimeInterval" value="200"/>
-			<LRProperty name="AdaptorClass" 
-				value="ReaderProtocol"/>
-			<LRProperty name="PhysicalReaderName" 
-				value="MyReader"/>
-			<LRProperty name="PhysicalReaderSource" 
-				value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+			<LRProperty name="Description" value="LLRP reader"/>
+			<LRProperty name="PhysicalReaderName" value="LogicalReader1"/>
+			<LRProperty name="ip" value="localhost"/>
+			<LRProperty name="port" value="5084"/>
+			<LRProperty name="AdaptorClass" value="LLRPReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor"/>
+			<LRProperty name="clientInitiated" value="true"/>
 		</LRSpec>
 	</LogicalReader>
 </LogicalReaders>
 +---+
 
 
-* {Example2} - A HAL Protocol LogicalReader
+* {Example2} - A HAL Protocol LogicalReader (example Feig Reader)
 
 	In the Hardware Abstraction Layer (HAL) the reader needs special 
 	parameters for the bootstrapping of the HAL. For a 
@@ -391,47 +373,31 @@ example:
 	
 +---+
 <?xml version="1.0" encoding="UTF-8"?>
-<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-   xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
 	<LogicalReader name="LogicalReader1">
-		<LRSpec isComposite="false" 
-		   readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
-			<LRProperty name="Description" 
-				value="This Logical Reader consists 
-					of shelf 1,2,3,4"/>
-			<LRProperty name="ConnectionPoint" 
-				value="http://localhost:8000"/>
-			<LRProperty name="NotificationPoint" 
-				value="http://localhost:9090"/>
-			<LRProperty name="ReadTimeInterval" value="200"/>
-			<LRProperty name="AdaptorClass" 
-				value="ReaderProtocol"/>
-			<LRProperty name="PhysicalReaderName" 
-				value="MyReader"/>
-			<LRProperty name="PhysicalReaderSource" 
-				value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+			<LRProperty name="Description" value="LLRP reader"/>
+			<LRProperty name="PhysicalReaderName" value="LogicalReader1"/>
+			<LRProperty name="ip" value="localhost"/>
+			<LRProperty name="port" value="5084"/>
+			<LRProperty name="AdaptorClass" value="LLRPReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor"/>
+			<LRProperty name="clientInitiated" value="true"/>
 		</LRSpec>
 	</LogicalReader>
 	<LogicalReader name="LogicalReader2">
-		<LRSpec isComposite="false" 
-		   readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
-			<LRProperty name="Description" 
-				value="My first HAL device reader"/>
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My first HAL device reader"/>
 			<LRProperty name="AdaptorClass" value="HAL"/>
-			<LRProperty name="PhysicalReaderName" 
-				value="MyReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.hal.HALAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
 			<LRProperty name="ReadTimeInterval" value="1000"/>
-			<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
-			<LRProperty name="PropertiesFile" 
-				value="/props/SimulatorController.xml"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
 		</LRSpec>
 	</LogicalReader>
 	<LogicalReader name="CompositeReader1">
-		<LRSpec isComposite="true" 
-		   readerType="org.fosstrak.ale.server.readers.CompositeReader">
-			<LRProperty name="Description" 
-				value="My first composite reader consisting 
-					of LogicalReader1 and LogicalReader2"/>
+		<LRSpec isComposite="true" readerType="org.fosstrak.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="My first composite reader consisting of LogicalReader1 and LogicalReader2"/>
 			<readers>LogicalReader1</readers>
 			<readers>LogicalReader2</readers>
 		</LRSpec>
