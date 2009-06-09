@@ -4,7 +4,7 @@
                                     ------
 
 
-Quick Start - Deploying the Fosstrak ALE Middleware with LLRP compliant RFID Readers
+Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP Compliant RFID Reader
 
 
 * {Objective}
@@ -39,7 +39,7 @@ Quick Start - Deploying the Fosstrak ALE Middleware with LLRP compliant RFID Rea
    * {{{http://tomcat.apache.org/} Apache Tomcat Java Servlet Container}}
    
      
-* {Tomcat} preparations
+* {Tomcat} Preparations
 
    Install {{{http://tomcat.apache.org/} Apache Tomcat}}, if you have not installed it yet. 
    
@@ -47,7 +47,7 @@ Quick Start - Deploying the Fosstrak ALE Middleware with LLRP compliant RFID Rea
    Tomcat will automatically deploy the two war files for you.
 
    
-* Setup LLRP reader emulator 
+* Setup LLRP Reader Emulator 
 
    To simplify this demo, we use a reader emulator to generate tag reads. 
    
@@ -61,9 +61,9 @@ Quick Start - Deploying the Fosstrak ALE Middleware with LLRP compliant RFID Rea
    
 	We will return to the LLRP reader emulator, once we configured the other components. 
    
-* Setup GUI for incoming http notifications from ALE Fosstrak Middleware
+* Setup GUI for Incoming HTTP ALE Notifications 
    
-   To display the reports with the aggregated data sent from the ALE Fosstrak Middleware, we'll start a Fosstrak tool that displays incoming http requests. 
+   To display the reports with the aggregated data sent by the ALE Fosstrak Middleware, we'll start a Fosstrak tool that displays incoming http requests. 
    Make sure the provided port is not used by some other application.
 
 +--------------+
@@ -153,7 +153,7 @@ specFilePath: c:\epc\LLRPReader.xml
   
   
   
-* {Define} the filtering and collection behavior via the ALE Filtering and Collection API
+* {Define} the Filtering and Collection Behavior via the ALE Filtering and Collection API
   
   In the next step you will define an ALE ECSpec. This tells the ALE Middleware how the RFID tag reads
   ariving from the Rifidi Emulator should be filtered and aggregated.   
@@ -175,7 +175,7 @@ specFilePath: c:\epc\ECSpec_current.xml
   You should get a list of ECSpec names currently defined in brackets. 
   Make sure that the ECSpec you just defined is listed.   
   
-* {Specify} the event consumer of the ALE events being sent
+* {Specify} the Event Consumer of the ALE Events Being Sent
 
   When there is no subscriber for an ECSpec, the ECSpec is not executed. We therefore need to specify a 
   listener by subscribing our event sink to the ECSpec "specCURRENT" we added earlier.
@@ -195,7 +195,7 @@ specName: specCURRENT
 	Rifidi emulator is not configured to send EPC tag reads via the LLRP protocol yet.
 	
 
-* {Configure} the Rifidi Emulator to report tags in range
+* {Configure} the Rifidi Emulator to Report Tags in "Range"
 
 	Start the LLRP Commander (via Eclipse) and connect to the remote adapter instance running on the ALE. 
 	Check, if you can send and retrieve messages from the reader by sending a GET_READER_CAPABILITIES message.
