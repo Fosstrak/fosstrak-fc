@@ -3,12 +3,13 @@
         <title>Changes fc-webclient</title>
     </properties>
     <body>
-    	<release version="0.4.2" date="2009-01-XX" 
+    	<release version="1.0.0" date="2009-06-09" 
 	    description="Feature and bugfix release">
 	    <action dev="sawielan" type="add">
-	    	add llrp support through LLRPAdaptor. together with 
-				fosstrak LLRP Commander LLRP enabled reader can be 
-				configured and maintained.
+	    	update TDT to version 0.9
+	    </action>
+	    <action dev="sawielan" type="add">
+	    	add llrp support through LLRPAdaptor. together with fosstrak LLRP Commander LLRP enabled reader can be configured and maintained.
 	    </action>
 			<action dev="sawielan" type="fix" issue="2481005">
 				in eventcycle when repeatPeriod and durationValue were the 

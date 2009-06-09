@@ -60,7 +60,7 @@ User guide - Installation and Configuration
 	the folder <TOMCAT_DIRECTORY>/webapps/fc-<VERSION>/WEB-INF/classes.
 
 +-------------------------------------------------------------------+
-example: /var/lib/tomcat/webapps/fc-server-0.3.0-SNAPSHOT/WEB-INF/classes
+example: /var/lib/tomcat/webapps/fc-server-1.0.0/WEB-INF/classes
 +-------------------------------------------------------------------+
 		
 	* InputGenerators.properties: This propertie-file is the main 
@@ -130,7 +130,7 @@ under windows:
 under linux/unix:
 	ls target
 	
-example output: fc-server-0.3.0-SNAPSHOT.war
+example output: fc-server-1.0.0.war
 +-------------------------------------------------------------------+
 
 	
