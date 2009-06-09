@@ -28,7 +28,7 @@
     <!-- Navigation Menu                                             -->
     <!-- =========================================================== -->
      
-    <menu name="Filtering and Collection Project" inherit="top">
+    <menu name="ALE Middleware" inherit="top">
       <item name="Overview" href="index.html"/>
       <item name="Features" href="features.html"/>
       <item name="Download" href="download.html"/>
