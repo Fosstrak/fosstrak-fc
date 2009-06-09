@@ -41,7 +41,7 @@
     </menu>
 
     <menu name="Guides &amp;amp; Documentation" inherit="top">
-	<item name="User guide" href="docs/user-index.html" collapse="false">
+	<item name="User Guide" href="docs/user-index.html" collapse="false">
 	    <item name="Quick Start" href="docs/user-example.html"/>
 		<item name="Install fc-server" href="docs/user-installation.html"/>
 		<item name="Define Logical Reader" href="docs/user-lrdef.html"/>
@@ -50,7 +50,7 @@
 		<item name="Capture App Example" href="docs/user-captureapp.html"/>
 	</item>
 	
-	<item name="Developers guide" href="docs/developer-index.html" collapse="true">
+	<item name="Developers Guide" href="docs/developer-index.html" collapse="true">
 		<item name="ALE Service Binding" href="docs/developer-ale.html"/>
 		<item name="ALE LR Service Binding" href="docs/developer-alelr.html"/>
 		<item name="Event Cycle" href="docs/developer-eventcycle.html"/>
