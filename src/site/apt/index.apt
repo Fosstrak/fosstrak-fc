@@ -11,19 +11,21 @@ Fosstrak ALE Middleware with LLRP Support
 
 [images/FilteringCollectionProjectOverview.png]
 
-    The Fosstrak <<Filtering and Collection>> Middleware comprises basically two 
-    separate modules:	
+  The Fosstrak ALE Middleware comprises three 
+  separate modules:	
 
-   *   the <<Filtering and Collection>> implementation itself based on EPCglobal's ALE 1.1 protocol
+   *   the <<filtering and collection server>>
+   
+   *   a <<standalone client>> to configure filtering and collection servers
 
-   *   two client <<ALE Clients>> (web-based and standalone application)
+   *   a <<web-based client>> to configure filtering and collection servers
 
-    Both implement the ALE Specification defined by EPCglobal.
+  All modules implement EPCglobal's ALE 1.1 specification.
 
-	To communicate with RFID readers, the Fosstrak ALE Middleware uses LLRP. 
-	For readers that do not support LLRP, the ALE Middleware uses the Fosstrak Hardware Abstraction Layer (HAL).
+  To communicate with RFID readers, the Fosstrak ALE Middleware uses LLRP. 
+  For readers that do not support LLRP, the ALE Middleware uses the Fosstrak
+  Hardware Abstraction Layer (HAL).
 	
-	The Fosstrak LLRP Commander is used to configure RFID readers that support LLRP. 
- 
-
+  In order to configure RFID readers that support LLRP, the Fosstrak
+  LLRP Commander can be used. 
  

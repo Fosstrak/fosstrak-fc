@@ -1,21 +1,21 @@
        ------
-                                    User guide - Installation and configuration
+                                    User Guide - Installation and configuration
                                     ------
                                     ------
 
 
-User guide - Installation and Configuration
+User Guide - Installation and Configuration
 
 
 * {Overview}
 
-	In order to run the Fosstrak Filtering and Collection (FC) middleware, 
-	you need to deploy the Fosstrak fc-server module in a servlet container, 
-	such as Apache Tomcat developed by the Apache Software Foundation. 
+	In order to run the Fosstrak ALE Middleware, 
+	you need to deploy the filtering and collection server (fc-server)
+	module in a servlet container, such as Apache Tomcat. 
 	
 	The individual steps include:
 	
-	[[1]] Install a java servlet container such as {{{http://tomcat.apache.org/} Apache Tomcat}}
+	[[1]] Install a Java servlet container such as {{{http://tomcat.apache.org/} Apache Tomcat}}
 	
 	[[2]] Download the latest Fosstrak fc-server binary
 	

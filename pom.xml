@@ -185,7 +185,7 @@
   </issueManagement>
   <mailingLists>
     <mailingList>
-      <name>Filtering and Collection user mailing list</name>
+      <name>ALE Middleware user mailing list</name>
       <subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</subscribe>
       <unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</unsubscribe>
       <post>accada-ale-user@lists.sourceforge.net</post>

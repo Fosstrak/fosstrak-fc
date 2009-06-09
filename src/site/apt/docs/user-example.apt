@@ -4,13 +4,13 @@
                                     ------
 
 
-Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP Compliant RFID Reader
+Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP-Compliant RFID Reader
 
 
 * {Objective}
 
 	This tutorial will guide you through an example that shows how the Fosstrak ALE
-	middleware is configured to collect data from an LLRP compliant RFID reader. 	
+	Middleware is configured to collect data from an LLRP-compliant RFID reader. 	
 	
 * {Prerequisites}
 
@@ -20,7 +20,7 @@ Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP Compliant RFID 
    
    * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/}fc-webclient fc-webclient-0.4.0.war or higher}}
    
-   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/reader/reader-rp-client}reader protocol client version 0.3.1 or higher}}.  (any other http monitor that displays incoming http request will work, too). 
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/reader/reader-rp-client}reader protocol client version 0.3.1 or higher}} (any other HTTP monitor that displays incoming HTTP request will work, too). 
    
    * a copy of this LLRP {{{../files/ROSPEC_example.llrp} ADD_ROSPEC message}}
    
@@ -30,40 +30,40 @@ Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP Compliant RFID 
    
    []
    
-   You will also need to install the following programs, if they are not already installed on your machine:
+   You will also need to install the following programs if they are not already present on your machine:
    
    * {{{../../llrp/index.html}Fosstrak LLRP Commander}}  
    
-   * {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi Reader Emulator}}.
+   * {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi Reader Emulator}}
    
    * {{{http://tomcat.apache.org/} Apache Tomcat Java Servlet Container}}
    
      
-* {Tomcat} Preparations
+* Prepare {Tomcat}
 
-   Install {{{http://tomcat.apache.org/} Apache Tomcat}}, if you have not installed it yet. 
+   Install {{{http://tomcat.apache.org/} Apache Tomcat}} if you have not installed it yet. 
    
-   Copy the two war files (fc-server-<VERSION>.war and fc-webclient-<VERSION>.war) into the tomcat-webapps directory and start apache tomcat.
-   Tomcat will automatically deploy the two war files for you.
+   Copy the two WAR files (fc-server-<VERSION>.war and fc-webclient-<VERSION>.war) into the Tomcat's <webapps> directory and start Tomcat.
+   Tomcat will automatically deploy the two WAR files for you.
 
    
-* Setup LLRP Reader Emulator 
+* Setup LLRP reader emulator 
 
    To simplify this demo, we use a reader emulator to generate tag reads. 
    
-   * Install the  {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi Emulator}} (if needed) 
+   * Install the  {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi emulator}} (if needed) 
    
-   * Start the Rifidi Emulator
+   * Start the Rifidi emulator
    
    * Instantiate a new reader of type "LLRPReader" that listens on port 5084 (default) using the Reader Wizard
    
    * Start the reader just instantiated
    
-	We will return to the LLRP reader emulator, once we configured the other components. 
+   We will return to the LLRP reader emulator once the other components are configured. 
    
-* Setup GUI for Incoming HTTP ALE Notifications 
+* Setup GUI for incoming HTTP ALE notifications 
    
-   To display the reports with the aggregated data sent by the ALE Fosstrak Middleware, we'll start a Fosstrak tool that displays incoming http requests. 
+   To display the reports with the aggregated data sent by the filtering and collection server, we will start a Fosstrak tool that displays incoming HTTP requests. 
    Make sure the provided port is not used by some other application.
 
 +--------------+
@@ -75,16 +75,19 @@ java -cp reader-rp-client-0.3.1.jar \
 	org.fosstrak.reader.rp.client.EventSinkUI 9999
 +--------------+
 
-	The screen will remain empty until the configuration of the ALE middleware is complete. 
+	The screen will remain empty until the configuration of the filtering
+	and collection server is complete. 
 
 
+* {Configure} the Fosstrak ALE web-client
 
-* {Configure} the Fosstrak ALE Web-Client
+  In this example, we will use the web-based client to configure the
+  filtering and collection server. Before we can use the web-based
+  client, we need to tell it the URL through which the filtering and
+  collection server can be accessed.  
 
-  Before we can configure the Fosstrak ALE Middleware, we need to tell the Fosstrak ALE Web-Client
-  where to find the Fosstrak ALE Server (fc-server) instance.  
-
-  Start your favorite webbrowser and point it to the address of the Fosstrak webclient.
+  Start your web browser and point it to the address of the web-based
+  client.
   
 +--------------+
 http://<SERVER>:<PORT>/<WEBCLIENT_VERSION>/services/ALEWebClient.jsp
@@ -93,11 +96,12 @@ example:
 http://localhost:8080/fc-webclient-0.4.0/services/ALEWebClient.jsp
 +--------------+
 
-  In the next step, specify two endpoints that tell the Fosstrak ALE Web-Client 
-  where the "Filtering and Collection API" and the "Logical Reader API" can be found.
+  In the next step, specify two endpoints that tell the web-based client 
+  where the "Filtering and Collection API" and the "Logical Reader API"
+  can be found.
   
-  Set the endpoint to the Fosstrak fc-server by the method
-  "setEndpoint(String endPointName)" in the "Filtering and Collection API". 
+  Set the endpoint to the filtering and collection server by selecting
+  the "setEndpoint(String endPointName)" method in the "Filtering and Collection API". 
   Click "Invoke" to execute the command.
   
 +--------------+
@@ -107,11 +111,12 @@ example:
 http://localhost:8080/fc-server-1.0.0/services/ALEService
 +--------------+
 
-  Verify the connection between the webclient and the server by 
-  clicking on "getVendorVersion()". A version number should be returned.
+  Verify that a connection between the web-based client and the server
+  can be established by clicking "getVendorVersion()". A version
+  number should be returned.
   
-  Set the endpoint to the Fosstrak Logical Reader API by the method 
-  "setEndPoint(String endPointName)" in the "LogicalReader API).
+  Set the endpoint to the filtering and collection server's Logical Reader
+  API by selecting "setEndPoint(String endPointName)" in the "LogicalReader API".
   Click "Invoke" to execute the command.
   
 +--------------+
@@ -121,12 +126,12 @@ example:
 http://localhost:8080/fc-server-1.0.0/services/ALELRService
 +--------------+
 
-  Verify the connection between the webclient and the server by 
-  clicking on "getVendorVersion()". A version number should be returned.
-    
+  Verify that a connection between the web-based client and the server
+  can be established by clicking "getVendorVersion()". A version
+  number should be returned.    
   
   
-* {Set} the readers connected to ALE middleware via the ALE Logical Reader API 
+* {Set} the readers connected to ALE Middleware via the ALE Logical Reader API 
   
   The next step is to configure the fc-server with the LLRP reader connected. 
   Click on "define(String readerName, LRSpec spec)" in the section LogicalReader API. 
