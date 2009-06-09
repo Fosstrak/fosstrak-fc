@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Fosstrak Filtering and Collection">
+<project name="Fosstrak ALE Middleware">
   <bannerLeft>
     <name>Fosstrak</name>
     <src>images/banner_left.gif</src>
@@ -79,7 +79,7 @@
     
     <breadcrumbs>
       <item href="../index.html" name="Fosstrak" />
-      <item name="Filtering and Collection"/> <!-- href is derived from project.url -->
+      <item name="ALE Middleware"/> <!-- href is derived from project.url -->
     </breadcrumbs>
   
   </body>
