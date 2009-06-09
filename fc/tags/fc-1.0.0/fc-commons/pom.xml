@@ -1,0 +1,172 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+  <!-- =========================================================== -->
+  <!-- Basics                                                      -->
+  <!-- =========================================================== -->
+
+  <groupId>org.fosstrak.fc</groupId>
+  <artifactId>fc-commons</artifactId>
+  <version>1.0.0</version>
+  <parent>
+    <artifactId>fc</artifactId>
+    <groupId>org.fosstrak.fc</groupId>
+    <version>1.0.0</version>
+  </parent>
+  <packaging>jar</packaging>
+  <modelVersion>4.0.0</modelVersion>
+  <name>fc-commons</name>
+  
+
+  <!-- =========================================================== -->
+  <!-- Dependencies                                                -->
+  <!-- =========================================================== -->
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+        <!-- dependencies required by CeltiXFire (CXF) -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-frontend-jaxws</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-databinding-jaxb</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+    
+    <dependency>
+	<groupId>xerces</groupId>
+	<artifactId>xercesImpl</artifactId>
+	<version>2.8.0</version>
+    </dependency>
+  </dependencies>
+  
+ <!-- =========================================================== -->
+  <!-- Build settings                                              -->
+  <!-- =========================================================== -->
+
+  <build>
+    <plugins>
+      <plugin>
+        <!-- this plugin generates the java stubs (POJOs) from the WSDL file -->
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-codegen-plugin</artifactId>
+	<version>2.0.9</version>
+        <executions>
+	  
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sourceRoot>${basedir}/target/generated-sources/main/java</sourceRoot>
+      
+              <wsdlOptions>
+	      
+	      <wsdlOption>	      
+                  <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-ale.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
+		    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:wsdl:1=org.fosstrak.ale.wsdl.ale.epcglobal</extraarg>
+                  </extraargs>
+                </wsdlOption>
+
+		<wsdlOption>
+                  <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-aleac.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
+		    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:aleac:wsdl:1=org.fosstrak.ale.wsdl.aleac.epcglobal</extraarg>
+                  </extraargs>
+                </wsdlOption>
+		
+		<wsdlOption>
+                  <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-alecc.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
+		    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:alecc:wsdl:1=org.fosstrak.ale.wsdl.alecc.epcglobal</extraarg>
+                  </extraargs>
+                </wsdlOption>
+		<wsdlOption>
+                  <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-alelr.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
+		    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:alelr:wsdl:1=org.fosstrak.ale.wsdl.alelr.epcglobal</extraarg>
+                  </extraargs>
+                </wsdlOption>
+		
+		<wsdlOption>
+                  <wsdl>${basedir}/src/main/resources/wsdl/EPCglobal-ale-1_1-aletm.wsdl</wsdl>
+                  <extraargs>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal</extraarg>
+		    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal</extraarg>
+                    <extraarg>-p</extraarg>
+                    <extraarg>urn:epcglobal:aletm:wsdl:1=org.fosstrak.ale.wsdl.aletm.epcglobal</extraarg>
+                  </extraargs>
+                </wsdlOption>
+			
+		</wsdlOptions>
+            </configuration>
+            <goals>
+              <goal>wsdl2java</goal>
+	    </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+		 <echo message="Replacing erroneous ObjectFactory by correct one" />
+		 <!-- we need to delete the file first, as on windows we cannot overwrite a existing file ... -->
+		 <delete file="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" />
+		 <copy file="src/main/resources/patches/ObjectFactory.java" tofile="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" failonerror="true" verbose="false" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

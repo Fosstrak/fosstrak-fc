@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ALEACSERVICE DEFINITIONS -->
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ale="urn:epcglobal:ale:xsd:1"
+                  xmlns:impl="urn:epcglobal:aleac:wsdl:1"
+                  targetNamespace="urn:epcglobal:aleac:wsdl:1">
+  <!-- ALEACSERVICE TYPES -->
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:epcglobal:aleac:wsdl:1">
+      <xsd:import namespace="urn:epcglobal:ale:xsd:1"
+                  schemaLocation="EPCglobal-ale-1_1-aleac.xsd"/>
+      <!-- ALEACSERVICE MESSAGE WRAPPERS -->
+
+      <xsd:element name="GetPermissionNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetPermissionNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="DefinePermission" type="impl:DefinePermission"/>
+      <xsd:complexType name="DefinePermission">
+        <xsd:sequence>
+          <xsd:element name="permName" type="xsd:string"/>
+          <xsd:element name="perm" type="ale:ACPermission"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefinePermissionResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UpdatePermission" type="impl:UpdatePermission"/>
+      <xsd:complexType name="UpdatePermission">
+        <xsd:sequence>
+          <xsd:element name="permName" type="xsd:string"/>
+          <xsd:element name="perm" type="ale:ACPermission"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UpdatePermissionResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetPermission" type="impl:GetPermission"/>
+      <xsd:complexType name="GetPermission">
+        <xsd:sequence>
+          <xsd:element name="permName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetPermissionResult" type="ale:ACPermission"/>
+
+      <xsd:element name="UndefinePermission" type="impl:UndefinePermission"/>
+      <xsd:complexType name="UndefinePermission">
+        <xsd:sequence>
+          <xsd:element name="permName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefinePermissionResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetRoleNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetRoleNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="DefineRole" type="impl:DefineRole"/>
+      <xsd:complexType name="DefineRole">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+          <xsd:element name="role" type="ale:ACRole"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineRoleResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UpdateRole" type="impl:UpdateRole"/>
+      <xsd:complexType name="UpdateRole">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+          <xsd:element name="role" type="ale:ACRole"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UpdateRoleResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetRole" type="impl:GetRole"/>
+      <xsd:complexType name="GetRole">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetRoleResult" type="ale:ACRole"/>
+
+      <xsd:element name="UndefineRole" type="impl:UndefineRole"/>
+      <xsd:complexType name="UndefineRole">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineRoleResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="AddPermissions" type="impl:AddPermissions"/>
+      <xsd:complexType name="AddPermissions">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+          <xsd:element name="permissionNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="permissionName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AddPermissionsResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="SetPermissions" type="impl:SetPermissions"/>
+      <xsd:complexType name="SetPermissions">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+          <xsd:element name="permissionNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="permissionName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SetPermissionsResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="RemovePermissions" type="impl:RemovePermissions"/>
+      <xsd:complexType name="RemovePermissions">
+        <xsd:sequence>
+          <xsd:element name="roleName" type="xsd:string"/>
+          <xsd:element name="permissionNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="permissionName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="RemovePermissionsResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetClientIdentityNames" type="impl:EmptyParms"/>
+      <xsd:element name="GetClientIdentityNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="DefineClientIdentity" type="impl:DefineClientIdentity"/>
+      <xsd:complexType name="DefineClientIdentity">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+          <xsd:element name="id" type="ale:ACClientIdentity"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="DefineClientIdentityResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="UpdateClientIdentity" type="impl:UpdateClientIdentity"/>
+      <xsd:complexType name="UpdateClientIdentity">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+          <xsd:element name="id" type="ale:ACClientIdentity"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UpdateClientIdentityResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetClientIdentity" type="impl:GetClientIdentity"/>
+      <xsd:complexType name="GetClientIdentity">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetClientIdentityResult" type="ale:ACClientIdentity"/>
+
+      <xsd:element name="GetClientPermissionNames" type="impl:GetClientPermissionNames"/>
+      <xsd:complexType name="GetClientPermissionNames">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="GetClientPermissionNamesResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="UndefineClientIdentity" type="impl:UndefineClientIdentity"/>
+      <xsd:complexType name="UndefineClientIdentity">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="UndefineClientIdentityResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="AddRoles" type="impl:AddRoles"/>
+      <xsd:complexType name="AddRoles">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+          <xsd:element name="roleNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="roleName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="AddRolesResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="RemoveRoles" type="impl:RemoveRoles"/>
+      <xsd:complexType name="RemoveRoles">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+          <xsd:element name="roleNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="roleName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="RemoveRolesResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="SetRoles" type="impl:SetRoles"/>
+      <xsd:complexType name="SetRoles">
+        <xsd:sequence>
+          <xsd:element name="identityName" type="xsd:string"/>
+          <xsd:element name="roleNames" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="roleName" type="xsd:string" minOccurs="0"
+                             maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="SetRolesResult">
+        <xsd:complexType/>
+      </xsd:element>
+
+      <xsd:element name="GetSupportedOperations" type="impl:EmptyParms"/>
+      <xsd:element name="GetSupportedOperationsResult" type="impl:ArrayOfString"/>
+
+      <xsd:element name="GetStandardVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetStandardVersionResult" type="xsd:string"/>
+
+      <xsd:element name="GetVendorVersion" type="impl:EmptyParms"/>
+      <xsd:element name="GetVendorVersionResult" type="xsd:string"/>
+
+      <xsd:element name="ALEException" type="impl:ALEException"/>
+      <xsd:complexType name="ALEException">
+        <xsd:sequence>
+          <xsd:element name="reason" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="SecurityException" type="impl:SecurityException"/>
+      <xsd:complexType name="SecurityException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchPermissionException"
+                   type="impl:NoSuchPermissionException"/>
+      <xsd:complexType name="NoSuchPermissionException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="PermissionValidationException"
+                   type="impl:PermissionValidationException"/>
+      <xsd:complexType name="PermissionValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicatePermissionException"
+                   type="impl:DuplicatePermissionException"/>
+      <xsd:complexType name="DuplicatePermissionException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchRoleException" type="impl:NoSuchRoleException"/>
+      <xsd:complexType name="NoSuchRoleException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="RoleValidationException" type="impl:RoleValidationException"/>
+      <xsd:complexType name="RoleValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicateRoleException" type="impl:DuplicateRoleException"/>
+      <xsd:complexType name="DuplicateRoleException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="NoSuchClientIdentityException"
+                   type="impl:NoSuchClientIdentityException"/>
+      <xsd:complexType name="NoSuchClientIdentityException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ClientIdentityValidationException"
+                   type="impl:ClientIdentityValidationException"/>
+      <xsd:complexType name="ClientIdentityValidationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="DuplicateClientIdentityException"
+                   type="impl:DuplicateClientIdentityException"/>
+      <xsd:complexType name="DuplicateClientIdentityException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="UnsupportedOperationException"
+                   type="impl:UnsupportedOperationException"/>
+      <xsd:complexType name="UnsupportedOperationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException"/>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:element name="ImplementationException" type="impl:ImplementationException"/>
+      <xsd:complexType name="ImplementationException">
+        <xsd:complexContent>
+          <xsd:extension base="impl:ALEException">
+            <xsd:sequence>
+              <xsd:element name="severity" type="impl:ImplementationExceptionSeverity"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element name="string" type="xsd:string" minOccurs="0"
+                       maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <!-- The ImplementationExceptionSeverity type is an enumerated type.
+           The following strings are legal values for this type:
+             ERROR
+             SEVERE
+            -->
+      <xsd:simpleType name="ImplementationExceptionSeverity">
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+
+      <xsd:complexType name="EmptyParms"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!-- ALEACSERVICE MESSAGES -->
+
+  <wsdl:message name="getPermissionNamesRequest">
+    <wsdl:part name="parms" element="impl:GetPermissionNames"/>
+  </wsdl:message>
+  <wsdl:message name="getPermissionNamesResponse">
+    <wsdl:part name="getPermissionNamesReturn" element="impl:GetPermissionNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="definePermissionRequest">
+    <wsdl:part name="parms" element="impl:DefinePermission"/>
+  </wsdl:message>
+  <wsdl:message name="definePermissionResponse">
+    <wsdl:part name="definePermissionReturn" element="impl:DefinePermissionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="updatePermissionRequest">
+    <wsdl:part name="parms" element="impl:UpdatePermission"/>
+  </wsdl:message>
+  <wsdl:message name="updatePermissionResponse">
+    <wsdl:part name="updatePermissionReturn" element="impl:UpdatePermissionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getPermissionRequest">
+    <wsdl:part name="parms" element="impl:GetPermission"/>
+  </wsdl:message>
+  <wsdl:message name="getPermissionResponse">
+    <wsdl:part name="getPermissionReturn" element="impl:GetPermissionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefinePermissionRequest">
+    <wsdl:part name="parms" element="impl:UndefinePermission"/>
+  </wsdl:message>
+  <wsdl:message name="undefinePermissionResponse">
+    <wsdl:part name="undefinePermissionReturn" element="impl:UndefinePermissionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getRoleNamesRequest">
+    <wsdl:part name="parms" element="impl:GetRoleNames"/>
+  </wsdl:message>
+  <wsdl:message name="getRoleNamesResponse">
+    <wsdl:part name="getRoleNamesReturn" element="impl:GetRoleNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="defineRoleRequest">
+    <wsdl:part name="parms" element="impl:DefineRole"/>
+  </wsdl:message>
+  <wsdl:message name="defineRoleResponse">
+    <wsdl:part name="defineRoleReturn" element="impl:DefineRoleResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="updateRoleRequest">
+    <wsdl:part name="parms" element="impl:UpdateRole"/>
+  </wsdl:message>
+  <wsdl:message name="updateRoleResponse">
+    <wsdl:part name="updateRoleReturn" element="impl:UpdateRoleResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getRoleRequest">
+    <wsdl:part name="parms" element="impl:GetRole"/>
+  </wsdl:message>
+  <wsdl:message name="getRoleResponse">
+    <wsdl:part name="getRoleReturn" element="impl:GetRoleResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineRoleRequest">
+    <wsdl:part name="parms" element="impl:UndefineRole"/>
+  </wsdl:message>
+  <wsdl:message name="undefineRoleResponse">
+    <wsdl:part name="undefineRoleReturn" element="impl:UndefineRoleResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="addPermissionsRequest">
+    <wsdl:part name="parms" element="impl:AddPermissions"/>
+  </wsdl:message>
+  <wsdl:message name="addPermissionsResponse">
+    <wsdl:part name="addPermissionsReturn" element="impl:AddPermissionsResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="setPermissionsRequest">
+    <wsdl:part name="parms" element="impl:SetPermissions"/>
+  </wsdl:message>
+  <wsdl:message name="setPermissionsResponse">
+    <wsdl:part name="setPermissionsReturn" element="impl:SetPermissionsResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="removePermissionsRequest">
+    <wsdl:part name="parms" element="impl:RemovePermissions"/>
+  </wsdl:message>
+  <wsdl:message name="removePermissionsResponse">
+    <wsdl:part name="removePermissionsReturn" element="impl:RemovePermissionsResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getClientIdentityNamesRequest">
+    <wsdl:part name="parms" element="impl:GetClientIdentityNames"/>
+  </wsdl:message>
+  <wsdl:message name="getClientIdentityNamesResponse">
+    <wsdl:part name="getClientIdentityNamesReturn"
+               element="impl:GetClientIdentityNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="defineClientIdentityRequest">
+    <wsdl:part name="parms" element="impl:DefineClientIdentity"/>
+  </wsdl:message>
+  <wsdl:message name="defineClientIdentityResponse">
+    <wsdl:part name="defineClientIdentityReturn"
+               element="impl:DefineClientIdentityResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="updateClientIdentityRequest">
+    <wsdl:part name="parms" element="impl:UpdateClientIdentity"/>
+  </wsdl:message>
+  <wsdl:message name="updateClientIdentityResponse">
+    <wsdl:part name="updateClientIdentityReturn"
+               element="impl:UpdateClientIdentityResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getClientIdentityRequest">
+    <wsdl:part name="parms" element="impl:GetClientIdentity"/>
+  </wsdl:message>
+  <wsdl:message name="getClientIdentityResponse">
+    <wsdl:part name="getClientIdentityReturn" element="impl:GetClientIdentityResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getClientPermissionNamesRequest">
+    <wsdl:part name="parms" element="impl:GetClientPermissionNames"/>
+  </wsdl:message>
+  <wsdl:message name="getClientPermissionNamesResponse">
+    <wsdl:part name="getClientPermissionNamesReturn"
+               element="impl:GetClientPermissionNamesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="undefineClientIdentityRequest">
+    <wsdl:part name="parms" element="impl:UndefineClientIdentity"/>
+  </wsdl:message>
+  <wsdl:message name="undefineClientIdentityResponse">
+    <wsdl:part name="undefineClientIdentityReturn"
+               element="impl:UndefineClientIdentityResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="addRolesRequest">
+    <wsdl:part name="parms" element="impl:AddRoles"/>
+  </wsdl:message>
+  <wsdl:message name="addRolesResponse">
+    <wsdl:part name="addRolesReturn" element="impl:AddRolesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="removeRolesRequest">
+    <wsdl:part name="parms" element="impl:RemoveRoles"/>
+  </wsdl:message>
+  <wsdl:message name="removeRolesResponse">
+    <wsdl:part name="removeRolesReturn" element="impl:RemoveRolesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="setRolesRequest">
+    <wsdl:part name="parms" element="impl:SetRoles"/>
+  </wsdl:message>
+  <wsdl:message name="setRolesResponse">
+    <wsdl:part name="setRolesReturn" element="impl:SetRolesResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getSupportedOperationsRequest">
+    <wsdl:part name="parms" element="impl:GetSupportedOperations"/>
+  </wsdl:message>
+  <wsdl:message name="getSupportedOperationsResponse">
+    <wsdl:part name="getSupportedOperationsReturn"
+               element="impl:GetSupportedOperationsResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getStandardVersionRequest">
+    <wsdl:part name="parms" element="impl:GetStandardVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getStandardVersionResponse">
+    <wsdl:part name="getStandardVersionReturn" element="impl:GetStandardVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="getVendorVersionRequest">
+    <wsdl:part name="parms" element="impl:GetVendorVersion"/>
+  </wsdl:message>
+  <wsdl:message name="getVendorVersionResponse">
+    <wsdl:part name="getVendorVersionReturn" element="impl:GetVendorVersionResult"/>
+  </wsdl:message>
+
+  <wsdl:message name="SecurityExceptionResponse">
+    <wsdl:part name="fault" element="impl:SecurityException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchPermissionExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchPermissionException"/>
+  </wsdl:message>
+
+  <wsdl:message name="PermissionValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:PermissionValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicatePermissionExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicatePermissionException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchRoleExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchRoleException"/>
+  </wsdl:message>
+
+  <wsdl:message name="RoleValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:RoleValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateRoleExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicateRoleException"/>
+  </wsdl:message>
+
+  <wsdl:message name="NoSuchClientIdentityExceptionResponse">
+    <wsdl:part name="fault" element="impl:NoSuchClientIdentityException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ClientIdentityValidationExceptionResponse">
+    <wsdl:part name="fault" element="impl:ClientIdentityValidationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="DuplicateClientIdentityExceptionResponse">
+    <wsdl:part name="fault" element="impl:DuplicateClientIdentityException"/>
+  </wsdl:message>
+
+  <wsdl:message name="UnsupportedOperationExceptionResponse">
+    <wsdl:part name="fault" element="impl:UnsupportedOperationException"/>
+  </wsdl:message>
+
+  <wsdl:message name="ImplementationExceptionResponse">
+    <wsdl:part name="fault" element="impl:ImplementationException"/>
+  </wsdl:message>
+  <!-- ALEACSERVICE PORTTYPE -->
+
+  <wsdl:portType name="ALEACServicePortType">
+
+    <wsdl:operation name="getPermissionNames">
+      <wsdl:input message="impl:getPermissionNamesRequest"
+                  name="getPermissionNamesRequest"/>
+      <wsdl:output message="impl:getPermissionNamesResponse"
+                   name="getPermissionNamesResponse"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="definePermission">
+      <wsdl:input message="impl:definePermissionRequest" name="definePermissionRequest"/>
+      <wsdl:output message="impl:definePermissionResponse"
+                   name="definePermissionResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:DuplicatePermissionExceptionResponse"
+                  name="DuplicatePermissionExceptionFault"/>
+      <wsdl:fault message="impl:PermissionValidationExceptionResponse"
+                  name="PermissionValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="updatePermission">
+      <wsdl:input message="impl:updatePermissionRequest" name="updatePermissionRequest"/>
+      <wsdl:output message="impl:updatePermissionResponse"
+                   name="updatePermissionResponse"/>
+      <wsdl:fault message="impl:NoSuchPermissionExceptionResponse"
+                  name="NoSuchPermissionExceptionFault"/>
+      <wsdl:fault message="impl:PermissionValidationExceptionResponse"
+                  name="PermissionValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getPermission">
+      <wsdl:input message="impl:getPermissionRequest" name="getPermissionRequest"/>
+      <wsdl:output message="impl:getPermissionResponse" name="getPermissionResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchPermissionExceptionResponse"
+                  name="NoSuchPermissionExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefinePermission">
+      <wsdl:input message="impl:undefinePermissionRequest"
+                  name="undefinePermissionRequest"/>
+      <wsdl:output message="impl:undefinePermissionResponse"
+                   name="undefinePermissionResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchPermissionExceptionResponse"
+                  name="NoSuchPermissionExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRoleNames">
+      <wsdl:input message="impl:getRoleNamesRequest" name="getRoleNamesRequest"/>
+      <wsdl:output message="impl:getRoleNamesResponse" name="getRoleNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineRole">
+      <wsdl:input message="impl:defineRoleRequest" name="defineRoleRequest"/>
+      <wsdl:output message="impl:defineRoleResponse" name="defineRoleResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:DuplicateRoleExceptionResponse"
+                  name="DuplicateRoleExceptionFault"/>
+      <wsdl:fault message="impl:RoleValidationExceptionResponse"
+                  name="RoleValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="updateRole">
+      <wsdl:input message="impl:updateRoleRequest" name="updateRoleRequest"/>
+      <wsdl:output message="impl:updateRoleResponse" name="updateRoleResponse"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:RoleValidationExceptionResponse"
+                  name="RoleValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRole">
+      <wsdl:input message="impl:getRoleRequest" name="getRoleRequest"/>
+      <wsdl:output message="impl:getRoleResponse" name="getRoleResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineRole">
+      <wsdl:input message="impl:undefineRoleRequest" name="undefineRoleRequest"/>
+      <wsdl:output message="impl:undefineRoleResponse" name="undefineRoleResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="addPermissions">
+      <wsdl:input message="impl:addPermissionsRequest" name="addPermissionsRequest"/>
+      <wsdl:output message="impl:addPermissionsResponse" name="addPermissionsResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchPermissionExceptionResponse"
+                  name="NoSuchPermissionExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="setPermissions">
+      <wsdl:input message="impl:setPermissionsRequest" name="setPermissionsRequest"/>
+      <wsdl:output message="impl:setPermissionsResponse" name="setPermissionsResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchPermissionExceptionResponse"
+                  name="NoSuchPermissionExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="removePermissions">
+      <wsdl:input message="impl:removePermissionsRequest"
+                  name="removePermissionsRequest"/>
+      <wsdl:output message="impl:removePermissionsResponse"
+                   name="removePermissionsResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientIdentityNames">
+      <wsdl:input message="impl:getClientIdentityNamesRequest"
+                  name="getClientIdentityNamesRequest"/>
+      <wsdl:output message="impl:getClientIdentityNamesResponse"
+                   name="getClientIdentityNamesResponse"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineClientIdentity">
+      <wsdl:input message="impl:defineClientIdentityRequest"
+                  name="defineClientIdentityRequest"/>
+      <wsdl:output message="impl:defineClientIdentityResponse"
+                   name="defineClientIdentityResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:DuplicateClientIdentityExceptionResponse"
+                  name="DuplicateClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:ClientIdentityValidationExceptionResponse"
+                  name="ClientIdentityValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="updateClientIdentity">
+      <wsdl:input message="impl:updateClientIdentityRequest"
+                  name="updateClientIdentityRequest"/>
+      <wsdl:output message="impl:updateClientIdentityResponse"
+                   name="updateClientIdentityResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:ClientIdentityValidationExceptionResponse"
+                  name="ClientIdentityValidationExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientIdentity">
+      <wsdl:input message="impl:getClientIdentityRequest"
+                  name="getClientIdentityRequest"/>
+      <wsdl:output message="impl:getClientIdentityResponse"
+                   name="getClientIdentityResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientPermissionNames">
+      <wsdl:input message="impl:getClientPermissionNamesRequest"
+                  name="getClientPermissionNamesRequest"/>
+      <wsdl:output message="impl:getClientPermissionNamesResponse"
+                   name="getClientPermissionNamesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineClientIdentity">
+      <wsdl:input message="impl:undefineClientIdentityRequest"
+                  name="undefineClientIdentityRequest"/>
+      <wsdl:output message="impl:undefineClientIdentityResponse"
+                   name="undefineClientIdentityResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="addRoles">
+      <wsdl:input message="impl:addRolesRequest" name="addRolesRequest"/>
+      <wsdl:output message="impl:addRolesResponse" name="addRolesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeRoles">
+      <wsdl:input message="impl:removeRolesRequest" name="removeRolesRequest"/>
+      <wsdl:output message="impl:removeRolesResponse" name="removeRolesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="setRoles">
+      <wsdl:input message="impl:setRolesRequest" name="setRolesRequest"/>
+      <wsdl:output message="impl:setRolesResponse" name="setRolesResponse"/>
+      <wsdl:fault message="impl:SecurityExceptionResponse"
+                  name="SecurityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchClientIdentityExceptionResponse"
+                  name="NoSuchClientIdentityExceptionFault"/>
+      <wsdl:fault message="impl:NoSuchRoleExceptionResponse"
+                  name="NoSuchRoleExceptionFault"/>
+      <wsdl:fault message="impl:UnsupportedOperationExceptionResponse"
+                  name="UnsupportedOperationExceptionFault"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getSupportedOperations">
+      <wsdl:input message="impl:getSupportedOperationsRequest"
+                  name="getSupportedOperationsRequest"/>
+      <wsdl:output message="impl:getSupportedOperationsResponse"
+                   name="getSupportedOperationsResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdl:input message="impl:getStandardVersionRequest"
+                  name="getStandardVersionRequest"/>
+      <wsdl:output message="impl:getStandardVersionResponse"
+                   name="getStandardVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdl:input message="impl:getVendorVersionRequest" name="getVendorVersionRequest"/>
+      <wsdl:output message="impl:getVendorVersionResponse"
+                   name="getVendorVersionResponse"/>
+      <wsdl:fault message="impl:ImplementationExceptionResponse"
+                  name="ImplementationExceptionFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- ALEACSERVICE BINDING -->
+
+  <wsdl:binding name="ALEACServiceBinding" type="impl:ALEACServicePortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="getPermissionNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getPermissionNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPermissionNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="definePermission">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="definePermissionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="definePermissionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="DuplicatePermissionExceptionFault">
+        <wsdlsoap:fault name="DuplicatePermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PermissionValidationExceptionFault">
+        <wsdlsoap:fault name="PermissionValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="updatePermission">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="updatePermissionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updatePermissionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchPermissionExceptionFault">
+        <wsdlsoap:fault name="NoSuchPermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PermissionValidationExceptionFault">
+        <wsdlsoap:fault name="PermissionValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getPermission">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getPermissionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPermissionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchPermissionExceptionFault">
+        <wsdlsoap:fault name="NoSuchPermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefinePermission">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefinePermissionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefinePermissionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchPermissionExceptionFault">
+        <wsdlsoap:fault name="NoSuchPermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRoleNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getRoleNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRoleNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineRole">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineRoleRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineRoleResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="DuplicateRoleExceptionFault">
+        <wsdlsoap:fault name="DuplicateRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="RoleValidationExceptionFault">
+        <wsdlsoap:fault name="RoleValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="updateRole">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="updateRoleRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateRoleResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="RoleValidationExceptionFault">
+        <wsdlsoap:fault name="RoleValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getRole">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getRoleRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRoleResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineRole">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineRoleRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineRoleResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="addPermissions">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="addPermissionsRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addPermissionsResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchPermissionExceptionFault">
+        <wsdlsoap:fault name="NoSuchPermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="setPermissions">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="setPermissionsRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setPermissionsResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchPermissionExceptionFault">
+        <wsdlsoap:fault name="NoSuchPermissionExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="removePermissions">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="removePermissionsRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removePermissionsResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientIdentityNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getClientIdentityNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClientIdentityNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="defineClientIdentity">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="defineClientIdentityRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="defineClientIdentityResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="DuplicateClientIdentityExceptionFault">
+        <wsdlsoap:fault name="DuplicateClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ClientIdentityValidationExceptionFault">
+        <wsdlsoap:fault name="ClientIdentityValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="updateClientIdentity">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="updateClientIdentityRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateClientIdentityResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ClientIdentityValidationExceptionFault">
+        <wsdlsoap:fault name="ClientIdentityValidationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientIdentity">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getClientIdentityRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClientIdentityResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getClientPermissionNames">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getClientPermissionNamesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClientPermissionNamesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="undefineClientIdentity">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="undefineClientIdentityRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undefineClientIdentityResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="addRoles">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="addRolesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addRolesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="removeRoles">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="removeRolesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeRolesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="setRoles">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="setRolesRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setRolesResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SecurityExceptionFault">
+        <wsdlsoap:fault name="SecurityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchClientIdentityExceptionFault">
+        <wsdlsoap:fault name="NoSuchClientIdentityExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NoSuchRoleExceptionFault">
+        <wsdlsoap:fault name="NoSuchRoleExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UnsupportedOperationExceptionFault">
+        <wsdlsoap:fault name="UnsupportedOperationExceptionFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getSupportedOperations">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getSupportedOperationsRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSupportedOperationsResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getStandardVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getStandardVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStandardVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+
+    <wsdl:operation name="getVendorVersion">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getVendorVersionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getVendorVersionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ImplementationExceptionFault">
+        <wsdlsoap:fault name="ImplementationExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- ALEACSERVICE -->
+  <wsdl:service name="ALEACService">
+    <wsdl:port binding="impl:ALEACServiceBinding" name="ALEACServicePort">
+      <!-- The value of the location attribute below is an example only;
+           Implementations are free to choose any appropriate URL. -->
+      <wsdlsoap:address location="http://localhost:8080/services/ALEACService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

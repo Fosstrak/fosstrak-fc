@@ -1,0 +1,446 @@
+       ------
+                                    Capture App Example
+                                    ------
+                                    ------
+
+
+Capture App Example
+
+* Contents
+	
+	[[]] {{{#Overview}Overview}}
+	
+	[[]] {{{#Retrieve}Retrieve ECReports}}
+	
+	[[]] {{{#Generate}Generate ECPIS Event}}
+	
+	[[]] {{{#Full}Full Code Example}}
+
+
+* {Overview}
+
+	From an event notification from the Fosstrak Filtering and Collection 
+	server you can easily create an event for the EPCIS repository. The 
+	following code example gives you an impression how you can use the 
+	serializer/deserializer utilities to perform such a job.
+
+	This guide will explain the different steps that have to be taken to 
+	implement a capture app. The capture app discussed will retrieve an 
+	ECReports over the http protocol. And generate an EPCIS Event through 
+	the ECPIS capture client.
+	
+	The guide will omit error-handling to keep the documentation short. The 
+	complete example at the end of the guide will implement the whole 
+	error handling.
+	
+	download the source code: {{{../files/CaptureApp.java}CaptureApp.java}}
+	
+	To run the capture app you will need the following packages in your 
+	classpath:
+	
+	* jaxb-api (eg. jaxb-api-2.0.jar)
+	
+	* jaxb-impl (eg. jaxb-impl-2.0.1.jar)
+	
+	* fc-commons (eg. fc-commons-0.3.0.jar)
+	
+	* epcis-captureclient (eg. epcis-captureclient-0.3.0.jar)
+	
+	* epcis-commons (eg. epcis-commons-0.3.0.jar)
+	
+	* xml-apis (eg. xml-apis-1.3.03.jar from javax)
+	
+	* log4j (eg. log4j-1.2.12.jar)
+
+* {Retrieve} ECReports
+
+	First you need to open a Socket to retrieve the ECReports from the 
+	Filtering and Collection server. 
+	
++---+
+// create a new server socket to retrieve ECReports
+ServerSocket ss = new ServerSocket(port);
+while (true) {
+	// accept an incoming message
+	Socket s = ss.accept();
+	
+	// ... (more to come)
+}
++---+
+
+	After the server socket has been created and incoming messages get 
+	accepted by another socket, you have to read the http message from the 
+	socket. Therefor you create an InputStream and read the message. We 
+	throw away the http header as we are just interested into the xml 
+	content holding the ECReports.
+
++---+
+// create a new server socket to retrieve ECReports
+ServerSocket ss = new ServerSocket(port);
+while (true) {
+	// accept an incoming message
+	Socket s = ss.accept();
+
+	BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+	
+	String data = in.readLine();
+	String buf = "";
+	// ignore the http header
+	data = in.readLine();
+	data = in.readLine();
+	data = in.readLine();
+	data = in.readLine();
+
+	while (data != null) {
+		buf += data;
+		data = in.readLine();
+	}
+	
+	// ... (more to come)
+}
++---+
+
+	After this step the ECReports are stored in the String <buf>. Now we 
+	have to deserialize the xml into an instance of an ECReports. Fosstrak 
+	offers you some helper methods that will do that job for you. You 
+	can find the whole serializer/deserializer methods in the packge 
+	<org.fosstrak.ale.util> in the classes <DeserializerUtil> and 
+	<SerializerUtil> respectively.
+	
+	For a detailed discussion of the serializer/deserializer utilties you 
+	can refer to the developers-guide {{{developer-serializers.html}Serializers and Deserializers}}.
+	
+	The serializer/deserializer methods require the input as an InputStream, 
+	we therefor create a ByteArrayInputStream from <buf>.
+	
++---+
+// create a new server socket to retrieve ECReports
+ServerSocket ss = new ServerSocket(port);
+while (true) {
+	// accept an incoming message
+	Socket s = ss.accept();
+
+	BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+	
+	String data = in.readLine();
+	String buf = "";
+	// ignore the http header
+	data = in.readLine();
+	data = in.readLine();
+	data = in.readLine();
+	data = in.readLine();
+
+	while (data != null) {
+		buf += data;
+		data = in.readLine();
+	}
+	
+	// create a stream from the buf
+	InputStream parseStream = new ByteArrayInputStream(buf.getBytes());
+	
+	// parse the string through the serializer/deserializer utils.
+	ECReports reports = DeserializerUtil.deserializeECReports(parseStream);
+	if (reports != null) {
+		// call the handler that will process the ECReports
+		handleReports(reports);
+	}
+}
++---+
+
+
+
+
+* {Generate} ECPIS Event
+
+	To create an EPCIS Event the EPCIS capture client is used. This guide 
+	will not discuss the generation of the event itself but outline the 
+	steps that have to be taken to retrieve the epc tags from the ECReports.
+
+	In this example we extract all the epcs from the ECReports and put 
+	them collectively into one EPCIS event. Thatfor we store all the epcs 
+	into a list of epc.
+	
++---+	
+List<ECReport> theReports = reports.getReports().getReport();
+// collect all the tags
+List<EPC> epcs = new LinkedList<EPC>();
+if (theReports != null) {
+	for (ECReport report : theReports) {
+		if (report.getGroup() != null) {
+			for (ECReportGroup group : report.getGroup()) {
+				if (group.getGroupList() != null) {
+					for (ECReportGroupListMember member : group.getGroupList().getMember()) {
+						if (member.getRawDecimal() != null) {
+							epcs.add(member.getRawDecimal());
+						}
+					}							
+				}
+			}
+		}
+	}
+}
+
+if (epcs.size() == 0) {
+	System.out.println("no epc received - generating no event");
+	return;
+}
++---+
+
+	After that step you have to create an EPCISDocumentType instance. Please 
+	refer to the users guide in the EPCIS documentation for a discussion. In 
+	this place we will just show you how to put the epcs we just extracted 
+	from the ECReports into the EPCISDocumentType.
+
++---+
+// ... (more code in front)
+
+EPCListType epcList = new EPCListType();
+// add the epcs
+for (EPC epc : epcs) {
+	org.fosstrak.epcis.model.EPC nepc = new org.fosstrak.epcis.model.EPC(); 
+	nepc.setValue(epc.getValue());
+	epcList.getEpc().add(nepc);
+}
+objEvent.setEpcList(epcList);
+
+// ... (more code behind)
++---+
+	
+	When you created the whole EPCISEvent and populated it with epc data, 
+	you are ready to call the capture-client.
+	
++---+
+EPCISDocumentType epcisDoc = new EPCISDocumentType();
+
+// ... (code in between)
+
+// send the event to the repository
+int httpResponseCode = client.capture(epcisDoc);
+if (httpResponseCode != 200) {
+    System.out.println("The event could NOT be captured!");
+}
++---+
+
+	
+	
+* {Full} Code Example
+
+	This section gives you an overview to the code for a whole captureApp. 
+	
+	download the source code: {{{../files/CaptureApp.java}CaptureApp.java}}
+
++---+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.DecimalFormat;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.fosstrak.ale.util.DeserializerUtil;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.epcglobal.EPC;
+import org.fosstrak.epcis.captureclient.CaptureClient;
+import org.fosstrak.epcis.model.ActionType;
+import org.fosstrak.epcis.model.BusinessLocationType;
+import org.fosstrak.epcis.model.EPCISBodyType;
+import org.fosstrak.epcis.model.EPCISDocumentType;
+import org.fosstrak.epcis.model.EPCListType;
+import org.fosstrak.epcis.model.EventListType;
+import org.fosstrak.epcis.model.ObjectEventType;
+import org.fosstrak.epcis.model.ReadPointType;
+
+public class CaptureApp {
+	
+	private int port;
+	
+	private String epcisRepository;
+	
+	private CaptureClient client = null;
+	
+	public CaptureApp(int port, String epcisRepository) {
+		this.port = port;
+		this.epcisRepository = epcisRepository;
+	}
+
+	private void handleReports(ECReports reports) throws IOException, JAXBException {
+		System.out.println("Handling incomming reports");
+			
+		List<ECReport> theReports = reports.getReports().getReport();
+		// collect all the tags
+		List<EPC> epcs = new LinkedList<EPC>();
+		if (theReports != null) {
+			for (ECReport report : theReports) {
+				if (report.getGroup() != null) {
+					for (ECReportGroup group : report.getGroup()) {
+						if (group.getGroupList() != null) {
+							for (ECReportGroupListMember member : group.getGroupList().getMember()) {
+								if (member.getRawDecimal() != null) {
+									epcs.add(member.getRawDecimal());
+								}
+							}							
+						}
+					}
+				}
+			}
+		}
+		
+		if (epcs.size() == 0) {
+			System.out.println("no epc received - generating no event");
+			return;
+		}
+		
+		// create the ecpis event
+		ObjectEventType objEvent = new ObjectEventType();
+
+		// get the current time and set the eventTime
+		XMLGregorianCalendar now = null;
+		try {
+		    DatatypeFactory dataFactory = DatatypeFactory.newInstance();
+		    now = dataFactory.newXMLGregorianCalendar(new GregorianCalendar());
+		    objEvent.setEventTime(now);
+		} catch (DatatypeConfigurationException e) {
+		    e.printStackTrace();
+		}
+
+		// get the current time zone and set the eventTimeZoneOffset
+		if (now != null) {
+		    int timezone = now.getTimezone();
+		    int h = Math.abs(timezone / 60);
+		    int m = Math.abs(timezone % 60);
+		    DecimalFormat format = new DecimalFormat("00");
+		    String sign = (timezone < 0) ? "-" : "+";
+		    objEvent.setEventTimeZoneOffset(sign + format.format(h) + ":" + format.format(m));
+		}
+		
+		EPCListType epcList = new EPCListType();
+		// add the epcs
+		for (EPC epc : epcs) {
+			org.fosstrak.epcis.model.EPC nepc = new org.fosstrak.epcis.model.EPC(); 
+			nepc.setValue(epc.getValue());
+			epcList.getEpc().add(nepc);
+		}
+		objEvent.setEpcList(epcList);
+
+		// set action
+		objEvent.setAction(ActionType.ADD);
+
+		// set bizStep
+		objEvent.setBizStep("urn:fosstrak:demo:bizstep:testing");
+
+		// set disposition
+		objEvent.setDisposition("urn:fosstrak:demo:disp:testing");
+
+		// set readPoint
+		ReadPointType readPoint = new ReadPointType();
+		readPoint.setId("urn:fosstrak:demo:rp:1.1");
+		objEvent.setReadPoint(readPoint);
+
+		// set bizLocation
+		BusinessLocationType bizLocation = new BusinessLocationType();
+		bizLocation.setId("urn:fosstrak:demo:loc:1.1");
+		objEvent.setBizLocation(bizLocation);
+
+		// create the EPCISDocument containing a single ObjectEvent
+		EPCISDocumentType epcisDoc = new EPCISDocumentType();
+		EPCISBodyType epcisBody = new EPCISBodyType();
+		EventListType eventList = new EventListType();
+		eventList.getObjectEventOrAggregationEventOrQuantityEvent().add(objEvent);
+		epcisBody.setEventList(eventList);
+		epcisDoc.setEPCISBody(epcisBody);
+		epcisDoc.setSchemaVersion(new BigDecimal("1.0"));
+		epcisDoc.setCreationDate(now);
+				
+		int httpResponseCode = client.capture(epcisDoc);
+		if (httpResponseCode != 200) {
+		    System.out.println("The event could NOT be captured!");
+		}
+	}
+	
+	public void run() {
+		client = new CaptureClient(epcisRepository);
+				
+		ServerSocket ss = null;
+		try {
+			ss = new ServerSocket(port);
+			while(true) {
+				try {
+					Socket s = ss.accept();
+	   				BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+	   			   
+	   				String data = in.readLine();
+	   				String buf = "";
+	   				// ignore the http header
+	 				data = in.readLine();
+	   				data = in.readLine();
+	   				data = in.readLine();
+	   				data = in.readLine();
+	   				
+	   				while (data != null) {
+	   					buf += data;
+	   					data = in.readLine();
+	   				}
+	   				System.out.println(buf);
+	   				
+	   				// create a stream from the buf
+	   				InputStream parseStream = new ByteArrayInputStream(buf.getBytes());
+	   				
+	   				// parse the string
+	   				
+	   				ECReports reports = DeserializerUtil.deserializeECReports(parseStream);
+	   				if (reports != null) {
+	   					handleReports(reports);
+	   				}
+				} catch (Exception e) {
+					System.out.println("ERROR: " + e.getMessage());
+				}
+			}
+	      } catch (IOException e1) {
+		 System.out.println(e1.getMessage());
+	      }
+	}
+	
+	public static void help() {
+		System.out.println("You need to specify the port where to listen and the url of the epcis repository");
+		System.out.println("Example: ");
+	}
+	
+	/**
+	 * starts the CaptureApp.
+	 * 
+	 * @param args the first command line parameter is the TCP port. if omitted port 9999 is used.
+	 */
+	public static void main(String[] args) {
+        CaptureApp client;
+        int port;
+        String epcisRepository;
+        // check if args[0] is tcp-port
+        // and args[1] is epcis repository
+        if (args.length == 2){
+        	port = Integer.parseInt(args[0]);
+        	epcisRepository = args[1];
+            client = new CaptureApp(port, epcisRepository);
+            
+        } else {
+        	help();
+        	return;
+        }
+        
+        client.run();
+	}
+}
++---+
