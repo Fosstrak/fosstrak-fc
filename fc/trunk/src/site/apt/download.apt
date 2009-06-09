@@ -9,9 +9,9 @@
 
 Download
 
-  The current version of Fosstrak Filtering and Collection is 1.0.0.
+  The current version of Fosstrak ALE Middleware is 1.0.0.
 
-* Fosstrak Filtering and Collection Server
+* Filtering and Collection Server
 
 *--------+----------+
          | Binaries |
@@ -24,42 +24,42 @@ Download
 *--------+----------+
 
 
-* Fosstrak Filtering and Collection Testclient (Swing)
+* Standalone Client
 
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Testclient 1.0.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.0/fc-client-1.0.0-bin-with-dependencies.zip}fc-client-1.0.0-bin-with-dependencies.zip}}
+ Standalone Client 1.0.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.0/fc-client-1.0.0-bin-with-dependencies.zip}fc-client-1.0.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Testclient 1.0.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.0/fc-client-1.0.0-bin-with-dependencies.tar.gz}fc-client-1.0.0-bin-with-dependencies.tar.gz}}
+ Standalone Client 1.0.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.0/fc-client-1.0.0-bin-with-dependencies.tar.gz}fc-client-1.0.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
 
 
-* Fosstrak Filtering and Collection Testclient (Webapp)
+* Web-Based Client
 
 *--------+----------+
          | Binaries |
 *--------+----------+
- Filtering and Collection Testclient 1.0.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.0/fc-webclient-1.0.0-bin-with-dependencies.zip}fc-webclient-1.0.0-bin-with-dependencies.zip}}
+ Web-Based Client 1.0.0 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.0/fc-webclient-1.0.0-bin-with-dependencies.zip}fc-webclient-1.0.0-bin-with-dependencies.zip}}
 *--------+----------+
- Filtering and Collection Testclient 1.0.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.0/fc-webclient-1.0.0-bin-with-dependencies.tar.gz}fc-webclient-1.0.0-bin-with-dependencies.tar.gz}}
+ Web-Based Client 1.0.0 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.0/fc-webclient-1.0.0-bin-with-dependencies.tar.gz}fc-webclient-1.0.0-bin-with-dependencies.tar.gz}}
 *--------+----------+
 
 
-* Source Distribution (including all submodules)
+* Source Distribution (including all above modules)
 
 *--------+----------+
          | Sources  |
 *--------+----------+
- Filtering and Collection Source 1.0.0 (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.0/fc-1.0.0-src.zip}fc-1.0.0-src.zip}}
+ ALE Middleware Source 1.0.0 (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.0/fc-1.0.0-src.zip}fc-1.0.0-src.zip}}
 *--------+----------+
- Filtering and Collection Source 1.0.0 (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.0/fc-1.0.0-src.tar.gz}fc-1.0.0-src.tar.gz}}
+ ALE Middleware Source 1.0.0 (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.0/fc-1.0.0-src.tar.gz}fc-1.0.0-src.tar.gz}}
 *--------+----------+
 
 
 * Previous Releases
 
-  All previous s of Fosstrak Filtering and Collection can be found in the {{{http://maven-repository.fosstrak.org/s}distribution repository}}.
+  All previous releases of the Fosstrak ALE Middleware can be found in the {{{http://maven-repository.fosstrak.org/s}distribution repository}}.
 
 
 * System Requirements

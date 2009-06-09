@@ -62,7 +62,7 @@
 	</item>
     </menu>
     
-    <menu name="Filtering and Collection Project Modules" inherit="none">
+    <menu name="ALE Middleware Modules" inherit="none">
       <item name="FC Client" href="fc-client/project-reports.html" collapse="true">
         <item name="dummy"/>
       </item>
