@@ -29,20 +29,26 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.util.ECReportSetEnum;
-import org.fosstrak.ale.util.HexUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupCount;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupList;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpecExtension;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSightingStat;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
-import org.fosstrak.ale.server.Tag;
 
 /**
  * This class represents a report.
@@ -442,22 +448,46 @@ public class Report {
 			epc.setValue(val);
 			groupMember.setRawDecimal(epc);
 		}
+		// TODO: check if this format is correct
 		if (reportSpec.getOutput().isIncludeTag()) {
 			EPC epc = new EPC();
 			epc.setValue(tag.getTagIDAsPureURI());
 			groupMember.setTag(epc);
 		}
+		
 		if (reportSpec.getOutput().isIncludeRawHex()) {
-			if (tag.getTagID() != null) {
+			if (tag.getTagAsBinary() != null) {
 				EPC epc = new EPC();
 				BigInteger hex = new BigInteger(tag.getTagAsBinary(), 2);
 				epc.setValue(hex.toString(16));
 				groupMember.setRawHex(epc);
 			}
 		}
+		// TODO: check if this format is correct
+		if (reportSpec.getOutput().isIncludeEPC()) {
+			if (null != tag.getTagIDAsPureURI()) {
+				EPC epc = new EPC();
+				epc.setValue(tag.getTagIDAsPureURI());
+				groupMember.setEpc(epc);
+			}
+		}
+		
+		// check if we need to add tag stats
+		ECReportSpecExtension ecReportSpecExtension = reportSpec.getExtension();
+		if ((null != ecReportSpecExtension) && 
+				(null != ecReportSpecExtension.getStatProfileNames())) {
+			
+			LOG.debug("adding stat profile");
+			addStatProfiles(
+					tag,
+					groupMember,
+					ecReportSpecExtension.
+						getStatProfileNames().getStatProfileName());
+		}
 		
 		// add list member to group list
-		List<ECReportGroupListMember> members = matchingGroup.getGroupList().getMember();		members.add(groupMember);
+		List<ECReportGroupListMember> members = matchingGroup.getGroupList().getMember();		
+		members.add(groupMember);
 		
 		// increment group counter
 		if (reportSpec.getOutput().isIncludeCount()) {
@@ -466,6 +496,38 @@ public class Report {
 		
 		LOG.debug("Tag '" + tagURI + "' successfully added to group '" + groupName + "' of report '" + name + "'");
 		
+	}
+
+	/**
+	 * for each statistics profile name add the respective statistics profile.
+	 * @param tag the tag holding information the statistics.
+	 * @param groupMember the group member where to add the statistics.
+	 * @param statProfileName a list of statistic profile names.
+	 */
+	private void addStatProfiles(Tag tag, ECReportGroupListMember groupMember,
+			List<String> statProfileName) {
+
+		ECReportGroupListMemberExtension extension = 
+			new ECReportGroupListMemberExtension();
+		groupMember.setExtension(extension);
+		
+		extension.setStats(new Stats());
+		List<ECTagStat> ecTagStats = extension.getStats().getStat();
+		for (String profile : statProfileName) {		
+			LOG.debug("adding stat profile: " + profile);
+		
+			ECTagStat ecTagStat = new ECTagStat();
+			ecTagStats.add(ecTagStat);
+			
+			ecTagStat.setProfile(profile);
+			ecTagStat.setStatBlocks(new StatBlocks());
+			ECReaderStat readerStat = new ECReaderStat();
+			ecTagStat.getStatBlocks().getStatBlock().add(readerStat);
+			
+			readerStat.setReaderName(tag.getReader());
+			readerStat.setSightings(new Sightings());
+			readerStat.getSightings().getSighting().add(new ECSightingStat());
+		}
 	}
 
 	/**
