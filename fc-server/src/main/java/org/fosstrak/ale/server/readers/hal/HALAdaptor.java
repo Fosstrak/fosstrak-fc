@@ -301,52 +301,58 @@ public class HALAdaptor extends BaseReader {
 						"caught exception from hal. %s",
 						e.getMessage()));
 			}
-			// dont process if observations are null.
+			// don't process if observations are null.
 			if (null == observations) {
 				return null;
 			}
 			// only process if there are tags
 			if (observations.length > 0) {
 				List<Tag> tags = new LinkedList<Tag>();
+				
 				for (Observation observation : observations) {
-					
-					// For each tag create a new Tag
-					for (String tagobserved : observation.getIds()) {
-						Tag tag = new Tag(getName());
-						
-						String bin = new BigInteger(
-								tagobserved.toLowerCase(), 16).toString(2);
-						
-						tag.setTagAsBinary(bin);
-						// 64 bit tag length
-						if (bin.length() <= 64) {
-							tag.setTagIDAsPureURI(
-									Tag.convert_to_PURE_IDENTITY(
-											"64",
-											"1",
-											"7",
-											bin)
-									);
-						} // 96 bit length
-							else if (bin.length() <= 96) {
-								
-							// leading 00 gets truncated away by the big int. 
-							if (bin.startsWith("1") && 
-									(bin.length() < 96)) {
-								
-								bin = "00" + bin;
+					try {
+						// For each tag create a new Tag
+						for (String tagobserved : observation.getIds()) {
+							Tag tag = new Tag(getName());
+							
+							String bin = new BigInteger(
+									tagobserved.toLowerCase(), 16).toString(2);
+							
+							tag.setTagAsBinary(bin);
+							// 64 bit tag length
+							if (bin.length() <= 64) {
+								System.out.println(bin);
+								tag.setTagIDAsPureURI(
+										Tag.convert_to_PURE_IDENTITY(
+												"64",
+												"1",
+												"7",
+												bin)
+										);
+							} // 96 bit length
+								else if (bin.length() <= 96) {
+									
+								// leading 00 gets truncated away by the big int. 
+								if (bin.startsWith("1") && 
+										(bin.length() < 96)) {
+									
+									bin = "00" + bin;
+								}
+									
+								tag.setTagIDAsPureURI(
+										Tag.convert_to_PURE_IDENTITY(
+												"96",
+												"3",
+												null,
+												bin)
+										);
 							}
-								
-							tag.setTagIDAsPureURI(
-									Tag.convert_to_PURE_IDENTITY(
-											"96",
-											"3",
-											null,
-											bin)
-									);
-						}
-						tag.setTimestamp(observation.getTimestamp());
-						tags.add(tag);
+
+							tag.setTimestamp(observation.getTimestamp());
+							tags.add(tag);
+						}	// \\END FOR
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 				

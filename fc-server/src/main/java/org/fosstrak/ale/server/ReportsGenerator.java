@@ -574,23 +574,23 @@ public class ReportsGenerator implements Runnable {
 		}
 		
 		// check if start trigger is non-empty and repeatPeriod is non-zero
-		if (boundarySpec.getStartTrigger() != null && boundarySpec.getRepeatPeriod().getValue() != 0) {
+		if ((boundarySpec.getStartTrigger() != null) && (boundarySpec.getRepeatPeriod().getValue() != 0)) {
 			throw new ECSpecValidationExceptionResponse(
 					"The startTrigger field of ECBoundarySpec is non-empty and " +
 					"the repeatPeriod field of ECBoundarySpec is non-zero.");
 		}
 		
 		// check if a stopping condition is specified
-		if (boundarySpec.getStopTrigger() == null 
-				&& boundarySpec.getDuration() == null &&
-				boundarySpec.getStableSetInterval() == null) {
+		if ((boundarySpec.getStopTrigger() == null) 
+				&& (boundarySpec.getDuration() == null) &&
+				(boundarySpec.getStableSetInterval() == null)) {
 			throw new ECSpecValidationExceptionResponse(
 					"No stopping condition is specified in ECBoundarySpec.");
 		}
 		
 		// check if there is a ECReportSpec instance
-		if (spec.getReportSpecs() == null || spec.getReportSpecs() == null ||
-				spec.getReportSpecs().getReportSpec().size() == 0) {
+		if ((spec.getReportSpecs() == null) ||
+				(spec.getReportSpecs().getReportSpec().size() == 0)) {
 			throw new ECSpecValidationExceptionResponse(
 					"List of ECReportSpec instances is empty.");
 		}
