@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
@@ -12,9 +13,10 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareException;
 import org.fosstrak.hal.Observation;
-import org.fosstrak.llrp.adaptor.Reader;
 import org.fosstrak.llrp.adaptor.Constants;
+import org.fosstrak.llrp.adaptor.Reader;
 import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
+import org.fosstrak.tdt.TDTEngine;
 import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.LLRPMessageFactory;
 import org.llrp.ltk.generated.interfaces.EPCParameter;
@@ -23,7 +25,6 @@ import org.llrp.ltk.generated.parameters.EPC_96;
 import org.llrp.ltk.generated.parameters.TagReportData;
 import org.llrp.ltk.types.Integer96_HEX;
 import org.llrp.ltk.types.LLRPMessage;
-import org.apache.log4j.Logger;
 
 /**
  * this class implements the adaptor from a logical reader in the filtering and 
@@ -255,10 +256,9 @@ public class LLRPAdaptor extends BaseReader {
 						EPC_96 epc96 = (EPC_96) epcParameter;
 						Integer96_HEX hex = epc96.getEPC();
 						String hx = hex.toString();
-						BigInteger b = new BigInteger(hx, 16);
 						try {
-							
-							String binary = b.toString(2);
+							TDTEngine tdt = Tag.getTDTEngine();
+							String binary = tdt.hex2bin(hx);
 							if (binary.startsWith("1") && 
 									(binary.length() < 96)) {
 								
@@ -272,8 +272,14 @@ public class LLRPAdaptor extends BaseReader {
 							tag.addTrace(getName());
 							tag.setTimestamp(System.currentTimeMillis());
 							
+							tag.setTagLength("96");
+							tag.setFilter("3");
+							tag.setCompanyPrefixLength(null);							
+							
 							String pureID = Tag.convert_to_PURE_IDENTITY(
-									"96", "3", null, binary);							
+									tag.getTagLength(), 
+									tag.getFilter(), 
+									tag.getCompanyPrefixLength(), binary);
 							tag.setTagIDAsPureURI(pureID);
 
 							//tag.prettyPrint(log, Level.DEBUG);

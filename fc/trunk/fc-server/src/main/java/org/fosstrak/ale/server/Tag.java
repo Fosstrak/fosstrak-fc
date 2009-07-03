@@ -42,6 +42,15 @@ public class Tag {
 	/** timestamp when the tag occured. */
 	private long timestamp = -1;
 	
+	/** the tag length. */
+	private String tagLength = null;
+	
+	/** the filter value. */
+	private String filter = null;
+	
+	/** the company prefix length. */
+	private String companyPrefixLength = null;
+	
 	/**
 	 * constructor for a tag. (default constructor).
 	 */
@@ -271,6 +280,48 @@ public class Tag {
 		return binary;
 	}
 		
+	/**
+	 * @param tagLength the tagLength to set
+	 */
+	public void setTagLength(String tagLength) {
+		this.tagLength = tagLength;
+	}
+
+	/**
+	 * @return the tagLength
+	 */
+	public String getTagLength() {
+		return tagLength;
+	}
+
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return filter;
+	}
+
+	/**
+	 * @param companyPrefixLength the companyPrefixLength to set
+	 */
+	public void setCompanyPrefixLength(String companyPrefixLength) {
+		this.companyPrefixLength = companyPrefixLength;
+	}
+
+	/**
+	 * @return the companyPrefixLength
+	 */
+	public String getCompanyPrefixLength() {
+		return companyPrefixLength;
+	}
+
 	/** instance of the TDT engine used for tag conversion. */
 	private static TDTEngine engine = null;
 	
@@ -287,6 +338,15 @@ public class Tag {
 					"exception when creating the tdt engine: " + e.getMessage()
 					);
 		}
+	}
+	
+	public static TDTEngine getTDTEngine() {
+		if (null != engine) {
+			return engine;
+		}
+		
+		startTDTEngine();
+		return engine;
 	}
 	
 	/**
@@ -361,5 +421,21 @@ public class Tag {
 			extraparms.put("companyprefixlength", companyPrefixLength);
 		}
 		return convert(tag, extraparms, outputLevel);		
+	}
+	
+	public static synchronized String convert_to_TAG_ENCODING(
+			String tagLength,
+			String filter,
+			String companyPrefixLength,
+			String tag) {
+		
+		LevelTypeList outputLevel = LevelTypeList.TAG_ENCODING;
+		HashMap<String, String> extraparms = new HashMap<String, String> ();
+		extraparms.put("taglength", tagLength);
+		extraparms.put("filter", filter);
+		if (null != companyPrefixLength) {
+			extraparms.put("companyprefixlength", companyPrefixLength);
+		}
+		return convert(tag, extraparms, outputLevel);
 	}
 }

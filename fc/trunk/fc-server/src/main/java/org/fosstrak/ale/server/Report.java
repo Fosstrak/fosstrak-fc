@@ -49,6 +49,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
+import org.fosstrak.tdt.TDTEngine;
 
 /**
  * This class represents a report.
@@ -438,38 +439,65 @@ public class Report {
 		
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
-		if (reportSpec.getOutput().isIncludeRawDecimal()) {
-			String val = tag.getTagIDAsPureURI();
-			if (null != tag.getTagAsBinary()) {
-				BigInteger dec = new BigInteger(tag.getTagAsBinary(), 2);
-				val = dec.toString();
-			}
-			EPC epc = new EPC();
-			epc.setValue(val);
-			groupMember.setRawDecimal(epc);
-		}
-		// TODO: check if this format is correct
-		if (reportSpec.getOutput().isIncludeTag()) {
-			EPC epc = new EPC();
-			epc.setValue(tag.getTagIDAsPureURI());
-			groupMember.setTag(epc);
-		}
 		
-		if (reportSpec.getOutput().isIncludeRawHex()) {
-			if (tag.getTagAsBinary() != null) {
-				EPC epc = new EPC();
-				BigInteger hex = new BigInteger(tag.getTagAsBinary(), 2);
-				epc.setValue(hex.toString(16));
-				groupMember.setRawHex(epc);
+		// RAW DECIMAL
+		TDTEngine tdt = Tag.getTDTEngine();
+		try {
+			if (reportSpec.getOutput().isIncludeRawDecimal()) {
+				if (null != tag.getTagAsBinary()) {
+					EPC epc = new EPC();
+					epc.setValue(tdt.bin2dec(tag.getTagAsBinary()));
+					groupMember.setRawDecimal(epc);
+				} else {
+					throw new Exception("missing binary representation of the tag");
+				}
 			}
+		} catch (Exception e) {
+			LOG.debug("could not put tag into report as format 'RawDecimal'");
 		}
-		// TODO: check if this format is correct
-		if (reportSpec.getOutput().isIncludeEPC()) {
-			if (null != tag.getTagIDAsPureURI()) {
-				EPC epc = new EPC();
-				epc.setValue(tag.getTagIDAsPureURI());
-				groupMember.setEpc(epc);
+		// TAG FORMAT
+		try {
+			if (reportSpec.getOutput().isIncludeTag()) {
+				if (null != tag.getTagAsBinary()) {
+					EPC epc = new EPC();
+					epc.setValue(Tag.convert_to_TAG_ENCODING(
+							tag.getTagLength(), 
+							tag.getFilter(), 
+							tag.getCompanyPrefixLength(), 
+							tag.getTagAsBinary()));
+					groupMember.setTag(epc);	
+				} else {
+					throw new Exception("missing binary representation of the tag");
+				}
 			}
+		} catch (Exception e) {
+			LOG.debug("could not put tag into report as format 'Tag'");
+		}
+		// RAW HEX
+		try {
+			if (reportSpec.getOutput().isIncludeRawHex()) {
+				if (null != tag.getTagAsBinary()) {
+					EPC epc = new EPC();
+					epc.setValue(tdt.bin2hex(tag.getTagAsBinary()));
+					groupMember.setRawHex(epc);
+				} else {
+					throw new Exception("missing binary representation of the tag");
+				}
+			}
+		} catch (Exception e) {
+			LOG.debug("could not put tag into report as format 'RawHex'");
+		}
+		// EPC
+		try {
+			if (reportSpec.getOutput().isIncludeEPC()) {
+				if (null != tag.getTagIDAsPureURI()) {
+					EPC epc = new EPC();
+					epc.setValue(tag.getTagIDAsPureURI());
+					groupMember.setEpc(epc);
+				}
+			}
+		} catch (Exception e) {
+			LOG.debug("could not put tag into report as format 'EPC'");
 		}
 		
 		// check if we need to add tag stats
