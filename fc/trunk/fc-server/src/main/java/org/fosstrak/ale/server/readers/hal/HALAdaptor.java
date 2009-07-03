@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.IdentifyThread;
@@ -15,7 +16,7 @@ import org.fosstrak.hal.HardwareAbstraction;
 import org.fosstrak.hal.HardwareException;
 import org.fosstrak.hal.Observation;
 import org.fosstrak.hal.Trigger;
-import org.apache.log4j.Logger;
+import org.fosstrak.tdt.TDTEngine;
 
 /**
  * adaptor for all HAL devices.
@@ -315,20 +316,28 @@ public class HALAdaptor extends BaseReader {
 						for (String tagobserved : observation.getIds()) {
 							Tag tag = new Tag(getName());
 							
-							String bin = new BigInteger(
-									tagobserved.toLowerCase(), 16).toString(2);
-							
+							TDTEngine tdt = Tag.getTDTEngine();
+							String bin = tdt.hex2bin(tagobserved);
 							tag.setTagAsBinary(bin);
 							// 64 bit tag length
 							if (bin.length() <= 64) {
-								System.out.println(bin);
-								tag.setTagIDAsPureURI(
+								
+								tag.setTagLength("64");
+								tag.setFilter("1");
+								tag.setCompanyPrefixLength("7");
+								
+								try {
+									tag.setTagIDAsPureURI(
 										Tag.convert_to_PURE_IDENTITY(
-												"64",
-												"1",
-												"7",
+												tag.getTagLength(),
+												tag.getFilter(),
+												tag.getCompanyPrefixLength(),
 												bin)
 										);
+								} catch (Exception myE) {
+									LOG.debug("exception when converting tag: " 
+											+ myE.getMessage());
+								}
 							} // 96 bit length
 								else if (bin.length() <= 96) {
 									
@@ -338,21 +347,28 @@ public class HALAdaptor extends BaseReader {
 									
 									bin = "00" + bin;
 								}
-									
-								tag.setTagIDAsPureURI(
+								tag.setTagLength("96");
+								tag.setFilter("3");
+								tag.setCompanyPrefixLength(null);
+								try {
+									tag.setTagIDAsPureURI(
 										Tag.convert_to_PURE_IDENTITY(
-												"96",
-												"3",
-												null,
-												bin)
-										);
+												tag.getTagLength(), 
+												tag.getFilter(), 
+												tag.getCompanyPrefixLength(), 
+												bin));
+								} catch (Exception myE) {
+									LOG.debug("exception when converting tag: " 
+											+ myE.getMessage());
+								}
 							}
 
 							tag.setTimestamp(observation.getTimestamp());
 							tags.add(tag);
 						}	// \\END FOR
 					} catch (Exception e) {
-						e.printStackTrace();
+						LOG.debug("exception when processing tags: " 
+								+ e.getMessage());
 					}
 				}
 				
