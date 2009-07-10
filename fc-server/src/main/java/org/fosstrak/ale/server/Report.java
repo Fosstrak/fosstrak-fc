@@ -444,9 +444,13 @@ public class Report {
 		TDTEngine tdt = Tag.getTDTEngine();
 		try {
 			if (reportSpec.getOutput().isIncludeRawDecimal()) {
-				if (null != tag.getTagAsBinary()) {
+				String bin = tag.getTagAsBinary();
+				if (null != bin) {
 					EPC epc = new EPC();
-					epc.setValue(tdt.bin2dec(tag.getTagAsBinary()));
+					epc.setValue(
+							createRepresentationAsRawDecimal(
+									bin.length(), 
+									tdt.bin2dec(bin)));
 					groupMember.setRawDecimal(epc);
 				} else {
 					throw new Exception("missing binary representation of the tag");
@@ -472,13 +476,19 @@ public class Report {
 			}
 		} catch (Exception e) {
 			LOG.debug("could not put tag into report as format 'Tag'");
+
+			e.printStackTrace();
 		}
 		// RAW HEX
 		try {
 			if (reportSpec.getOutput().isIncludeRawHex()) {
-				if (null != tag.getTagAsBinary()) {
+				String bin = tag.getTagAsBinary();
+				if (null != bin) {
 					EPC epc = new EPC();
-					epc.setValue(tdt.bin2hex(tag.getTagAsBinary()));
+					epc.setValue(
+							createRepresentationAsRawHex(
+									bin.length(), 
+									tdt.bin2hex(bin)));
 					groupMember.setRawHex(epc);
 				} else {
 					throw new Exception("missing binary representation of the tag");
@@ -524,6 +534,30 @@ public class Report {
 		
 		LOG.debug("Tag '" + tagURI + "' successfully added to group '" + groupName + "' of report '" + name + "'");
 		
+	}
+
+	/**
+	 * creates a raw epc-decimal representation of a given tag.
+	 * @param bitStringLength the length of the bit-string (binary representation).
+	 * @param dec the decimal representation of the tag.
+	 * @return the formatted epc-decimal representation.
+	 */
+	private String createRepresentationAsRawDecimal(int bitStringLength, String dec) {
+		return String.format("urn:epc:raw:%d.%s", 
+				bitStringLength, 
+				dec);
+	}
+	
+	/**
+	 * creates a epc-hex representation of a given tag.
+	 * @param bitStringLength the length of the bit-string (binary representation).
+	 * @param hex the hex representation of the tag.
+	 * @return the formatted epc-hex representation.
+	 */
+	private String createRepresentationAsRawHex(int bitStringLength, String hex) {
+		return String.format("urn:epc:raw:%d.x%s", 
+				bitStringLength, 
+				hex);
 	}
 
 	/**
