@@ -385,6 +385,10 @@ public class Report {
 		
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
+		// if this one is null, try something different to compense crashes...
+		if (null == tagURI) {
+			tagURI = Tag.getTDTEngine().bin2hex(tag.getTagAsBinary());
+		}
 		
 		// get group name (use group patterns)
 		String groupName = getGroupName(tagURI);
@@ -500,7 +504,21 @@ public class Report {
 		// EPC
 		try {
 			if (reportSpec.getOutput().isIncludeEPC()) {
-				if (null != tag.getTagIDAsPureURI()) {
+				String bin = tag.getTagAsBinary();
+				try {
+					if (null != bin) {
+						EPC epc = new EPC();
+						epc.setValue(Tag.convert_to_PURE_IDENTITY(
+								tag.getTagLength(), 
+								tag.getFilter(), 
+								tag.getCompanyPrefixLength(), 
+								bin));
+						groupMember.setEpc(epc);
+					}
+				} catch (Exception ex) {
+					LOG.debug("extracting epc via binary failed.");
+				}
+				if ((null == groupMember.getEpc()) && (null != tag.getTagIDAsPureURI())) {
 					EPC epc = new EPC();
 					epc.setValue(tag.getTagIDAsPureURI());
 					groupMember.setEpc(epc);

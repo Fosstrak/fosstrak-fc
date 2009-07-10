@@ -320,13 +320,7 @@ public class HALAdaptor extends BaseReader {
 							String bin = tdt.hex2bin(tagobserved);
 							tag.setTagAsBinary(bin);
 							// 64 bit tag length
-							if (bin.length() <= 64) {
-//								while (bin.length() < 64) {
-//									// pad with leading zeros (tdt makes error).
-//									bin = "0" + bin;
-//									tag.setTagAsBinary(bin);
-//								}
-								
+							if (bin.length() <= 64) {								
 								tag.setTagLength("64");
 								tag.setFilter("1");
 								tag.setCompanyPrefixLength("7");

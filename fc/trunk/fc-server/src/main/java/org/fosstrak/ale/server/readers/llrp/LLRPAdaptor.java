@@ -256,6 +256,7 @@ public class LLRPAdaptor extends BaseReader {
 						EPC_96 epc96 = (EPC_96) epcParameter;
 						Integer96_HEX hex = epc96.getEPC();
 						String hx = hex.toString();
+						Tag tag = null;
 						try {
 							TDTEngine tdt = Tag.getTDTEngine();
 							String binary = tdt.hex2bin(hx);
@@ -265,28 +266,39 @@ public class LLRPAdaptor extends BaseReader {
 								binary = "00" + binary;
 							}
 							
-							Tag tag = new Tag(readerName);
+							tag = new Tag(readerName);
 							tag.setTagAsBinary(binary);
 							tag.setTagID(binary.getBytes());
 							tag.setReader(readerName);
 							tag.addTrace(getName());
 							tag.setTimestamp(System.currentTimeMillis());
-							
-							tag.setTagLength("96");
-							tag.setFilter("3");
-							tag.setCompanyPrefixLength(null);							
-							
-							String pureID = Tag.convert_to_PURE_IDENTITY(
-									tag.getTagLength(), 
-									tag.getFilter(), 
-									tag.getCompanyPrefixLength(), binary);
-							tag.setTagIDAsPureURI(pureID);
 
-							//tag.prettyPrint(log, Level.DEBUG);
+							// add the tag.
 							tags.add(tag);
 						} catch (Exception e) {
-							log.info("could not convert provided tag");
-							log.debug(e.getMessage());
+							log.debug("bad error, ignoring tag: " + e.getMessage());
+						}
+						
+						// try to run a conversion on the tag...
+						if (null != tag) {
+							try {
+								String tagLength = "96";
+								String filter = "3";							
+								
+								String pureID = Tag.convert_to_PURE_IDENTITY(
+										tagLength, 
+										filter, 
+										null, 
+										tag.getTagAsBinary());
+								tag.setTagIDAsPureURI(pureID);
+
+								// it works, so set the prefix and the tag length.
+								tag.setTagLength(tagLength);
+								tag.setFilter(filter);
+								tag.setCompanyPrefixLength(null);
+							} catch (Exception e) {
+								log.debug("could not convert provided tag: " + e.getMessage());
+							}
 						}
 					}
 				}
