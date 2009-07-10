@@ -321,6 +321,11 @@ public class HALAdaptor extends BaseReader {
 							tag.setTagAsBinary(bin);
 							// 64 bit tag length
 							if (bin.length() <= 64) {
+//								while (bin.length() < 64) {
+//									// pad with leading zeros (tdt makes error).
+//									bin = "0" + bin;
+//									tag.setTagAsBinary(bin);
+//								}
 								
 								tag.setTagLength("64");
 								tag.setFilter("1");
@@ -346,6 +351,7 @@ public class HALAdaptor extends BaseReader {
 										(bin.length() < 96)) {
 									
 									bin = "00" + bin;
+									tag.setTagAsBinary(bin);
 								}
 								tag.setTagLength("96");
 								tag.setFilter("3");
