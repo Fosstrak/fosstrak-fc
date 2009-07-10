@@ -197,7 +197,7 @@ public class Tag {
 	/**
 	 * comparator to check whether two tags are the same.
 	 * @param tag the other tag to be checked.
-	 * @return boolean value flaging whether equal or not
+	 * @return boolean value flagging whether equal or not
 	 */
 	public boolean equalsTag(Tag tag) {
 		// if the origin in both tags is null, then do not take the 
@@ -223,9 +223,27 @@ public class Tag {
 		}
 		
 		// compare the tag id
-		if (!tag.getTagIDAsPureURI().equalsIgnoreCase(getTagIDAsPureURI())) {
+		if ((null != tag.getTagIDAsPureURI()) && (null != getTagIDAsPureURI())) {
+			// both not null, so compare
+			if (!tag.getTagIDAsPureURI().equalsIgnoreCase(getTagIDAsPureURI())) {
+				return false;
+			}				
+		} else if ((null != tag.getTagIDAsPureURI()) || (null != getTagIDAsPureURI())) {
+			// only one null, therefore not equals
 			return false;
 		}
+		
+		// try to compare the binary value
+		if ((null != tag.getTagAsBinary()) && (null != getTagAsBinary())) {
+			// both not null, so compare
+			if (!tag.getTagAsBinary().equalsIgnoreCase(getTagAsBinary())) {
+				return false;
+			}				
+		} else if ((null != tag.getTagAsBinary()) || (null != getTagAsBinary())) {
+			// only one null, therefore not equals
+			return false;
+		}
+		
 		return true;
 	}
 	
