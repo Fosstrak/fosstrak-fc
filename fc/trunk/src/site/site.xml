@@ -47,7 +47,7 @@
 		<item name="Define Logical Reader" href="docs/user-lrdef.html"/>
 		<item name="Use ALE Clients" href="docs/user-testclients.html"/>
 		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
-		<item name="Capture App Example" href="docs/user-captureapp.html"/>
+		<item name="Capture App" href="../captureapp/index.html"/>
 	</item>
 	
 	<item name="Developer Guide" href="docs/developer-index.html" collapse="true">
