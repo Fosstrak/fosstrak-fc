@@ -428,7 +428,10 @@ public class Subscriber {
 		
 		// append request line
 		header.append("POST ");
-		header.append(path);
+		// add the trimmed / again together with a white space
+		String p = "/" + path + " ";
+		header.append(p);
+			
 		header.append("HTTP/1.1");
 		header.append("\n");
 		
