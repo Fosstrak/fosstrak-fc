@@ -1,9 +1,9 @@
 <document>
 	<properties>
-		<title>Changes fc-webclient</title>
+		<title>Changes fc-server</title>
 	</properties>
 	<body>
-		<release version="1.0.1" description="Feature and Bugfix release">
+		<release version="1.0.1" date="2009-07-24" description="Feature and Bugfix release">
 			<action dev="sawielan" type="fix" issue="2822988">tag format in ECReports is wrong for rawHex and rawDecimal. Fix implements decimal as epc-decimal and hex as epc-hex.</action>
 			<action dev="sawielan" type="fix" issue="2822918">When sending notifications to URI with resource path, the 'remainder-of-URL' is merged with 'HTTP/1.1'.</action>
 			<action dev="sawielan" type="fix" issue="2816225">tdt within hal adapter crashes when hex-tag with 64bit length is submitted: fixed by using tdt conversion algorithms to convert between binary and hex. further introduced stronger exception handling.</action>
