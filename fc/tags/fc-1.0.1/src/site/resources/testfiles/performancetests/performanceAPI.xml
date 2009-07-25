@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader1"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader2">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader2"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader3">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader3"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader4">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader4"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader5">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader5"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader6">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader6"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader7">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader7"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader8">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader8"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader9">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader9"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader10">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader10"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>

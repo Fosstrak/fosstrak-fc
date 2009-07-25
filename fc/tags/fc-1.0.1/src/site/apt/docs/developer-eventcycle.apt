@@ -1,0 +1,290 @@
+       ------
+                                    Event Cycle
+                                    ------
+                                    ------
+
+
+Event Cycle
+
+* Contents
+
+   [[1]] {{{#Objective}Objective}}
+
+   [[2]] {{{#Implementation}Implementation}}
+   
+   [[3]] {{{#Creation}Creation and Flow}}
+   
+   [[4]] {{{#Sequence}Sequence Diagram}}
+   
+   [[5]] {{{#State}State Diagram}}
+
+   [[6]] {{{#Interface}Interface}}
+
+
+* {Objective}
+
+	According to the EPC Standard, an EventCycle is the smallest unit 
+	of interaction between an ALE client and an ALE implementation 
+	through the ALE reading API. An EventCycle is an intervall of time 
+	during which tags are read.
+		
+	This document shall provide an overview to the implementation 
+	of an EventCycle in the Fosstrak ALE.
+
+
+* {Implementation}
+	
+	The EventCycle is implemented as a thread. After creation 
+	the thread waits on the EventCycles monitor.
+	
++-------------------------------------------------+
+synchronized (this) {
+	try {
+		this.wait();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+}
++-------------------------------------------------+
+
+	When there are subscribers for the EventCycle the ReportsGenerator 
+	launches the EventCycle through the launch method.
+	
++-------------------------------------------------+
+// Code fragment from ReportsGenerator
+eventCycle.launch();
++-------------------------------------------------+
+
+	This call will set the EventCycle to the running state
+	
++-------------------------------------------------+
+this.running = true;
+synchronized (this) {
+	this.notifyAll();
+}
++-------------------------------------------------+
+
+	The EventCycle runs as long as specified by the duration 
+	value. The reports are generated and sent through the 
+	ReportsGenerator to the subscribers.
+	
+	After some cleanup and preparations for the next 
+	EventCycle the EventCycle sets itself sleeping and 
+	waits for the next launch call.
+	
++-------------------------------------------------+
+try {
+	synchronized (this) {
+		this.wait();
+	}
+} catch (InterruptedException e) {
+	e.printStackTrace();
+}
++-------------------------------------------------+
+
+* {Creation} and Flow
+
+	An EventCycle is constructed according to an EventCycle 
+	specification (called ECSpec). The ECSpec specifies several 
+	parameters. The most important ones are the time intervall 
+	during which tags are read and the readers where tags shall 
+	be collected.
+	
+	Whenever a client defines a new EventCycle through the ALE 
+	interface, a new ReportsGenerator will be created along an 
+	EventCycle. The ReportsGenerator acts as a gateway to the 
+	EventCycle for clients. A client does not subscribe on an 
+	EventCycle but on the associated ReportsGenerator. The 
+	ReportsGenerator ensures that the EventCycle is started/stopped 
+	and that subscribers (clients) receive the resulting tags.
+	
+	Upon creation the EventCycle aquires the readers from the 
+	logical reader API and registers as an Observer. The EventCycle 
+	does not accept tags yet.
+	
++-------------------------------------------------+
+// code piece from the EventCycle constructor
+setAcceptTags(false);
++-------------------------------------------------+
+	
+	As soon as a client subscribes for an EventCycle, the 
+	ReportsGenerator starts the demanded EventCycle. Tags are 
+	now accepted by the EventCycle.
+	
+	When the specified duration (EventCycle duration) is over 
+	the EventCycle is stopped and the tags are distributed to 
+	the clients by the ReportsGenerator. The tag-filtering is 
+	performed by the class Reports.
+	
++-------------------------------------------------+	
+ECReports ecReports = getECReports();
+
+// notifySubscribers
+generator.notifySubscribers(ecReports);
++-------------------------------------------------+
+	
+	In case where the EventCycle is not repeating (this means that 
+	one EventCycle does not run multiple times) all readers are 
+	deregistered and the EventCycle is destroyed together with 
+	its ReportsGenerator. This is preformed by a call to the stop() 
+	method.
+
+
+* {Sequence} Diagram
+
+	The following sequence diagram shall visualize the behaviour 
+	of an EventCycle. The dashed lines are asynchronous calls whereas 
+	the solid lines denote synchronous calls.
+	
+	1: A client defines a new EventCycle through the ALE.
+	
+	1.1: The ALE checks if this EventCycle already exists. In 
+			the present case there is no such EventCycle an therefor the 
+			ALE creates a new ReportsGenerator.
+		
+	1.1.1: The ReportsGenerator creates a new EventCycle.
+	
+	1.1.1.1/2/3: The EventCycle retrieves the readers specified in the 
+		ECSpec from the LogicalReaderManager.
+		
+		
+	2: The Client subscribes for an EventCycle.
+	
+	2.1: The ALE subscribes the Client on the ReportsGenerator.
+	
+	2.1.1: The ReportsGenerator starts the EventCycle. The 
+		EventCycle now processes tags from the readers.
+	
+	3/4/5: The LogicalReader(s) add Tags to the EventCycle.
+	
+	6: When the EventCycle reaches its boundaries the reports are 
+		generated and sent back to the Client (through the 
+		ReportsGenerator).
+		
+	7: The Client wants to unsubscribe from an EventCycle.
+	
+	7.1: The ALE calls the unsubscribe-method on the corresponding 
+		ReportsGenerator.
+		
+	8: The Client undefines an EventCycle.
+	
+	8.1: The ALE stops the corresponding ReportsGenerator
+	
+	8.2: The ReportsGenerator stops the EventCycle
+	
+[]
+
+[../images/ALE/EventCycleSequence.png]
+
+
+
+
+* {State} diagram
+
+	The following state diagram shall visualize the states of an 
+	EventCycle. 
+	
+	The EventCycle is initially null. A ReportsGenerator creates 
+	the EventCycle and starts it (Transition to the wait-state). 
+	Then a subscription for this EventCycle arrives and the EventCycle 
+	is launched (Transition to running state). After the cycle 
+	is over the EventCycle returns into the wait-state. When 
+	an undefine occurs the EventCycle moves into the stopped final 
+	state and becomes destroyed.
+	
+[../images/ALE/EventCycleStateDiagram.png]
+
+
+
+
+
+* {Interface}
+
+	The following class interface gives an overview to the methods 
+	available from the EventCycle.
+
+[../images/ALE/EventCycle.png]
+
+	* EventCycle: The constructor takes a ReportsGenerator as an 
+		argument. The constructor performs:
+	  
+		* Create the EventCycle-thread
+		
+		* Register the Reports for the reports notification
+		
+		* Register the logical readers from the logical reader 
+			API.
+	
+	* getECReports: this method prepares the ECReports and returns 
+		an ECReports-object
+	
+	* getTags: Returns a Set of tags that are currently available 
+		on the EventCycle
+	
+	* addTag: Adds a Tag to the set of Tags
+	
+	* update: Whenever a new Tag is read on one of the LogicalReaders 
+		this update-method will be called. The EventCycle 
+		processes these Tags inside this method.
+	
+	* stop: When this method is called, the thread is destroyed and 
+		as a consequence the EventCycle will be destroyed.
+	
+	* getName: Returns the associated Name of the EventCycle
+	
+	* launch: The ReportsGenerator triggers this method when the 
+		EventCycle shall be started.
+	
+	* getLastEventCycleTags: To allow a Report to create 
+		ADDITION/DELETION reports the tags from the 
+		previous EventCycle need to be known.
+	
+	* getReportList: Returns the list of all the Reports
+	
+	* getDurationValue: Returns the duration of the EventCycle. 
+		(Set through ECSpec)
+	
+	* isAcceptingTags: The EventCycle only accepts tags when 
+		it is running. 
+	
+	* setAcceptTags: This method allows to flag whether the 
+		EventCycle accepts Tags or not.
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

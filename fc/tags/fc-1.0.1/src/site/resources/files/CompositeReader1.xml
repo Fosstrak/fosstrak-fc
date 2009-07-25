@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>true</isComposite>
+    <readers>
+        <reader>LogicalReader1</reader>
+        <reader>LogicalReader2</reader>
+    </readers>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
+        </property>
+    </properties>
+</ns3:LRSpec>

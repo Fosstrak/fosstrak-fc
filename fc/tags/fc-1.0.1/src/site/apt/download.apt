@@ -1,0 +1,86 @@
+              -------------------
+              Download
+              -------------------
+              Christof Roduner
+              -------------------
+              04/06/2007
+              -------------------
+
+
+Download
+
+  The current version of Fosstrak ALE Middleware is 1.0.1.
+
+* Filtering and Collection Server
+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Filtering and Collection Server 1.0.1 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/1.0.1/fc-server-1.0.1-bin-with-dependencies.zip}fc-server-1.0.1-bin-with-dependencies.zip}}
+*--------+----------+
+ Filtering and Collection Server 1.0.1 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/1.0.1/fc-server-1.0.1-bin-with-dependencies.tar.gz}fc-server-1.0.1-bin-with-dependencies.tar.gz}}
+*--------+----------+
+ Filtering and Collection Server 1.0.1 with dependencies (war) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/1.0.1/fc-server-1.0.1.war}fc-server-1.0.1.war}}
+*--------+----------+
+
+
+* Standalone Client
+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Standalone Client 1.0.1 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.1/fc-client-1.0.1-bin-with-dependencies.zip}fc-client-1.0.1-bin-with-dependencies.zip}}
+*--------+----------+
+ Standalone Client 1.0.1 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-client/1.0.1/fc-client-1.0.1-bin-with-dependencies.tar.gz}fc-client-1.0.1-bin-with-dependencies.tar.gz}}
+*--------+----------+
+
+
+* Web-Based Client
+
+*--------+----------+
+         | Binaries |
+*--------+----------+
+ Web-Based Client 1.0.1 with dependencies (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.1/fc-webclient-1.0.1-bin-with-dependencies.zip}fc-webclient-1.0.1-bin-with-dependencies.zip}}
+*--------+----------+
+ Web-Based Client 1.0.1 with dependencies (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/1.0.1/fc-webclient-1.0.1-bin-with-dependencies.tar.gz}fc-webclient-1.0.1-bin-with-dependencies.tar.gz}}
+*--------+----------+
+
+
+* Source Distribution (including all above modules)
+
+*--------+----------+
+         | Sources  |
+*--------+----------+
+ ALE Middleware Source 1.0.1 (zip) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.1/fc-1.0.1-src.zip}fc-1.0.1-src.zip}}
+*--------+----------+
+ ALE Middleware Source 1.0.1 (tar.gz) | {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc/1.0.1/fc-1.0.1-src.tar.gz}fc-1.0.1-src.tar.gz}}
+*--------+----------+
+
+* Fosstrak Capturing Application
+
+*--------+----------+
+         | Download Page |
+*--------+----------+
+ Fosstrak Capturing Application | {{{../capturingapp/download.html}Download Page}}
+*--------+----------+
+
+
+* Previous Releases
+
+  All previous releases of the Fosstrak ALE Middleware can be found in the {{{http://maven-repository.fosstrak.org/releases}distribution repository}}.
+
+
+* System Requirements
+
+*---------------------+---------+
+ <<JDK>>              | 1.6.x
+*---------------------+---------+
+ <<Memory>>           | No minimum requirements.
+*---------------------+---------+
+ <<Operating System>> | No minimum requirements. Tested on Windows XP, Windows Vista 32bit, GNU linux. 
+*---------------------+---------+
+
+
+* Installation and Usage Instructions
+
+  Please consult the {{{docs/user-index.html} User Guide}} for installation and usage instructions.

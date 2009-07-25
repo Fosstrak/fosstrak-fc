@@ -1,0 +1,351 @@
+       ------
+                                    Logical Reader concept
+                                    ------
+                                    ------
+
+
+Logical Reader concept
+
+* Contents
+
+   [[1]] {{{#Overview}Overview}}
+
+   [[2]] {{{#Composite}Composite Pattern}}
+   
+   [[3]] {{{#Observer}Observer Pattern}}
+
+   [[4]] {{{#Adaptor}Adaptor Pattern}}
+   
+   [[5]] {{{#LogicalReader}LogicalReader}}
+   
+   [[6]] {{{#CompositeReader}CompositeReader}}
+   
+   [[7]] {{{#BaseReader}BaseReader}}
+   
+
+
+* {Overview}
+
+	From the view of an ALE client it is preferable to share 
+	a common view on a reader, without having to care about 
+	vendor versions, manufacturer and so on. This chapter 
+	introduces the concept of logical, composite and 
+	base readers that shall provide a uniform access to 
+	readers of different types. 
+
+	In a first step the chosen design pattern are presented. 
+	Then the basic implementation of the Logical Reader API 
+	is shown and explained more specific.
+	
+	The documentation for the usage of the Logical Reader API 
+	through the LogicalReaderManager is not covered here. 
+	Please refer to the chapter 
+	"{{{developer-logical-reader-manager.html}LogicalReader Management}}"
+	
+	
+	
+	
+	
+* {Composite} Pattern
+	
+	In the EPC Standard basically two reader types are defined
+	(according to chapter 10.2):
+	
+	* Base Reader (actual channel for manipulating tags)
+	
+	* Composite Reader (reader composed out of other readers)
+	
+	[]
+	The terminology of a base reader and a composite reader was 
+	used directly in a composite pattern. The composite pattern 
+	gives a clean and easy way how to treat objects and 
+	compositions of objects in the same way. The direct 
+	application on the logical reader lead to the design shown 
+	in the next image.
+	
+		
+[../images/readerAPI/CompositePattern.png]
+
+	
+	* LogicalReader is the most general interface to a reader. 
+	LogicalReader implements the behaviour of a reader in the 
+	context of an ALE client.
+	
+	* BaseReader models a reader that actually manipulates 
+	tags on a physical reader.
+	
+	* Through CompositeReader a LogicalReader can be built out 
+	of different other LogicalReaders (those can be either 
+	CompositeReader or BaseReader). CompositeReader accesses 
+	its children through the interface provided by LogicalReader.
+	
+	[]
+	To create a reader a static factory method inside LogicalReader 
+	is used. Each Reader has to provide two methods. These are a 
+	Default-Constructor with the same name as the Reader and an 
+	initialize method "public void initialize(String name, LRSpec spec)". 
+	The factory-method extracts the reader type from the LRSpec. 
+	Through reflection and dynamic class-loading a new instance 
+	of this type is created. That for the default-constructor 
+	is used. Once this new instance is available the factory 
+	calls the initialize-method on the new object. This makes possible 
+	that a reader can prepare itself but without the need of 
+	complicated constructor-search in the object-creation process. 
+	
+	
+	The following subsections "LogicalReader", "CompositeReader" and 
+	"BaseReader" will explain in more detail the different 
+	building blocks of the composite pattern.
+	
+	[]
+	In all the diagrams the following conventions were used.
+	
+		* + = public methods
+		
+		* # = protected methods
+		
+		* underlined methods are static
+		
+		* methods in italics are abstract
+
+
+
+
+
+
+* {Observer} Pattern
+
+	To simplify the Tag propagation inside the Logical Reader API 
+	an Observer Pattern was chosen. There are two cases to consider, first 
+	when an EventCycle acts as an Observer and second when a CompositeReader 
+	uses the ObserverPattern for its children. However these cases are 
+	conceptually equal as will be explained shortly.
+	
+	* EventCycle as Observer:
+	 	When an EventCycle wants to read Tags from a LogicalReader 
+		it has to register itself as a java-observer on the Observable 
+		LogicalReader. The LogicalReader collects Tags and 
+		notifies all its observers through the update(Observable o, 
+		Object arg) - method. This ensures that multiple EventCycles 
+		can register on the same LogicalReader.
+	
+	* CompositeReader as Observer:
+	 	A CompsiteReader is built out of LogicalReaders. It is 
+		therefor obvious to reuse the same mechanism to acquire 
+		Tags as with the EventCycles. A CompositeReader acts 
+		as an Observable for other CompositeReaders or for 
+		EventCycles and in the same time it is a Observer for 
+		its components accessed as LogicalReaders.
+
+	[]
+[../images/readerAPI/ObserverPattern.png]
+	
+	As the image visualizes a LogicalReader acts in any case only as 
+	Observable where CompositeReaders or EventCycles can register. 
+	CompositeReaders register themself on other LogicalReaders, therefor 
+	act as Observer and as Observable in the same time.
+	
+	The following image shall give an example.
+	
+[../images/readerAPI/ObserverPattern_example.png]
+
+		* "EventCycle 1" has registered on "CompositeReader 1" and 
+			"Reader 2". 
+		
+		* "EventCycle 2" has registered on "CompositeReader 1" and 
+			"CompositeReader 2".
+		
+		* "CompositeReader 1" has registered on "Reader 1", 
+			"Reader 2" and "Reader 3".
+		
+		* "CompositeReader 2" has registered on "CompositeReader 1", 
+			"Reader 3" and "CompositeReader 3".
+	
+	
+	Whenever a BaseReader reads a Tag it calls its notify-method. This 
+	method calls the update-method on all the Observers. Like that one 
+	BaseReader can send one Tag to multiple receivers. In the same manner 
+	CompositeReader calls its notify method whenever a component triggered 
+	the update-method.
+	
+	
+	
+	
+* {Adaptor} pattern
+	
+	There are many different physical readers available and one might be 
+	interested in using them all in one application without the need to 
+	implement several BaseReaders. Therefor the adaptor pattern was used to 
+	generalize the notion of a BaseReader. 
+	
+	The Adaptor pattern translates an interface of a class into another 
+	interface. In this case the interfaces of different readers are 
+	translated into the interface BaseReader.
+	
+[../images/readerAPI/AdaptorPattern.png]	
+	
+	One drawback of this pattern is, that for each new reader one has to 
+	implement a new adaptor. Nevertheless, in our opinion the advantages 
+	still overrule the drawbacks.
+	
+	The instantiation of such adaptors are explained in the 
+	section BaseReader.	
+	
+	
+	
+	
+	
+	
+	
+	
+* {LogicalReader}
+	
+	As motivated by the CompositePattern LogicalReader declares the 
+	interface to a reader. In following the methods contained in 
+	LogicalReader are explained shortly.
+	
+[../images/readerAPI/LogicalReader.png]	
+	
+	* setLRSpec/getLRSpec: These methods set/return the logical reader 
+		specification (called LRSpec) for a LogicalReader.
+	
+	* setProperties/getProperties: These methods set/return the logical 
+		reader properties (called LRProperty) for a LogicalReader.
+	
+	* setName/getName: Set/return the name of the current LogicalReader.
+	
+	* update: Update is an abstract method that is used in either a 
+		CompositeReader or a BaseReader. By calling the update-method 
+		an ALE client can change the LRSpec of a LogicalReader.
+	
+	* start/stop: Abstract methods allowing an ALE client to start/stop a 
+		LogicalReader.
+	
+	* setStarted/setStopped: A reader can be suspended from within the 
+		LogicalReader API. This is neccessary for a CompositeReader 
+		whenever an update inside the CompositeReader occures.
+		
+	* createReader: This static factory method is used to create/setup a 
+		LogicalReader. In a first step the LRSpec is used to determine 
+		whether to create a CompositeReader or a LogicalReader. 
+		
+		The first case is simply the instantiation of a new 
+		CompositeReader object through a constructor-call. The setup 
+		of a CompositeReader is explained in the section about 
+		CompositeReader.
+		
+		The second case is more complicated an shall be explained in 
+		the section about BaseReaders.
+		
+		In both of the two cases a LogicalReader is returned.
+	
+		
+		
+		
+		
+	
+* {CompositeReader}
+
+	The class CompositeReader models a composite in the composite pattern 
+	that can be composed by different other components. The components are 
+	in this case LogicalReaders.
+
+[../images/readerAPI/CompositeReader.png]
+
+	The image above shows only new or overwritten methods from 
+	LogicalReader. 
+	
+	* unregisterAsObserver: Unregisteres the current CompositeReader from 
+		all the leafs (other LogicalReaders).
+		
+	* update(o: Observable, arg: Object): Whenever an Observable calls its 
+		notify-method this update-method is invoked by the java observer 
+		pattern. The CompositeReader itself processes the call and then 
+		notifies its Observers.
+	
+	* update(spec: LRSpec): Changes the LRSpec of the CompositeReader. This 
+		includes the change of available readers and the LRProperties.
+	
+	* addReader/removeReader: Modify the readers contained in this 
+		CompositeReader. 
+	
+	* start/stop: Whenever changes to the leafs have to be performed these 
+		methods are invoked to start/stop the reader
+		
+	* initialize and CompositeReader: Whenever a new CompositeReader is to 
+		be created a call to the initialize-method follows the 
+		Constructor-call. 
+		
+		In the initialize-method the leafs of the CompositeReader are 
+		aquired from the LogicalReaderManager by calling the Logical 
+		Reader API. The CompositeReader registers itself on the leafs 
+		as an Observer.
+	
+	
+	
+	
+	
+	
+* {BaseReader}
+
+	BaseReader models the leaf of the composite pattern. BaseReader 
+	provides more methods that can be used to communicate directly with a 
+	physical reader. 
+
+[../images/readerAPI/BaseReader.png]
+
+	In the image above only new or overwritten methods from 
+	LogicalReader are shown. 
+	
+	* addTag: When a new Tag is read on the reader the method addTag is called. 
+		The tag is processed and prepared for the usage in the Logical 
+		Reader API. Then the Observers of the BaseReader are notified through 
+		the notify call of the java observer pattern. 
+	
+	* start/stop: Whenever the reader needs to be stopped these methods can 
+		be used.
+	
+	* connectReader/disconnectReader: BaseReaders provide these two methods to 
+		setup the connection between the software (BaseReader) and the 
+		physical reader. As this can be time consuming and as maybe not all 
+		changes to the reader need a disconnect these methods are provided 
+		aside of the start/stop methods.
+	
+	* update: Changes the LRSpec of the BaseReader. 
+	
+	* identify: To support readers that do not know a polling mechanism, BaseReader 
+		provides the identify-method that can be called by a polling thread.
+	
+	
+	[]
+	BaseReader is still an abstract class and cannot be instantiated by the 
+	Logical Reader API. In following the instantiation of reader adaptors 
+	through the createReader factory-method will be explained.
+	
+	From the LRSpec the fully qualified reader type is extracted as a string. 
+	This type has to be provided through an LRProperty. Through dynamic 
+	class loading the class is loaded and a new instance of the adaptor 
+	is created. This instance is already of type LogicalReader. The 
+	subsequent call to the initialize-method on the new LogicalReader 
+	calls (through the mechanism of overloading) the correct initializer method.
+	
+	For further information on the existing adaptors and how you can write 
+	your own adaptor refer to the chapter "Implement an Adaptor".
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

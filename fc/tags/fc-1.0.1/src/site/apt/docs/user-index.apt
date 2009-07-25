@@ -1,0 +1,39 @@
+       ------
+                                    User guide
+                                    ------
+                                    ------
+
+
+User guide
+
+
+* {Overview}
+	
+	The user guide is split into multiple sections:
+	
+	* {{{user-example.html} Quick Start}} - Connect the Fosstrak Middleware to an LLRP Reader Emulator and Receive ALE Notifications
+	
+	* {{{user-installation.html} Installation and Configuration of the fc-server}}
+	
+	* {{{user-lrdef.html} Defining Logical Readers }}
+	
+	* {{{user-testclients.html} Using the Fosstrak ALE Test Clients}}
+	
+	[]
+	
+
+
+* {Requirements}
+
+	* {{{http://java.com}Java 1.6}}
+	
+	* {{{http://tomcat.apache.org}Tomcat 5.5 (or higher)}} or 
+		another java servlet container. This guide assumes 
+		that you use an Apache Tomcat server.
+	
+	* {{{http://maven.apache.org}Apache Maven Project}}
+	
+		
+	
+
+

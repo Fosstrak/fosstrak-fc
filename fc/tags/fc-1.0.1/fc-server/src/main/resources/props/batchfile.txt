@@ -1,0 +1,30 @@
+# Example batch file for Fosstrak BatchSimulator
+# Author: Jonas Haller
+#
+# Lines beginning wich '#' are not processed (comments)
+# An event line has the following form:
+#  <time>;<eventTypeName>;<sourceID>;<serial>;<userMemoryData>
+# The values have following meaning:
+#  <time>: Time after last event in milliseconds, must fit into a long
+#  <eventTypeName>: Type of the event, 'EN' for enter, 'EX' for exit
+#  <sourceID>: ID of the source (read point name)
+#  <serial>: Serial number of the tag triggering the event
+#  <userMemoryData>: String containing the user memory data of the tag or 'null' if none
+# Example of an event line:
+#  1000;EN;Antenna;9204F0004B00001;null
+500;EN;Shelf1;9204F0004B00001;null
+500;EX;Shelf1;9204F0004B00001;null
+5000;EN;Shelf1;9204F0004B00001;null
+5000;EN;Shelf1;9204F0004B00002;null
+5000;EN;Shelf1;9204F0004B00003;null
+5000;EN;Shelf1;9204F0004B00004;null
+5000;EN;Shelf1;9204F0004B00005;null
+5000;EN;Shelf1;9204F0004B00006;null
+5000;EN;Shelf1;9204F0004B00007;null
+2000;EX;Shelf1;9204F0004B00001;null
+2000;EX;Shelf1;9204F0004B00002;null
+2000;EX;Shelf1;9204F0004B00003;null
+2000;EX;Shelf1;9204F0004B00004;null
+2000;EX;Shelf1;9204F0004B00005;null
+2000;EX;Shelf1;9204F0004B00006;null
+2000;EX;Shelf1;9204F0004B00007;null

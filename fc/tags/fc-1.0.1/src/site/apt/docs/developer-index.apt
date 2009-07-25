@@ -1,0 +1,77 @@
+       ------
+                                    Developers guide
+                                    ------
+                                    ------
+
+
+Developers guide
+
+* Contents
+	
+	[[1]] {{{#Objective}Objective}}
+	
+	[[2]] {{{#Overview}Overview}}
+	
+	[[3]] {{{#Detailed}Detailed information}}
+
+
+* {Objective}
+
+	The Filtering and Collection middleware provides an interface
+	through which clients may interact with filtered, consolidated
+	EPC data and related data from a variety  of sources. Its an
+	implementation of the EPCglobal standart ALE 1.1.
+
+		
+* {Overview}
+
+	From a global view one can split the Fosstrak Filtering and 
+	Collection framework into 3 layers that are built on top 
+	of each other.
+	
+	* org.fosstrak.ale.server: This layer provides the interface 
+		to the client through the class ALE. This includes:
+	  
+	  	* Tag filtering and reports generation
+			
+		* EventCycle and ReportsGenerator administration
+			
+		* Client subscription/unsubscription
+	
+	* org.fosstrak.ale.server.readers: This layer models the logical 
+		reader API. This includes:
+	  
+	  	* Tag aggregation
+			
+		* Reader management
+		
+	* org.fosstrak.ale.server.readers.XYZ: This layer acts as the 
+		layer to the physical hardware. This includes:
+	  	
+		* Aquiring of the tags
+		
+		* Maintenance of reader connections
+		
+	[]
+
+[../images/ALE/ALE_overview.png]
+
+
+
+
+* {Detailed} information
+	
+	For detailed information please refer to the chapters:
+	 
+	* {{{developer-ale.html}Application Layer Events}}
+	
+	* {{{developer-eventcycle.html}Event Cycle}}
+	
+	* {{{developer-reports-generator.html}Reports generation}}
+	
+	* {{{developer-reports-notification.html}Reports notification}}
+	
+	* {{{developer-reader-concept.html}LogicalReader Concept}} (logical reader API)
+	
+	[]
+	

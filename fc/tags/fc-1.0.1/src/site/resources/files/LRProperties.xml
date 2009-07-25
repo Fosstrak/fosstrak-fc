@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:LRProperties xmlns:ns1="urn:epcglobal:ale:xsd:1">
+	<property xsi:type="ns1:LRProperty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Property1</name>
+		<value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">The value for the property 1</value>
+	</property>
+	<property xsi:type="ns1:LRProperty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<name xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Property2</name>
+		<value xsi:type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema">The value for the property 2</value>
+	</property>	
+</ns1:LRProperties>
