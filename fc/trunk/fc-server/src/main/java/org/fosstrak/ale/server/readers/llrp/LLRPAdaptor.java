@@ -1,9 +1,10 @@
 package org.fosstrak.ale.server.readers.llrp;
 
-import java.math.BigInteger;
 import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.Tag;
@@ -21,10 +22,12 @@ import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.LLRPMessageFactory;
 import org.llrp.ltk.generated.interfaces.EPCParameter;
 import org.llrp.ltk.generated.messages.RO_ACCESS_REPORT;
+import org.llrp.ltk.generated.parameters.AntennaID;
 import org.llrp.ltk.generated.parameters.EPC_96;
 import org.llrp.ltk.generated.parameters.TagReportData;
 import org.llrp.ltk.types.Integer96_HEX;
 import org.llrp.ltk.types.LLRPMessage;
+import org.llrp.ltk.types.UnsignedShort;
 
 /**
  * this class implements the adaptor from a logical reader in the filtering and 
@@ -56,6 +59,12 @@ public class LLRPAdaptor extends BaseReader {
 	
 	/** the message callback. */
 	private Callback callback = null;
+	
+	/** 
+	 * if the hash set is empty, allow from all the antennas, otherwise only 
+	 * tags arriving from the specified antenna IDs.
+	 */
+	private Set<Integer> acceptTagsFromAntennas = new HashSet<Integer>(); 
 	
 	/**
 	 * constructor for the LLRP adaptor.
@@ -127,6 +136,20 @@ public class LLRPAdaptor extends BaseReader {
 					
 					// create the reader but do not immediately connect.
 					manager.getAdaptor().define(physicalReaderName, ip, port, clientInitiated, false);
+				}
+				
+				// get the antenna IDs to read from
+				String antennaIDSStr = logicalReaderProperties.get("antennaID");
+				if (null != antennaIDSStr) {
+					String[] ai = antennaIDSStr.split(",");
+					for (String str : ai) {
+						try {
+							int i = Integer.parseInt(str);
+							acceptTagsFromAntennas.add(new Integer(i));
+						} catch (Exception e) {
+							log.debug(String.format("Illegal antennaID: %s", str));
+						}
+					}
 				}
 								
 				reader = manager.getAdaptor().getReader(physicalReaderName);
@@ -250,9 +273,22 @@ public class LLRPAdaptor extends BaseReader {
 				RO_ACCESS_REPORT report = (RO_ACCESS_REPORT)message;
 				List<TagReportData> tagDataList = report.getTagReportDataList();
 				for (TagReportData tagData : tagDataList) {
+					boolean include = false;
+					if (0 == acceptTagsFromAntennas.size()) {
+						include = true;
+					} else {
+						AntennaID antennaID = tagData.getAntennaID();
+						if ((null != antennaID) && 
+								(null != antennaID.getAntennaID())) {
+							
+							int id = antennaID.getAntennaID().intValue();
+							if (acceptTagsFromAntennas.contains(new Integer(id))) {
+								include = true;
+							}
+						}
+					}
 					EPCParameter epcParameter = tagData.getEPCParameter();
-					
-					if (epcParameter instanceof EPC_96) {
+					if ((include) && (epcParameter instanceof EPC_96)) {
 						EPC_96 epc96 = (EPC_96) epcParameter;
 						Integer96_HEX hex = epc96.getEPC();
 						String hx = hex.toString();
