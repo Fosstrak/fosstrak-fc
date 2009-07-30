@@ -388,6 +388,8 @@ Sample Configuration for a RPAdaptor
 	* Description: (optional) parameter with a textual description of the 
 	logical reader.
 	
+	* antennaID: (optional) parameter controlling from which antenna ids the logical reader is accepting tags. By default, the logical reader accepts all the tags. If you specify a comma-separated list of antenna ids, then the logical reader will only deliver those tags to you, that have been read on an antenna specified in the list. <<NOTICE>>: When you omit the parameter <EnableAntennaID> in the <TagReportContentSelector>-Section of your <RO_SPEC>-configuration, the logical reader has no means to determine the antenna id and will simply deliver all the tags to you.
+	
 	
 	
 ** Dynamic definition
@@ -424,6 +426,10 @@ Sample Configuration for a LLRPAdaptor
             <name>clientInitiated</name>
             <value>true</value>
         </property>
+        <property>
+            <name>antennaID</name>
+            <value>1,2</value>
+        </property>
     </properties>
 </ns3:LRSpec>
 +---+
@@ -443,6 +449,7 @@ Sample Configuration for a LLRPAdaptor
 			value="127.0.0.1"/>
 		<LRProperty name="port" value="5084"/>
 		<LRProperty name="clientInitiated" value="true"/>
+		<LRProperty name="antennaID" value="1,2"/>
 	</LRSpec>
 </LogicalReader>
 +---+
