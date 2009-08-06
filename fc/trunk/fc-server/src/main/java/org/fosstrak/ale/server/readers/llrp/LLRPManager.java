@@ -1,11 +1,13 @@
 package org.fosstrak.ale.server.readers.llrp;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
@@ -16,6 +18,12 @@ import org.fosstrak.llrp.client.LLRPExceptionHandler;
 import org.fosstrak.llrp.client.LLRPExceptionHandlerTypeMap;
 import org.fosstrak.llrp.client.LLRPMessageItem;
 import org.fosstrak.llrp.client.MessageHandler;
+import org.fosstrak.llrp.client.ROAccessReportsRepository;
+import org.fosstrak.llrp.client.Repository;
+import org.fosstrak.llrp.client.RepositoryFactory;
+import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
+import org.llrp.ltk.generated.messages.RO_ACCESS_REPORT;
+import org.llrp.ltk.generated.parameters.LLRPStatus;
 import org.llrp.ltk.types.LLRPMessage;
 
 
@@ -33,6 +41,9 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	/** the path to the configuration file. */
 	public static final String CONFIGURATION_FILE = "/llrpAdaptorConfiguration.properties";
 	
+	/** the name of the property of the adapter management configuration file.*/
+	public static final String PROP_MGMT_CFG = "mgmt";
+	
 	/** the singleton of the LLRPManager. */
 	private static LLRPManager instance = null;
 	
@@ -49,6 +60,9 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	
 	/** get a handle on the adaptor management. */
 	private final AdaptorManagement mgmt = AdaptorManagement.getInstance();
+	
+	/** if defined, a handle to the LLRP message repository. */
+	private Repository repository = null;
 	
 	/** 
 	 * a link counter counting the references onto a physical reader. 
@@ -81,16 +95,22 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	 * @throws LLRPRuntimeException 
 	*/
 	private void initialize() throws LLRPRuntimeException {
-		
-		String resolvedConfig = null;
+		String mgmtConfigFile = null;
+		Properties props = null;
 		try {
-			URL url1 = LLRPManager.class.getResource(CONFIGURATION_FILE);			
-			resolvedConfig = url1.getFile();
+			URL url1 = LLRPManager.class.getResource(CONFIGURATION_FILE);
+			String resolvedConfig = url1.getFile();
+			
+			props = new Properties();
+			props.load(new FileInputStream(new File(resolvedConfig)));
+			
+			// try to read the configuration file for the adapter management.
+			mgmtConfigFile = props.getProperty(PROP_MGMT_CFG, null);			
 			
 			// try to read from it ...
-			File f = new File(resolvedConfig);
+			File f = new File(mgmtConfigFile);
 			if (f.exists() && f.canRead() && f.canWrite()) {
-				log.debug("found config file: " + resolvedConfig);
+				log.debug("found config file: " + mgmtConfigFile);
 			} else {
 				throw new Exception("config file not found");
 			}
@@ -100,16 +120,87 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 		
 		
 		// tell the adaptor management to export the adaptor with RMI (last true).
-		mgmt.initialize(resolvedConfig, resolvedConfig, false, this, this, true);
+		mgmt.initialize(mgmtConfigFile, mgmtConfigFile, false, this, this, true);
 		
 		// get the first exported adaptor.
-		if (mgmt.getAdaptorNames().size()>0) {
+		if (mgmt.getAdaptorNames().size() > 0) {
 			adaptor = mgmt.getAdaptor(mgmt.getAdaptorNames().get(0));
 		} else {
 			throw new LLRPRuntimeException("no adaptor was found!!!");
 		}
+		try {
+			// if everything is fine, try to open the repository (if defined).
+			registerRepository(props);
+		} catch (Exception e) {
+			log.error("Could not initialize the repository - disabling it.");
+		}
 	}
 	
+	/**
+	 * try to create a new repository and register it as a new message 
+	 * handler. if the RO_ACCESS_REPORT is logged, register this repository 
+	 * as well.
+	 * @param props the properties file of the adapter.
+	 * @throws Exception when something goes wrong.
+	 */
+	private void registerRepository(Properties props) throws Exception {
+		if (null == props) throw new Exception("Empty properties.");
+		repository = RepositoryFactory.create(props);
+		
+		if (null == repository) throw new Exception("Repository is null.");
+		// create our message handler
+		mgmt.registerFullHandler(new MessageHandler() {
+
+			public void handle(String adapter, String reader, 
+					LLRPMessage msg) {
+				
+				LLRPMessageItem item = new LLRPMessageItem();
+				item.setAdapter(adapter);
+				item.setReader(reader);
+				
+				String msgName = msg.getName();
+				item.setMessageType(msgName);
+				
+				// if the message contains a "LLRPStatus" parameter, 
+				//set the status code (otherwise use empty string)
+				String statusCode = null;
+				try {
+					Method getLLRPStatusMethod = 
+						msg.getClass().getMethod("getLLRPStatus", 
+								new Class[0]);
+					LLRPStatus status = 
+						(LLRPStatus) getLLRPStatusMethod.invoke(
+								msg, new Object[0]);
+					statusCode = status.getStatusCode().toString();
+				} catch (Exception e) {
+					statusCode = "";
+				} 
+				item.setStatusCode(statusCode);
+				
+				// store the xml string to the repository
+				try {
+					item.setContent(msg.toXMLString());
+				} catch (InvalidLLRPMessageException e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					repository.put(item);
+				} catch (Exception e) {
+					// repository might be null
+					e.printStackTrace();
+				}
+			}
+		});
+		ROAccessReportsRepository roAcc = repository.getROAccessRepository();
+		if ((null != roAcc) && (roAcc instanceof MessageHandler)) {
+			// register the RO_ACCESS_REPORTS handler
+			mgmt.registerPartialHandler(
+					roAcc, RO_ACCESS_REPORT.class);
+		}
+		
+	}
+
 	/**
 	 * return a reference to the llrp gui client adaptor management. 
 	 * @return an instance of the llrp gui client adaptor management.
