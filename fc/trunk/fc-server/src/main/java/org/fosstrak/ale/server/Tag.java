@@ -407,11 +407,11 @@ public class Tag {
 		
 		LevelTypeList outputLevel = LevelTypeList.LEGACY;
 		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		extraparms.put("taglength", tagLength);
-		extraparms.put("filter", filter);
-		if (null != companyPrefixLength) {
+		if (null != tagLength) extraparms.put("taglength", tagLength);
+		if (null != filter) extraparms.put("filter", filter);
+		if (null != companyPrefixLength)
 			extraparms.put("companyprefixlength", companyPrefixLength);
-		}
+		
 		return convert(tag, extraparms, outputLevel);
 	}
 	
@@ -433,11 +433,11 @@ public class Tag {
 		
 		LevelTypeList outputLevel = LevelTypeList.PURE_IDENTITY;
 		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		extraparms.put("taglength", tagLength);
-		extraparms.put("filter", filter);
-		if (null != companyPrefixLength) {
+		if (null != tagLength) extraparms.put("taglength", tagLength);
+		if (null != filter) extraparms.put("filter", filter);
+		if (null != companyPrefixLength)
 			extraparms.put("companyprefixlength", companyPrefixLength);
-		}
+		
 		return convert(tag, extraparms, outputLevel);		
 	}
 	
@@ -449,11 +449,11 @@ public class Tag {
 		
 		LevelTypeList outputLevel = LevelTypeList.TAG_ENCODING;
 		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		extraparms.put("taglength", tagLength);
-		extraparms.put("filter", filter);
-		if (null != companyPrefixLength) {
+		if (null != tagLength) extraparms.put("taglength", tagLength);
+		if (null != filter) extraparms.put("filter", filter);
+		if (null != companyPrefixLength)
 			extraparms.put("companyprefixlength", companyPrefixLength);
-		}
+		
 		return convert(tag, extraparms, outputLevel);
 	}
 }

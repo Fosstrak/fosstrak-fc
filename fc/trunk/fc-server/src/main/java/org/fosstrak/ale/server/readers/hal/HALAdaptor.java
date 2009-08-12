@@ -319,27 +319,9 @@ public class HALAdaptor extends BaseReader {
 							TDTEngine tdt = Tag.getTDTEngine();
 							String bin = tdt.hex2bin(tagobserved);
 							tag.setTagAsBinary(bin);
-							// 64 bit tag length
-							if (bin.length() <= 64) {								
-								tag.setTagLength("64");
-								tag.setFilter("1");
-								tag.setCompanyPrefixLength("7");
-								
-								try {
-									tag.setTagIDAsPureURI(
-										Tag.convert_to_PURE_IDENTITY(
-												tag.getTagLength(),
-												tag.getFilter(),
-												tag.getCompanyPrefixLength(),
-												bin)
-										);
-								} catch (Exception myE) {
-									LOG.debug("exception when converting tag: " 
-											+ myE.getMessage());
-								}
-							} // 96 bit length
-								else if (bin.length() <= 96) {
-									
+							
+							// 96 bit length
+							if ((bin.length() > 64) && (bin.length() <= 96)) {	
 								// leading 00 gets truncated away by the big int. 
 								if (bin.startsWith("1") && 
 										(bin.length() < 96)) {
@@ -347,20 +329,19 @@ public class HALAdaptor extends BaseReader {
 									bin = "00" + bin;
 									tag.setTagAsBinary(bin);
 								}
-								tag.setTagLength("96");
-								tag.setFilter("3");
-								tag.setCompanyPrefixLength(null);
-								try {
-									tag.setTagIDAsPureURI(
-										Tag.convert_to_PURE_IDENTITY(
-												tag.getTagLength(), 
-												tag.getFilter(), 
-												tag.getCompanyPrefixLength(), 
-												bin));
-								} catch (Exception myE) {
-									LOG.debug("exception when converting tag: " 
-											+ myE.getMessage());
-								}
+							}
+							
+							try {
+								tag.setTagIDAsPureURI(
+									Tag.convert_to_PURE_IDENTITY(
+											null,
+											null,
+											null,
+											bin)
+									);
+							} catch (Exception myE) {
+								LOG.debug("exception when converting tag: " 
+										+ myE.getMessage());
 							}
 
 							tag.setTimestamp(observation.getTimestamp());
