@@ -293,8 +293,8 @@ public class LLRPAdaptor extends BaseReader {
 						Integer96_HEX hex = epc96.getEPC();
 						String hx = hex.toString();
 						Tag tag = null;
+						TDTEngine tdt = Tag.getTDTEngine();
 						try {
-							TDTEngine tdt = Tag.getTDTEngine();
 							String binary = tdt.hex2bin(hx);
 							if (binary.startsWith("1") && 
 									(binary.length() < 96)) {
@@ -317,21 +317,13 @@ public class LLRPAdaptor extends BaseReader {
 						
 						// try to run a conversion on the tag...
 						if (null != tag) {
-							try {
-								String tagLength = "96";
-								String filter = "3";							
-								
+							try {								
 								String pureID = Tag.convert_to_PURE_IDENTITY(
-										tagLength, 
-										filter, 
+										null, 
+										null, 
 										null, 
 										tag.getTagAsBinary());
 								tag.setTagIDAsPureURI(pureID);
-
-								// it works, so set the prefix and the tag length.
-								tag.setTagLength(tagLength);
-								tag.setFilter(filter);
-								tag.setCompanyPrefixLength(null);
 							} catch (Exception e) {
 								log.debug("could not convert provided tag: " + e.getMessage());
 							}
