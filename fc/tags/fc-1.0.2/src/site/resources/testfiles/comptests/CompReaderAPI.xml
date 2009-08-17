@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My first HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader1"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController1.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader2">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My second HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader2"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController2.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="RPLogicalReader1">
+                <LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
+                        <LRProperty name="Description" value="This Logical Reader consists of shelf 1,2,3,4"/>
+                        <LRProperty name="ConnectionPoint" value="http://localhost:8000"/>
+                        <LRProperty name="NotificationPoint" value="http://localhost:9090"/>
+                        <LRProperty name="ReadTimeInterval" value="200"/>
+                        <LRProperty name="PhysicalReaderName" value="MyReader"/>
+                        <LRProperty name="PhysicalReaderSource" value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+                </LRSpec>
+        </LogicalReader>
+	<LogicalReader name="CompReader">
+		<LRSpec isComposite="true" readerType="org.fosstrak.ale.server.readers.CompositeReader">
+                        <LRProperty name="Description" value="Composite reader consisting of LogicalReader1 and RPLogicalReader1"/>
+                        <readers>LogicalReader1</readers>
+                        <readers>RPLogicalReader1</readers>
+                </LRSpec>
+	</LogicalReader>
+</LogicalReaders>

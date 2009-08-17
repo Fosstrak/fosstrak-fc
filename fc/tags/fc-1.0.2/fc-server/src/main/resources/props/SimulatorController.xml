@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+
+   <!-- SimulatorType to be loaded dynamically -->
+   <simType>org.fosstrak.hal.impl.sim.GraphicSimulator</simType>
+   <!-- <simType>org.fosstrak.hal.impl.sim.BatchSimulator</simType> -->
+   <!-- <simType>org.fosstrak.hal.impl.sim.CmdLineSim</simType> -->
+   <!-- <simType>org.fosstrak.hal.impl.sim.SimulatorClient</simType> -->
+   <simTypePropFile>/props/GraphicSimulator.xml</simTypePropFile>
+   <!-- <simTypePropFile>/props/BatchSimulator.xml</simTypePropFile> -->
+   
+   <!-- The EPC transponder models configuration file -->
+   <epcTransponderModelsConfig>/props/EPCTransponderModels_default.xml</epcTransponderModelsConfig>
+   <!-- The IdTypes configuration file -->
+   <idTypesConfig>/props/IDTypes_default.xml</idTypesConfig>
+
+
+   <!-- Read point definition -->
+   <numberOfReadPoints>4</numberOfReadPoints>
+   <!-- readpoints numebred readPoint_1 ... readPoint_n (at the moment) -->
+   <!-- the client has to use these names to address this read points -->
+   <!-- example: <readPoint_1>Antenna1</readPoint_1> -->
+   <readPoint_1>Shelf1</readPoint_1>
+   <readPoint_2>Shelf2</readPoint_2>
+   <readPoint_3>Shelf3</readPoint_3>
+   <readPoint_4>Shelf4</readPoint_4>
+</properties>

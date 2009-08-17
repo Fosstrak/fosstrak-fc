@@ -1,0 +1,218 @@
+       ------
+                                    User guide 
+                                    ------
+                                    ------
+
+
+Quick Start - Deploying the Fosstrak ALE Middleware with an LLRP-Compliant RFID Reader
+
+
+* {Objective}
+
+	This tutorial will guide you through an example that shows how the Fosstrak ALE
+	Middleware is configured to collect data from an LLRP-compliant RFID reader. 	
+	
+* {Prerequisites}
+
+   You will need the following files:
+   
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-server/}fc-server-1.0.0.war or higher}}.  (<note:> LLRP support requires >= 1.0.0).
+   
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/fc/fc-webclient/}fc-webclient fc-webclient-0.4.0.war or higher}}
+   
+   * a copy of the {{{http://maven-repository.fosstrak.org/releases/org/fosstrak/reader/reader-rp-client}reader protocol client version 0.3.1 or higher}} (any other HTTP monitor that displays incoming HTTP request will work, too). 
+   
+   * a copy of this LLRP {{{../files/ROSPEC_example.llrp} ADD_ROSPEC message}}
+   
+   * a copy of this ALE  {{{../files/ECSpec_current.xml}ECSpec message}} 
+   
+   * a copy of this ALE {{{../files/LLRPReader.xml} logical reader definition file}} 
+   
+   []
+   
+   You will also need to install the following programs if they are not already present on your machine:
+   
+   * {{{../../llrp/index.html}Fosstrak LLRP Commander}}  
+   
+   * {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi Reader Emulator}}
+   
+   * {{{http://tomcat.apache.org/} Apache Tomcat Java Servlet Container}}
+   
+     
+* Prepare {Tomcat}
+
+   Install {{{http://tomcat.apache.org/} Apache Tomcat}} if you have not installed it yet. 
+   
+   Copy the two WAR files (fc-server-<VERSION>.war and fc-webclient-<VERSION>.war) into the Tomcat's <webapps> directory and start Tomcat.
+   Tomcat will automatically deploy the two WAR files for you.
+
+   
+* Setup LLRP reader emulator 
+
+   To simplify this demo, we use a reader emulator to generate tag reads. 
+   
+   * Install the  {{{https://sourceforge.net/project/showfiles.php?group_id=170933&package_id=195190}Rifidi emulator}} (if needed) 
+   
+   * Start the Rifidi emulator
+   
+   * Instantiate a new reader of type "LLRPReader" that listens on port 5084 (default) using the Reader Wizard
+   
+   * Start the reader just instantiated
+   
+   We will return to the LLRP reader emulator once the other components are configured. 
+   
+* Setup GUI for incoming HTTP ALE notifications 
+   
+   To display the reports with the aggregated data sent by the filtering and collection server, we will start a Fosstrak tool that displays incoming HTTP requests. 
+   Make sure the provided port is not used by some other application.
+
++--------------+
+java -cp <READER_RP_CLIENT_VERSION>.jar \ 
+	org.fosstrak.reader.rp.client.EventSinkUI <PORT>
+
+example:
+java -cp reader-rp-client-0.3.1.jar \ 
+	org.fosstrak.reader.rp.client.EventSinkUI 9999
++--------------+
+
+	The screen will remain empty until the configuration of the filtering
+	and collection server is complete. 
+
+
+* {Configure} the Fosstrak ALE web-client
+
+  In this example, we will use the web-based client to configure the
+  filtering and collection server. Before we can use the web-based
+  client, we need to tell it the URL through which the filtering and
+  collection server can be accessed.  
+
+  Start your web browser and point it to the address of the web-based
+  client.
+  
++--------------+
+http://<SERVER>:<PORT>/<WEBCLIENT_VERSION>/services/ALEWebClient.jsp
+
+example:
+http://localhost:8080/fc-webclient-0.4.0/services/ALEWebClient.jsp
++--------------+
+
+  In the next step, specify two endpoints that tell the web-based client 
+  where the "Filtering and Collection API" and the "Logical Reader API"
+  can be found.
+  
+  Set the endpoint to the filtering and collection server by selecting
+  the "setEndpoint(String endPointName)" method in the "Filtering and Collection API". 
+  Click "Invoke" to execute the command.
+  
++--------------+
+endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALEService
+
+example: 
+http://localhost:8080/fc-server-1.0.0/services/ALEService
++--------------+
+
+  Verify that a connection between the web-based client and the server
+  can be established by clicking "getVendorVersion()". A version
+  number should be returned.
+  
+  Set the endpoint to the filtering and collection server's Logical Reader
+  API by selecting "setEndPoint(String endPointName)" in the "LogicalReader API".
+  Click "Invoke" to execute the command.
+  
++--------------+
+endpoint: http://<SERVER>:<PORT>/<FCSERVER_VERSION>/services/ALELRService
+
+example: 
+http://localhost:8080/fc-server-1.0.0/services/ALELRService
++--------------+
+
+  Verify that a connection between the web-based client and the server
+  can be established by clicking "getVendorVersion()". A version
+  number should be returned.    
+  
+  
+* {Set} the readers connected to ALE Middleware via the ALE Logical Reader API 
+  
+  The next step is to configure the fc-server with the LLRP reader connected. 
+  Click on "define(String readerName, LRSpec spec)" in the section LogicalReader API. 
+  
+  DO NOT CONFUSE the define method for an EventCycle with the define method for a logical reader! 
+  For this tutorial name your reader "LogicalReader1" and use the {{{../files/LLRPReader.xml} LLRPReader.xml}} as your LRSpec.
+  
++--------------+
+readerName:  <READERNAME>
+specFilePath: <PATH_TO_SPEC>\<SPEC_NAME>.xml
+
+example:
+readerName: LogicalReader1
+specFilePath: c:\epc\LLRPReader.xml
++--------------+
+
+  Verify that the reader has been created by clicking on "getLogicalReaderNames()". 
+  The call should return a list of logical readers in brackets. 
+  Make sure that the reader just creates is listed.  
+  
+  In the Rifidi emulator you can now see the message exchange with the Fosstrak ALE middleware.
+  
+  You can inspect the logical reader specification LRSpec by the method "getLRSpec(String readerName)".
+  
+  
+  
+* {Define} the Filtering and Collection Behavior via the ALE Filtering and Collection API
+  
+  In the next step you will define an ALE ECSpec. This tells the ALE Middleware how the RFID tag reads
+  ariving from the Rifidi Emulator should be filtered and aggregated.   
+  
+  Invoke the method  "define(String specName, String specFilePath)". 
+  DO NOT CONFUSE the define method for an EventCycle with the define method for a logical reader! 
+  For this tutorial name your EventCycle "specCURRENT" and load this {{{../files/ECSpec_current.xml}ECSpec message}} 
+
++--------------+
+specName: <SPEC_NAME>
+specFilePath: <PATH_TO_SPEC>\<SPEC_NAME>.xml
+
+example:
+specName: specCURRENT
+specFilePath: c:\epc\ECSpec_current.xml
++--------------+
+  
+  Verify the correct defintion of your ECSpec by invoking the method "getECSpecNames()". 
+  You should get a list of ECSpec names currently defined in brackets. 
+  Make sure that the ECSpec you just defined is listed.   
+  
+* {Specify} the Event Consumer of the ALE Events Being Sent
+
+  When there is no subscriber for an ECSpec, the ECSpec is not executed. We therefore need to specify a 
+  listener by subscribing our event sink to the ECSpec "specCURRENT" we added earlier.
+  
+  Invoke "subscribe(String specName, String notificationUri)" and register the URL on which the event sink GUI is listening.
+  
++--------------+
+notificationURI: http://<SERVER>:<PORT>
+specName: <SPEC_NAME>
+
+example:
+notificationURI: http://localhost:9999
+specName: specCURRENT
++--------------+
+
+	The ALE will start sending empty ECReports to the event sink GUI as the 
+	Rifidi emulator is not configured to send EPC tag reads via the LLRP protocol yet.
+	
+
+* {Configure} the Rifidi Emulator to Report Tags in "Range"
+
+	Start the LLRP Commander (via Eclipse) and connect to the remote adapter instance running on the ALE. 
+	Check, if you can send and retrieve messages from the reader by sending a GET_READER_CAPABILITIES message.
+	
+	Create a new LLRP message and replace the content by the content from the LLRP 
+	{{{../files/ROSPEC_example.llrp}RO_SPEC}}. Send the message to the Rifid Emulator.
+	From the context menu (right-click on the Rifidi Emulator), select "Send ENABLE_RO_SPEC message"
+	to instruct the reader to enable the ROspec just loaded.
+	
+	Now the virtual reader is ready to deliver tags to the ALE. 
+	
+	Switch to the Rifidi reader emulator and create a tag (SGTIN96, GEN2). 
+	When you place the tag on the reader antenna, the tag reads will be reported to 
+	the Fosstrak ALE Middleware. After the tag reads are filtered and collected as specified
+	in the ECSpec, they are delivered by the Fosstrak ALE middleware to the event sink GUI. 

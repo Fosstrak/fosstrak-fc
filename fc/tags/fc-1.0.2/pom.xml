@@ -1,0 +1,297 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+  <!-- =========================================================== -->
+  <!-- Basics                                                      -->
+  <!-- =========================================================== -->
+
+  <groupId>org.fosstrak.fc</groupId>
+  <artifactId>fc</artifactId>
+  <version>1.0.2</version>
+  <packaging>pom</packaging>
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <!-- =========================================================== -->
+  <!-- Modules                                                     -->
+  <!-- =========================================================== -->
+
+  <modules>
+    <module>fc-commons</module>
+    <module>fc-server</module>
+    <module>fc-client</module>
+    <module>fc-webclient</module>
+  </modules>
+
+
+  <!-- =========================================================== -->
+  <!-- Dependencies                                                -->
+  <!-- =========================================================== -->
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+  <!-- =========================================================== -->
+  <!-- Plugins                                                     -->
+  <!-- =========================================================== -->
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/src.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <configuration>
+            <tagBase>https://svn.fosstrak.org/repos/fc/tags</tagBase>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+	</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <!-- Lock to this version in order to prevent generating corrupted
+               menu structures for sub-modules when running site:site from the
+               parent module. See http://jira.codehaus.org/browse/MSITE-270 for
+               details on this issue. -->
+          <version>2.0-beta-5</version>
+          <configuration>
+            <locales>en</locales>
+            <publishDate position="left" format="yyyy-MM-dd hh:mm:ss" />
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+
+  <!-- =========================================================== -->
+  <!-- Repositories                                                -->
+  <!-- =========================================================== -->
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>fosstrak-repository</id>
+      <name>Fosstrak repository</name>
+      <url>http://maven-repository.fosstrak.org/releases</url>
+      <layout>default</layout>
+    </repository>
+    <!--
+	JARs provided by Sun fall under Sun's Binary License which disallows
+	them from being distributed from Maven's central repository. Therefore
+	we need to specify where such libraries can be downloaded. See
+	http://maven.apache.org/guides/mini/guide-coping-with-sun-jars.html
+	-->
+    <repository>
+	    <!-- for getting the jta libraries -->
+	    <id>sun-maven2</id>
+	    <name>Sun Maven 2 Repository</name>
+	    <url>http://download.java.net/maven/2</url>
+    </repository>
+    <repository>
+	    <!-- for getting the jaxb libraries -->
+	    <id>sun-maven1</id>
+	    <name>java.net Maven Repository</name>
+	    <url>http://download.java.net/maven/1</url>
+	    <layout>legacy</layout>
+    </repository>
+    <repository>
+	    <!-- for getting the cxf libraries -->
+	    <id>apache-incubating</id>
+	    <name>Apache Incubating Repository</name>
+	    <url>http://people.apache.org/repo/m2-incubating-repository</url>
+	    <releases>
+		    <enabled>true</enabled>
+	    </releases>
+	    <snapshots>
+		    <enabled>false</enabled>
+	    </snapshots>
+    </repository>
+  </repositories>
+
+  <!-- =========================================================== -->
+  <!-- Infrastructure                                              -->
+  <!-- =========================================================== -->
+
+  <scm>
+    <!-- keep empty tags here to avoid release:prepare crashes -->
+    <connection>scm:svn:https://svn.fosstrak.org/repos/fc/tags/fc-1.0.2</connection>
+    <developerConnection>scm:svn:https://svn.fosstrak.org/repos/fc/tags/fc-1.0.2</developerConnection>
+    <url>scm:svn:https://svn.fosstrak.org/repos/fc/tags/fc-1.0.2</url>
+  </scm>
+  <distributionManagement>
+    <repository>
+      <id>fosstrak-repository</id>
+      <name>Fosstrak repository</name>
+      <url>sftp://maven-repository.fosstrak.org/local/home/fosstrakrep/public_html/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>fosstrak-repository</id>
+      <name>Fosstrak repository</name>
+      <url>sftp://maven-repository.fosstrak.org/local/home/fosstrakrep/public_html/snapshots</url>
+    </snapshotRepository>
+    <site>
+      <id>fosstrak-website</id>
+      <name>Fosstrak website</name>
+      <url>sftp://www.fosstrak.org/local/home/fosstrakweb/public_html/fc</url>
+    </site>
+  </distributionManagement>
+  <issueManagement>
+    <system>Sourceforge</system>
+    <url>http://sourceforge.net/tracker/?group_id=171114</url>
+  </issueManagement>
+  <mailingLists>
+    <mailingList>
+      <name>ALE Middleware user mailing list</name>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</unsubscribe>
+      <post>accada-ale-user@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-user</archive>
+    </mailingList>
+  </mailingLists>
+
+
+  <!-- =========================================================== -->
+  <!-- Reporting                                                   -->
+  <!-- =========================================================== -->
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+		<version>2.1</version>
+		<configuration>
+			<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+		</configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <maxmemory>1024</maxmemory>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <configuration>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <linkXref>true</linkXref>
+          <sourceEncoding>utf-8</sourceEncoding>
+          <minimumTokens>100</minimumTokens>
+          <targetJdk>1.5</targetJdk>
+          <excludes>
+            <exclude>**/*Test.java</exclude>
+            <exclude>**/package-info.java</exclude>
+            <exclude>org/fosstrak/reader/rp/proxy/configurator/*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <!--
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <configuration>
+          <threshold>Low</threshold>
+          <effort>Default</effort>
+        </configuration>
+      </plugin>
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+        </configuration>
+      </plugin>
+      
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>javancss-maven-plugin</artifactId>
+        <version>2.0-beta-2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+      </plugin>
+      
+    </plugins>
+  </reporting>
+
+
+
+  <!-- =========================================================== -->
+  <!-- Project Information                                         -->
+  <!-- =========================================================== -->
+
+  <name>fc</name>
+  <url>http://www.fosstrak.org/fc</url>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License (LGPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+    </license>
+  </licenses>
+
+
+</project>
