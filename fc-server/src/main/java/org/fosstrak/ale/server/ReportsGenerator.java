@@ -23,10 +23,12 @@ package org.fosstrak.ale.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
@@ -41,12 +43,15 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
-import org.apache.log4j.Logger;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 
 /**
  * This class generates ec reports.
@@ -258,19 +263,147 @@ public class ReportsGenerator implements Runnable {
 	 * specified ec reports.
 	 * @param reports to notify the subscribers about
 	 */
-	public void notifySubscribers(ECReports reports) {
-		// notifiy subscribers
-		for (Subscriber listener : subscribers.values()) {
-			try {
-				listener.notify(reports);
-			} catch (Exception e) {
-				LOG.error("Could not notifiy subscriber '" + 
-						listener.getURI() 
-						+ "' (" + e.getMessage() + ")");
+	public void notifySubscribers(ECReports reports, EventCycle ec) {
+		
+		// according the ALE 1.1 standard:
+		// When the processing of reportIfEmpty and reportOnlyOnChange
+		// results in all ECReport instances being omitted from an 
+		// ECReports for an event cycle, then the delivery of results
+		// to subscribers SHALL be suppressed altogether. [...] poll 
+		// and immediate SHALL always be returned [...] even if that 
+		// ECReports instance contains zero ECReport instances.
+
+		// we remove the reports that are equal to the ones in the 
+		// last event cycle. then we send the subscribers and add 
+		// them back for the pollers... .
+		List<ECReport> equalReps = new LinkedList<ECReport> ();
+		Map<String, ECReportGroup> newGroupByName = new HashMap<String, ECReportGroup> ();
+		Map<String, ECReportGroup> oldGroupByName = new HashMap<String, ECReportGroup> ();
+		boolean isOneReportRequestingEmpty = false;	// count if someone wants empty reports...
+		System.out.println("reports size: " + reports.getReports().getReport().size());
+		try {
+		for (ECReport r : reports.getReports().getReport()) {
+			// if we only want reports that have changed, we need to compare the 
+			// old report with the current...
+			if (ec.getReportSpecByName().get(r.getReportName()).isReportIfEmpty()) {
+				isOneReportRequestingEmpty = true;
+				System.out.println("requesting empty: " + r.getReportName());
+			}
+			if (ec.getReportSpecByName().get(r.getReportName()).isReportOnlyOnChange()) {
+				
+				ECReport oldR = ec.getLastReports().get(r.getReportName());
+	
+				boolean equality = false;
+				// compare the tags...
+				if (null != oldR) {
+					List<ECReportGroup> oldGroup = oldR.getGroup();
+					List<ECReportGroup> newGroup = r.getGroup();
+					if (oldGroup.size() == newGroup.size()) {
+						// equal amount of groups, so need to compare the groups...
+						for (ECReportGroup g : oldGroup) oldGroupByName.put(g.getGroupName(), g);
+						for (ECReportGroup g : newGroup) newGroupByName.put(g.getGroupName(), g);
+						
+						for (String gName : oldGroupByName.keySet()) {
+							ECReportGroup og = oldGroupByName.get(gName);
+							ECReportGroup ng = newGroupByName.get(gName);
+							
+							// now compare the two groups...
+							if ((null != og.getGroupList()) && (null != ng.getGroupList())) {
+								// need to check
+								
+								boolean useEPC = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeEPC();
+								boolean useTag = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeTag();
+								boolean useHex = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeRawHex();
+								HashSet<String> hs = new HashSet<String>();
+								HashSet<String> hs2 = new HashSet<String>();
+								for (ECReportGroupListMember oMember : og.getGroupList().getMember()) {
+									// compare according the epc field
+									if (useEPC) {
+										hs.add(oMember.getEpc().getValue());
+									} else if (useTag) {
+										hs.add(oMember.getTag().getValue());
+									} else if (useHex) {
+										hs.add(oMember.getRawHex().getValue());
+									} else {
+										hs.add(oMember.getRawDecimal().getValue());
+									}
+								}
+								for (ECReportGroupListMember oMember : ng.getGroupList().getMember()) {
+									// compare according the epc field
+									if (useEPC) {
+										hs2.add(oMember.getEpc().getValue());
+									} else if (useTag) {
+										hs2.add(oMember.getTag().getValue());
+									} else if (useHex) {
+										hs2.add(oMember.getRawHex().getValue());
+									} else {
+										hs2.add(oMember.getRawDecimal().getValue());
+									}
+								}
+								// if intersection is not empty, the sets are not equal
+								if (hs.containsAll(hs2) && hs2.containsAll(hs)) {
+									// equal
+									equality = true;
+								} else {
+									equality = false;
+									break;
+								}
+								
+							} else if ((null == og.getGroupList()) && (null == ng.getGroupList())) {
+								// the groups are equal
+								equality = true;
+							} else {
+								// not equal.
+								equality = false;
+								break;
+							}
+						}
+					}
+				}
+			
+				if (equality) {
+					equalReps.add(r);
+				}
+			}
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// remove the equal reports
+		Reports re = reports.getReports();
+		if (null != re) re.getReport().removeAll(equalReps);
+		System.out.println("reports size2: " + reports.getReports().getReport().size());
+		// next step is to check, if the total report is empty
+		if (
+				((null != re) && (re.getReport().size() > 0)) 
+				|| 
+				(isOneReportRequestingEmpty)) {		
+			// notify subscribers 
+			for (Subscriber listener : subscribers.values()) {
+				try {
+					listener.notify(reports);
+				} catch (Exception e) {
+					LOG.error("Could not notifiy subscriber '" + 
+							listener.getURI() 
+							+ "' (" + e.getMessage() + ")");
+				}
+			}
+		}
+		
+		// add the equal reports back (as pollers need to get those).
+		if (null != re) re.getReport().addAll(equalReps);
+		
+		// store the new reports as old reports
+		ec.getLastReports().clear();
+		if (null != re) {
+			for (ECReport r : re.getReport()) {
+				ec.getLastReports().put(r.getReportName(), r);
 			}
 		}
 		
 		// notify pollers
+		// pollers always receive reports (even when empty).
 		if (isPolling) {
 			pollReport = reports;
 			isPolling = false;

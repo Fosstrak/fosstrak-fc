@@ -22,8 +22,10 @@ package org.fosstrak.ale.server;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -89,6 +91,13 @@ public class EventCycle implements Runnable, Observer {
 	/** set of reports for this event cycle. */
 	private final Set<Report> reports = new HashSet<Report>();
 	
+	/** a hash map with all the reports generated in the last round. */
+	private final Map<String, ECReport> lastReports = new HashMap<String, ECReport> ();
+	
+	/** contains all the ec report specs hashed by their report name. */
+	private final Map<String, ECReportSpec> reportSpecByName = 
+		new HashMap<String, ECReportSpec> ();
+	
 	/** set of tags for this event cycle. */
 	private  Set<Tag> tags = new HashSet<Tag>();
 	
@@ -145,6 +154,9 @@ public class EventCycle implements Runnable, Observer {
 			
 			// add report spec and report to reports
 			reports.add(new Report(reportSpec, this));
+			
+			// hash into the report spec structure
+			reportSpecByName.put(reportSpec.getReportName(), reportSpec);
 			
 		}
 		
@@ -481,7 +493,7 @@ public class EventCycle implements Runnable, Observer {
 				ECReports ecReports = getECReports();
 				
 				// notifySubscribers
-				generator.notifySubscribers(ecReports);
+				generator.notifySubscribers(ecReports, this);
 				
 				// store the current tags into the old tags
 				// explicitly clear the tags
@@ -550,7 +562,8 @@ public class EventCycle implements Runnable, Observer {
 
 		ArrayList<ECReport> ecReports = new ArrayList<ECReport>();
 		for (Report report : reports) {
-			ecReports.add(report.getECReport());
+			ECReport r = report.getECReport();
+			if (null != r) ecReports.add(r);
 		}
 		return ecReports;
 		
@@ -631,6 +644,17 @@ public class EventCycle implements Runnable, Observer {
 			}
 			lock.wait();
 		}
+	}
+
+	public Map<String, ECReportSpec> getReportSpecByName() {
+		return reportSpecByName;
+	}
+
+	/**
+	 * @return the lastReports
+	 */
+	public Map<String, ECReport> getLastReports() {
+		return lastReports;
 	}
 
 }
