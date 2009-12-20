@@ -13,7 +13,7 @@ Starting Filtering and Collection Client:
 
 1. Unpack fc-client-VERSION-bin-with-deps.zip.
 
-2. Optionally change the properties files ALEClient.properties
+2. Optionally change the properties files client.properties
    to set the endpoint of the ALE webservice to which you want to connect
    and the log4j.properties.
 
