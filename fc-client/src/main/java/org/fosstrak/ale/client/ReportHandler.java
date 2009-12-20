@@ -21,7 +21,9 @@
 package org.fosstrak.ale.client;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
@@ -100,29 +103,41 @@ public class ReportHandler implements Runnable {
 	 * and forwarded to the method notifyListeners().
 	 */
 	public void run() {
-		
-		try {
-			while (true) {
+		while (true) {
+			try {
 				Socket s = ss.accept();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				StringBuffer data = new StringBuffer();
-				String line = null;
-				while (!reader.ready()) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
+				BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				
+				String data = in.readLine();
+				// ignore the HTTP header
+				data = in.readLine();
+				data = in.readLine();
+				data = in.readLine();
+				data = in.readLine();
+
+				StringBuffer buffer = new StringBuffer();
+				while (null != data) {
+					buffer.append(data);
+					data = in.readLine();
 				}
-				while (!"".equals(line) && reader.ready()) {
-					line = reader.readLine();
-					data.append(line);
-				};
-				log.debug("Incoming ecReports: " + data);
-				notifyListeners(data);
+				log.debug(buffer.toString());
+
+				// create a stream from the buffer
+				InputStream parseStream = new ByteArrayInputStream(
+						buffer.toString().getBytes());
+
+				// parse the string
+				ECReports reports = DeserializerUtil.deserializeECReports(parseStream);
+				if (null != reports) {
+					notifyListeners(reports);
+				}
 				s.close();
+			} catch (Exception e) {
+				log.error(String.format("Could not receive report: %s", 
+						e.getMessage()));
 			}
-		} catch (Exception e) {}
-		
+		}
+
 	}
 	
 	/**
@@ -167,16 +182,12 @@ public class ReportHandler implements Runnable {
 	//
 	
 	/**
-	 * This method parses the data to a ec reports and notifies all subscribers about the newly received ec reports.
+	 * dispatch the reports.
 	 * 
-	 * @param data string buffer with ec reports as string
+	 * @param ecReports the reports.
 	 * @throws Exception 
 	 */
-	private void notifyListeners(StringBuffer data) throws Exception {
-		
-		ECReports ecReports = null;
-		//FIXME
-		//ecReports = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(data.toString().getBytes()));
+	private void notifyListeners(ECReports ecReports) throws Exception {
 			
 		Iterator listenerIt = listeners.iterator();
 		while (listenerIt.hasNext()) {

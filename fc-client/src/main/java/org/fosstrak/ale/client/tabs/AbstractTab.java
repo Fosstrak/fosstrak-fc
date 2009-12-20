@@ -136,7 +136,7 @@ public abstract class AbstractTab extends JPanel {
 	 * combobox which contains all defined specification names.
 	 */
 	protected JComboBox m_specNameComboBox;
-
+	
 	/** 
 	 * combobox which contains all possible commands.
 	 */

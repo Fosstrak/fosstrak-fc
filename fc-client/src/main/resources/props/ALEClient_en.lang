@@ -14,6 +14,8 @@ NotificationURILabel = Notification URI
 ExecuteButtonLabel = execute
 OkButtonLabel = OK
 
+CreateEventSink = Create Event Sink
+
 SuccessfullyDefinedMessage = The specification is successfully defined.
 SuccessfullyUndefinedMessage = The specification is successfully undefined.
 SuccessfullySubscribedMessage = The uri is successfully subscribed.

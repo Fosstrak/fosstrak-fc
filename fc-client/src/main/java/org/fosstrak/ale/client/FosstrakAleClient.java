@@ -44,6 +44,7 @@ import org.fosstrak.ale.client.cfg.Configuration;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.tabs.ALEClient;
 import org.fosstrak.ale.client.tabs.ALELRClient;
+import org.fosstrak.ale.client.tabs.EventSink;
 
 /**
  * @author sawielan
@@ -111,8 +112,13 @@ public class FosstrakAleClient extends JFrame  {
 		add(m_tab);
 		
 		setSize(m_configuration.getWindowSize());
+		setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+	}
+	
+	public void addTab(String title, JPanel tab) {
+		m_tab.addTab(title, tab);
 	}
 	
 	/**
