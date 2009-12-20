@@ -21,7 +21,6 @@
 package org.fosstrak.ale.client;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -30,11 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.reader.rp.proxy.RPProxyException;
-import org.apache.log4j.Logger;
 
 /**
  * This class listen to a specified port for ec reports and notifies his subscribers about new ec reports.

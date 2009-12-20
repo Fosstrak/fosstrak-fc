@@ -71,7 +71,7 @@
               <Class-Path>.</Class-Path>
             </manifestEntries>
             <manifest>
-              <mainClass>org.fosstrak.ale.client.ALEClient</mainClass>
+              <mainClass>org.fosstrak.ale.client.FosstrakAleClient</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix>./lib</classpathPrefix>
             </manifest>

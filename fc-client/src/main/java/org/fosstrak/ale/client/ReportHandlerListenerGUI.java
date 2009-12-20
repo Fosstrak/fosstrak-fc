@@ -24,8 +24,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.CharArrayWriter;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -35,7 +33,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 
@@ -61,8 +58,7 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 	public ReportHandlerListenerGUI(ReportHandler reportHandler) {
 		
 		reportHandler.addListener(this);
-		initializeGUI();
-		
+		initializeGUI();		
 	}
 
 	/**
