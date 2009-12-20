@@ -24,6 +24,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.CharArrayWriter;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -33,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 
@@ -84,7 +87,6 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 	 * @param reports the ec reports which were received
 	 */
 	public void dataReceived(ECReports reports) {
-		/* FIXME
 		try {
 			CharArrayWriter writer = new CharArrayWriter();
 			SerializerUtil.serializeECReportsPretty(reports, writer);
@@ -93,7 +95,6 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
 	}
 	
 	/**

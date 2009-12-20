@@ -21,13 +21,17 @@
 package org.fosstrak.ale.client.tabs;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.CharArrayWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,7 +39,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.client.FosstrakAleClient;
+import org.fosstrak.ale.client.ReportHandlerListenerGUI;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.exception.FosstrakAleClientServiceDownException;
 import org.fosstrak.ale.util.DeserializerUtil;
@@ -61,7 +67,6 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.Undefine;
 import org.fosstrak.ale.wsdl.ale.epcglobal.Unsubscribe;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
-import org.fosstrak.reader.rprm.core.msg.command.NotificationChannelCommand.AddSources;
 
 /**
  * This class implements a graphical user interface for the application level
@@ -88,10 +93,23 @@ public class ALEClient extends AbstractTab {
 	 */
 	private JTextField m_notificationUriField;
 	
+	/**
+	 * if the user checks this combo box, then an event sink is created for the subscription.
+	 */
+	private JCheckBox m_createEventSink;
+	
 	/** 
 	 * text field which contains the reader name.
 	 */
 	private JTextField m_specNameValueField;
+	
+	/** 
+	 * combobox which contains all defined subscribers for a selected event cycle.
+	 */
+	private JComboBox m_subscribersComboBox;
+	
+	// logger.
+	private static final Logger s_log = Logger.getLogger(ALEClient.class);
 	
 	private static final int CMD__DEFINE = 1;
 	private static final int CMD__UNDEFINE = 2;
@@ -152,10 +170,22 @@ public class ALEClient extends AbstractTab {
 			break;
 
 		case CMD__SUBSCRIBE: // subscribe
-		case CMD__UNSUBSCRIBE: // unsubscribe
 			m_commandPanel.setLayout(new GridLayout(7, 1, 5, 0));
 			addECSpecNameComboBox(m_commandPanel);
 			addNotificationURIField(m_commandPanel);
+			
+			m_createEventSink = new JCheckBox();
+			m_commandPanel.add(new JLabel(m_guiText.getString("CreateEventSink")));
+			m_commandPanel.add(m_createEventSink);
+		
+			addSeparator(m_commandPanel);
+			break;
+
+		case CMD__UNSUBSCRIBE: // unsubscribe
+			m_commandPanel.setLayout(new GridLayout(7, 1, 5, 0));
+			addECSpecNameComboBox(m_commandPanel);
+			addNotificationURIComboBox(m_commandPanel);
+					
 			addSeparator(m_commandPanel);
 			break;
 
@@ -175,6 +205,7 @@ public class ALEClient extends AbstractTab {
 		}
 
 		addExecuteButton(m_commandPanel);
+		
 		validate();
 		this.setVisible(true);
 	}
@@ -187,8 +218,7 @@ public class ALEClient extends AbstractTab {
 	private void addECSpecNameComboBox(JPanel panel) {
 
 		m_specNameComboBox = new JComboBox();
-		m_specNameComboBox.setEditable(true);
-		m_specNameComboBox.addItem(null);
+		m_specNameComboBox.setEditable(false);
 
 		List<String> ecSpecNames = null;
 		try {
@@ -207,6 +237,53 @@ public class ALEClient extends AbstractTab {
 		panel.add(m_specNameComboBox);
 	}
 	
+	/**
+	 * This method adds the subscriber names combobox to the panel.
+	 * 
+	 * @param panel to which the specification name combobox should be added
+	 */
+	private void addNotificationURIComboBox(JPanel panel) {
+
+		m_subscribersComboBox = new JComboBox();
+		m_subscribersComboBox.setEditable(false);
+		fillSubscribersList();
+
+		m_specNameComboBox.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				fillSubscribersList();			
+			}
+			
+		});
+		
+		panel.add(new JLabel(m_guiText.getString("NotificationURILabel")));
+		panel.add(m_subscribersComboBox);
+	}
+	
+	/**
+	 * populates the subscribers list.
+	 */
+	private void fillSubscribersList() {
+		m_subscribersComboBox.removeAllItems();
+		String spec = (String) m_specNameComboBox.getSelectedItem();
+		if (null != spec) {
+			ArrayOfString subscribers = null;
+			try {
+				GetSubscribers parms = new GetSubscribers();
+				parms.setSpecName(spec);
+				subscribers = getAleServiceProxy().getSubscribers(parms);
+			} catch (Exception e) {
+			}
+			if (subscribers.getString() != null && subscribers.getString().size() > 0) {
+				for (String subscriber : subscribers.getString()) {
+					m_subscribersComboBox.addItem(subscriber);
+				}
+				return;
+			}
+		}
+		m_subscribersComboBox.addItem("no subscribers defined");	
+	}
+
 	/**
 	 * This method adds a notification property value field to the panel.
 	 * 
@@ -308,16 +385,21 @@ public class ALEClient extends AbstractTab {
 					break;
 				}
 
-				// get notificationURI
-				notificationURI = m_notificationUriField.getText();
-				if (notificationURI == null || "".equals(notificationURI)) {
-					FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("NotificationUriNotSpecifiedDialog"));
-					break;
-				}
-
 				switch (m_commandSelection.getSelectedIndex()) {
 
 				case CMD__SUBSCRIBE:
+
+					// get notificationURI
+					notificationURI = m_notificationUriField.getText();
+					if (notificationURI == null || "".equals(notificationURI)) {
+						FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("NotificationUriNotSpecifiedDialog"));
+						break;
+					}
+					
+					if (m_createEventSink.isSelected()) {
+						createEventSink(m_notificationUriField.getText());
+					}
+					
 					Subscribe subscribeParms = new Subscribe();
 					subscribeParms.setSpecName(specName);
 					subscribeParms.setNotificationURI(notificationURI);
@@ -326,6 +408,14 @@ public class ALEClient extends AbstractTab {
 					break;
 
 				case CMD__UNSUBSCRIBE:
+
+					// get notificationURI
+					notificationURI = (String) m_subscribersComboBox.getSelectedItem();
+					if (notificationURI == null || "".equals(notificationURI)) {
+						FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("NotificationUriNotSpecifiedDialog"));
+						break;
+					}
+					
 					Unsubscribe unsubscribeParms = new Unsubscribe();
 					unsubscribeParms.setSpecName(specName);
 					unsubscribeParms.setNotificationURI(notificationURI);
@@ -439,6 +529,20 @@ public class ALEClient extends AbstractTab {
 				}
 			}
 			m_specNameComboBox.setSelectedItem(current);
+		}
+	}
+
+	/**
+	 * creates an event sink from a given url.
+	 * @param text
+	 */
+	private void createEventSink(String eventSinkURL) {
+		try {
+			EventSink sink = new EventSink(eventSinkURL);
+			FosstrakAleClient.instance().addTab(eventSinkURL, sink);
+		} catch (Exception e) {
+			s_log.error("Could not start requested event sink.");
+			e.printStackTrace();
 		}
 	}
 

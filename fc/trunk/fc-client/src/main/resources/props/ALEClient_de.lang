@@ -3,16 +3,18 @@ ApplicationTitle = ALE Client - Reading API
 FileMenu = Datei
 QuitMenuItem = Exit
 
-SelectionPanelTitle = Wähle Kommando
+SelectionPanelTitle = Wï¿½hle Kommando
 ResultPanelTitle = Resultat
 
 SpecNameLabel = Name der Spezifikation
 FilePathLabel = Pfad zu Spezifikationsdatei
-ChooseFileButtonLabel = Datei auswählen
+ChooseFileButtonLabel = Datei auswï¿½hlen
 NotificationURILabel = Benachrichtigung URI
 
-ExecuteButtonLabel = ausführen
+ExecuteButtonLabel = ausfï¿½hren
 OkButtonLabel = OK
+
+CreateEventSink = Event Sink erzeugen
 
 SuccessfullyDefinedMessage = Die Spezifikation wurde erfolgreich definiert.
 SuccessfullyUndefinedMessage = Die Spezifikation wurde erfolgreich undefiniert.
@@ -28,12 +30,12 @@ SpecNameNotSpecifiedDialog = Bitte geben Sie den Namen der Spezifikation an.
 FilePathNotSpecifiedDialog = Bitte geben Sie den Pfad zur Spezifikationsdatei an.
 NotificationUriNotSpecifiedDialog = Bitte geben Sie eine URI an.
 FileNotFoundDialog = Die angegebene Datei existiert nicht.
-UnexpectedFileFormatDialog = Die angegebene Datei hat ein ungültiges Format.
+UnexpectedFileFormatDialog = Die angegebene Datei hat ein ungï¿½ltiges Format.
 DuplicateNameExceptionDialog = Der angegebene Name existiert bereits.
 DuplicateSubscriptionExceptionDialog = Die angegebene URI ist bereits registriert.
-ECSpecValidationExceptionDialog = Die Spezifikation ist ungültig.
+ECSpecValidationExceptionDialog = Die Spezifikation ist ungï¿½ltig.
 ImplementationExceptionDialog = Es ist ein Implementationsfehler aufgetreten.
-InvalidURIExceptionDialog = Die angegebene URI ist ungütlig.
+InvalidURIExceptionDialog = Die angegebene URI ist ungï¿½tlig.
 NoSuchNameExceptionDialog = Der angegebene Spezifikationsname existiert nicht.
 NoSuchSubscriberExceptionDialog = Der angegebene Abonnent ist nicht registriert.
 SecurityExceptionDialog = Es ist ein Sicherheitsfehler aufgetreten.
