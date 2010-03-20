@@ -22,7 +22,9 @@ package org.fosstrak.ale.client.tabs;
 
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,11 +40,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.fosstrak.ale.client.FosstrakAleClient;
@@ -153,6 +158,11 @@ public abstract class AbstractTab extends JPanel {
 	protected JTextField m_filePathField;
 	
 	/**
+	 * the font to be used for all components.
+	 */
+	protected final Font m_font;
+	
+	/**
 	 * 
 	 * @param clzz the class of the proxy stub.
 	 * @param endpointKey key to the endpoint in the properties.
@@ -164,6 +174,8 @@ public abstract class AbstractTab extends JPanel {
 		m_parent = parent;
 		m_testMethod = testMethod;
 		m_testMethodParameter = testMethodParameter;
+		
+		m_font = FosstrakAleClient.instance().getConfiguration().getFont();
 	}
 	
 	/**
@@ -244,10 +256,22 @@ public abstract class AbstractTab extends JPanel {
 	 */
 	protected void initializeGUI() {
 		
-		this.setLayout(new BorderLayout());
-		this.add(createCommandSelectionPanel(), BorderLayout.NORTH);
-		this.add(m_commandSuperPanel, BorderLayout.CENTER);
-		this.add(m_resultScrollPane, BorderLayout.SOUTH);
+		this.setLayout(new GridLayout());
+		
+		JLayeredPane contentPane = new JLayeredPane();
+		contentPane.setFont(m_font);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		add(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		JLayeredPane leftPane = new JLayeredPane();
+		contentPane.add(leftPane, BorderLayout.WEST);
+		leftPane.setFont(m_font);
+		leftPane.setLayout(new BorderLayout());
+		leftPane.add(createCommandSelectionPanel(), BorderLayout.NORTH);
+		leftPane.add(m_commandSuperPanel, BorderLayout.CENTER);
+		
+		contentPane.add(m_resultScrollPane, BorderLayout.CENTER);
 		
 		m_commandSuperPanel.setLayout(new BorderLayout());
 		m_commandSuperPanel.add(m_commandPanel, BorderLayout.NORTH);
@@ -255,6 +279,10 @@ public abstract class AbstractTab extends JPanel {
 		m_resultScrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(m_guiText.getString("ResultPanelTitle")), BorderFactory.createEmptyBorder(5,5,5,5)));
 		
 		m_resultTextArea.setEditable(false);
+		
+		m_commandSuperPanel.setFont(m_font);
+		m_commandPanel.setFont(m_font);
+		m_resultTextArea.setFont(m_font);
 		
 		this.setVisible(true);
 	}
@@ -267,9 +295,12 @@ public abstract class AbstractTab extends JPanel {
 	protected JPanel createCommandSelectionPanel() {
 		
 		JPanel selectionPanel = new JPanel();
+		selectionPanel.setLayout(new GridLayout(1,1));
 		selectionPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(m_guiText.getString("SelectionPanelTitle")), BorderFactory.createEmptyBorder(5,5,5,5)));
-				
+		selectionPanel.setFont(m_font);		
+		
 		m_commandSelection.addItem(null);
+		m_commandSelection.setFont(m_font);
 		for (String item : getCommands()) {
 			m_commandSelection.addItem(item);
 		}
@@ -283,6 +314,7 @@ public abstract class AbstractTab extends JPanel {
 		});
 		
 		selectionPanel.add(m_commandSelection);
+		selectionPanel.setPreferredSize(new Dimension(200, 55));
 		
 		return selectionPanel;
 	}
@@ -312,6 +344,7 @@ public abstract class AbstractTab extends JPanel {
 
 			JButton execButton = new JButton(m_guiText
 					.getString("ExecuteButtonLabel"));
+			execButton.setFont(m_font);
 			execButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					executeCommand();
@@ -319,6 +352,7 @@ public abstract class AbstractTab extends JPanel {
 			});
 
 			m_execButtonPanel = new JPanel();
+			m_execButtonPanel.setFont(m_font);
 			m_execButtonPanel.setLayout(new GridLayout(1, 3));
 			m_execButtonPanel.add(new JPanel());
 			m_execButtonPanel.add(execButton);
@@ -345,27 +379,38 @@ public abstract class AbstractTab extends JPanel {
 	protected void addChooseFileField(JPanel panel) {
 
 		m_filePathField = new JTextField();
+		m_filePathField.setFont(m_font);
 		
 		final FileDialog fileDialog = new FileDialog(m_parent);
-		fileDialog.setModal(true); fileDialog.addComponentListener(new
-		ComponentAdapter() { public void componentHidden(ComponentEvent e) {
-		if (fileDialog.getFile() != null) {
-		m_filePathField.setText(fileDialog.getDirectory() +
-		fileDialog.getFile()); } } });
+		fileDialog.setModal(true); 
+		fileDialog.addComponentListener(
+				new	ComponentAdapter() 
+				{ 
+					public void componentHidden(ComponentEvent e) 
+					{
+						if (fileDialog.getFile() != null) 
+						{
+							m_filePathField.setText(fileDialog.getDirectory() +	fileDialog.getFile()); 
+						} 
+					} 
+				});
 		 
-		final JButton chooseFileButton = new
-		JButton(m_guiText.getString("ChooseFileButtonLabel"));
-		chooseFileButton.addActionListener(new ActionListener() { public void
-		actionPerformed(ActionEvent e) { fileDialog.setVisible(true); } });
-		  
-		JPanel chooseFileButtonPanel = new JPanel();
-		chooseFileButtonPanel.setLayout(new GridLayout(1, 3));
-		chooseFileButtonPanel.add(new JPanel());
-		chooseFileButtonPanel.add(chooseFileButton);
-		chooseFileButtonPanel.add(new JPanel());
+		final JButton chooseFileButton = new JButton(m_guiText.getString("ChooseFileButtonLabel"));
+		chooseFileButton.addActionListener(
+				new ActionListener() 
+				{ 
+					public void	actionPerformed(ActionEvent e) 
+					{ 
+						fileDialog.setVisible(true); 
+					} 
+				});		  
+		chooseFileButton.setFont(m_font);
 		 
-		panel.add(new JLabel(m_guiText.getString("FilePathLabel")));
-		panel.add(m_filePathField); panel.add(chooseFileButtonPanel);
+		JLabel lbl = new JLabel(m_guiText.getString("FilePathLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
+		panel.add(m_filePathField); 
+		panel.add(chooseFileButton);
 	}
 	
 	/**

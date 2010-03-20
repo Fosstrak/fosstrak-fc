@@ -184,6 +184,7 @@ public class ALELRClient extends AbstractTab {
 	private void addLRSpecNamesComboBox(JPanel panel) {
 		
 		m_specNameComboBox = new JComboBox();
+		m_specNameComboBox.setFont(m_font);
 		m_specNameComboBox.setEditable(true);
 		m_specNameComboBox.addItem(null);
 		
@@ -200,7 +201,9 @@ public class ALELRClient extends AbstractTab {
 			m_specNameComboBox.addItem("no specs defined");
 		}
 		
-		panel.add(new JLabel(m_guiText.getString("SpecNameLabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("SpecNameLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_specNameComboBox);
 		
 	}
@@ -213,8 +216,11 @@ public class ALELRClient extends AbstractTab {
 	private void addPropertyValueField(JPanel panel) {
 		
 		m_propertyValueField = new JTextField();
+		m_propertyValueField.setFont(m_font);
 		
-		panel.add(new JLabel(m_guiText.getString("PropertyNameLabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("PropertyNameLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_propertyValueField);
 	}
 	
@@ -226,8 +232,11 @@ public class ALELRClient extends AbstractTab {
 	private void addReaderNameValueField(JPanel panel) {
 		
 		m_readerNameValueField = new JTextField();
+		m_readerNameValueField.setFont(m_font);
 		
-		panel.add(new JLabel(m_guiText.getString("ReaderNameLabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("ReaderNameLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_readerNameValueField);
 	}
 		
