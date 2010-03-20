@@ -20,6 +20,7 @@
 
 package org.fosstrak.ale.client.tabs;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -164,25 +165,27 @@ public class ALEClient extends AbstractTab {
 		case CMD__GET_ECSPEC: // getECSpec
 		case CMD__POLL: // poll
 		case CMD__GET_SUBSCRIBERS: // getSubscribers
-			m_commandPanel.setLayout(new GridLayout(5, 1, 5, 0));
+			m_commandPanel.setLayout(new GridLayout(5, 1, 5, 0)); 
 			addECSpecNameComboBox(m_commandPanel);
 			addSeparator(m_commandPanel);
 			break;
 
 		case CMD__SUBSCRIBE: // subscribe
-			m_commandPanel.setLayout(new GridLayout(7, 1, 5, 0));
+			m_commandPanel.setLayout(new GridLayout(11, 1, 5, 0));
 			addECSpecNameComboBox(m_commandPanel);
 			addNotificationURIField(m_commandPanel);
 			
 			m_createEventSink = new JCheckBox();
-			m_commandPanel.add(new JLabel(m_guiText.getString("CreateEventSink")));
+			JLabel lbl = new JLabel(m_guiText.getString("CreateEventSink"));
+			lbl.setFont(m_font);
+			m_commandPanel.add(lbl);
 			m_commandPanel.add(m_createEventSink);
 		
 			addSeparator(m_commandPanel);
 			break;
 
 		case CMD__UNSUBSCRIBE: // unsubscribe
-			m_commandPanel.setLayout(new GridLayout(7, 1, 5, 0));
+			m_commandPanel.setLayout(new GridLayout(9, 1, 5, 0));
 			addECSpecNameComboBox(m_commandPanel);
 			addNotificationURIComboBox(m_commandPanel);
 					
@@ -204,6 +207,7 @@ public class ALEClient extends AbstractTab {
 
 		}
 
+		m_commandPanel.setFont(m_font);
 		addExecuteButton(m_commandPanel);
 		
 		validate();
@@ -218,6 +222,7 @@ public class ALEClient extends AbstractTab {
 	private void addECSpecNameComboBox(JPanel panel) {
 
 		m_specNameComboBox = new JComboBox();
+		m_specNameComboBox.setFont(m_font);
 		m_specNameComboBox.setEditable(false);
 
 		List<String> ecSpecNames = null;
@@ -232,8 +237,9 @@ public class ALEClient extends AbstractTab {
 		} else {
 			m_specNameComboBox.addItem("no specs defined");
 		}
-
-		panel.add(new JLabel(m_guiText.getString("SpecNameLabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("SpecNameLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_specNameComboBox);
 	}
 	
@@ -245,6 +251,7 @@ public class ALEClient extends AbstractTab {
 	private void addNotificationURIComboBox(JPanel panel) {
 
 		m_subscribersComboBox = new JComboBox();
+		m_subscribersComboBox.setFont(m_font);
 		m_subscribersComboBox.setEditable(false);
 		fillSubscribersList();
 
@@ -256,7 +263,9 @@ public class ALEClient extends AbstractTab {
 			
 		});
 		
-		panel.add(new JLabel(m_guiText.getString("NotificationURILabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("NotificationURILabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_subscribersComboBox);
 	}
 	
@@ -292,8 +301,11 @@ public class ALEClient extends AbstractTab {
 	private void addSpecNameValueField(JPanel panel) {
 		
 		m_specNameValueField = new JTextField();
+		m_specNameValueField.setFont(m_font);
 		
-		panel.add(new JLabel(m_guiText.getString("SpecNameLabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("SpecNameLabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_specNameValueField);
 	}
 
@@ -305,8 +317,11 @@ public class ALEClient extends AbstractTab {
 	private void addNotificationURIField(JPanel panel) {
 
 		m_notificationUriField = new JTextField();
+		m_notificationUriField.setFont(m_font);
 
-		panel.add(new JLabel(m_guiText.getString("NotificationURILabel")));
+		JLabel lbl = new JLabel(m_guiText.getString("NotificationURILabel"));
+		lbl.setFont(m_font);
+		panel.add(lbl);
 		panel.add(m_notificationUriField);
 	}
 

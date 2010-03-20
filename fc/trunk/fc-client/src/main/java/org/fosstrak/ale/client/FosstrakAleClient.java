@@ -22,6 +22,7 @@ package org.fosstrak.ale.client;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -92,17 +93,19 @@ public class FosstrakAleClient extends JFrame  {
 	 * @throws FosstrakAleClientException upon error in startup procedure.
 	 */
 	public void execute() throws FosstrakAleClientException {
-		
+
+		Font font = FosstrakAleClient.instance().getConfiguration().getFont();
 		m_tab = new JTabbedPane();
         m_tab.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        m_tab.setFont(font);
 		
 		// add the legacy clients into the tabs...
         try {
-        	ALEClient aleClient = new ALEClient(this);
+        	ALEClient aleClient = new ALEClient(this);;
 			aleClient.initialize();
         	ALELRClient lrClient = new ALELRClient(this);
 			lrClient.initialize();
-
+			
 			m_tab.addTab("Event Cycle", aleClient);
 			m_tab.addTab("Logical Reader", lrClient);
         } catch (Exception e) {

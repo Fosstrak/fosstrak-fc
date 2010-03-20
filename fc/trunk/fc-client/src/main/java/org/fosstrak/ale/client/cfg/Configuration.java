@@ -21,6 +21,7 @@
 package org.fosstrak.ale.client.cfg;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -39,6 +40,8 @@ public class Configuration {
 	
 	// the properties container
 	private Properties m_properties;
+	
+	private Font m_font = null;
 	
 	// logger.
 	private static final Logger s_log = Logger.getLogger(Configuration.class);
@@ -138,6 +141,34 @@ public class Configuration {
 	 */
 	public int getPropertyAsInteger(String key) {
 		return Integer.parseInt(m_properties.getProperty(key));
+	}
+	
+	/**
+	 * @return the font specified in the configuration. the font is created only once and is 
+	 * reused later.
+	 */
+	public final Font getFont()
+	{
+		if (null == m_font)
+		{
+			String fontName = null;
+			int fontSize = 10;
+			try
+			{
+				fontName = getProperty("org.fosstrak.ale.client.font");
+				if (null == fontName)
+				{
+					throw new Exception("no font found");
+				}
+				fontSize = getPropertyAsInteger("org.fosstrak.ale.client.font.size");
+			} 
+			catch (Exception e)
+			{
+				fontName = "Verdana";
+			}			
+			m_font = new Font(fontName, Font.PLAIN, fontSize);
+		}
+		return m_font;
 	}
 	
 	/**
