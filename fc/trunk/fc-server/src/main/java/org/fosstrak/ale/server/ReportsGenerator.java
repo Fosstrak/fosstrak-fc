@@ -52,6 +52,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
+import org.fosstrak.ale.xsd.epcglobal.EPC;
 
 /**
  * This class generates ec reports.
@@ -259,6 +260,19 @@ public class ReportsGenerator implements Runnable {
 	}
 	
 	/**
+	 * adds an epc value to the hashset. 
+	 * @param set the set where to add.
+	 * @param epc the epc to get the value from.
+	 * @return true if value could be obtained, false otherwise.
+	 */
+	private boolean addEPC(HashSet<String> set, EPC epc)
+	{
+		if ((null == set) || (null == epc) || (null == epc.getValue())) return false;
+		set.add(epc.getValue());
+		return true;
+	}
+	
+	/**
 	 * This method notifies all subscribers of this report generator about the 
 	 * specified ec reports.
 	 * @param reports to notify the subscribers about
@@ -317,28 +331,22 @@ public class ReportsGenerator implements Runnable {
 								HashSet<String> hs = new HashSet<String>();
 								HashSet<String> hs2 = new HashSet<String>();
 								for (ECReportGroupListMember oMember : og.getGroupList().getMember()) {
+									
+									boolean error = false;
 									// compare according the epc field
-									if (useEPC) {
-										hs.add(oMember.getEpc().getValue());
-									} else if (useTag) {
-										hs.add(oMember.getTag().getValue());
-									} else if (useHex) {
-										hs.add(oMember.getRawHex().getValue());
-									} else {
-										hs.add(oMember.getRawDecimal().getValue());
-									}
+									if (useEPC) error = addEPC(hs, oMember.getEpc());
+									if (!error && useTag) error = addEPC(hs, oMember.getTag());
+									if (!error && useHex) error = addEPC(hs, oMember.getRawHex());
+									if (!error) error = addEPC(hs, oMember.getRawDecimal());
 								}
 								for (ECReportGroupListMember oMember : ng.getGroupList().getMember()) {
+									
+									boolean error = false;
 									// compare according the epc field
-									if (useEPC) {
-										hs2.add(oMember.getEpc().getValue());
-									} else if (useTag) {
-										hs2.add(oMember.getTag().getValue());
-									} else if (useHex) {
-										hs2.add(oMember.getRawHex().getValue());
-									} else {
-										hs2.add(oMember.getRawDecimal().getValue());
-									}
+									if (useEPC) error = addEPC(hs2, oMember.getEpc());
+									if (!error && useTag) error = addEPC(hs2, oMember.getTag());
+									if (!error && useHex) error = addEPC(hs2, oMember.getRawHex());
+									if (!error) error = addEPC(hs2, oMember.getRawDecimal());
 								}
 								// if intersection is not empty, the sets are not equal
 								if (hs.containsAll(hs2) && hs2.containsAll(hs)) {

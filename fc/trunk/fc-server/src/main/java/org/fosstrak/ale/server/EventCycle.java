@@ -57,6 +57,8 @@ import org.fosstrak.reader.rprm.core.msg.notification.TagType;
  * 
  * @author regli
  * @author sawielan
+ * @author benoit plomion
+ * @author nkef@ait.edu.gr
  */
 public class EventCycle implements Runnable, Observer {
 
@@ -103,6 +105,12 @@ public class EventCycle implements Runnable, Observer {
 	
 	/** this set stores the tags from the previous EventCycle run. */
 	private Set<Tag> lastEventCycleTags = null;
+	
+	/** this set stores the tags between two event cycle in the case of rejectTagsBetweenCycle is false */
+	private List<Tag> betweenEventsCycleTags = new ArrayList<Tag>();	
+
+	/** flags to know if the event cycle haven t to reject tags in the case than duration and repeatPeriod is same */
+	private boolean rejectTagsBetweenCycle = true;
 	
 	/** indicates if this event cycle is terminated or not .*/
 	private boolean isTerminated = false;
@@ -162,6 +170,11 @@ public class EventCycle implements Runnable, Observer {
 		
 		// init BoundarySpec values
 		durationValue = getDurationValue();
+		
+		long repeatPeriod = getRepeatPeriodValue();
+		if (durationValue == repeatPeriod) {
+			rejectTagsBetweenCycle = false;
+		}
 		
 		LOG.debug(String.format("durationValue: %s\n",
 				durationValue));
@@ -284,13 +297,6 @@ public class EventCycle implements Runnable, Observer {
 			LOG.debug(
 					"EventCycle '" + name + "' add Tag '" + 
 					tag.getTagIDAsPureURI() + "'.");
-			/*
-			for (Tag atag : tags) {
-				// do not add the tag it is already in the list
-				if (atag.equals(tag)) {
-					return;
-				}
-			}*/
 			
 			// add tag to tags
 			if (!tags.add(tag)) {
@@ -318,14 +324,7 @@ public class EventCycle implements Runnable, Observer {
 			LOG.debug(
 					"EventCycle '" + name + "' add Tag '" + 
 					newTag.getTagIDAsPureURI() + "'.");
-			/*
-			for (Tag atag : tags) {
-				// do not add the tag it is already in the list
-				if (atag.equals(newTag)) {
-					return;
-				}
-			}
-			*/
+			
 			// add tag to tags
 			//tags.add(newTag);
 			if (!tags.add(newTag)) {
@@ -334,6 +333,31 @@ public class EventCycle implements Runnable, Observer {
 		}
 	}
 
+	/**
+	 * This method adds a tag between 2 event cycle.
+	 * 
+	 * @param tag to add
+	 * @throws ImplementationException if an implementation exception occurs
+	 * @throws ECSpecValidationException if the tag is not valid
+	 */
+	public synchronized void addTagBetweenEventsCycle(Tag tag) {
+		
+		if (rejectTagsBetweenCycle) {
+			return;
+		}
+		
+		// add event only if EventCycle is still running
+		if (thread.isAlive()) {
+			
+			LOG.debug("Between 2 EventCycle '" + name + "' add Tag '" + tag.getTagIDAsPureURI() + "'.");
+			
+			// add tag to tags
+			if (!betweenEventsCycleTags.add(tag)) {
+				LOG.debug("tag already contained, therefore not adding.");
+			}
+			
+		}
+	}
 
 	/**
 	 * implementation of the observer interface for tags.
@@ -344,8 +368,48 @@ public class EventCycle implements Runnable, Observer {
 		LOG.debug("EventCycle "+ getName() + ": Update notification received. ");
 		if (!isAcceptingTags()) {
 			LOG.debug("EventCycle "+ getName() + ": Not accepting notification.");
+			
+			if (!rejectTagsBetweenCycle) {
+				if (arg instanceof Tag) {	
+					
+					// process one tag
+					Tag tag = (Tag) arg;					
+					LOG.debug("received tag: " + tag.getTagIDAsPureURI());	
+					
+					addTagBetweenEventsCycle(tag);
+					
+				} else if (arg instanceof List) {						
+					List<Tag> tagList = (List<Tag>) arg;					
+					LOG.debug("EventCycle "+ getName() + ": Received list of tags :");				
+					
+					for (Tag tag : tagList) {	
+						LOG.debug("received tags: " + tag.getTagIDAsPureURI());
+						
+						addTagBetweenEventsCycle(tag);	
+					}					
+				}
+			}			
 			return;
 		}
+		
+		if (!rejectTagsBetweenCycle && betweenEventsCycleTags.size() > 0) {			
+			for (Tag tag : betweenEventsCycleTags) {
+						
+				try {					
+					LOG.debug("add tags from period between two evencycles: " + tag.getTagIDAsPureURI());					
+					addTag(tag);
+					
+				} catch (ImplementationExceptionResponse ie) {
+					ie.printStackTrace();
+				} catch (ECSpecValidationExceptionResponse ive) {
+					ive.printStackTrace();
+				}				
+			}
+			
+			betweenEventsCycleTags.clear();
+			
+		}
+		
 		if (arg instanceof Tag) {
 			
 			// process one tag
@@ -422,6 +486,8 @@ public class EventCycle implements Runnable, Observer {
 	 * At the end the reports will be generated and the subscribers will be notified.
 	 */
 	public void run() {
+		
+		lastEventCycleTags = new HashSet<Tag>();
 		
 		// wait for the start
 		// running will be set by the ReportsGenerator when the EventCycle
@@ -500,7 +566,10 @@ public class EventCycle implements Runnable, Observer {
 				if (lastEventCycleTags != null) {
 					lastEventCycleTags.clear();
 				}
-				lastEventCycleTags = tags;
+				if (null != tags) {
+					lastEventCycleTags.addAll(tags);
+				}
+					
 				tags = new HashSet<Tag>();
 				
 			} catch (ECSpecValidationExceptionResponse e) {
@@ -589,6 +658,27 @@ public class EventCycle implements Runnable, Observer {
 		}
 		return -1;
 		
+	}
+	
+	/**	
+	 * This method returns the repeat period value on the basis of the event 
+	 * cycle specification.
+	 * @return repeat period value
+	 * @throws ImplementationException if the time unit in use is unknown
+	 */
+	private long getRepeatPeriodValue() throws ImplementationExceptionResponse {
+		if (spec.getBoundarySpec() != null) {		
+			ECTime repeatPeriod = spec.getBoundarySpec().getRepeatPeriod();
+			if (repeatPeriod != null) {
+				if (repeatPeriod.getUnit().compareToIgnoreCase(ECTimeUnit.MS) != 0) {
+					throw new ImplementationExceptionResponse(
+							"The only ECTimeUnit allowed is milliseconds (MS).");
+				} else {
+					return repeatPeriod.getValue();
+				}
+			}
+		}
+		return -1;
 	}
 
 	/**
