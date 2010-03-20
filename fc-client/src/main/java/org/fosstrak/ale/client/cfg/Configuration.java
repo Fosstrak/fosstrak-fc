@@ -180,4 +180,13 @@ public class Configuration {
 	public static Configuration getConfiguration(String[] cmdLine) throws FosstrakAleClientException {
 		return new Configuration(cmdLine);
 	}
+	
+	/**
+	 * reads the default configuration file
+	 * @return a configuration
+	 * @throws FosstrakAleClientException when the configuration could not be obtained.
+	 */
+	public static Configuration getConfigurtionDefaultConfig() throws FosstrakAleClientException {
+		return getConfiguration(new String[] {} );
+	}
 }
