@@ -3,6 +3,10 @@
 		<title>Changes fc-server</title>
 	</properties>
 	<body>
+		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
+			<action dev="sawielan" type="fix" issue="2973906">If repeatPeriod and duration is set to the same value, then it can happen that the eventcycle misses some tags.</action>
+			<action dev="sawielan" type="fix" issue="2843394">Reports are always sent, even when there are no tags, and the option 'reportIfEmpty' is set to false.</action>
+		</release>
 		<release version="1.0.2" date="2009-08-14" description="Bugfix release">
 			<action dev="sawielan" type="fix" issue="2829908">When connecting the ALE to a LLRP reader, it should be possible to create one logical reader per one antenna. Eg there are four antennas on the pysical LLRP reader, therefore we should be allowed to create a logical reader per each antenna.</action>
 			<action dev="sawielan" type="update">Switch to newest llrp-adaptor version (1.1.0).</action>

@@ -190,8 +190,7 @@ example:
 	In LLRP the reader needs special arameters for the connection between the physical reader and the LogicalReader. For a detailed introduction of these parameters refer to the developers-guide - section  {{{developer-adaptor.html}"Implement an Adaptor"}}.
 	
 	The Example shows the definition of one LLRP LogicalReader.
-	
-	
+		
 ** Dynamic Definition:	
 
 	You can download the xml 
@@ -251,6 +250,24 @@ example:
 		</LRSpec>
 	</LogicalReader>
 </LogicalReaders>
++---+
+
+
+	In both static and dynamic configuration you can add an optional parameter antennaID: Parameter controlling from which antenna ids the logical reader is accepting tags. By default, the logical reader accepts all the tags. If you specify a comma-separated list of antenna ids, then the logical reader will only deliver those tags to you, that have been read on an antenna specified in the list. <<NOTICE>>: When you omit the parameter <EnableAntennaID> in the <TagReportContentSelector>-Section of your <RO_SPEC>-configuration, the logical reader has no means to determine the antenna id and will simply deliver all the tags to you.
+	
+** Dynamic Definition:	
+
++---+	
+        <property>
+            <name>antennaID</name>
+            <value>1,2</value>
+        </property>
++---+
+
+** Static Definition:
+
++---+	
+        <LRProperty name="antennaID" value="1,2"/>
 +---+
 
 
