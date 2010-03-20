@@ -45,7 +45,6 @@ import org.fosstrak.ale.client.cfg.Configuration;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.tabs.ALEClient;
 import org.fosstrak.ale.client.tabs.ALELRClient;
-import org.fosstrak.ale.client.tabs.EventSink;
 
 /**
  * @author sawielan
