@@ -3,6 +3,10 @@
         <title>Changes fc-commons</title>
     </properties>
     <body>
+		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
+			<action dev="sawielan" type="update">Update to cxf-2.2.6.</action>
+			<action dev="sawielan" type="fix" issue="2991458">performance degradation due to bad handling of JAXB-Context.</action>
+		</release>
         <release version="0.4.0" date="2008-07-29"
             description="Project name changed to Fosstrak">
             <action dev="roduner" type="update">

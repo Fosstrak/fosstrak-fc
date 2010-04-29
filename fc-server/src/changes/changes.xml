@@ -4,6 +4,9 @@
 	</properties>
 	<body>
 		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
+			<action dev="sawielan" type="update">Update to cxf-2.2.6.</action>
+			<action dev="sawielan" type="fix" issue="2994342">logical reader manager does not update lrspec correctly.</action>
+			<action dev="sawielan" type="fix" issue="2994341">hal adapter crashes during properties update.</action>
 			<action dev="sawielan" type="fix" issue="2973906">If repeatPeriod and duration is set to the same value, then it can happen that the eventcycle misses some tags.</action>
 			<action dev="sawielan" type="fix" issue="2843394">Reports are always sent, even when there are no tags, and the option 'reportIfEmpty' is set to false.</action>
 		</release>
