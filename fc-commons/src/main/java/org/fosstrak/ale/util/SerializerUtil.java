@@ -23,42 +23,51 @@ package org.fosstrak.ale.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
-import org.fosstrak.ale.xsd.ale.epcglobal.*;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 
 /**
  * This class provides some methods to serialize ec specifications and reports.
  * 
- * @author regli
  * @author sawielan
+ * @author regli
+ * @author julian roche
  */
 public class SerializerUtil {
 	
-	private final static QName _ECSpec_QNAME = new QName("urn:epcglobal:ale:xsd:1", "ECSpec");
-    private final static QName _ECReports_QNAME = new QName("urn:epcglobal:ale:xsd:1", "ECReports");
-
-    private final static QName _LRProperty_QNAME = new QName("urn:epcglobal:ale:xsd:1", "LRProperty");
-    private final static QName _LRSpec_QNAME = new QName("urn:epcglobal:ale:xsd:1", "LRSpec");
-
+	// object factory for ALE
+	private static final org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory s_objectFactoryALE = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
+	
+	// object factory for ALELR
+	private static final org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory s_objectFactoryALELR = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
+	
+	// hash-map for JAXB context.
+	private static final Map<String, JAXBContext> s_context = new ConcurrentHashMap<String, JAXBContext> ();
+	
+	// logger
+	private static final Logger s_log = Logger.getLogger(SerializerUtil.class);
+	
 	/**
 	 * This method serializes an ec specification to an xml and writes it into a writer.
 	 * 
 	 * @param ecSpec to serialize
 	 * @param writer containing the xml
-	 * @throws IOException if serialization fails
+	 * @throws Exception upon error.
 	 */
-	public static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer) throws IOException {
+	public static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer) throws Exception {
 	
 		serializeECSpec(ecSpec, writer, false);
 		
@@ -69,9 +78,9 @@ public class SerializerUtil {
 	 * 
 	 * @param ecSpec to serialize
 	 * @param writer to write the well formed xml into
-	 * @throws IOException if serialization fails
+	 * @throws Exception upon error.
 	 */
-	public static void serializeECSpecPretty(ECSpec ecSpec, FileOutputStream writer) throws IOException {
+	public static void serializeECSpecPretty(ECSpec ecSpec, FileOutputStream writer) throws Exception {
 		
 		serializeECSpec(ecSpec, writer, true);
 		
@@ -82,9 +91,9 @@ public class SerializerUtil {
 	 *  
 	 * @param ecReports to serialize
 	 * @param writer to write the xml into
-	 * @throws IOException if serialization fails
+	 * @throws Exception upon error.
 	 */
-	public static void serializeECReports(ECReports ecReports, Writer writer) throws IOException {
+	public static void serializeECReports(ECReports ecReports, Writer writer) throws Exception {
 		
 		serializeECReports(ecReports, writer, false);
 		
@@ -95,9 +104,9 @@ public class SerializerUtil {
 	 *  
 	 * @param ecReports to serialize
 	 * @param writer to write the well formed xml into
-	 * @throws IOException if serialization fails
+	 * @throws Exception upon error.
 	 */
-	public static void serializeECReportsPretty(ECReports ecReports, Writer writer) throws IOException {
+	public static void serializeECReportsPretty(ECReports ecReports, Writer writer) throws Exception {
 		
 		serializeECReports(ecReports, writer, true);
 		
@@ -108,24 +117,10 @@ public class SerializerUtil {
 	 * @param spec the LRSpec to be written into a file
 	 * @param pathName the file where to store
 	 * @param pretty flag whether well-formed xml or not
-	 * @throws IOException whenever an io problem occurs
+	 * @throws Exception upon error.
 	 */
-	public static void serializeLRSpec(LRSpec spec, String pathName, boolean pretty) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.ale.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-	
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-
-			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
-			JAXBElement<LRSpec> thespec = objFactory.createLRSpec(spec);
-					
-			// store the file to the file path
-			marshaller.marshal(thespec, new FileOutputStream(pathName));
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+	public static void serializeLRSpec(LRSpec spec, String pathName, boolean pretty) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", s_objectFactoryALE.createLRSpec(spec), pathName, pretty);
 	}
 	
 	/**
@@ -133,124 +128,50 @@ public class SerializerUtil {
 	 * @param spec the LRSpec to be written into a file
 	 * @param pathName the file where to store
 	 * @param pretty flag whether well-formed xml or not
-	 * @throws IOException whenever an io problem occurs
+	 * @throws Exception upon error.
 	 */
-	public static void serializeLRSpec(LRSpec spec, Writer writer) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.ale.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-	
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-
-			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
-			JAXBElement<LRSpec> thespec = objFactory.createLRSpec(spec);
-					
-			// store the file to the file path
-			marshaller.marshal(thespec, writer);
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+	public static void serializeLRSpec(LRSpec spec, Writer writer) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", s_objectFactoryALE.createLRSpec(spec), writer, true);
 	}
 	
 	/**
 	 * Serializes an SetProperties to xml and stores this xml into a file.
 	 * @param props the SetProperties to be serialized.
 	 * @param pathName the path to the file where to store the xml.
-	 * @throws IOException if the file cannot be used.
+	 * @throws Exception upon error.
 	 */
-	public static void serializeSetProperties(SetProperties props, String pathName) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			
-			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
-			JAXBElement<SetProperties> theprops = objFactory.createSetProperties(props);
-			
-			// store the file to the file path
-			marshaller.marshal(theprops, new FileOutputStream(pathName));
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+	public static void serializeSetProperties(SetProperties props, String pathName) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createSetProperties(props), pathName, true);
 	}
 	
 	/**
 	 * Serializes a RemoveReaders to xml and stores this xml into a file.
 	 * @param readers the RemoveReaders to be serialized.
 	 * @param pathName the path to the file where to store the xml.
-	 * @throws IOException if the file cannot be used.
+	 * @throws Exception upon error.
 	 */
-	public static void serializeRemoveReaders(RemoveReaders readers, String pathName) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			
-			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();			
-			JAXBElement<RemoveReaders> theReaders = objFactory.createRemoveReaders(readers);
-			
-			// store the file to the file path
-			marshaller.marshal(theReaders, new FileOutputStream(pathName));
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}		
+	public static void serializeRemoveReaders(RemoveReaders readers, String pathName) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createRemoveReaders(readers), pathName, true);
 	}
 	
 	/**
 	 * Serializes a SetReaders to xml and stores this xml into a file.
 	 * @param readers the SetReaders to be serialized.
 	 * @param pathName the path to the file where to store the xml.
-	 * @throws IOException if the file cannot be used.
+	 * @throws Exception upon error.
 	 */
-	public static void serializeSetReaders(SetReaders readers, String pathName) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			
-			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
-			JAXBElement<SetReaders> theReaders = objFactory.createSetReaders(readers);
-			
-			// store the file to the file path
-			marshaller.marshal(theReaders, new FileOutputStream(pathName));
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+	public static void serializeSetReaders(SetReaders readers, String pathName) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createSetReaders(readers), pathName, true);
 	}
 	
 	/**
 	 * Serializes an AddReaders to xml and stores this xml into a file.
 	 * @param readers the AddReaders to be serialized.
 	 * @param pathName the path to the file where to store the xml.
-	 * @throws IOException if the file cannot be used.
+	 * @throws Exception upon error.
 	 */
-	public static void serializeAddReaders(AddReaders readers, String pathName) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			
-			org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
-			JAXBElement<AddReaders> theReaders = objFactory.createAddReaders(readers);
-			
-			// store the file to the file path
-			marshaller.marshal(theReaders, new FileOutputStream(pathName));
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+	public static void serializeAddReaders(AddReaders readers, String pathName) throws Exception {
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createAddReaders(readers), pathName, true);
 	}
 	
 	
@@ -264,25 +185,10 @@ public class SerializerUtil {
 	 * @param ecSpec to serialize
 	 * @param writer to write the xml into
 	 * @param pretty indicates if the xml should be well formed or not
-	 * @throws IOException if deserialization fails
+	 * @throws Exception upon error.
 	 */
-	private static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer, boolean pretty) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			
-			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
-			JAXBElement<ECSpec> theSpec = objFactory.createECSpec(ecSpec);
-			
-			// store the file to the file path
-			marshaller.marshal(theSpec, writer);
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}		
+	private static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer, boolean pretty) throws Exception {
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECSpec(ecSpec), writer, pretty);
 	}
 	
 	
@@ -290,26 +196,10 @@ public class SerializerUtil {
 	 * This method serializes en ECSpec to an xml and writes it into a writer.
 	 * @param ecSpec spec to be serialized.
 	 * @param writer to writer where to store.
-	 * @throws IOException if the file cannot be read.
+	 * @throws Exception upon error.
 	 */
-	public static void serializeECSpec(ECSpec ecSpec, Writer writer) throws IOException {
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-
-			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
-			JAXBElement<ECSpec> theSpec = objFactory.createECSpec(ecSpec);			
-			
-			// store the file to the file path
-			marshaller.marshal(theSpec, writer);
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}		
+	public static void serializeECSpec(ECSpec ecSpec, Writer writer) throws Exception {
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECSpec(ecSpec), writer, true);		
 	}	
 	
 	
@@ -319,25 +209,66 @@ public class SerializerUtil {
 	 * @param ecReports to serialize
 	 * @param writer to write the xml into
 	 * @param pretty indicates if the xml should be well formed or not
+	 * @throws Exception upon error.
 	 * @throws IOException if deserialization fails
 	 */
-	private static void serializeECReports(ECReports ecReports, Writer writer, boolean pretty) throws IOException {
+	private static void serializeECReports(ECReports ecReports, Writer writer, boolean pretty) throws Exception {
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECReports(ecReports), writer, pretty);	
+	}
+	
+	/**
+	 * marshalles the object into the stream. if errors occur, they are written to the log.
+	 * @param marshaller the marshaller.
+	 * @param pretty if formatted or not.
+	 * @param o the object to write.
+	 * @param of the output stream.
+	 * @throws Exception upon error.
+	 */
+	private static void marshall(String jaxbContext, Object o, Object of, boolean pretty) throws Exception {
 		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-
-			org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objFactory = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
-			JAXBElement<ECReports> theReports = objFactory.createECReports(ecReports);
-			
-			// store the file to the file path
-			marshaller.marshal(theReports, writer);
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}	
+			Marshaller marshaller = getMarshaller(jaxbContext, pretty);
+			if (of instanceof Writer) {
+				marshaller.marshal(o, (Writer) of);
+			} else {
+				FileOutputStream fof = null;
+				if (of instanceof String) {
+					fof = new FileOutputStream((String) of);
+				} else if (of instanceof FileOutputStream) {
+					fof = (FileOutputStream) of;
+				} else {
+					throw new Exception("Wrong writer provided.");
+				}
+				marshaller.marshal(o, fof);
+			}
+				
+		} catch (Exception e) {
+			s_log.error(String.format("Caught exception during marshalling:\n%s", e.getMessage()));
+			throw e;
+		}
+	}
+	
+	/**
+	 * creates a marshaller on pooled JAXBContext instances.
+	 * @param jaxbContext the context on which to create a marshaller.
+	 * @param pretty if formatted or not.
+	 * @return the marshaller.
+	 * @throws JAXBException when unable to create the marshaller.
+	 */
+	private static Marshaller getMarshaller(String jaxbContext, boolean pretty) throws JAXBException {
+		JAXBContext context = null;
+		synchronized (s_context) {
+			context = s_context.get(jaxbContext);
+			if (null == context) {
+				context = JAXBContext.newInstance(jaxbContext);
+				s_context.put(jaxbContext, context);
+			}
+		}
+		Marshaller marshaller = null;
+		synchronized (context) {
+			marshaller = context.createMarshaller();
+		}			
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(pretty));
+		return marshaller;
 	}
 	
 	

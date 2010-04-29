@@ -83,11 +83,11 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     	try {
 			LogicalReaderManager.setProperties(parms.getName(), parms.getProperties().getProperty());
 		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
 		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
+			throw new SecurityExceptionResponse(e.getMessage(), e);
 		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }

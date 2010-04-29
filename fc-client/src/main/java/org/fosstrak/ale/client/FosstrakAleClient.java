@@ -21,11 +21,14 @@
 package org.fosstrak.ale.client;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
@@ -33,6 +36,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -45,6 +52,7 @@ import org.fosstrak.ale.client.cfg.Configuration;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.tabs.ALEClient;
 import org.fosstrak.ale.client.tabs.ALELRClient;
+import org.fosstrak.ale.client.tabs.EventSink;
 
 /**
  * @author sawielan
@@ -112,6 +120,39 @@ public class FosstrakAleClient extends JFrame  {
         	throw new FosstrakAleClientException(e);
         }		
 		add(m_tab);
+				
+		JMenu fileMenuItem = new JMenu("File");
+		JMenuItem exitMenuItem = new JMenuItem("Quit");
+		exitMenuItem.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				for (Component comp : m_tab.getComponents())
+				{
+					if (comp instanceof EventSink)
+					{
+						((EventSink)comp).quitSink();
+					}
+				}
+				System.exit(0);
+			}
+		});
+		fileMenuItem.add(exitMenuItem);
+		
+		JMenu esMenuItem = new JMenu("Sink");
+		JMenuItem createSink = new JMenuItem("Create Sink");
+		createSink.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Not implemented yet.");
+			}
+		});
+		esMenuItem.add(createSink);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(fileMenuItem);
+		menuBar.add(esMenuItem);
+		
+		setJMenuBar(menuBar);
 		
 		setSize(m_configuration.getWindowSize());
 		setResizable(true);
@@ -284,6 +325,15 @@ public class FosstrakAleClient extends JFrame  {
 		FosstrakAleClient.instance().configure(Configuration.getConfiguration(args));
 		s_log.debug("executing client.");
 		FosstrakAleClient.instance().execute();
+	}
+
+	/**
+	 * remove the event sink from the tab list.
+	 * @param eventSink the event sink.
+	 */
+	public void removeTab(EventSink eventSink) 
+	{
+		m_tab.remove(eventSink);
 	}
 
 }

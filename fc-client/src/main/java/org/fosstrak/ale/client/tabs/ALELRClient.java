@@ -185,7 +185,6 @@ public class ALELRClient extends AbstractTab {
 		
 		m_specNameComboBox = new JComboBox();
 		m_specNameComboBox.setFont(m_font);
-		m_specNameComboBox.setEditable(true);
 		m_specNameComboBox.addItem(null);
 		
 		List<String> lrSpecNames = null;
@@ -463,7 +462,7 @@ public class ALELRClient extends AbstractTab {
 			CharArrayWriter writer = new CharArrayWriter();
 			try {
 				SerializerUtil.serializeLRSpec((LRSpec)result, writer);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("SerializationExceptionMessage"));
 			}
 			sb.append(writer.toString());

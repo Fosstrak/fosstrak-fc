@@ -92,7 +92,7 @@ public class ReportHandlerListenerGUI extends JFrame implements ReportHandlerLis
 			SerializerUtil.serializeECReportsPretty(reports, writer);
 			ecReportArea.append(writer.toString());
 			ecReportArea.append("\n\n");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -317,7 +317,7 @@ public class ALE {
 	 */
 	public static String getVendorVersion() {
 		
-		return "0.1";
+		return "1.0.3";
 		
 	}
 	

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-	<servlet>
-		<servlet-name>ALEWebService</servlet-name>
-		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-	</servlet>
 	
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
@@ -15,6 +11,11 @@
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/*</url-pattern>
+		
+		<init-param>
+			<param-name>config-location</param-name>
+			<param-value>/WEB-INF/cxf-servlet.xml</param-value>
+		</init-param>
 	</servlet-mapping>
 
 	<welcome-file-list>
