@@ -139,18 +139,33 @@ public class LogicalReaderManager {
 	 */
 	public static void setProperties(String name, List<LRProperty> properties) throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
+		if (null == logRd) {
+			String errMsg = String.format("There is no such reader %s", name);
+			LOG.debug(errMsg);
+			throw new NoSuchNameExceptionResponse(errMsg);
+		}
 		LRSpec spec = logRd.getLRSpec();
 		if (spec.getProperties() == null) {
 			spec.setProperties(new LRSpec.Properties());
 		}
-		spec.getProperties().getProperty().addAll(properties);
+		// we need to replace the properties, not just add to the old ones.
+		if (null != properties) {
+			spec.getProperties().getProperty().clear();
+			spec.getProperties().getProperty().addAll(properties);
+		}
 		LOG.debug("set the properties");
 		try {
 			update(name, spec);
 		} catch (ReaderLoopExceptionResponse e) {
-			throw new ImplementationExceptionResponse("reader loop detected");
+			String errMsg = "reader loop detected";
+			LOG.debug(errMsg);
+			throw new ImplementationExceptionResponse(errMsg, e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String errMsg = "Error during setting the reader properties.";
+			LOG.debug(errMsg);
+			throw new ImplementationExceptionResponse(errMsg, e);			
 		}
-		// TODO what is table below?
 	}
 
 	/**

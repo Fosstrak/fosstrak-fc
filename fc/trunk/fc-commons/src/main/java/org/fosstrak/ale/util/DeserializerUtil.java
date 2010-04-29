@@ -22,15 +22,18 @@ package org.fosstrak.ale.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
@@ -39,42 +42,31 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
-import org.apache.log4j.Logger;
 
 /**
  * This class provides some methods to deserialize ec specifications and reports.
  * 
- * @author regli
  * @author sawielan
+ * @author regli
+ * @author julian roche
  */
 public class DeserializerUtil {
 
+	// hash-map for JAXB context.
+	private static final Map<String, JAXBContext> s_context = new ConcurrentHashMap<String, JAXBContext> ();
+	
 	/**	logger. */
-	public static final Logger LOG = Logger.getLogger(DeserializerUtil.class);
+	private static final Logger LOG = Logger.getLogger(DeserializerUtil.class);
 	
 	/**
 	 * This method deserializes an ec specification from an input stream.
 	 * 
 	 * @param inputStream to deserialize
+	 * @throws Exception upon error.
 	 * @return ec specification
-	 * @throws Exception if deserialization fails
 	 */
 	public static ECSpec deserializeECSpec(InputStream inputStream) throws Exception {
-		ECSpec spec = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			spec = ((JAXBElement<ECSpec>) unmarshaller.unmarshal(inputStream)).getValue();
-						
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return spec;
+		return (ECSpec) unmarshall("org.fosstrak.ale.xsd.ale.epcglobal", inputStream, null, ECSpec.class);
 	}
 	
 	/**
@@ -82,44 +74,29 @@ public class DeserializerUtil {
 	 * 
 	 * @param pathName of the file containing the ec specification
 	 * @return ec specification
-	 * @throws FileNotFoundException if the file could not be found
-	 * @throws Exception if deserialization fails
+	 * @throws Exception upon error.
 	 */
-	public static ECSpec deserializeECSpec(String pathName) throws FileNotFoundException, Exception {
+	public static ECSpec deserializeECSpec(String pathName) throws Exception {
 		return deserializeECSpec(new FileInputStream(new File(pathName)));
 	}	
 	
 	/**
 	 * This method deserializes a LRSpec from an input stream.
 	 * @param inputStream to deserialize
+	 * @throws Exception upon error.
 	 * @return LRSpec
-	 * @throws Exception if deserialization fails
 	 */
 	public static LRSpec deserializeLRSpec(InputStream inputStream) throws Exception {
-		LRSpec spec = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			spec = ((JAXBElement<LRSpec>) unmarshaller.unmarshal(inputStream)).getValue();
-						
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return spec;
+		return (LRSpec) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", inputStream, null, LRSpec.class);
 	}
 
 	/**
 	 * This method deserializes a LRSpec from an file path.
 	 * @param pathName to deserialize
 	 * @return LRSpec
-	 * @throws Exception if deserialization fails
+	 * @throws Exception upon error.
 	 */
-	public static LRSpec deserializeLRSpec(String pathName) throws FileNotFoundException, Exception {
+	public static LRSpec deserializeLRSpec(String pathName) throws Exception {
 		return deserializeLRSpec(new FileInputStream(new File(pathName)));
 	}
 
@@ -128,145 +105,115 @@ public class DeserializerUtil {
 	 * 
 	 * This method deserializes a LRProperty from an input stream.
 	 * @param inputStream to deserialize
+	 * @throws Exception upon error.
 	 * @return LRProperty
-	 * @throws Exception if deserialization fails
 	 */
 	public static LRProperty deserializeLRProperty(InputStream inputStream) throws Exception {
-		// FIXME : throws Exception
-		LRProperty prop = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			prop = (LRProperty) unmarshaller.unmarshal(inputStream);
-						
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return prop;
+		return (LRProperty) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", inputStream, null, LRProperty.class);
 	}
 	
 	/**
 	 * This method deserializes a SetProperties from a file.
 	 * @param pathName the path to the file to be deserialized.
 	 * @return SetProperties.
-	 * @throws IOException if file is not found.
+	 * @throws Exception upon error.
 	 */
-	public static SetProperties deserializeSetProperties(String pathName) throws IOException {
-		SetProperties props = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			props = ((JAXBElement<SetProperties>) unmarshaller.unmarshal(new FileInputStream(new File(pathName)))).getValue();
-						
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return props;
+	public static SetProperties deserializeSetProperties(String pathName) throws Exception {
+		return (SetProperties) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", pathName, null, SetProperties.class);
 	}
 	
 	/**
 	 * This method deserializes a RemoveReaders from a file.
 	 * @param pathName the path to the file to be deserialized.
 	 * @return RemoveReaders.
-	 * @throws IOException if file is not found.
+	 * @throws Exception upon error.
 	 */
-	public static RemoveReaders deserializeRemoveReaders(String pathName) throws IOException {
-		RemoveReaders readers = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			readers = ((JAXBElement<RemoveReaders>) unmarshaller.unmarshal(new FileInputStream(new File(pathName)))).getValue();
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return readers;
+	public static RemoveReaders deserializeRemoveReaders(String pathName) throws Exception {
+		return (RemoveReaders) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", pathName, null, RemoveReaders.class);
 	}
 	
 	/**
 	 * This method deserializes a SetReaders from a file.
 	 * @param pathName the path to the file to be deserialized.
 	 * @return SetReaders.
-	 * @throws IOException if file is not found.
+	 * @throws Exception upon error.
 	 */
-	public static SetReaders deserializeSetReaders(String pathName) throws IOException {
-		SetReaders readers = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			readers = ((JAXBElement<SetReaders>) unmarshaller.unmarshal(new FileInputStream(new File(pathName)))).getValue();
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return readers;		
+	public static SetReaders deserializeSetReaders(String pathName) throws Exception {
+		return (SetReaders) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", pathName, null, SetReaders.class);
 	}
 	
 	/**
 	 * This method deserializes a AddReaders from a file.
 	 * @param pathName the path to the file to be deserialized.
 	 * @return AddReaders.
-	 * @throws IOException if file is not found.
+	 * @throws Exception upon error.
 	 */
-	public static AddReaders deserializeAddReaders(String pathName) throws IOException {
-		AddReaders readers = null;
-		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.wsdl.alelr.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			readers = ((JAXBElement<AddReaders>) unmarshaller.unmarshal(new FileInputStream(new File(pathName)))).getValue();
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
-		return readers;
+	public static AddReaders deserializeAddReaders(String pathName) throws Exception {
+		return (AddReaders) unmarshall("org.fosstrak.ale.wsdl.alelr.epcglobal", pathName, null, AddReaders.class);
 	}
 	
 	/**
 	 * This method deserializes ECReports from a file.
 	 * @param pathName the path to the file to be deserialized.
 	 * @return ECReports.
-	 * @throws IOException if file is not found.
+	 * @throws Exception upon error.
 	 */
-	public static ECReports deserializeECReports(InputStream in) throws IOException {
-		ECReports reports = null;
+	public static ECReports deserializeECReports(InputStream in) throws Exception {
+		return (ECReports) unmarshall("org.fosstrak.ale.xsd.ale.epcglobal", in, null, ECReports.class);
+	}
+	
+
+	/**
+	 * unmarshalles the object from the stream. if errors occur, they are written to the log.
+	 * @param unmarshaller the unmarshaller.
+	 * @param validationEventHandler validation event handler. if null, the default validation handler is added.
+	 * @param of the output stream.
+	 * @return the unmarshalled object.
+	 * @throws Exception upon error.
+	 * @throws Exception upon error.
+	 */
+	private static Object unmarshall(String jaxbContext, Object istr, ValidationEventHandler validationEventHandler, Class<?> object) throws Exception {
 		try {
-			String JAXB_CONTEXT = "org.fosstrak.ale.xsd.ale.epcglobal";
-			
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-			
-			reports = ((JAXBElement<ECReports>) unmarshaller.unmarshal(in)).getValue();
-			
-		} catch (JAXBException e) {
-			e.printStackTrace();
+			ValidationEventHandler handler = validationEventHandler;
+			if (null == handler) handler = new DefaultValidationEventHandler();
+			Unmarshaller unmarshaller = getUnmarshaller(jaxbContext, handler);
+			InputStream fif = null;
+			if (istr instanceof String) {
+				fif = new FileInputStream((String) istr);
+			} else if (istr instanceof InputStream) {
+				fif = (InputStream) istr;
+			} else {
+				throw new Exception("Wrong writer provided.");
+			}
+			return ((JAXBElement<?>) unmarshaller.unmarshal(fif)).getValue();
+				
+		} catch (Exception e) {
+			LOG.error(String.format("Caught exception during unmarshalling:\n%s", e.getMessage()));
+			throw e;
 		}
-		return reports;
+	}
+	
+	/**
+	 * creates a unmarshaller on pooled JAXBContext instances.
+	 * @param jaxbContext the context on which to create a unmarshaller.
+	 * @param validationEventHandler validation event handler.
+	 * @return the unmarshaller.
+	 * @throws JAXBException when unable to create the unmarshaller.
+	 */
+	private static Unmarshaller getUnmarshaller(String jaxbContext, ValidationEventHandler validationEventHandler) throws JAXBException {
+		JAXBContext context = null;
+		synchronized (s_context) {
+			context = s_context.get(jaxbContext);
+			if (null == context) {
+				context = JAXBContext.newInstance(jaxbContext);
+				s_context.put(jaxbContext, context);
+			}
+		}
+		Unmarshaller unmarshaller = null;
+		synchronized (context) {
+			unmarshaller = context.createUnmarshaller();
+		}			
+		unmarshaller.setEventHandler(validationEventHandler);
+		return unmarshaller;
 	}
 }

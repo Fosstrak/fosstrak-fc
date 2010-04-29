@@ -590,7 +590,7 @@ public class ALEClient extends AbstractTab {
 			CharArrayWriter writer = new CharArrayWriter();
 			try {
 				SerializerUtil.serializeECSpec((ECSpec) result, writer);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("SerializationExceptionMessage"));
 			}
 			sb.append(writer.toString());
@@ -599,7 +599,7 @@ public class ALEClient extends AbstractTab {
 			CharArrayWriter writer = new CharArrayWriter();
 			try {
 				SerializerUtil.serializeECReports((ECReports) result, writer);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				FosstrakAleClient.instance().showExceptionDialog(m_guiText.getString("SerializationExceptionMessage"));
 			}
 			sb.append(writer.toString());

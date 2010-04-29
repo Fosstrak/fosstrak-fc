@@ -76,6 +76,9 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 	
 	private final Map<String, ECReports> ecReports = new HashMap<String, ECReports> ();
 	
+	// if this sink runs in standalone mode.
+	private boolean m_standalone = false;
+	
 	/** 
 	 * text area where the ec reports will be displayed 
 	 */
@@ -93,6 +96,9 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 	 */
 	private int m_numberReceived = 0;
 	
+	// the report handler.
+	private ReportHandler m_reportHandler;
+	
 	/**
 	 * This constructor creates a new sink listening on the specified url.
 	 * 
@@ -103,8 +109,8 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 		Font font = FosstrakAleClient.instance().getConfiguration().getFont();
 		try {
 			URL url = new URL(eventSinkURL);
-			ReportHandler reportHandler = new ReportHandler(url.getPort());
-			reportHandler.addListener(this);
+			m_reportHandler = new ReportHandler(url.getPort());
+			m_reportHandler.addListener(this);
 						
 			//setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			setLayout(new GridLayout());
@@ -158,7 +164,7 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 						try {
 							SerializerUtil.serializeECReportsPretty(ecReports.get((String) o), writer);
 							str = writer.toString();
-						} catch (IOException e1) {
+						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
 						m_ecReportArea.setText(str);
@@ -206,8 +212,14 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 		});
 		JButton closeSink = new JButton("Close Sink");
 		closeSink.setFont(font);
-		closeSink.setEnabled(false);
 		panel2.add(closeSink);
+		closeSink.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				quitSink();
+			}
+		});
 		
 		return control;
 	}
@@ -241,7 +253,7 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 				}
 				
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -252,9 +264,32 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 	 * @return content of the ec report area
 	 */
 	public String getData() {
-		
 		return m_ecReportArea.getText();
+	}
+	
+	/**
+	 * set the event sink to stand-alone mode.
+	 */
+	public void setStandalone()
+	{
+		m_standalone = true;
+	}
+	
+	/**
+	 * stop the event sink.
+	 */
+	public void quitSink()
+	{
+		m_reportHandler.stop();
 		
+		if (m_standalone)
+		{
+			System.exit(0);
+		}
+		else
+		{
+			FosstrakAleClient.instance().removeTab(this);
+		}
 	}
 	
 	private static final class FosstrackListModel extends AbstractListModel

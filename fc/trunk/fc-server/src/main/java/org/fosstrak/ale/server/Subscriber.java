@@ -383,7 +383,7 @@ public class Subscriber {
 		CharArrayWriter writer = new CharArrayWriter();
 		try {			
 			SerializerUtil.serializeECReports(reports, writer);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new ImplementationExceptionResponse("Unable to serialze reports. (" + e.getMessage() + ")");
 		}
 		return writer.toString();
@@ -402,7 +402,7 @@ public class Subscriber {
 		CharArrayWriter writer = new CharArrayWriter();
 		try {
 			SerializerUtil.serializeECReports(reports, writer);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new ImplementationExceptionResponse("Unable to serialze reports. (" + e.getMessage() + ")");
 		}
 		return writer.toString();

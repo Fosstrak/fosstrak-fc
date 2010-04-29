@@ -52,6 +52,20 @@ public class HALAdaptor extends BaseReader {
 	
 	/** the name of the default implementing class to be chosen. */
 	public static final String DEFAULT_IMPLCLASS = "org.fosstrak.hal.impl.sim.SimulatorController";
+	
+	// cfg param read time interval / polling frequency.
+	private static final String PARAM_READTIME_INTERVAL = "ReadTimeInterval";
+	
+	// cfg param read points
+	private static final String PARAM_READ_POINTS = "ReadPoints"; 
+	
+	// cfg param properties file
+	private static final String PARAM_PROPERTIES_FILE = "PropertiesFile";
+	
+	// cfg param implementing class
+	private static final String PARAM_IMPLEMENTING_CLASS = "ImplementingClass";
+	
+	private static final String PARAM_PYSICAL_READER_NAME = "PhysicalReaderName";
 
 	/**
 	 * constructor for the HAL adaptor.
@@ -70,9 +84,9 @@ public class HALAdaptor extends BaseReader {
 	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
 		super.initialize(name, spec);
 
-		pollingFrequency = Long.parseLong(logicalReaderProperties.get("ReadTimeInterval"));
-		halName = logicalReaderProperties.get("PhysicalReaderName");
-		String rpS = logicalReaderProperties.get("ReadPoints");
+		pollingFrequency = Long.parseLong(logicalReaderProperties.get(PARAM_READTIME_INTERVAL));
+		halName = logicalReaderProperties.get(PARAM_PYSICAL_READER_NAME);
+		String rpS = logicalReaderProperties.get(PARAM_READ_POINTS);
 		if (rpS != null) {
 			readPoints = rpS.split(",");
 		}
@@ -80,12 +94,12 @@ public class HALAdaptor extends BaseReader {
 		// there is a problem with the HAL simulators when they try to load
 		// a relative path from within a jar.
 		// the easiest solution is to provide the absolute path
-		propertiesFile = logicalReaderProperties.get("PropertiesFile");
+		propertiesFile = logicalReaderProperties.get(PARAM_PROPERTIES_FILE);
 		URL url = this.getClass().getResource(propertiesFile);
 		propertiesFile = url.getFile();
 		
 		// get the implementing class
-		String implClass = logicalReaderProperties.get("ImplementingClass");
+		String implClass = logicalReaderProperties.get(PARAM_IMPLEMENTING_CLASS);
 		if (implClass == null) {
 			// the implementing class is missing, 
 			// therefore set to the default implementor
@@ -227,22 +241,29 @@ public class HALAdaptor extends BaseReader {
 	 */
 	@Override
 	public synchronized  void update(LRSpec spec) throws ImplementationExceptionResponse {
-		
-		// we update the properties, so stop the reader from retrieving tags
-		stop();
-		// set the specification
-		setLRSpec(spec);
-		// extract the pollingFrequency
-		pollingFrequency = Long.parseLong(logicalReaderProperties.get("pollingFrequency"));
-		
-		readPoints = null;
-		String rpS = logicalReaderProperties.get("ReadPoints");
-		if (rpS != null) {
-			readPoints = rpS.split(",");
+		try {
+			// we update the properties, so stop the reader from retrieving tags
+			stop();
+			// set the specification
+			setLRSpec(spec);
+			
+			// extract the pollingFrequency
+			String pf = logicalReaderProperties.get(PARAM_READTIME_INTERVAL);
+			if (null != pf) {
+				pollingFrequency = Long.parseLong(pf);
+			}
+			
+			readPoints = null;
+			String rpS = logicalReaderProperties.get(PARAM_READ_POINTS);
+			if (rpS != null) {
+				readPoints = rpS.split(",");
+			}
+			
+			// restart the reader
+			start();
+		} catch (Exception e) {
+			 throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
-		
-		// restart the reader
-		start();
 	}
 	
 	/**
