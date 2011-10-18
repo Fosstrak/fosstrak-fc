@@ -59,6 +59,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <!-- ORANGE: added -->
+		<version>2.3.2</version>
         <configuration>
           <archive>
             <manifestEntries>

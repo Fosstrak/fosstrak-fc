@@ -60,6 +60,7 @@ import org.fosstrak.ale.xsd.epcglobal.EPC;
  * 
  * @author regli
  * @author sawielan
+ * @author benoit.plomion@orange.com
  */
 public class ReportsGenerator implements Runnable {
 
@@ -214,12 +215,24 @@ public class ReportsGenerator implements Runnable {
 		InvalidURIExceptionResponse {
 		
 		Subscriber uri = new Subscriber(notificationURI);
+		
+		//ORANGE: persistence can only add one URI
+		/* Original code
 		if (subscribers.containsKey(notificationURI)) {
 			throw new DuplicateSubscriptionExceptionResponse();
 		} else {
 			subscribers.put(notificationURI, uri);
-			LOG.debug("NotificationURI '" + notificationURI 
-					+ "' subscribed to spec '" + name + "'.");
+			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
+			if (state == ReportsGeneratorState.UNREQUESTED) {
+				setState(ReportsGeneratorState.REQUESTED);
+			}
+		}
+		*/
+		if (!subscribers.isEmpty()) {
+			throw new DuplicateSubscriptionExceptionResponse();
+		} else {
+			subscribers.put(notificationURI, uri);
+			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
 			if (state == ReportsGeneratorState.UNREQUESTED) {
 				setState(ReportsGeneratorState.REQUESTED);
 			}

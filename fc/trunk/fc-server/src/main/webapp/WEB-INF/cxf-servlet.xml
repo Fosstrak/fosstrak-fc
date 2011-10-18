@@ -22,4 +22,20 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
     xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
     xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
 
+<jaxws:endpoint id="ALEController"
+    implementor="com.orange.api.rfid.ale.server.controller.ALEControllerImpl"
+    endpointName="e:ALEControllerServicePortType"
+    serviceName="s:ALEControllerService"
+    address="/ALEControllerService"
+    xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+    xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+    
+ <jaxws:endpoint id="LLRPController"
+    implementor="com.orange.api.rfid.ale.server.llrp.LLRPControllerImpl"
+    endpointName="e:LLRPControllerServicePortType"
+    serviceName="s:LLRPControllerService"
+    address="/LLRPControllerService"
+    xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+    xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+ 
 </beans>

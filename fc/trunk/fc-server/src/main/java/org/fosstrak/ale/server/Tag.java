@@ -14,10 +14,11 @@ import org.fosstrak.tdt.TDTException;
  * @author sawielan
  * @author alessio orlando
  * @author roberto vergallo
+ * @author wafa.soubra@orange.com
  *
  */
 public class Tag {
-	
+		
 	/** logger. */
 	private static final Logger log = Logger.getLogger(Tag.class);
 	
@@ -50,6 +51,9 @@ public class Tag {
 	
 	/** the company prefix length. */
 	private String companyPrefixLength = null;
+	
+	/** ORANGE: user memory of the tag. */
+	private String userMemory = null;
 	
 	/**
 	 * constructor for a tag. (default constructor).
@@ -126,7 +130,7 @@ public class Tag {
 	public void setTagID(byte[] tagID) {
 		this.tagID = tagID;
 	}
-
+	
 	/**
 	 * returns the timestamp when the tag occured.
 	 * @return timestamp
@@ -338,6 +342,22 @@ public class Tag {
 	 */
 	public String getCompanyPrefixLength() {
 		return companyPrefixLength;
+	}
+	
+	/**
+	 * ORANGE: returns the user memory of this tag.
+	 * @return String containing the tag user memory.
+	 */
+	public String getUserMemory() {
+		return userMemory;
+	}
+
+	/**
+	 * ORANGE: sets the user memory of this tag. 
+	 * @param userMemory the String holding the tag user memory.
+	 */
+	public void setUserMemory(String userMemory) {
+		this.userMemory = userMemory;
 	}
 
 	/** instance of the TDT engine used for tag conversion. */

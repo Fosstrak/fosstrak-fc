@@ -60,6 +60,8 @@
 				<!-- this plugin generates the java stubs (POJOs) from the WSDL file -->
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-codegen-plugin</artifactId>
+				<!-- ORANGE: added -->
+				<version>${lib-cxf-version}</version>
 				<executions>
 
 					<execution>

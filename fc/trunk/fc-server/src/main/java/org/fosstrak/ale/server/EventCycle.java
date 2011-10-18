@@ -57,7 +57,7 @@ import org.fosstrak.reader.rprm.core.msg.notification.TagType;
  * 
  * @author regli
  * @author sawielan
- * @author benoit plomion
+ * @author benoit.plomion@orange.com
  * @author nkef@ait.edu.gr
  */
 public class EventCycle implements Runnable, Observer {
