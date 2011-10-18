@@ -55,6 +55,7 @@ import org.apache.log4j.PropertyConfigurator;
  * @author regli
  * @author sawielan
  * @author haennimi
+ * @author benoit.plomion@orange.com
  */
 public class ALE {
 
@@ -166,6 +167,10 @@ public class ALE {
 			throw new DuplicateNameExceptionResponse();
 		}
 		reportGenerators.put(specName, new ReportsGenerator(specName, spec));		
+			
+		//ORANGE: persistence define ECSpec
+		WriteConfig.writeECSpec(specName, spec);
+	
 	}
 	
 	/**
@@ -180,6 +185,9 @@ public class ALE {
 			throw new NoSuchNameExceptionResponse();
 		}
 		reportGenerators.remove(specName);
+		
+		//ORANGE: persistence undefine ECSpec
+		RemoveConfig.removeECSpec(specName);
 		
 	}
 	
@@ -226,6 +234,9 @@ public class ALE {
 		}
 		reportGenerators.get(specName).subscribe(notificationURI);
 		
+		//ORANGE: persistence add ECSpec subscriber
+		WriteConfig.writeECSpecSubscriber(specName, notificationURI);
+		
 	}
 
 	/**
@@ -243,6 +254,9 @@ public class ALE {
 			throw new NoSuchNameExceptionResponse();
 		}
 		reportGenerators.get(specName).unsubscribe(notificationURI);
+		
+		//ORANGE: persistence remove ECSpec subscriber
+		RemoveConfig.removeECSpecSubscriber(specName, notificationURI);
 		
 	}
 
@@ -382,6 +396,11 @@ public class ALE {
 		
 		return REPORT_GENERATOR_NAME_PREFIX + (nameCounter++);
 		
+	}
+	
+	//ORANGE: add for ALEController ws
+	public static HashMap<String, ReportsGenerator> getReportGenerators() {
+		return reportGenerators;
 	}
 	
 }

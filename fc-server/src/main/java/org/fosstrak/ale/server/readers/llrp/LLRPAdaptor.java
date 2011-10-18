@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -20,14 +21,21 @@ import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 import org.fosstrak.tdt.TDTEngine;
 import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.LLRPMessageFactory;
+import org.llrp.ltk.generated.enumerations.C1G2ReadResultType;
+import org.llrp.ltk.generated.enumerations.C1G2WriteResultType;
 import org.llrp.ltk.generated.interfaces.EPCParameter;
 import org.llrp.ltk.generated.messages.RO_ACCESS_REPORT;
 import org.llrp.ltk.generated.parameters.AntennaID;
+import org.llrp.ltk.generated.parameters.C1G2ReadOpSpecResult;
+import org.llrp.ltk.generated.parameters.C1G2WriteOpSpecResult;
+import org.llrp.ltk.generated.interfaces.AccessCommandOpSpecResult;
 import org.llrp.ltk.generated.parameters.EPC_96;
 import org.llrp.ltk.generated.parameters.TagReportData;
 import org.llrp.ltk.types.Integer96_HEX;
 import org.llrp.ltk.types.LLRPMessage;
 import org.llrp.ltk.types.UnsignedShort;
+import org.llrp.ltk.types.UnsignedShortArray_HEX;
+
 
 /**
  * this class implements the adaptor from a logical reader in the filtering and 
@@ -41,6 +49,7 @@ import org.llrp.ltk.types.UnsignedShort;
  * contained) are extracted from the notification and are then propagated to 
  * the filtering and collection framework.
  * @author sawielan
+ * @author wafa.soubra@orange.com
  *
  */
 public class LLRPAdaptor extends BaseReader {
@@ -59,6 +68,43 @@ public class LLRPAdaptor extends BaseReader {
 	
 	/** the message callback. */
 	private Callback callback = null;
+
+	/** ORANGE: the path to the properties file for the LLRPAdaptor. */
+	private static final String LLRPADAPTOR_CONFIG_FILE = "/LLRPAdaptorConfig.properties";
+	
+	/** ORANGE: the name of the property corresponding to the OpSpecId of the C1G2Read for the MB=3. */
+	/** MB=3 is the the memory bank for the user memory. */
+	private static final String USER_MEM_C1G2READ_OPSPEC_ID = "UserMemoryC1G2ReadOpSpecId";
+	
+	/** ORANGE: the name of the property corresponding to the OpSpecId of the C1G2Write for the MB=3. */
+	/** MB=3 is the the memory bank for the user memory. */
+	private static final String USER_MEM_C1G2WRITE_OPSPEC_ID = "UserMemoryC1G2WriteOpSpecId";
+		
+	/** ORANGE: the tag length. */
+	private static final String TAG_LENGTH = "tagLength";
+	
+	/** ORANGE: the tag filter. */
+	private static final String TAG_FILTER = "tagFilter";
+	
+	/** ORANGE: the tag company prefix length. */
+	private static final String TAG_COMPANY_PREFIX_LENGTH = "tagCompanyPrefixLength";
+	
+	/** ORANGE: the OpSpecID of the C1G2Read for the User Memory (MB=3).*/
+	/** Will be initialized by the value of UserMemoryC1G2ReadOpSpecId.*/
+	private static int userMemReadOpSpecID = -1;
+	
+	/** ORANGE: the OpSpecID of the C1G2Write for the User Memory (MB=3).*/
+	/** Will be initialized by the value of UserMemoryC1G2WriteOpSpecId.*/
+	private static int userMemWriteOpSpecID = -1;
+	
+	/** ORANGE: the tag length. */
+	private static String length = null;
+	
+	/** ORANGE: the tag filter. */
+	private static String filter = null;
+	
+	/** ORANGE: the tag company prefix length. */
+	private static String companyPrefixLength = null;
 	
 	/** 
 	 * if the hash set is empty, allow from all the antennas, otherwise only 
@@ -96,6 +142,9 @@ public class LLRPAdaptor extends BaseReader {
 			throw new ImplementationExceptionResponse("reader name or LRSpec is null.");
 		}
 		
+		//ORANGE: initialize properties for the LLRPAdaptor
+		inititializeLLRPAdaptorProperties (LLRPADAPTOR_CONFIG_FILE);
+	
 		physicalReaderName = logicalReaderProperties.get("PhysicalReaderName");
 				
 		try {
@@ -309,20 +358,64 @@ public class LLRPAdaptor extends BaseReader {
 							tag.addTrace(getName());
 							tag.setTimestamp(System.currentTimeMillis());
 
+							//ORANGE: add additional values if they exist
+							tag.setTagLength(length);
+							tag.setFilter(filter);
+							tag.setCompanyPrefixLength(companyPrefixLength);
+							//ORANGE End.
+
 							// add the tag.
 							tags.add(tag);
 						} catch (Exception e) {
 							log.debug("bad error, ignoring tag: " + e.getMessage());
-						}
+						}	
+		
+						//ORANGE: managing the User Memory in the RO_ACCESS_REPORT
+						List<AccessCommandOpSpecResult> accessResultList = tagData.getAccessCommandOpSpecResultList();
+						for (AccessCommandOpSpecResult accessResult : accessResultList) {
+							
+							//ORANGE: in case of reading the User Memory of a tag, 
+							//retrieve the user memory from the RO_ACCESS_REPORT and store it in the tag.
+							if (accessResult instanceof C1G2ReadOpSpecResult) {
+								C1G2ReadOpSpecResult op = (C1G2ReadOpSpecResult)accessResult;
+								if ((op.getResult().intValue() == C1G2ReadResultType.Success) && 
+									(op.getOpSpecID().intValue() == userMemReadOpSpecID)){
+									UnsignedShortArray_HEX userMemoryHex = op.getReadData();
+									log.debug ("User Memory read from the tag is = " + userMemoryHex.toString());
+									tag.setUserMemory(userMemoryHex.toString());
+								}
+							}
+					
+							//ORANGE: in case of writing in the User Memory of the tag,
+							//log if needed that the C1G2Write Operation on the tag has succeeded. 
+							if (accessResult instanceof C1G2WriteOpSpecResult) {
+								C1G2WriteOpSpecResult op = (C1G2WriteOpSpecResult)accessResult;
+								if ((op.getResult().intValue()== C1G2WriteResultType.Success)&&
+									(op.getOpSpecID().intValue() == userMemWriteOpSpecID)) {
+									log.debug ("Writing in the User Memory of the tag has succeeded.");
+								}
+							}
+						}	
+						//ORANGE End	
 						
 						// try to run a conversion on the tag...
 						if (null != tag) {
-							try {								
-								String pureID = Tag.convert_to_PURE_IDENTITY(
-										null, 
-										null, 
-										null, 
-										tag.getTagAsBinary());
+							try {		
+								//ORANGE : replace the following code ...
+//								String pureID = Tag.convert_to_PURE_IDENTITY(
+//										null, 
+//										null, 
+//										null, 
+//										tag.getTagAsBinary());
+								
+								//ORANGE : by this one more generic.
+								String pureID =	Tag.convert_to_PURE_IDENTITY(
+										tag.getTagLength(),
+										tag.getFilter(),
+										tag.getCompanyPrefixLength(),
+										tag.getTagAsBinary());	
+								//ORANGE End.
+							
 								tag.setTagIDAsPureURI(pureID);
 							} catch (Exception e) {
 								log.debug("could not convert provided tag: " + e.getMessage());
@@ -338,5 +431,37 @@ public class LLRPAdaptor extends BaseReader {
 			log.info("received invalid llrp message that could not be converted from binary");
 		}
 		
+	}
+	
+	/**
+	 * ORANGE: This method initalizes properties needed to manage an LLRPAdaptor.
+	 * Properties are used to read the User Memory of a tag from an RO_ACCESS_REPORT or to log that
+	 * a write operation in the User Memory of a tag has succeeded. 
+	 * There are also properties linked to the creation of a tag like : length, filter and companyPrefixLength. 
+	 * @param propertiesFilePath the filepath to the properties file
+	 * @throws ImplementationException if properties could not be loaded
+	 */
+	public void inititializeLLRPAdaptorProperties (String propertiesFilePath) throws ImplementationExceptionResponse {
+		Properties props = new Properties();
+		//TODO : to test the different cases !!!!
+		try {
+			props.load(LLRPAdaptor.class.getResourceAsStream(propertiesFilePath));
+		} catch (Exception e) {
+			throw new ImplementationExceptionResponse
+			("Error loading properties from LLRPAdaptor '" + propertiesFilePath + "'");
+		}
+		// we need to initialize the User Memory OpSpecID
+		String readOpSpecID = props.getProperty(USER_MEM_C1G2READ_OPSPEC_ID);
+		String writeOpSpecID = props.getProperty(USER_MEM_C1G2WRITE_OPSPEC_ID);
+		if (readOpSpecID != null) {
+			userMemReadOpSpecID = java.lang.Integer.parseInt(readOpSpecID);
+		}
+		if (writeOpSpecID != null) {
+			userMemWriteOpSpecID = java.lang.Integer.parseInt(writeOpSpecID);
+		}
+		// init the parameters of a tag from the properties file
+		length = props.getProperty(TAG_LENGTH);
+		filter = props.getProperty(TAG_FILTER);
+		companyPrefixLength = props.getProperty(TAG_COMPANY_PREFIX_LENGTH);
 	}
 }

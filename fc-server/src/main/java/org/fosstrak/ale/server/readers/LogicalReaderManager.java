@@ -55,11 +55,14 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.apache.log4j.Logger;
 
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
+
 /**
  * represents the LogicalReader API according 10.3 API from EPC global ALE standard.
  * @author sawielan
  * @author haennimi
- *
+ * @author benoit.plomion@orange.com
  */
 public class LogicalReaderManager {
 	
@@ -308,6 +311,10 @@ public class LogicalReaderManager {
 			basereader.disconnectReader();
 			basereader.cleanup();
 		}
+		
+		//ORANGE: persistence remove LRSpec
+		RemoveConfig.removeLRSpec(name);
+		
 		logicalReaders.remove(name);
 	}
 
@@ -331,6 +338,10 @@ public class LogicalReaderManager {
 	public static void update(String name, LRSpec spec)  throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse,  ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		logRd.update(spec);
+		
+		//ORANGE: persistence update LRSpec
+		RemoveConfig.removeLRSpec(name);
+		WriteConfig.writeLRSpec(name, spec);
 	}
 
 	/**
@@ -388,6 +399,10 @@ public class LogicalReaderManager {
 		if (logRead instanceof BaseReader) {
 			((BaseReader)logRead).connectReader();
 		}
+		
+		//ORANGE: persistence LRSpec
+		WriteConfig.writeLRSpec(name, spec);
+		
 		logicalReaders.put(name, logRead);
 	}
 	
