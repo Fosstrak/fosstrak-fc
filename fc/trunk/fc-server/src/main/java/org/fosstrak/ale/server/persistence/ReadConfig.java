@@ -23,10 +23,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 
 
-import com.orange.api.rfid.ale.server.gpio.GPIOControllerImpl;
-import com.orange.api.rfid.ale.server.llrp.LLRPControllerManager;
-import com.orange.api.rfid.ale.server.mobile.MobileDeviceImpl;
-import com.orange.api.rfid.ale.server.subscriber.CaptureAppGatewayImpl;
+import org.fosstrak.ale.server.llrp.LLRPControllerManager;
 
 /**
  * This class is called at the startup of tomcat and load all configuration on the the ALE.
@@ -226,7 +223,7 @@ public class ReadConfig extends Config {
 				
 				String pathFile = Config.getRealPathROSpecDir() + fileName;
 				LOG.debug("pathfile of add_rospec is " + pathFile);
-				addRoSpec = com.orange.api.rfid.ale.util.DeserializerUtil.deserializeAddROSpec(pathFile);
+				addRoSpec = org.fosstrak.ale.util.DeserializerUtil.deserializeAddROSpec(pathFile);
 				LOG.debug("ID of the deserialized add_rospec = " + addRoSpec.getROSpec().getROSpecID());
 				
 			} catch (FileNotFoundException e) {
@@ -242,7 +239,7 @@ public class ReadConfig extends Config {
 				llrpControllerImpl.define(specName, addRoSpec);
 			} catch (org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse e) {
 				LOG.error("error when trying to define add_rospec ", e);
-			} catch(com.orange.api.rfid.ale.server.llrp.DuplicateNameExceptionResponse e) {
+			} catch(org.fosstrak.ale.util.DuplicateNameExceptionResponse e) {
 				LOG.error("error when trying to define add_rospec ", e);
 			}
 			

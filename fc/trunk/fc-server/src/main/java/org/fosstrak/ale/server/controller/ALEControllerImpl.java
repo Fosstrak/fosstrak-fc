@@ -20,7 +20,7 @@ import org.fosstrak.ale.server.readers.LogicalReaderManager;
  * this class is a webservice wich is control ALE. Can stop/start/... ECSpec.
  * @author benoit.plomion@orange.com
  */
-@WebService(endpointInterface = "com.orange.api.rfid.ale.server.controller.ALEController")
+@WebService(endpointInterface = "org.fosstrak.ale.server.controller.ALEController")
 public class ALEControllerImpl implements ALEController {
 
 	/**	logger. */

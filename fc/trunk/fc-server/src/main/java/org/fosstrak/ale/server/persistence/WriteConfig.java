@@ -14,8 +14,6 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 
-import com.orange.api.rfid.ale.server.gpio.GPIOObject;
-
 /**
  * This class write all configuration file on the real path of the webapp
  * @author benoit.plomion@orange.com
@@ -218,7 +216,7 @@ public class WriteConfig extends Config {
 					LOG.info("cannot create directories or directories already exist : " + path);
 				}		
 				LOG.debug("try to create file for add_rospec: " + fileName);
-				com.orange.api.rfid.ale.util.SerializerUtil.serializeAddROSpec(addRoSpec, path + fileName);
+				org.fosstrak.ale.util.SerializerUtil.serializeAddROSpec(addRoSpec, path + fileName);
 				LOG.info("add_rospec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
