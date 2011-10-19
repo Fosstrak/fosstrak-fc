@@ -8,11 +8,10 @@ import javax.servlet.ServletException;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
 
-import com.orange.api.rfid.ale.server.controller.ALEController;
-import com.orange.api.rfid.ale.server.controller.ALEControllerImpl;
-import com.orange.api.rfid.ale.server.gpio.NoSuchNameGPIOExceptionResponse;
-import com.orange.api.rfid.ale.server.llrp.LLRPController;
-import com.orange.api.rfid.ale.server.llrp.LLRPControllerImpl;
+import org.fosstrak.ale.server.controller.ALEController;
+import org.fosstrak.ale.server.controller.ALEControllerImpl;
+import org.fosstrak.ale.server.llrp.LLRPController;
+import org.fosstrak.ale.server.llrp.LLRPControllerImpl;
 
 /**
  * Persistence servlet is run at the startup of tomcat

@@ -17,7 +17,7 @@ public class Config {
 	
 	/**
      *  default path, modified by servlet startup
-     *  @see com.orange.api.rfid.ale.server.persistence.PersistenceServlet 
+     *  @see org.fosstrak.ale.server.persistence.PersistenceServlet 
      */
 	private static String realPathWebapp = "C:\\Program Files\\apache-tomcat-6.0.14\\webapps\\fc-server";
 	

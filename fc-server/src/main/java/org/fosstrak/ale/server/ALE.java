@@ -48,6 +48,9 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
+
 /**
  * This class represents the application level events interface.
  * All ale operations are executed by this class.

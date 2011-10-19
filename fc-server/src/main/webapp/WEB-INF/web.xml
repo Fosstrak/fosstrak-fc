@@ -21,7 +21,7 @@
 	<servlet>    	
    	 	<display-name>PersistenceServlet</display-name>
    	 	<servlet-name>PersistenceServlet</servlet-name>
-    	<servlet-class>com.orange.api.rfid.ale.server.persistence.PersistenceServlet</servlet-class>
+    	<servlet-class>org.fosstrak.ale.server.persistence.PersistenceServlet</servlet-class>
     	<load-on-startup>2</load-on-startup>
   	</servlet>
   	
