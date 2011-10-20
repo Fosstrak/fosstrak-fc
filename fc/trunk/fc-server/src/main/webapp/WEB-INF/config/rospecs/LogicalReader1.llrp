@@ -21,43 +21,27 @@
       </llrp:AISpecStopTrigger>
       <llrp:InventoryParameterSpec>
         <llrp:InventoryParameterSpecID>1</llrp:InventoryParameterSpecID>
-        <llrp:ProtocolID>EPCGlobalClass1Gen2</llrp:ProtocolID>
-        <llrp:AntennaConfiguration>
-          <llrp:AntennaID>1</llrp:AntennaID>
-          <llrp:RFTransmitter>
-            <llrp:HopTableID>0</llrp:HopTableID>
-            <llrp:ChannelIndex>3</llrp:ChannelIndex>
-            <llrp:TransmitPower>49</llrp:TransmitPower>
-          </llrp:RFTransmitter>
-          <llrp:C1G2InventoryCommand>
-            <llrp:TagInventoryStateAware>0</llrp:TagInventoryStateAware>
-            <llrp:C1G2RFControl>
-              <llrp:ModeIndex>2</llrp:ModeIndex>
-              <llrp:Tari>0</llrp:Tari>
-            </llrp:C1G2RFControl>
-            <llrp:C1G2SingulationControl>
-              <llrp:Session>1</llrp:Session>
-              <llrp:TagPopulation>0</llrp:TagPopulation>
-              <llrp:TagTransitTime>0</llrp:TagTransitTime>
-            </llrp:C1G2SingulationControl>
-          </llrp:C1G2InventoryCommand>
-        </llrp:AntennaConfiguration>
+        <llrp:ProtocolID>Unspecified</llrp:ProtocolID>
       </llrp:InventoryParameterSpec>
     </llrp:AISpec>
     <llrp:ROReportSpec>
       <llrp:ROReportTrigger>Upon_N_Tags_Or_End_Of_ROSpec</llrp:ROReportTrigger>
       <llrp:N>1</llrp:N>
       <llrp:TagReportContentSelector>
-        <llrp:EnableROSpecID>0</llrp:EnableROSpecID>
-        <llrp:EnableSpecIndex>0</llrp:EnableSpecIndex>
-        <llrp:EnableInventoryParameterSpecID>0</llrp:EnableInventoryParameterSpecID>
+        <llrp:EnableROSpecID>1</llrp:EnableROSpecID>
+        <llrp:EnableSpecIndex>1</llrp:EnableSpecIndex>
+        <llrp:EnableInventoryParameterSpecID>1</llrp:EnableInventoryParameterSpecID>
         <llrp:EnableAntennaID>1</llrp:EnableAntennaID>
-        <llrp:EnableChannelIndex>0</llrp:EnableChannelIndex>
+        <llrp:EnableChannelIndex>1</llrp:EnableChannelIndex>
         <llrp:EnablePeakRSSI>1</llrp:EnablePeakRSSI>
         <llrp:EnableFirstSeenTimestamp>1</llrp:EnableFirstSeenTimestamp>
-        <llrp:EnableLastSeenTimestamp>0</llrp:EnableLastSeenTimestamp>
-        <llrp:EnableTagSeenCount>0</llrp:EnableTagSeenCount>
+        <llrp:EnableLastSeenTimestamp>1</llrp:EnableLastSeenTimestamp>
+        <llrp:EnableTagSeenCount>1</llrp:EnableTagSeenCount>
         <llrp:EnableAccessSpecID>1</llrp:EnableAccessSpecID>
+        <llrp:C1G2EPCMemorySelector>
+          <llrp:EnableCRC>1</llrp:EnableCRC>
+          <llrp:EnablePCBits>1</llrp:EnablePCBits>
+        </llrp:C1G2EPCMemorySelector>
       </llrp:TagReportContentSelector>
     </llrp:ROReportSpec>
   </llrp:ROSpec>

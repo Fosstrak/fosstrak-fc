@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
@@ -49,13 +50,15 @@ public class WriteConfig extends Config {
 				
 				LOG.debug("try to create file for ecspec: " + fileName);
 				FileOutputStream fileOutputStream = new FileOutputStream(path + fileName);
-				org.fosstrak.ale.util.SerializerUtil.serializeECSpec(spec, fileOutputStream);
+				SerializerUtil.serializeECSpec(spec, fileOutputStream);
 				LOG.info("ecspec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
 				LOG.error("error create ecspec file: " + path + fileName, e);		
 			} catch (IOException e) {			
 				LOG.error("error serialize ecspec file: " + path + fileName, e);
+			} catch (Exception e) {
+				LOG.error("error ecspec file: " + path + fileName, e);
 			}
 		
 		} else {			
@@ -184,13 +187,15 @@ public class WriteConfig extends Config {
 				}		
 				
 				LOG.debug("try to create file for lrspec: " + fileName);
-				org.fosstrak.ale.util.SerializerUtil.serializeLRSpec(spec, path + fileName, false);
+				SerializerUtil.serializeLRSpec(spec, path + fileName, false);
 				LOG.info("lrspec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
-				LOG.error("error create ecspec file: " + path + fileName, e);		
+				LOG.error("error create lrspec file: " + path + fileName, e);		
 			} catch (IOException e) {			
-				LOG.error("error serialize ecspec file: " + path + fileName, e);
+				LOG.error("error serialize lrspec file: " + path + fileName, e);
+			}  catch (Exception e) {
+				LOG.error("error lrspec file: " + path + fileName, e);
 			}
 		
 		} else {			
@@ -216,7 +221,7 @@ public class WriteConfig extends Config {
 					LOG.info("cannot create directories or directories already exist : " + path);
 				}		
 				LOG.debug("try to create file for add_rospec: " + fileName);
-				org.fosstrak.ale.util.SerializerUtil.serializeAddROSpec(addRoSpec, path + fileName);
+				SerializerUtil.serializeAddROSpec(addRoSpec, path + fileName);
 				LOG.info("add_rospec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {

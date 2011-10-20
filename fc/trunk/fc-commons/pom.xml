@@ -18,6 +18,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<name>fc-commons</name>
 
+	<!-- =========================================================== -->
+	<!-- ORANGE: Properties                                          -->
+	<!-- =========================================================== -->
+
+	<properties>
+		<fosstrak.llrp.version>1.1.0</fosstrak.llrp.version>
+		<apache.axis2.version>1.4.1</apache.axis2.version>
+	</properties>
 
 	<!-- =========================================================== -->
 	<!-- Dependencies                                                -->
@@ -47,6 +55,21 @@
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
+		</dependency>
+		
+		<!-- ORANGE: added -->
+		<dependency>
+			<groupId>org.fosstrak.llrp</groupId>
+			<artifactId>llrp-adaptor</artifactId>
+			<version>${fosstrak.llrp.version}</version>
+		</dependency>
+		<!-- ORANGE: added -->
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-jws-api</artifactId>
+			<version>${apache.axis2.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
