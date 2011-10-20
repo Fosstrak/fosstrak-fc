@@ -232,14 +232,14 @@ public class ReadConfig extends Config {
 				LOG.error("error to read add_rospec file " + fileName, e);
 			}
 			
-			LLRPControllerManager llrpControllerImpl = new LLRPControllerManager();
+			LLRPControllerManager llrpControllerManager = new LLRPControllerManager();
 			LOG.debug("try to define add_rospec " + fileName + " with specName = " + specName);
 			
 			try {
-				llrpControllerImpl.define(specName, addRoSpec);
+				llrpControllerManager.define(specName, addRoSpec);
 			} catch (org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse e) {
 				LOG.error("error when trying to define add_rospec ", e);
-			} catch(org.fosstrak.ale.util.DuplicateNameExceptionResponse e) {
+			} catch(org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse e) {
 				LOG.error("error when trying to define add_rospec ", e);
 			}
 			

@@ -22,6 +22,7 @@ package org.fosstrak.ale.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +35,13 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 import org.apache.log4j.Logger;
+
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
+import org.llrp.ltk.generated.LLRPMessageFactory;
+import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.types.LLRPMessage;
+
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
@@ -49,6 +57,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
  * @author sawielan
  * @author regli
  * @author julian roche
+ * @author wafa.soubra@orange.com
  */
 public class DeserializerUtil {
 
@@ -216,4 +225,41 @@ public class DeserializerUtil {
 		unmarshaller.setEventHandler(validationEventHandler);
 		return unmarshaller;
 	}
+	
+	
+	/**
+	 * ORANGE: This method deserializes an ADD_ROSPEC from an input stream.
+	 * TODO :  Must be tested very well because when we put these methods
+	 * into the class org.fosstrak.ale.util.DeserializerUtil in fc-commons,
+	 * we had the error "NoSuchMethodError" in the localhost log file when we launch Fosstrak. 
+	 * @param inputStream to deserialize
+	 * @return ADD_ROSPEC
+	 * @throws Exception if deserialization fails
+	 */
+	public static ADD_ROSPEC deserializeAddROSpec(InputStream inputStream) throws Exception {
+		LOG.debug("Start deserializeAddROSpec .... ");
+		Document document = new SAXBuilder().build(inputStream);
+		LOG.debug("Get jdom Document with SAXBuilder");
+		LLRPMessage message = LLRPMessageFactory.createLLRPMessage(document);
+		if (message != null ) {
+			LOG.debug("LLRP Message created");
+		}
+		else {
+			LOG.debug("LLRP Message is null !!!!!");
+		}
+		ADD_ROSPEC addRoSpec = (ADD_ROSPEC)message;
+		LOG.debug("End of deserializeAddROSpec");
+		return addRoSpec;
+	}
+
+	/**
+	 * ORANGE: This method deserializes an ADD_ROSPEC from an file path.
+	 * @param pathName to deserialize
+	 * @return ADD_ROSPEC
+	 * @throws Exception if deserialization fails
+	 */
+	public static ADD_ROSPEC deserializeAddROSpec(String pathName) throws FileNotFoundException, Exception {
+		return  deserializeAddROSpec(new FileInputStream(new File(pathName)));
+	}
+	
 }
