@@ -78,44 +78,64 @@ public class LLRPControllerManager  {
 	/**
 	 * Add an ROSpec to a declared logical reader in the ALE and enable it.
 	 * @param lrSpecName the name of the logical reader
-	 * @param addRoSpec the description of the ADD_ROSPEC
+	 * @param pathFile a file containing the description of the ADD_ROSPEC
 	 * Note : if we define this method as a Web Method, JAXB fails at runtime
 	 * because ADD_ROSPEC contains interfaces and JAXB cannot deserialize them. 
-	 * That's why this method doesn't do anything and is defined here just 
-	 * to respect the implementation of LLRPControllerImpl.
-	 * In fact, we call directly the "define(String lrSpecName, ADD_ROSPEC addRoSpec)" 
+	 * In our client, we call directly the "define(String lrSpecName, ADD_ROSPEC addRoSpec)" 
+	 * We can call the "define" webmethod in the LLRPControllerImpl which will call 
+	 * the "define" function below ==> MUST BE TESTED. 
 	 */
 	
-	public void define (String lrSpecName, String addRoSpec) throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+	public void define (String lrSpecName, String pathFile) throws FileNotFoundException, Exception {
+		ADD_ROSPEC addRoSpec = null;
+		try {
+			LOG.debug("pathfile of add_rospec is " + pathFile);
+			addRoSpec = org.fosstrak.ale.util.DeserializerUtil.deserializeAddROSpec(pathFile);
+			LOG.debug("ID of the deserialized add_rospec = " + addRoSpec.getROSpec().getROSpecID());
+		} catch (FileNotFoundException e) {
+			LOG.error("add_rospec file not found " + pathFile, e);				
+		} catch (Exception e) {
+			LOG.error("error to read add_rospec file " + pathFile, e);
+		}	
+		define(lrSpecName, addRoSpec);
 	}
 	
 	
 	/**
-	 * Add a new RoSpec, launch the thread and persist the ADD_ROSPEC
+	 * Add a new RoSpec, enable it, launch the thread and persist the ADD_ROSPEC
 	 * @param lrSpecName the logical reader name
-	 * @param addRoSpec the ADD_ROSPEC
+	 * @param addRoSpec the ADD_ROSPEC object
 	 */
 	
 	public void define(String lrSpecName, ADD_ROSPEC addRoSpec) 
 		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
-		LOG.debug("Define an ADD_ROSPEC for " + lrSpecName);
-		// init the Connection and the LLRP context
-		AdaptorMgmt.initializeLLRPContext();
-		String readerName= retrievePhysicalReader (lrSpecName);
-		getLLRPConfiguration();
-		initClientConnection(readerName);
-		// add ROSpec
-		AdaptorMgmt.sendLLRPMessage(readerName, addRoSpec);
-		// init the internal data
-		lrROSpecMap.put(lrSpecName, addRoSpec.getROSpec());
-		physicalLRMap.put(readerName, lrSpecName);
-		//TODO: case of composite reader
-		lrPhysicalMap.put(lrSpecName, readerName);
-		//TODO: case of composite reader
-		lrLLRPCheckMap.put(lrSpecName, new LLRPChecking(readerName));
-		// persistence
-		WriteConfig.writeAddROSpec(lrSpecName, addRoSpec);
-		LOG.debug("End Define an ADD_ROSPEC for " + lrSpecName);
+		if (addRoSpec != null) {
+			LOG.debug("Define an ADD_ROSPEC for " + lrSpecName);
+			// init the Connection and the LLRP context
+			AdaptorMgmt.initializeLLRPContext();
+			String readerName= retrievePhysicalReader (lrSpecName);
+			getLLRPConfiguration();
+			initClientConnection(readerName);
+			// add ROSpec
+			AdaptorMgmt.sendLLRPMessage(readerName, addRoSpec);
+			// enable the ROSpec
+			ENABLE_ROSPEC enableROSpec = new ENABLE_ROSPEC();
+			UnsignedInteger roSpecId = addRoSpec.getROSpec().getROSpecID();
+			enableROSpec.setROSpecID(roSpecId);
+			AdaptorMgmt.sendLLRPMessage(readerName, enableROSpec);
+			// init the internal data
+			lrROSpecMap.put(lrSpecName, addRoSpec.getROSpec());
+			physicalLRMap.put(readerName, lrSpecName);
+			//TODO: case of composite reader
+			lrPhysicalMap.put(lrSpecName, readerName);
+			//TODO: case of composite reader
+			lrLLRPCheckMap.put(lrSpecName, new LLRPChecking(readerName));
+			// persistence
+			WriteConfig.writeAddROSpec(lrSpecName, addRoSpec);
+			LOG.debug("End Define an ADD_ROSPEC for " + lrSpecName);
+		} else {
+			LOG.error("ERROR !!!! ADD_ROSPEC is null for " + lrSpecName);
+		}
 	}
 	
 	/**
@@ -258,6 +278,9 @@ public class LLRPControllerManager  {
 				ADD_ROSPEC addRoSpec = new ADD_ROSPEC();
 				addRoSpec.setROSpec(roSpec);
 				AdaptorMgmt.sendLLRPMessage(readerName, addRoSpec);	
+				ENABLE_ROSPEC enableROSpec = new ENABLE_ROSPEC();
+				enableROSpec.setROSpecID(roSpec.getROSpecID());
+				AdaptorMgmt.sendLLRPMessage(readerName, enableROSpec);
 			} else {
 				if (roSpec == null) {
 					LOG.error("Undefined ROSpec for this physical reader " + readerName);	
