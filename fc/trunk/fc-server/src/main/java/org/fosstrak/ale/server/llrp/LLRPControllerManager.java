@@ -86,7 +86,7 @@ public class LLRPControllerManager  {
 	 * the "define" function below ==> MUST BE TESTED. 
 	 */
 	
-	public void define (String lrSpecName, String pathFile) throws FileNotFoundException, Exception {
+	public void define (String lrSpecName, String pathFile) throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
 		ADD_ROSPEC addRoSpec = null;
 		try {
 			LOG.debug("pathfile of add_rospec is " + pathFile);
