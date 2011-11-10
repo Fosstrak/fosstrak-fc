@@ -10,6 +10,8 @@ Application Layer Events Service Binding
 
 	[[]] {{{#Overview}Overview}}
 	
+	[[]] {{{#Persistence}Configuration Persistence}}
+	
 	[[]] {{{#EventCycle}EventCycle modification}}
 	
 	[[]] {{{#Client}Client Subscription}}
@@ -19,6 +21,10 @@ Application Layer Events Service Binding
 	[[]] {{{#WSDL}WSDL interface}}
 
 	[[]] {{{#ServiceBinding}ServiceBinding}}
+	
+	[[]] {{{#ALEController}ALEController}}
+	
+	[[]] {{{#LLRPController}LLRPController}}
 
 	[[]] {{{#Status}Status}}
 	
@@ -31,10 +37,16 @@ Application Layer Events Service Binding
 	
 	The ALE is the responsible class for the communication with the 
 	applications of the Layer above. It provides: 
-	 
+	
+	* Configuration Persistence (LRSpecs, ROSpecs, ECSpecs, Subscribers)
+		 
 	* Interface for the definition and modification of EventCycles
 	
+	* Start and stop one or all ECSpecs
+	
 	* Subscription/unsubscription of report notifications
+	
+	* Interface for the definition and modification of ROSpecs
 	
 	* Administrative methods (eg. VendorVersion).
 	
@@ -50,6 +62,15 @@ Application Layer Events Service Binding
 		of the Filtering and Collection.
 		
 	[]
+	
+* Configuration {Persistence}
+	
+	The ALE provides a configuration persistence module than load/modify/delete:
+	
+	* LRSpecs (XML file)
+	* ROSpecs (XML file)
+	* ECSpecs (XML file)
+	* Subscribers (Properties file)
 	
 * {EventCycle} modification
 
@@ -218,6 +239,22 @@ example for getStandardVersion:
 	provided to clients in the ALEServicePortTypeImpl.
 
 	
+*{ALEController}	
+	
+	The ALE Controller provides the following methods to start or stop EventCycles:
+	
+	* ecSpecIsStarted: return the status of an ECSpec (started or stopped)
+	* getAllECSpecNameStarted: return all ECSpec names which is started
+	* startECSpec: start a specified ECSpec
+	* stopECSpec: stop a specified ECSpec
+	* stopAllECSpec: stop all ECSpec
+	* stopAllECSpec4LogicalReader: stop all ECSpec started for a LogicalReader
+	* stopAllECSpec4LogicalReaderByECSpecName: stop all ECSpec started for a LogicalReader searching by ecspec
+	* getLogicalReaderNames
+	
+*{LLRPController}	
+	
+	TODO
 
 * {Status}
 
