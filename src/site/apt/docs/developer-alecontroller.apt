@@ -8,11 +8,11 @@ ALE Controller
 
 * Contents
 
-   [[1]] {{{#Objective}Objective}}
+   [[]] {{{#Objective}Objective}}
    
-   [[2]] {{{#Class}Class Diagram}}
+   [[]] {{{#Class}Class Diagram}}
    
-   [[3]] {{{#Interface}Interface}}
+   [[]] {{{#Interface}Interface}}
 
 
 * {Objective}
@@ -25,20 +25,25 @@ ALE Controller
 
 * {Interface}
 
-Réalisation d'un webservice SOAP permettant de contrôler l'ALE. En effet, grâce à ce webservice, il est possible de:
-	
 	* to start an ECSpec
+	
 		*startECSpec(String specName)
 
 	* to stop an ECSpec
+	
 		*stopECSPec(String specName)
 
 	* to all ECSpecs started
+	
 		*getAllECSpecNameStarted()
 
 	* to know if an ECSpecs is started or stopped
+	
 		*ecSpecIsStarted(String specName)
 
 	* to stop all ECSpecs associated to a logical reader
+	
 		*stopAllECSpec4LogicalReader(String logicalReaderName)
+		
 		*stopAllECSpec4LogicalReaderByECSpecName(String specName)
+		
