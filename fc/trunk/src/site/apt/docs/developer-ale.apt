@@ -68,8 +68,11 @@ Application Layer Events Service Binding
 	The ALE provides a configuration persistence module than load/modify/delete:
 	
 	* LRSpecs (XML file)
+	
 	* ROSpecs (XML file)
+	
 	* ECSpecs (XML file)
+	
 	* Subscribers (Properties file)
 	
 * {EventCycle} modification
@@ -201,10 +204,6 @@ wsdl2java -impl -v
 	The ALEServicePortTypeImpl is stored in the module fc-server (see the 
 	next chapter of this guide).
 
-
-
-	
-
 * {ServiceBinding}
 
 	The stubs described in the former chapter are used for the 
@@ -244,12 +243,19 @@ example for getStandardVersion:
 	The ALE Controller provides the following methods to start or stop EventCycles:
 	
 	* ecSpecIsStarted: return the status of an ECSpec (started or stopped)
+	
 	* getAllECSpecNameStarted: return all ECSpec names which is started
+	
 	* startECSpec: start a specified ECSpec
+	
 	* stopECSpec: stop a specified ECSpec
+	
 	* stopAllECSpec: stop all ECSpec
+	
 	* stopAllECSpec4LogicalReader: stop all ECSpec started for a LogicalReader
+	
 	* stopAllECSpec4LogicalReaderByECSpecName: stop all ECSpec started for a LogicalReader searching by ecspec
+	
 	* getLogicalReaderNames
 	
 *{LLRPController}	
