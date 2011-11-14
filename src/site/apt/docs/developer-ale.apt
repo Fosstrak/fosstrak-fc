@@ -25,6 +25,8 @@ Application Layer Events Service Binding
 	[[]] {{{#ALEController}ALEController}}
 	
 	[[]] {{{#LLRPController}LLRPController}}
+	
+	[[]] {{{#UserMemory}Tag's UserMemory}}
 
 	[[]] {{{#Status}Status}}
 	
@@ -260,7 +262,35 @@ example for getStandardVersion:
 	
 *{LLRPController}	
 	
-	TODO
+	The LLRP Controller provides the following methods to manage an ROSPEC on a logical reader:
+	 
+	* define: Define takes a two parameters, a name for the logical reader and 
+		the path file containing the description of the ADD_ROSPEC or directly the ADD_ROSPEC.
+			
+	* disable: Disable the ROSPEC defined on the given logical reader name.
+	
+	* disableAll: Disable the ROSPEC on all the logical readers.
+		
+	* enable: Enable the ROSPEC defined on the given logical reader name.
+	
+	* start: Start the ROSPEC defined on the given logical reader name.
+		
+	* stop: Stop the ROSPEC defined on the given logical reader name.
+		
+	* undefine: Undefine the ROSPEC defined on the given logical reader name.
+
+
+* Tag's {UserMemory}
+
+	It is possible to report tag’s user memory contents.
+	
+	* Checks if a user memory exists in the ECspec extensions and adds it to ECreport.
+	
+	* Possibility to capture this information and stored it in the EPCIS.
+	
+	* In the case of an LLRP Adaptor, if a user memory exists, this adaptor will be notified.  
+		Therefore, this memory will be stored like the epc code.   
+
 
 * {Status}
 
