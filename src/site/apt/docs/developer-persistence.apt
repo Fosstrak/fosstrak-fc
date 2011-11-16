@@ -42,9 +42,9 @@ Persistence
 
 	* ROSpecs
 	
-		* WEBAPP_PATH/WEB-INF/config/rospecs/LRSPEC_NAME.xml
+		* WEBAPP_PATH/WEB-INF/config/rospecs/LRSPEC_NAME.llrp
 		
-		* 1 XML file for each ROSpec
+		* 1 LLRP/XML file for each ROSpec
 
 	* ECSpec Subscribers
 	
