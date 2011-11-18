@@ -59,6 +59,7 @@
 		<item name="Reports notification" href="docs/developer-reports-notification.html"/>
 		<item name="ALE Controller" href="docs/developer-alecontroller.html"/>
 		<item name="LLRP Controller" href="docs/developer-llrpcontroller.html"/>
+		<item name="User Memory" href="docs/developer-usermemory.html"/>
 		<item name="Logical Reader concept" href="docs/developer-reader-concept.html"/>
 		<item name="Implement an Adaptor" href="docs/developer-adaptor.html"/>
 		<item name="Serializers and Deserializers" href="docs/developer-serializers.html"/>
