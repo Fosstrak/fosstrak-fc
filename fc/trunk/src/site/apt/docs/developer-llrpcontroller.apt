@@ -1,1 +1,98 @@
-TODO
+ ------
+                                    LLRP Controller 
+                                    ------
+                                    ------
+
+LLRP Controller
+
+* Contents
+
+   [[]] {{{#Objective}Objective}}
+   
+   [[]] {{{#Interface}Interface}}
+   
+   [[]] {{{#Properties}Properties}}
+
+
+* {Objective}
+
+    This document will give you a short overview of the LLRP Controller
+    which allows you to manage an ROSPEC on a logical reader.
+    
++---+
+It should be noted that a logical reader can have just one ROSpec.
++---+
+
+    Like the ROSPEC, methods to manage ACCESS_SPECS will be integrated shortly. 
+
+* {Interface}
+
+
+    * to define an ROSpec. 
+       
+        *define(String lrSpecName, String pathFile) is a Web method. 
+        It takes two parameters,  a name for the logical reader and 
+        the path file containing the description of the ADD_ROSPEC.
+        
+        *define(String lrSpecName, ADD_ROSPEC addRoSpec) is a method.
+        It takes two parameters, a name for the logical reader and the ADD_ROSPEC.
+        
++---+
+Defining an ROSpec involves that the ROSpec will be add and enable on this logical reader.
+The ADD_ROSPEC will be persisted in a file under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp
+A thread will be launched to check that there is always one defined ROSPEC on the physical reader.
++---+    
+
+
+    * to undefine an ROSpec
+    
+        *undefine(String lrSpecName) is a Web method. 
+            Delete the ROSpec defined on the given logical reader name, stop the thread and 
+            remove the persisted file. 
+
+
+    * to enable an ROSpec
+    
+        *enable(String lrSpecName)is a Web method. 
+            Enable the ROspec defined on the given logical reader name. 
+            
+            
+    * to disable an R0Spec
+    
+        *disable(String lrSpecName) is a Web Method. 
+            Disable the ROspec defined on the given logical reader name. 
+            
+        *disableAll() is a Web Method. 
+            Disable the ROspec on all the logical readers. 
+        
+        
+    * to start an ROSpec
+        
+        *start(String lrSpecName) is a Web Method.
+            Start the ROspec defined on the given logical reader name. 
+    
+    
+    * to stop an ROSpec
+    
+        *stop(String lrSpecName) is a Web Method.
+            Stop the ROspec defined on the given logical reader name. 
+        
+        
+* {Properties}
+
+    We define 2 properties for the configuration of the client under 
+      <WEBAPP_PATH/WEB-INF/config/llrp/llrpConfig.properties>.
+      
+        *<<rifidiEmulator>> : This property must be set to true when we test the client with the Rifidi Emulator. 
+             When testing with the Rifidi Emulator, the acknowledge of the connection is never sent to the LLRP message handler in Fosstrak.
+             In the case of a client outside Rifidi Emulator, this property is set to false. 
+
+
+        *<<waitConnection>> : This property must be set to false when we test the client with Rifidi Emulator.
+            In that case, the client does not wait for acknowledge of the connection (ACK) between the client and the reader. 
+            If this property is set to true, the client wait until the LLRP connection between the client and the reader is really established
+
+		
+		
+		
+		
