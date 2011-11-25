@@ -26,12 +26,15 @@ import org.jdom.output.XMLOutputter;
 import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.LLRPMessageFactory;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.DELETE_ROSPEC;
 import org.llrp.ltk.generated.messages.DISABLE_ROSPEC;
 import org.llrp.ltk.generated.messages.ENABLE_ROSPEC;
+import org.llrp.ltk.generated.messages.ENABLE_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.START_ROSPEC;
 import org.llrp.ltk.generated.messages.STOP_ROSPEC;
 import org.llrp.ltk.generated.parameters.ROSpec;
+import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.types.LLRPMessage;
 import org.llrp.ltk.types.UnsignedInteger;
 
@@ -74,6 +77,9 @@ public class LLRPControllerManager  {
 	
 	/** flag to indicate if we wait for the acknowledge of the connection. */
 	private static boolean toWaitForConnection = true;
+	
+	/** key = logical reader name, value = AccessSpec */
+	private static HashMap<String, AccessSpec> lrAccessSpecMap = new HashMap<String, AccessSpec>();
 	
 	/**
 	 * Add an ROSpec to a declared logical reader in the ALE and enable it.
@@ -273,24 +279,33 @@ public class LLRPControllerManager  {
 		ROSpec roSpec = null;
 		String logicalName = physicalLRMap.get(readerName);
 		if (logicalName != null) {
-			roSpec = lrROSpecMap.get(logicalName);
-			if (roSpec != null) {	
-				ADD_ROSPEC addRoSpec = new ADD_ROSPEC();
-				addRoSpec.setROSpec(roSpec);
-				AdaptorMgmt.sendLLRPMessage(readerName, addRoSpec);	
-				ENABLE_ROSPEC enableROSpec = new ENABLE_ROSPEC();
-				enableROSpec.setROSpecID(roSpec.getROSpecID());
-				AdaptorMgmt.sendLLRPMessage(readerName, enableROSpec);
-			} else {
-				if (roSpec == null) {
-					LOG.error("Undefined ROSpec for this physical reader " + readerName);	
-				}
-			}
+			redefineROSpec (readerName,logicalName);
+			redefineAccessSpec (readerName,logicalName);
 		} else {
 			LOG.error("Undefined logical reader for this physical reader " + readerName);
 		} 	
 		LOG.debug("End Redefine for " + readerName);
 	}
+	
+	/**
+	 * Add again the ROSpec and enable it. 
+	 * @param readerName the physical reader name
+	 * @param logicalName the logical reader name
+	 */
+	private static void redefineROSpec (String readerName, String logicalName) {
+		ROSpec roSpec = lrROSpecMap.get(logicalName);
+		if (roSpec != null) {	
+			ADD_ROSPEC addRoSpec = new ADD_ROSPEC();
+			addRoSpec.setROSpec(roSpec);
+			AdaptorMgmt.sendLLRPMessage(readerName, addRoSpec);
+			ENABLE_ROSPEC enableROSpec = new ENABLE_ROSPEC();
+			enableROSpec.setROSpecID(roSpec.getROSpecID());
+			AdaptorMgmt.sendLLRPMessage(readerName, enableROSpec);
+		} else {
+			LOG.error("Undefined ROSpec for this physical reader " + readerName);	
+		}
+	}
+	
 	
 	/**
 	 * Set the connection of a reader
@@ -377,6 +392,64 @@ public class LLRPControllerManager  {
 		 			LOG.error("Error when init or waiting for the client connection ", e );
 		 		}
 			}
+		}
+	}
+	
+	
+	/**---------------------------------------------------------------------------------
+	 * AccessSpec Methods
+	 * 
+	 * ---------------------------------------------------------------------------------
+	 */
+	
+	/**
+	 * ORANGE: Add a new AccessSpec
+	 * @param lrSpecName the logical reader name
+	 * @param addAccessSpec the ADD_ACCESSSPEC
+	 */
+	public static void defineAccessSpec (String lrSpecName, ADD_ACCESSSPEC addAccessSpec) 
+		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+		if (addAccessSpec != null) {
+		LOG.debug("Define an ADD_ACCESSSPEC for " + lrSpecName);
+		
+		// init the Connection and the LLRP context :
+		// not necessary because it has already be done by the ROSpec
+		AdaptorMgmt.initializeLLRPContext();
+		String readerName= retrievePhysicalReader(lrSpecName);
+	
+		// add and enable the AccessSpec		
+		AdaptorMgmt.sendLLRPMessage(readerName, addAccessSpec);
+		ENABLE_ACCESSSPEC enableAccessSpec = new ENABLE_ACCESSSPEC();
+		UnsignedInteger accessSpecId = addAccessSpec.getAccessSpec().getAccessSpecID();
+		enableAccessSpec.setAccessSpecID(accessSpecId);
+		AdaptorMgmt.sendLLRPMessage(readerName, enableAccessSpec);
+		// init the internal data
+		lrAccessSpecMap.put(lrSpecName, addAccessSpec.getAccessSpec());
+		// persistence
+		WriteConfig.writeAddAccessSpec(lrSpecName, addAccessSpec);
+		LOG.info("End define an ADD_ACCESSSPEC for " + lrSpecName);
+		} else {
+			LOG.error("ERROR !!!! ADD_ACCESSSPEC is null for " + lrSpecName);
+		}
+	}
+		
+	/**
+	 * Add again if it exists the AccessSpec and enable it.
+	 * @param readerName the physical reader name
+	 * @param logicalName the logical reader name
+	 */
+	private static void redefineAccessSpec (String readerName, String logicalName) {
+		AccessSpec accessSpec = lrAccessSpecMap.get(logicalName);
+		if (accessSpec != null) {	
+			ADD_ACCESSSPEC addAccessSpec = new ADD_ACCESSSPEC();
+			addAccessSpec.setAccessSpec(accessSpec);
+			AdaptorMgmt.sendLLRPMessage(readerName, addAccessSpec);
+		
+			ENABLE_ACCESSSPEC enableAccessSpec = new ENABLE_ACCESSSPEC();
+			enableAccessSpec.setAccessSpecID(accessSpec.getAccessSpecID());
+			AdaptorMgmt.sendLLRPMessage(readerName, enableAccessSpec);
+		} else {
+			LOG.info("Undefined AccessSpec for this physical reader " + readerName);	
 		}
 	}
 

@@ -21,6 +21,7 @@ import org.llrp.ltk.generated.messages.READER_EVENT_NOTIFICATION;
 import org.llrp.ltk.generated.parameters.ConnectionAttemptEvent;
 import org.llrp.ltk.generated.parameters.LLRPStatus;
 import org.llrp.ltk.generated.parameters.ROSpec;
+import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.types.LLRPMessage;
 
 /**
@@ -223,6 +224,37 @@ public class AdaptorMgmt {
 						addFirstTime=false;
 						setRedefineStatus(true);
 					}
+				
+				// added to test sending commands 
+				if (item.getMessageType().equals("ADD_ACCESSSPEC_RESPONSE") && (statusStr != "")) {
+					LOG.debug("Status of AccesSpec Response = " + statusCode.getValue(statusStr));
+					}		
+				
+				if (item.getMessageType().equals("ENABLE_ACCESSSPEC_RESPONSE") && (statusStr != "")) {
+					LOG.debug("Status of Enable AccesSpec Response = " + statusCode.getValue(statusStr));
+					}		
+				
+				if (item.getMessageType().equals("ERROR_MESSAGE") && (statusStr != "")) {
+					LOG.debug("Status of Error Message = " + statusCode.getValue(statusStr));
+					}	
+				
+				try {
+					if (item.getMessageType().equals("GET_ACCESSSPECS_RESPONSE")) { 					
+						Method getAccessSpecList = msg.getClass().getMethod("getAccessSpecList", new Class[0]);
+						List<AccessSpec> listAccessSpec = (List<AccessSpec>) getAccessSpecList.invoke(msg, new Object[0]);	
+						for (AccessSpec access : listAccessSpec) {
+							LOG.debug ("length of acccesspecList = " + listAccessSpec.size());
+							LOG.debug ("access id is = " + access.getAccessSpecID());
+						}
+					}
+				} catch (NoSuchMethodException e) {
+					LOG.error ("NoSuchMethodException in GET_ACCESSSPECS_RESPONSE " + e);
+				} catch (InvocationTargetException e) {
+					LOG.error ("InvocationTargetException in GET_ACCESSSPECS_RESPONSE " + e);
+				} catch (IllegalAccessException e) {
+					LOG.error ("IllegalAccessException in GET_ACCESSSPECS_RESPONSE " + e);
+				}
+				
 	
 				// if reader was deconnected, redefine the ROSpec and disable the Redefine Status
 				try {

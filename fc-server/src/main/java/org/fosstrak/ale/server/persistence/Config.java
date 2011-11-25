@@ -25,6 +25,7 @@ public class Config {
 	private static final String EC_SPECS_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "ecspecs" + File.separator;
 	private static final String EC_SPEC_SUBSCRIBER_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "subscriber" + File.separator + "ecspec" + File.separator;
 	private static final String RO_SPECS_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "rospecs" + File.separator;
+	private static final String ACCESS_SPECS_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "accessspecs" + File.separator;
 	private static final String LLRP_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "llrp" + File.separator;
 	
 	/**
@@ -54,6 +55,10 @@ public class Config {
 		
 	protected static String  getRealPathROSpecDir() {
 		return Config.realPathWebapp + Config.RO_SPECS_WEBAPP_PATH;
+	}
+	
+	protected static String  getRealPathAccessSpecDir() {
+		return Config.realPathWebapp + Config.ACCESS_SPECS_WEBAPP_PATH;
 	}
 	
 	public static String  getRealPathLLRPSpecDir() {

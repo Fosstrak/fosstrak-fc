@@ -21,6 +21,7 @@ import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 
 
 import org.fosstrak.ale.server.llrp.LLRPControllerManager;
@@ -65,7 +66,11 @@ public class ReadConfig extends Config {
 			LOG.error("readAddROSpecs error", e);
 		}
 		
-				
+		try {
+			ReadConfig.readAddAccessSpecs();
+		} catch (Exception e) {
+			LOG.error("readAddACCESSSpecs error", e);
+		}	
 	}
 	
 	private static void readECSpecs() {
@@ -250,4 +255,38 @@ public class ReadConfig extends Config {
 		LOG.info("end read and load all rospec");
 	}
 		
+	
+	
+	private static void readAddAccessSpecs() {
+		LOG.info("start read and load all accessspecs");
+		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathAccessSpecDir());
+		for (String fileName : filesNameList) {
+			String specName = fileName.substring(0,fileName.length()-5); // remove ".llrp"
+			ADD_ACCESSSPEC addAccessSpec = null;
+			try {
+				String pathFile = Config.getRealPathAccessSpecDir() + fileName;
+				LOG.debug("pathfile of add_accessspec is " + pathFile);
+				addAccessSpec = org.fosstrak.ale.util.DeserializerUtil.deserializeAddAccessSpec(pathFile);
+				LOG.debug("ID of the deserialized add_accessspec = " + addAccessSpec.getAccessSpec().getAccessSpecID());
+				} catch (FileNotFoundException e) {
+					LOG.error("add_accessspec file not found " + fileName, e);				
+				} catch (Exception e) {
+					LOG.error("error to read add_accessspec file " + fileName, e);
+				}
+				
+				LLRPControllerManager llrpControllerManager = new LLRPControllerManager();
+				LOG.debug("try to define add_accessspec " + fileName + " with specName = " + specName);
+				try {
+					llrpControllerManager.defineAccessSpec(specName, addAccessSpec);
+				} catch (org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse e) {
+					LOG.error("error when trying to define add_accessspec ", e);
+				} catch(org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse e) {
+					LOG.error("error when trying to define add_acccessspec ", e);
+				}
+				LOG.debug("add_acccessspec defined  " + fileName);
+		}
+		LOG.info("end read and load all acccessspec");
+	}
+
+	
 }

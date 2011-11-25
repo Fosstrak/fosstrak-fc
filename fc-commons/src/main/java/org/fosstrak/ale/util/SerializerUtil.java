@@ -35,6 +35,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
@@ -309,6 +310,39 @@ public class SerializerUtil {
 	public static void serializeAddROSpec(ADD_ROSPEC addRoSpec, Writer writer) throws IOException {
 		try {
 			Document document = addRoSpec.encodeXML();
+			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+			outputter.output(document, writer);
+		} catch (InvalidLLRPMessageException e) {
+		e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * ORANGE: This method serializes an ADD_ACCESSSPEC to an xml and writes it into a file.
+	 * @param addAccessSpec containing the ADD_ACCESSSPEC to be written into a file
+	 * @param pathName the file where to store
+	 * @throws IOException whenever an io problem occurs
+	 */
+	public static void serializeAddAccessSpec(ADD_ACCESSSPEC addAccessSpec, String pathName) throws IOException {
+		try {
+			Document document = addAccessSpec.encodeXML();
+			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+			outputter.output(document, new FileOutputStream(pathName));
+		} catch (InvalidLLRPMessageException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * ORANGE: This method serializes an ADD_ACCESSSPEC to an xml and writes it into a file.
+	 * @param addAccessSpec containing the ADD_ACCESSSPEC to be written into a file
+	 * @param writer to write the xml into
+	 * @throws IOException whenever an io problem occurs
+	 */
+	public static void serializeAddAccessSpec(ADD_ACCESSSPEC addAccessSpec, Writer writer) throws IOException {
+		try {
+			Document document = addAccessSpec.encodeXML();
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 			outputter.output(document, writer);
 		} catch (InvalidLLRPMessageException e) {
