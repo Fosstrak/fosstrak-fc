@@ -14,6 +14,7 @@ import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 
 /**
  * This class write all configuration file on the real path of the webapp
@@ -235,5 +236,37 @@ public class WriteConfig extends Config {
 		}
 		
 	}
+	
+	
+	/**
+	 * this method write on the path of the webapp the ADD_ROSPEC loaded in the ALE.
+	 * @param specName the logical reader name
+	 * @param addAccessSpec the ADD_ACCESSSPEC to save
+	 */
+	public static void writeAddAccessSpec(String specName, ADD_ACCESSSPEC addAccessSpec) {
+		LOG.info("start write file for add_accessspec: " + specName + ".llrp");
 		
+		String path = Config.getRealPathAccessSpecDir();
+		String fileName = specName + ".llrp";
+		if (!WriteConfig.fileExist(fileName, path)) {
+			try {
+				boolean dirCreated = new File(path).mkdirs();
+				if (!dirCreated) {
+					LOG.info("cannot create directories or directories already exist : " + path);
+				}		
+				LOG.debug("try to create file for add_accessspec: " + fileName);
+				SerializerUtil.serializeAddAccessSpec(addAccessSpec, path + fileName);
+				LOG.info("add_accessspec file " + fileName + " created on path: " + path);	
+								
+			} catch (FileNotFoundException e) {
+				LOG.error("error create accessspec file: " + path + fileName, e);		
+			} catch (IOException e) {			
+				LOG.error("error serialize accessspec file: " + path + fileName, e);
+			}
+		
+		} else {			
+			LOG.info("accessspec file " + fileName + " already exist on path: " + path);			
+		}
+		
+	}
 }
