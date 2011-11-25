@@ -40,6 +40,7 @@ import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.llrp.ltk.generated.LLRPMessageFactory;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.types.LLRPMessage;
 
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
@@ -261,5 +262,40 @@ public class DeserializerUtil {
 	public static ADD_ROSPEC deserializeAddROSpec(String pathName) throws FileNotFoundException, Exception {
 		return  deserializeAddROSpec(new FileInputStream(new File(pathName)));
 	}
+	
+	/**
+	 * ORANGE:This method deserializes an ADD_ACCESSSPEC from an input stream.
+	 * @param inputStream to deserialize
+	 * @return ADD_ACCESSSPEC
+	 * @throws Exception if deserialization fails
+	 */
+	
+	public static ADD_ACCESSSPEC deserializeAddAccessSpec(InputStream inputStream) throws Exception {
+		LOG.debug("Start deserializeAddAccessSpec .... ");
+		Document document = new SAXBuilder().build(inputStream);
+		LOG.debug("Get jdom Document with SAXBuilder");
+		LLRPMessage message = LLRPMessageFactory.createLLRPMessage(document);
+		if (message != null ) {
+			LOG.debug("LLRP Message created");
+		}
+		else {
+			LOG.debug("LLRP Message is null !!!!!");
+		}
+		ADD_ACCESSSPEC addAccesSpec = (ADD_ACCESSSPEC)message;
+		LOG.debug("End of deserializeAddAccessSpec");
+		return addAccesSpec;
+	}
+	
+	/**
+	 * ORANGE: This method deserializes an ADD_ACCESSSPEC from an file path.
+	 * @param pathName to deserialize
+	 * @return ADD_ACCESSSPEC
+	 * @throws Exception if deserialization fails
+	 */
+	public static ADD_ACCESSSPEC deserializeAddAccessSpec(String pathName) throws FileNotFoundException, Exception {
+		return  deserializeAddAccessSpec(new FileInputStream(new File(pathName)));
+		
+	}
+
 	
 }
