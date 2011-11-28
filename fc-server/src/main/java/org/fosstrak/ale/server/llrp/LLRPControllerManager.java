@@ -85,13 +85,14 @@ public class LLRPControllerManager  {
 	 * Add an ROSpec to a declared logical reader in the ALE and enable it.
 	 * @param lrSpecName the name of the logical reader
 	 * @param pathFile a file containing the description of the ADD_ROSPEC
-	 * Note : if we define this method as a Web Method, JAXB fails at runtime
-	 * because ADD_ROSPEC contains interfaces and JAXB cannot deserialize them. 
-	 * In our client, we call directly the "define(String lrSpecName, ADD_ROSPEC addRoSpec)" 
-	 * We can call the "define" webmethod in the LLRPControllerImpl which will call 
-	 * the "define" function below ==> MUST BE TESTED. 
 	 */
 	
+	 //* Note : if we define this method as a Web Method, JAXB fails at runtime
+	 //* because ADD_ROSPEC contains interfaces and JAXB cannot deserialize them. 
+	 //* In our client, we call directly the "define(String lrSpecName, ADD_ROSPEC addRoSpec)" 
+	 //* We can call the "define" webmethod in the LLRPControllerImpl which will call 
+	 //* the "define" function below ==> MUST BE TESTED. 
+	 
 	public void define (String lrSpecName, String pathFile) throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
 		ADD_ROSPEC addRoSpec = null;
 		try {

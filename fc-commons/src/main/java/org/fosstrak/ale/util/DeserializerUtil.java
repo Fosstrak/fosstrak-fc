@@ -230,9 +230,6 @@ public class DeserializerUtil {
 	
 	/**
 	 * ORANGE: This method deserializes an ADD_ROSPEC from an input stream.
-	 * TODO :  Must be tested very well because when we put these methods
-	 * into the class org.fosstrak.ale.util.DeserializerUtil in fc-commons,
-	 * we had the error "NoSuchMethodError" in the localhost log file when we launch Fosstrak. 
 	 * @param inputStream to deserialize
 	 * @return ADD_ROSPEC
 	 * @throws Exception if deserialization fails

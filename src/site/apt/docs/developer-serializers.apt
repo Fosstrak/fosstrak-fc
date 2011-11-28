@@ -47,6 +47,10 @@ Serializers and Deserializers
 	
 	* SetReaders
 	
+	* ROSpec
+	 
+	* AccessSpec
+	
 	[]
 	
 	For a detailed discussion refer to the api documentation.
@@ -76,6 +80,10 @@ Serializers and Deserializers
 	* SetProperties
 	
 	* SetReaders
+	
+	* ROSpec
+	 
+	* AccessSpec
 	
 	[]
 	
