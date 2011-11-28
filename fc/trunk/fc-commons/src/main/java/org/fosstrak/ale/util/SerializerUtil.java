@@ -281,9 +281,6 @@ public class SerializerUtil {
 	
 	/**
 	 * ORANGE: This method serializes a ADD_ROSPEC to an xml and writes it into a file.
-	 * TODO :  Must be tested very well because when we put these methods
-	 * into the class org.fosstrak.ale.util.SerializerUtil in fc-commons,
-	 * we had the error "NoSuchMethodError" in the localhost log file when we launch Fosstrak. 
 	 * @param addRoSpec containing the ADD_ROSPEC to be written into a file
 	 * @param pathName the file where to store
 	 * @throws IOException whenever an io problem occurs
@@ -300,9 +297,6 @@ public class SerializerUtil {
 	
 	/**
 	 * ORANGE: This method serializes a ADD_ROSPEC to an xml and writes it into a file.
-	 * TODO :  Must be tested very well because when we put these methods
-	 * into the class org.fosstrak.ale.util.SerializerUtil in fc-commons,
-	 * we had the error "NoSuchMethodError" in the localhost log file when we launch Fosstrak. 
 	 * @param roSpec containing the ADD_ROSPEC to be written into a file
 	 * @param writer to write the xml into
 	 * @throws IOException whenever an io problem occurs

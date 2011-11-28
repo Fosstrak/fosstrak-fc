@@ -17,13 +17,13 @@ LLRP Controller
 * {Objective}
 
     This document will give you a short overview of the LLRP Controller
-    which allows you to manage an ROSPEC on a logical reader.
+    which allows you to manage an ROSPEC on a logical reader and define an AccessSpec.
     
 +---+
-It should be noted that a logical reader can have just one ROSpec.
+It should be noted that a logical reader can have just one ROSpec
+and an ROSpec can have maximum one enabled AccessSpec at a time.  
 +---+
 
-    Like the ROSPEC, methods to manage ACCESS_SPECS will be integrated shortly. 
 
 * {Interface}
 
@@ -39,8 +39,11 @@ It should be noted that a logical reader can have just one ROSpec.
         
 +---+
 Defining an ROSpec involves that the ROSpec will be add and enable on this logical reader.
-The ADD_ROSPEC will be persisted in a file under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp
+The ADD_ROSPEC will be read/written (persistence) in a file under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp
 A thread will be launched to check that there is always one defined ROSPEC on the physical reader.
+
+Defining an AccessSpec on an ROSpec involves that it will be added and enabled. 
+The ADD_ACCESSSPEC will be read/written (persistence)in a file under WEBAPP_PATH/WEB-INF/config/accessspecs/<logical_reader_name>.llrp
 +---+    
 
 
@@ -76,6 +79,12 @@ A thread will be launched to check that there is always one defined ROSPEC on th
     
         *stop(String lrSpecName) is a Web Method.
             Stop the ROspec defined on the given logical reader name. 
+            
+            
+    * to define an AccessSpec
+    
+        *defineAccessSpec(String lrSpecName, ADD_ACCESSSPEC addAccessSpec) is a method.
+        It takes two parameters,  a name for the logical reader and the ADD_ACCESSSPEC.
         
         
 * {Properties}
