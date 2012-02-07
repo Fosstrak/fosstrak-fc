@@ -12,7 +12,9 @@ LLRP Controller
    [[]] {{{#Interface}Interface}}
    
    [[]] {{{#Properties}Properties}}
-
+   
+   [[]] {{{#Implementation}Implementation details}}
+   
 
 * {Objective}
 
@@ -24,6 +26,12 @@ It should be noted that a logical reader can have just one ROSpec
 and an ROSpec can have maximum one enabled AccessSpec at a time.  
 +---+
 
+	Thanks to the module of "Persistence", you don't need anymore to define explicitly the ROSpec and the AccessSpec each
+	time you start up your server. 
+	Consequently, in case there are an ROSpec defined under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp 
+	and an AccessSpec defined under WEBAPP_PATH/WEB-INF/config/accessspecs/<logical_reader_name>.llrp,
+	they'll be automatically loaded, defined and enabled. 
+	
 
 * {Interface}
 
@@ -33,9 +41,12 @@ and an ROSpec can have maximum one enabled AccessSpec at a time.
         *define(String lrSpecName, String pathFile) is a Web method. 
         It takes two parameters,  a name for the logical reader and 
         the path file containing the description of the ADD_ROSPEC.
+        It deserializes the ADD_ROSPEC and call the next method below. 
+        
         
         *define(String lrSpecName, ADD_ROSPEC addRoSpec) is a method.
         It takes two parameters, a name for the logical reader and the ADD_ROSPEC.
+        This method is called directly in our start up server configuration. 
         
 +---+
 Defining an ROSpec involves that the ROSpec will be add and enable on this logical reader.
@@ -83,8 +94,8 @@ The ADD_ACCESSSPEC will be read/written (persistence)in a file under WEBAPP_PATH
             
     * to define an AccessSpec
     
-        *defineAccessSpec(String lrSpecName, ADD_ACCESSSPEC addAccessSpec) is a method.
-        It takes two parameters,  a name for the logical reader and the ADD_ACCESSSPEC.
+        *defineAccessSpec(String lrSpecName, ADD_ACCESSSPEC addAccessSpec) is a method and not a webmethod like the others defined above.
+         It takes two parameters,  a name for the logical reader and the ADD_ACCESSSPEC.
         
         
 * {Properties}
@@ -103,5 +114,30 @@ The ADD_ACCESSSPEC will be read/written (persistence)in a file under WEBAPP_PATH
 
 		
 		
+* {Implementation} details
+
+	Below, the new and modified classes :
+
+   * fc-commons 
+   
+		*<org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse.java> : exception if 2 readers have the same name. 
 		
+		*<org.fosstrak.ale.server.llrp.LLRPController.java> : WebService to define, undefine, start, stop, enable, disable ROSPEC on a logical Reader			
+		
+		*<org.fosstrak.ale.util.DeserializerUtil.java> : add methods to deserialize an ADD_ROSPEC/ADD_ACCESSSPEC from an xml file with SAXBuilder.
+		
+		*<org.fosstrak.ale.util.SerializerUtil.java> : add methods to serialize an ADD_ROSPEC/ADD_ACCESSSPEC in an xml file. 
+  
+  
+   * fc-server	
+   
+		*<org.fosstrak.ale.server.llrp.AdaptorMgmt.java> : initialize the Adaptor Management and define 2 handlers to catch and manage the LLRP messages coming from the LLRPAdaptor. 
+		
+		*<org.fosstrak.ale.server.llrp.LLRPChecking.java> : we must always have one ROSPEC defined on each logical reader. This class defines and launches a thread to check this condition. 
+		
+		*<org.fosstrak.ale.server.llrp.LLRPControllerImpl.java>: implementation webmethods of the WebService LLRPController.
+		
+		*<org.fosstrak.ale.server.llrp.LLRPControllerManager.java> : contains methods to define/redefine/undefine/start/stop/enable/disable/disableAll ROSpec and methods to define/redefine AccessSpec on a logical reader.
+ 
+
 		
