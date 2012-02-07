@@ -3,6 +3,10 @@
         <title>Changes fc-commons</title>
     </properties>
     <body>
+    	<release version="1.1.0" date="2011-11-21" description="Orange Enhancements">
+			<action dev="soubra" type="add">Serialize/Deserialize an ROSpec and AccessSpec</action>
+			<action dev="soubra" type="add">LLRP controller service to manage ROSpec using SOAP interface</action>
+		</release>
 		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
 			<action dev="sawielan" type="update">Update to cxf-2.2.6.</action>
 			<action dev="sawielan" type="fix" issue="2991458">performance degradation due to bad handling of JAXB-Context.</action>

@@ -40,7 +40,7 @@ Application Layer Events Service Binding
 	The ALE is the responsible class for the communication with the 
 	applications of the Layer above. It provides: 
 	
-	* Configuration Persistence (LRSpecs, ROSpecs, ECSpecs, Subscribers)
+	* Configuration Persistence (LRSpecs, ROSpecs, AccessSpecs, ECSpecs, Subscribers)
 		 
 	* Interface for the definition and modification of EventCycles
 	

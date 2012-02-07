@@ -16,6 +16,8 @@ User Memory
    [[]] {{{#LLRPAdaptor}User Memory with LLRPAdaptor}}
    
    [[]] {{{#Properties}Properties for LLRPAdaptor}}
+   
+   [[]] {{{#Implementation}Implementation details}}
 
 
 * {Objective}
@@ -130,5 +132,20 @@ The UserMemory stored in the Extension belongs to this unique tag.
 	*<<tagCompanyPrefixLength>> : specify the company prefix length of the tag used in the LLRPAdaptor.
 
 	
+* {Implementation} details
 
-       
+	Below, the modified classes :
+
+   * fc-server 
+   
+   		*<org.fosstrak.ale.server.Tag.java> : add a “userMemory” attribute and the get/set methods. 
+   
+		*<org.fosstrak.ale.server.Report.java> : take account of userMemory in ECSpec to add it to ECReport.
+		
+		*<org.fosstrak.ale.server.LLRPAdaptor.java> : take into account the defined properties (length, filter and company prefix). Manage the userMemory in the RO_ACCESS_REPORT.
+  
+  
+  * fc/src/site/resources/files
+  
+  		*<CaptureApp.java> : add methods to handle ECReports containing “userMemory” and store this “userMemory” in the EPCIS. The property epcisUniqueTagInObjectEvent if true allows to add the userMemory in the ObjectEvent.
+  
