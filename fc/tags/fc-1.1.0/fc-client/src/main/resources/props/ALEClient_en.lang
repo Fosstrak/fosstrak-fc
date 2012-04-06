@@ -1,0 +1,56 @@
+ApplicationTitle = ALE Client - Reading API
+
+FileMenu = File
+QuitMenuItem = Quit
+
+SelectionPanelTitle = Select Command
+ResultPanelTitle = Result
+
+SpecNameLabel = Specification Name
+FilePathLabel = Specification File Path
+ChooseFileButtonLabel = Choose File
+NotificationURILabel = Notification URI
+
+ExecuteButtonLabel = execute
+OkButtonLabel = OK
+
+CreateEventSink = Create Event Sink
+
+SuccessfullyDefinedMessage = The specification is successfully defined.
+SuccessfullyUndefinedMessage = The specification is successfully undefined.
+SuccessfullySubscribedMessage = The uri is successfully subscribed.
+SuccessfullyUnsubscribedMessage = The uri is successfully unsubscribed.
+NoSpecDefinedMessage = There are no specifications defined.
+NoSubscribersMessage = There are no subscribers subscribed.
+EmptyArray = There are no result items.
+
+ExceptionDialogTitle = Exception
+ConnectionExceptionDialog = Could not connect to the specified endpoint.
+SpecNameNotSpecifiedDialog = Please specify the specification name.
+FilePathNotSpecifiedDialog = Please specify the specification file path. 
+NotificationUriNotSpecifiedDialog = Please specify the notification uri.
+FileNotFoundDialog = The specified file does not exist.
+UnexpectedFileFormatDialog = The specified file has an unexpected format.
+DuplicateNameExceptionDialog = The specified specification name does already exist. 
+DuplicateSubscriptionExceptionDialog = The specified notification URI is already subscribed.
+ECSpecValidationExceptionDialog = The specification is invalid.
+ImplementationExceptionDialog = An implementation exception occured.
+InvalidURIExceptionDialog = The specified URI is invalid.
+NoSuchNameExceptionDialog = The specified specification name does not exist.
+NoSuchSubscriberExceptionDialog = The specified subscriber does not exist.
+SecurityExceptionDialog = A security exception occured.
+UnknownExceptionDialog = An unknown exception occured.
+SerializationExceptionMessage = Could not serialize the result.
+DetailsPanelTitle = Exception Details
+
+Command1 = define
+Command2 = undefine
+Command3 = getECSpec
+Command4 = getECSpecNames
+Command5 = subscribe
+Command6 = unsubscribe
+Command7 = poll
+Command8 = immediate
+Command9 = getSubscribers
+Command10 = getStandardVersion
+Command11 = getVendorVersion

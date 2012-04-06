@@ -1,0 +1,49 @@
+       ------
+                                   ALE Controller
+                                    ------
+                                    ------
+
+
+ALE Controller
+
+* Contents
+
+   [[]] {{{#Objective}Objective}}
+   
+   [[]] {{{#Class}Class Diagram}}
+   
+   [[]] {{{#Interface}Interface}}
+
+
+* {Objective}
+
+	Objective of this module start/stop ECSpecs using a SOAP interface.
+
+* {Class} Diagram
+	
+[../images/ALE/Controller.png]
+
+* {Interface}
+
+	* to start an ECSpec
+	
+		*startECSpec(String specName)
+
+	* to stop an ECSpec
+	
+		*stopECSPec(String specName)
+
+	* to all ECSpecs started
+	
+		*getAllECSpecNameStarted()
+
+	* to know if an ECSpecs is started or stopped
+	
+		*ecSpecIsStarted(String specName)
+
+	* to stop all ECSpecs associated to a logical reader
+	
+		*stopAllECSpec4LogicalReader(String logicalReaderName)
+		
+		*stopAllECSpec4LogicalReaderByECSpecName(String specName)
+		

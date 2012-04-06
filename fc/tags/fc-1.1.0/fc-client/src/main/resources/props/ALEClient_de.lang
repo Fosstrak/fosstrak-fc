@@ -1,0 +1,56 @@
+ApplicationTitle = ALE Client - Reading API
+
+FileMenu = Datei
+QuitMenuItem = Exit
+
+SelectionPanelTitle = W�hle Kommando
+ResultPanelTitle = Resultat
+
+SpecNameLabel = Name der Spezifikation
+FilePathLabel = Pfad zu Spezifikationsdatei
+ChooseFileButtonLabel = Datei ausw�hlen
+NotificationURILabel = Benachrichtigung URI
+
+ExecuteButtonLabel = ausf�hren
+OkButtonLabel = OK
+
+CreateEventSink = Event Sink erzeugen
+
+SuccessfullyDefinedMessage = Die Spezifikation wurde erfolgreich definiert.
+SuccessfullyUndefinedMessage = Die Spezifikation wurde erfolgreich undefiniert.
+SuccessfullySubscribedMessage = Die URI wurde erfolgreich registriert.
+SuccessfullyUnsubscribedMessage = Die URI wurde erfolgreich gestrichen.
+NoSpecDefinedMessage = Es sind keine Spezifikationen definiert.
+NoSubscribersMessage = Es sind keine Abonennten registriert.
+EmptyArray = Es gibt kein Resultat.
+
+ExceptionDialogTitle = Fehler
+ConnectionExceptionDialog = Es konnte kein Verbindung mit dem angegebenen Endpoint erstellt werden.
+SpecNameNotSpecifiedDialog = Bitte geben Sie den Namen der Spezifikation an.
+FilePathNotSpecifiedDialog = Bitte geben Sie den Pfad zur Spezifikationsdatei an.
+NotificationUriNotSpecifiedDialog = Bitte geben Sie eine URI an.
+FileNotFoundDialog = Die angegebene Datei existiert nicht.
+UnexpectedFileFormatDialog = Die angegebene Datei hat ein ung�ltiges Format.
+DuplicateNameExceptionDialog = Der angegebene Name existiert bereits.
+DuplicateSubscriptionExceptionDialog = Die angegebene URI ist bereits registriert.
+ECSpecValidationExceptionDialog = Die Spezifikation ist ung�ltig.
+ImplementationExceptionDialog = Es ist ein Implementationsfehler aufgetreten.
+InvalidURIExceptionDialog = Die angegebene URI ist ung�tlig.
+NoSuchNameExceptionDialog = Der angegebene Spezifikationsname existiert nicht.
+NoSuchSubscriberExceptionDialog = Der angegebene Abonnent ist nicht registriert.
+SecurityExceptionDialog = Es ist ein Sicherheitsfehler aufgetreten.
+UnknownExceptionDialog = Es ist ein unbekannter Fehler aufgetreten.
+SerializationExceptionMessage = Das Resultat konnte nicht serialisiert werden.
+DetailsPanelTitle = Fehler Details
+
+Command1 = define
+Command2 = undefine
+Command3 = getECSpec
+Command4 = getECSpecNames
+Command5 = subscribe
+Command6 = unsubscribe
+Command7 = poll
+Command8 = immediate
+Command9 = getSubscribers
+Command10 = getStandardVersion
+Command11 = getVendorVersion

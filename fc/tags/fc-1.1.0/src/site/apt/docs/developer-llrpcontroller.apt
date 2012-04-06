@@ -1,0 +1,143 @@
+ ------
+                                    LLRP Controller 
+                                    ------
+                                    ------
+
+LLRP Controller
+
+* Contents
+
+   [[]] {{{#Objective}Objective}}
+   
+   [[]] {{{#Interface}Interface}}
+   
+   [[]] {{{#Properties}Properties}}
+   
+   [[]] {{{#Implementation}Implementation details}}
+   
+
+* {Objective}
+
+    This document will give you a short overview of the LLRP Controller
+    which allows you to manage an ROSPEC on a logical reader and define an AccessSpec.
+    
++---+
+It should be noted that a logical reader can have just one ROSpec
+and an ROSpec can have maximum one enabled AccessSpec at a time.  
++---+
+
+	Thanks to the module of "Persistence", you don't need anymore to define explicitly the ROSpec and the AccessSpec each
+	time you start up your server. 
+	Consequently, in case there are an ROSpec defined under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp 
+	and an AccessSpec defined under WEBAPP_PATH/WEB-INF/config/accessspecs/<logical_reader_name>.llrp,
+	they'll be automatically loaded, defined and enabled. 
+	
+
+* {Interface}
+
+
+    * to define an ROSpec. 
+       
+        *define(String lrSpecName, String pathFile) is a Web method. 
+        It takes two parameters,  a name for the logical reader and 
+        the path file containing the description of the ADD_ROSPEC.
+        It deserializes the ADD_ROSPEC and call the next method below. 
+        
+        
+        *define(String lrSpecName, ADD_ROSPEC addRoSpec) is a method.
+        It takes two parameters, a name for the logical reader and the ADD_ROSPEC.
+        This method is called directly in our start up server configuration. 
+        
++---+
+Defining an ROSpec involves that the ROSpec will be add and enable on this logical reader.
+The ADD_ROSPEC will be read/written (persistence) in a file under WEBAPP_PATH/WEB-INF/config/rospecs/<logical_reader_name>.llrp
+A thread will be launched to check that there is always one defined ROSPEC on the physical reader.
+
+Defining an AccessSpec on an ROSpec involves that it will be added and enabled. 
+The ADD_ACCESSSPEC will be read/written (persistence)in a file under WEBAPP_PATH/WEB-INF/config/accessspecs/<logical_reader_name>.llrp
++---+    
+
+
+    * to undefine an ROSpec
+    
+        *undefine(String lrSpecName) is a Web method. 
+            Delete the ROSpec defined on the given logical reader name, stop the thread and 
+            remove the persisted file. 
+
+
+    * to enable an ROSpec
+    
+        *enable(String lrSpecName)is a Web method. 
+            Enable the ROspec defined on the given logical reader name. 
+            
+            
+    * to disable an R0Spec
+    
+        *disable(String lrSpecName) is a Web Method. 
+            Disable the ROspec defined on the given logical reader name. 
+            
+        *disableAll() is a Web Method. 
+            Disable the ROspec on all the logical readers. 
+        
+        
+    * to start an ROSpec
+        
+        *start(String lrSpecName) is a Web Method.
+            Start the ROspec defined on the given logical reader name. 
+    
+    
+    * to stop an ROSpec
+    
+        *stop(String lrSpecName) is a Web Method.
+            Stop the ROspec defined on the given logical reader name. 
+            
+            
+    * to define an AccessSpec
+    
+        *defineAccessSpec(String lrSpecName, ADD_ACCESSSPEC addAccessSpec) is a method and not a webmethod like the others defined above.
+         It takes two parameters,  a name for the logical reader and the ADD_ACCESSSPEC.
+        
+        
+* {Properties}
+
+    We define 2 properties for the configuration of the client under 
+      <WEBAPP_PATH/WEB-INF/config/llrp/llrpConfig.properties>.
+      
+        *<<rifidiEmulator>> : This property must be set to true when we test the client with the Rifidi Emulator. 
+             When testing with the Rifidi Emulator, the acknowledge of the connection is never sent to the LLRP message handler in Fosstrak.
+             In the case of a client outside Rifidi Emulator, this property is set to false. 
+
+
+        *<<waitConnection>> : This property must be set to false when we test the client with Rifidi Emulator.
+            In that case, the client does not wait for acknowledge of the connection (ACK) between the client and the reader. 
+            If this property is set to true, the client wait until the LLRP connection between the client and the reader is really established
+
+		
+		
+* {Implementation} details
+
+	Below, the new and modified classes :
+
+   * fc-commons 
+   
+		*<org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse.java> : exception if 2 readers have the same name. 
+		
+		*<org.fosstrak.ale.server.llrp.LLRPController.java> : WebService to define, undefine, start, stop, enable, disable ROSPEC on a logical Reader			
+		
+		*<org.fosstrak.ale.util.DeserializerUtil.java> : add methods to deserialize an ADD_ROSPEC/ADD_ACCESSSPEC from an xml file with SAXBuilder.
+		
+		*<org.fosstrak.ale.util.SerializerUtil.java> : add methods to serialize an ADD_ROSPEC/ADD_ACCESSSPEC in an xml file. 
+  
+  
+   * fc-server	
+   
+		*<org.fosstrak.ale.server.llrp.AdaptorMgmt.java> : initialize the Adaptor Management and define 2 handlers to catch and manage the LLRP messages coming from the LLRPAdaptor. 
+		
+		*<org.fosstrak.ale.server.llrp.LLRPChecking.java> : we must always have one ROSPEC defined on each logical reader. This class defines and launches a thread to check this condition. 
+		
+		*<org.fosstrak.ale.server.llrp.LLRPControllerImpl.java>: implementation webmethods of the WebService LLRPController.
+		
+		*<org.fosstrak.ale.server.llrp.LLRPControllerManager.java> : contains methods to define/redefine/undefine/start/stop/enable/disable/disableAll ROSpec and methods to define/redefine AccessSpec on a logical reader.
+ 
+
+		
