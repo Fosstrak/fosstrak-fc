@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 
 	<!-- =========================================================== -->
@@ -8,11 +7,11 @@
 
 	<groupId>org.fosstrak.fc</groupId>
 	<artifactId>fc-commons</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<parent>
 		<artifactId>fc</artifactId>
 		<groupId>org.fosstrak.fc</groupId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
 	<packaging>jar</packaging>
 	<modelVersion>4.0.0</modelVersion>
@@ -44,9 +43,9 @@
 
 
   <scm>
-    	<connection>https://fosstrak.googlecode.com/svn/fc/</connection>
-   	<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/</developerConnection>
-    	<url>https://fosstrak.googlecode.com/svn/fc/</url>
+    	<connection>https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</connection>
+   	<developerConnection>scm:svn:https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</developerConnection>
+    	<url>https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</url>
   </scm>
 
 	<!-- =========================================================== -->
@@ -205,11 +204,8 @@
 									we need to delete the file first, as on windows we cannot
 									overwrite a existing file ...
 								-->
-								<delete
-									file="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" />
-								<copy file="src/main/resources/patches/ObjectFactory.java"
-									tofile="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java"
-									failonerror="true" verbose="false" />
+								<delete file="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" />
+								<copy file="src/main/resources/patches/ObjectFactory.java" tofile="target/generated-sources/main/java/org/fosstrak/ale/xsd/ale/epcglobal/ObjectFactory.java" failonerror="true" verbose="false" />
 							</tasks>
 						</configuration>
 						<goals>
