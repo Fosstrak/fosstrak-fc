@@ -8,10 +8,14 @@
 
 	<groupId>org.fosstrak.fc</groupId>
 	<artifactId>fc</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 	<modelVersion>4.0.0</modelVersion>
-
+        <parent>
+    		<groupId>org.sonatype.oss</groupId>
+    		<artifactId>oss-parent</artifactId>
+    		<version>7</version>
+  	</parent>
 	<properties>
 		<lib-cxf-version>2.2.6</lib-cxf-version>
 	</properties>
@@ -26,7 +30,37 @@
 		<module>fc-client</module>
 		<module>fc-webclient</module>
 	</modules>
+	  <description>Filtering and Collection Middleware implementing the EPCglobal ALE spec</description>
+  
+  	<developers>
+   	  <developer>
+   	     <id>1</id>
+    	    <name>Benoit Plomion</name>
+   	  </developer>
+          <developer>
+             <id>2</id>
+            <name>Wafa Soubra</name>
+          </developer>
+          <developer>
+            <id>3</id>
+            <name>Samuel Wieland</name>
+          </developer>
+          <developer>
+            <id>4</id>
+            <name>Christian Floerkemeier </name>
+          </developer>
+        </developers>  
 
+ 	 <!-- =========================================================== -->
+ 	 <!-- Infrastructure                                              -->
+ 	 <!-- =========================================================== -->
+
+
+  	<scm>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/</url>
+  	</scm>
 
 	<!-- =========================================================== -->
 	<!-- Dependencies                                                -->
