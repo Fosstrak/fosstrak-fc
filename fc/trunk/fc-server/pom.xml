@@ -43,9 +43,9 @@
 
 
   <scm>
-    	<connection>https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</connection>
-   	<developerConnection>scm:svn:https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</developerConnection>
-    	<url>https://svn.fosstrak.org/repos/fc/tags/fc-1.1.0/fc</url>
+    	<connection>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</connection>
+   	<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</developerConnection>
+    	<url>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</url>
   </scm>
 
 
