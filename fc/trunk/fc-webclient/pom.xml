@@ -42,11 +42,11 @@
   <!-- =========================================================== -->
 
 
-  <scm>
-    	<connection>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</connection>
-   	<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</developerConnection>
-    	<url>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc</url>
-  </scm>
+	<scm>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</url>
+  	</scm>
 
   <!-- =========================================================== -->
   <!-- Dependencies                                                -->
