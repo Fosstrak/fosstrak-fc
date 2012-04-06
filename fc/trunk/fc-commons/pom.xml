@@ -7,11 +7,11 @@
 
 	<groupId>org.fosstrak.fc</groupId>
 	<artifactId>fc-commons</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<parent>
 		<artifactId>fc</artifactId>
 		<groupId>org.fosstrak.fc</groupId>
-		<version>1.1.0</version>
+		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 	<packaging>jar</packaging>
 	<modelVersion>4.0.0</modelVersion>
@@ -43,9 +43,9 @@
 
 
 	<scm>
-    		<connection>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc-commons</connection>
-   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc-commons</developerConnection>
-    		<url>https://fosstrak.googlecode.com/svn/fc/tags/fc-1.1.0/fc-commons</url>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</url>
   	</scm>
 	<!-- =========================================================== -->
 	<!-- ORANGE: Properties                                          -->
