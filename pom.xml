@@ -226,47 +226,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-	</repositories>
-	<!-- =========================================================== -->
-	<!-- Infrastructure                                              -->
-	<!-- =========================================================== -->
-
-	<scm>
-		<!-- keep empty tags here to avoid release:prepare crashes -->
-		<connection></connection>
-		<developerConnection>scm:svn:https://svn.fosstrak.org/repos/fc/trunk</developerConnection>
-		<url></url>
-	</scm>
-	<distributionManagement>
-		<repository>
-			<id>fosstrak-repository</id>
-			<name>Fosstrak repository</name>
-			<url>sftp://maven-repository.fosstrak.org/local/home/fosstrakrep/public_html/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>fosstrak-repository</id>
-			<name>Fosstrak repository</name>
-			<url>sftp://maven-repository.fosstrak.org/local/home/fosstrakrep/public_html/snapshots</url>
-		</snapshotRepository>
-		<site>
-			<id>fosstrak-website</id>
-			<name>Fosstrak website</name>
-			<url>sftp://www.fosstrak.org/local/home/fosstrakweb/public_html/fc</url>
-		</site>
-	</distributionManagement>
-	<issueManagement>
-		<system>Sourceforge</system>
-		<url>http://sourceforge.net/tracker/?group_id=171114</url>
-	</issueManagement>
-	<mailingLists>
-		<mailingList>
-			<name>ALE Middleware user mailing list</name>
-			<subscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</subscribe>
-			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/accada-ale-user</unsubscribe>
-			<post>accada-ale-user@lists.sourceforge.net</post>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=accada-ale-user</archive>
-		</mailingList>
-	</mailingLists>
+	</repositories>	
 
 
 	<!-- =========================================================== -->
