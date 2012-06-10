@@ -11,7 +11,7 @@ import javax.jws.WebService;
  * 
  * @author wafa.soubra@orange.com
  */
-@WebService(endpointInterface = "com.orange.api.rfid.ale.server.llrp.LLRPController")
+@WebService(endpointInterface = "org.fosstrak.ale.server.llrp.LLRPController")
 public class LLRPControllerImpl implements LLRPController {
 
 	@WebMethod
