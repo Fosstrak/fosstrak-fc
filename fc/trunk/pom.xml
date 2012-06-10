@@ -184,7 +184,7 @@
 			</snapshots>
 			<id>fosstrak-repository</id>
 			<name>Fosstrak repository</name>
-			<url>http://maven-repository.fosstrak.org/releases</url>
+			<url>https://oss.sonatype.org/content/repositories/public/</url>
 			<layout>default</layout>
 		</repository>
 		<!--
