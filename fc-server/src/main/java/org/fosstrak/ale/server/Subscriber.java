@@ -440,6 +440,10 @@ public class Subscriber {
 		header.append(host);
 		header.append("\n");
 		
+    // append port 
+    // patch by Gianrico D'Angelis <gianrico.dangelis@gmail.com>  
+    header.append(host+":"+port);  
+      
 		// append content type
 		header.append("Content-Type: ");
 		header.append("text/xml; charset=\"utf-8\"");
