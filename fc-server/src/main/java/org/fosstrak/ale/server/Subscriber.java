@@ -437,12 +437,12 @@ public class Subscriber {
 		
 		// append host
 		header.append("Host: ");
-		header.append(host);
-		header.append("\n");
-		
-    // append port 
+		// append port 
     // patch by Gianrico D'Angelis <gianrico.dangelis@gmail.com>  
     header.append(host+":"+port);  
+		header.append("\n");
+		
+    
       
 		// append content type
 		header.append("Content-Type: ");
