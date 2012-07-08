@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.CharArrayWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -90,11 +89,6 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 	private final JScrollPane m_scrollPaneEcReport = new JScrollPane(m_ecReportArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	
 	private final JScrollPane m_scrollPaneReportsList = new JScrollPane(m_list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	
-	/**
-	 * how many reports received.
-	 */
-	private int m_numberReceived = 0;
 	
 	// the report handler.
 	private ReportHandler m_reportHandler;
@@ -294,6 +288,7 @@ public class EventSink extends JPanel implements ReportHandlerListener {
 	
 	private static final class FosstrackListModel extends AbstractListModel
 	{
+		private static final long serialVersionUID = 2030573050598359260L;
 		
 		private LinkedList<String> m_objects = new LinkedList<String> ();
 

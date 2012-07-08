@@ -22,7 +22,6 @@ package org.fosstrak.ale.client.cfg;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -65,7 +64,7 @@ public class Configuration {
 		try {
 			m_properties = new Properties();
 			m_properties.load(inputStream);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			m_properties = null;
 			s_log.error(String.format("could not load configuration file '%s'", file));
 			throw new FosstrakAleClientException(e);

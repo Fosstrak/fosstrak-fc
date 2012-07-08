@@ -1,6 +1,5 @@
 package org.fosstrak.ale.client;
 
-import java.awt.Font;
 import java.net.URL;
 import java.util.Properties;
 

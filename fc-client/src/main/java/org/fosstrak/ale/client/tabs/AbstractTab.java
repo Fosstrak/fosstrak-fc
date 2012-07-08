@@ -47,7 +47,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.fosstrak.ale.client.FosstrakAleClient;
@@ -100,7 +99,7 @@ public abstract class AbstractTab extends JPanel {
 	/**
 	 * class of the proxy stub.
 	 */
-	protected final Class m_clzz;
+	protected final Class<?> m_clzz;
 	
 	/**
 	 * key to the endpoint in the properties.
@@ -168,7 +167,7 @@ public abstract class AbstractTab extends JPanel {
 	 * @param endpointKey key to the endpoint in the properties.
 	 * @param parent the parent frame.
 	 */
-	public AbstractTab(Class clzz, String endpointKey, JFrame parent, Method testMethod, Object testMethodParameter) {
+	public AbstractTab(Class<?> clzz, String endpointKey, JFrame parent, Method testMethod, Object testMethodParameter) {
 		m_clzz = clzz;
 		m_endpointKey = endpointKey;
 		m_parent = parent;
