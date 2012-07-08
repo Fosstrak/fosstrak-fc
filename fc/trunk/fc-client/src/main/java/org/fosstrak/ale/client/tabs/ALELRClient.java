@@ -24,7 +24,6 @@ import java.awt.GridLayout;
 import java.io.CharArrayWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;

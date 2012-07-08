@@ -189,9 +189,9 @@ public class ReportHandler implements Runnable {
 	 */
 	private void notifyListeners(ECReports ecReports) throws Exception {
 			
-		Iterator listenerIt = listeners.iterator();
+		Iterator<ReportHandlerListener> listenerIt = listeners.iterator();
 		while (listenerIt.hasNext()) {
-			((ReportHandlerListener)listenerIt.next()).dataReceived(ecReports);
+			listenerIt.next().dataReceived(ecReports);
 		}
 	
 	}

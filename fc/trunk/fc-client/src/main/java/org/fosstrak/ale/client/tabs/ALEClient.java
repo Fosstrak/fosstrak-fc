@@ -20,15 +20,12 @@
 
 package org.fosstrak.ale.client.tabs;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.CharArrayWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -42,7 +39,6 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.client.FosstrakAleClient;
-import org.fosstrak.ale.client.ReportHandlerListenerGUI;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.exception.FosstrakAleClientServiceDownException;
 import org.fosstrak.ale.util.DeserializerUtil;

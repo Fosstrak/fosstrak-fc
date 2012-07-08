@@ -25,7 +25,6 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.CharArrayWriter;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
