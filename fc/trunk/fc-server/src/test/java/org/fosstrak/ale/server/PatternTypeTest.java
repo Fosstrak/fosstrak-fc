@@ -22,17 +22,16 @@ package org.fosstrak.ale.server;
 
 import java.net.URL;
 
-import org.fosstrak.ale.server.PatternType;
+import junit.framework.Assert;
+
 import org.apache.log4j.PropertyConfigurator;
-
-
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author regli
  */
-public class PatternTypeTest extends TestCase {
+public class PatternTypeTest {
 
 	private static final String GID_96 = "gid-96";
 	private static final String SGTIN_64 = "sgtin-64";
@@ -42,38 +41,32 @@ public class PatternTypeTest extends TestCase {
 	private static final int SGTIN_64_DATAFIELDS = 4;
 	private static final int SSCC_64_DATAFIELDS = 3;
 	
-	protected void setUp() throws Exception {
-
-		super.setUp();
-		
+	@Before
+	public void setUp() throws Exception {		
 		// configure Logger with properties file
 		URL url = this.getClass().getResource("/log4j.properties");
-		PropertyConfigurator.configure(url);
-		
+		PropertyConfigurator.configure(url);	
 	}
 	
+	@Test
 	public void testGetType() throws Exception {
+		Assert.assertEquals(PatternType.GID_96, PatternType.getType(GID_96));
+		Assert.assertEquals(PatternType.SGTIN_64, PatternType.getType(SGTIN_64));
+		Assert.assertEquals(PatternType.SSCC_64, PatternType.getType(SSCC_64));
+	}
 
-		assertEquals(PatternType.GID_96, PatternType.getType(GID_96));
-		assertEquals(PatternType.SGTIN_64, PatternType.getType(SGTIN_64));
-		assertEquals(PatternType.SSCC_64, PatternType.getType(SSCC_64));
-		
-	}
-	
+	@Test
 	public void testGetNumberOfDataFields() throws Exception {
-		
-		assertEquals(GID_96_DATAFIELDS, PatternType.GID_96.getNumberOfDatafields());
-		assertEquals(SGTIN_64_DATAFIELDS, PatternType.SGTIN_64.getNumberOfDatafields());
-		assertEquals(SSCC_64_DATAFIELDS, PatternType.SSCC_64.getNumberOfDatafields());
-		
+		Assert.assertEquals(GID_96_DATAFIELDS, PatternType.GID_96.getNumberOfDatafields());
+		Assert.assertEquals(SGTIN_64_DATAFIELDS, PatternType.SGTIN_64.getNumberOfDatafields());
+		Assert.assertEquals(SSCC_64_DATAFIELDS, PatternType.SSCC_64.getNumberOfDatafields());
 	}
-	
+
+	@Test
 	public void testToString() throws Exception {
-		
-		assertEquals(GID_96, PatternType.GID_96.toSring());
-		assertEquals(SGTIN_64, PatternType.SGTIN_64.toSring());
-		assertEquals(SSCC_64, PatternType.SSCC_64.toSring());
-		
+		Assert.assertEquals(GID_96, PatternType.GID_96.toSring());
+		Assert.assertEquals(SGTIN_64, PatternType.SGTIN_64.toSring());
+		Assert.assertEquals(SSCC_64, PatternType.SSCC_64.toSring());
 	}
 	
 }

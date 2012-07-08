@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
-import org.apache.log4j.Logger;
 
 /**
  * represents a compositeReader that is a composition of different logicalreaders.

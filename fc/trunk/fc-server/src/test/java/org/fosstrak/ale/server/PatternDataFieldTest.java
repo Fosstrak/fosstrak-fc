@@ -22,21 +22,18 @@ package org.fosstrak.ale.server;
 
 import java.net.URL;
 
-import org.fosstrak.ale.server.PatternDataField;
-import org.fosstrak.ale.server.PatternUsage;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import junit.framework.Assert;
+
 import org.apache.log4j.PropertyConfigurator;
-
-
-import junit.framework.TestCase;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author regli
  */
-public class PatternDataFieldTest extends TestCase {
+public class PatternDataFieldTest {
 
 	private static final String INT = "50";
 	private static final int LOW = 0;
@@ -46,74 +43,78 @@ public class PatternDataFieldTest extends TestCase {
 	private static final String X = "X";
 	private static final String ABC = "abc";
 
-	protected void setUp() throws Exception {
-
-		super.setUp();
-		
+	@Before
+	public void setUp() throws Exception {
 		// configure Logger with properties file
 		URL url = this.getClass().getResource("/log4j.properties");
 		PropertyConfigurator.configure(url);
 		
 	}
-	
+
+	@Test
 	public void testCreateTagDataField() throws Exception {
 		
 		new PatternDataField(INT, PatternUsage.TAG);
 		
 	}
-	
+
+	@Test
 	public void testCreateTagDataFieldWithInvalidStringRepresentation_Range() throws Exception {
 		
 		try {
 			new PatternDataField(RANGE, PatternUsage.TAG);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + RANGE + "'. Only 'int' is allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + RANGE + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + RANGE + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + RANGE + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateTagDataFieldWithInvalidStringRepresentation_Asterisk() throws Exception {
 		
 		try {
 			new PatternDataField(ASTERISK, PatternUsage.TAG);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + ASTERISK + "'. Only 'int' is allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + ASTERISK + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ASTERISK + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ASTERISK + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateTagDataFieldWithInvalidStringRepresentation_X() throws Exception {
 		
 		try {
 			new PatternDataField(X, PatternUsage.TAG);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + X + "'. Only 'int' is allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + X + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + X + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + X + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateTagDataFieldWithInvalidStringRepresentation_Abc() throws Exception {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.TAG);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only 'int' is allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + ABC + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateFilterDataField() throws Exception {
 		
 		new PatternDataField(INT, PatternUsage.FILTER);
@@ -121,33 +122,36 @@ public class PatternDataFieldTest extends TestCase {
 		new PatternDataField(ASTERISK, PatternUsage.FILTER);
 		
 	}
-	
+
+	@Test
 	public void testCreateFilterDataFieldWithInvalidStringRepresentation_X() throws Exception {
 		
 		try {
 			new PatternDataField(X, PatternUsage.FILTER);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + X + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + X + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + X + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + X + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateFilterDataFieldWithInvalidStringRepresentation_Abc() throws Exception {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.FILTER);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + ABC + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
 		
 	}
-	
+
+	@Test
 	public void testCreateGroupDataField() throws Exception {
 		
 		new PatternDataField(INT, PatternUsage.GROUP);
@@ -155,20 +159,22 @@ public class PatternDataFieldTest extends TestCase {
 		new PatternDataField(ASTERISK, PatternUsage.GROUP);
 		
 	}
-	
+
+	@Test
 	public void testCreateGroupDataFieldWithInvalidStringRepresentation_Abc() throws Exception {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.GROUP);
 		} catch(ECSpecValidationExceptionResponse e) {
-			assertEquals("Invalid data field '" + ABC + "'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
+			Assert.assertEquals("Invalid data field '" + ABC + "'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
+		Assert.fail("Should throw an ECSpecValidationException because the string representation of the data field contains a '" + ABC + "'.");
 		
 	}
-	
+
+	@Test
 	public void testTypes() throws Exception {
 
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -176,36 +182,38 @@ public class PatternDataFieldTest extends TestCase {
 		PatternDataField asteriskField = new PatternDataField(ASTERISK, PatternUsage.GROUP);
 		PatternDataField xField = new PatternDataField(X, PatternUsage.GROUP);
 		
-		assertTrue(intField.isInt());
-		assertFalse(intField.isRange());
-		assertFalse(intField.isAsterisk());
-		assertFalse(intField.isX());
+		Assert.assertTrue(intField.isInt());
+		Assert.assertFalse(intField.isRange());
+		Assert.assertFalse(intField.isAsterisk());
+		Assert.assertFalse(intField.isX());
 		
-		assertFalse(rangeField.isInt());
-		assertTrue(rangeField.isRange());
-		assertFalse(rangeField.isAsterisk());
-		assertFalse(rangeField.isX());
+		Assert.assertFalse(rangeField.isInt());
+		Assert.assertTrue(rangeField.isRange());
+		Assert.assertFalse(rangeField.isAsterisk());
+		Assert.assertFalse(rangeField.isX());
 		
-		assertFalse(asteriskField.isInt());
-		assertFalse(asteriskField.isRange());
-		assertTrue(asteriskField.isAsterisk());
-		assertFalse(asteriskField.isX());
+		Assert.assertFalse(asteriskField.isInt());
+		Assert.assertFalse(asteriskField.isRange());
+		Assert.assertTrue(asteriskField.isAsterisk());
+		Assert.assertFalse(asteriskField.isX());
 		
-		assertFalse(xField.isInt());
-		assertFalse(xField.isRange());
-		assertFalse(xField.isAsterisk());
-		assertTrue(xField.isX());
+		Assert.assertFalse(xField.isInt());
+		Assert.assertFalse(xField.isRange());
+		Assert.assertFalse(xField.isAsterisk());
+		Assert.assertTrue(xField.isX());
 		
 	}
 
+	@Test
 	public void testGetValue() throws Exception {
 
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
 		
-		assertEquals(Integer.parseInt(INT), intField.getValue());
+		Assert.assertEquals(Integer.parseInt(INT), intField.getValue());
 		
 	}
 
+	@Test
 	public void testGetValueWithNonIntDataField() throws Exception {
 	
 		PatternDataField rangeField = new PatternDataField(RANGE, PatternUsage.GROUP);
@@ -213,22 +221,24 @@ public class PatternDataFieldTest extends TestCase {
 		try {
 			rangeField.getValue();
 		} catch(ImplementationExceptionResponse e) {
-			assertEquals("Data field is not an int.", e.getMessage());
+			Assert.assertEquals("Data field is not an int.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ImplementationException because data field is not an of type int.");
+		Assert.fail("Should throw an ImplementationException because data field is not an of type int.");
 		
 	}
-	
+
+	@Test
 	public void testGetLow() throws Exception {
 
 		PatternDataField rangeField = new PatternDataField(RANGE, PatternUsage.GROUP);
 		
-		assertEquals(LOW, rangeField.getLow());
+		Assert.assertEquals(LOW, rangeField.getLow());
 		
 	}
-	
+
+	@Test
 	public void testGetLowWithNonRangeDataField() throws Exception {
 		
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -236,22 +246,24 @@ public class PatternDataFieldTest extends TestCase {
 		try {
 			intField.getLow();
 		} catch(ImplementationExceptionResponse e) {
-			assertEquals("Data field is not a range.", e.getMessage());
+			Assert.assertEquals("Data field is not a range.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ImplementationException because data field is not of type range.");
+		Assert.fail("Should throw an ImplementationException because data field is not of type range.");
 		
 	}
 
+	@Test
 	public void testGetHigh() throws Exception {
 
 		PatternDataField rangeField = new PatternDataField(RANGE, PatternUsage.GROUP);
 		
-		assertEquals(HIGH, rangeField.getHigh());
+		Assert.assertEquals(HIGH, rangeField.getHigh());
 		
 	}
-	
+
+	@Test
 	public void testGetHighWithNonRangeDataField() throws Exception {
 		
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -259,14 +271,15 @@ public class PatternDataFieldTest extends TestCase {
 		try {
 			intField.getHigh();
 		} catch(ImplementationExceptionResponse e) {
-			assertEquals("Data field is not a range.", e.getMessage());
+			Assert.assertEquals("Data field is not a range.", e.getMessage());
 			return;
 		}
 		
-		fail("Should throw an ImplementationException because data field is not of type range.");
+		Assert.fail("Should throw an ImplementationException because data field is not of type range.");
 		
 	}
 
+	@Test
 	public void testIsDisjoint() throws Exception {
 
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -279,39 +292,39 @@ public class PatternDataFieldTest extends TestCase {
 				new Integer(HIGH + 200).toString() + "]", PatternUsage.GROUP);
 		
 		// test intField
-		assertFalse(intField.isDisjoint(xField));
-		assertFalse(intField.isDisjoint(asteriskField));
-		assertFalse(intField.isDisjoint(intField));
-		assertFalse(intField.isDisjoint(rangeField));
-		assertTrue(intField.isDisjoint(disjointIntField));
-		assertTrue(intField.isDisjoint(disjointRangeField));
+		Assert.assertFalse(intField.isDisjoint(xField));
+		Assert.assertFalse(intField.isDisjoint(asteriskField));
+		Assert.assertFalse(intField.isDisjoint(intField));
+		Assert.assertFalse(intField.isDisjoint(rangeField));
+		Assert.assertTrue(intField.isDisjoint(disjointIntField));
+		Assert.assertTrue(intField.isDisjoint(disjointRangeField));
 		
 		// test rangeField
-		assertFalse(rangeField.isDisjoint(xField));
-		assertFalse(rangeField.isDisjoint(asteriskField));
-		assertFalse(rangeField.isDisjoint(intField));
-		assertFalse(rangeField.isDisjoint(rangeField));
-		assertTrue(rangeField.isDisjoint(disjointIntField));
-		assertTrue(rangeField.isDisjoint(disjointRangeField));
+		Assert.assertFalse(rangeField.isDisjoint(xField));
+		Assert.assertFalse(rangeField.isDisjoint(asteriskField));
+		Assert.assertFalse(rangeField.isDisjoint(intField));
+		Assert.assertFalse(rangeField.isDisjoint(rangeField));
+		Assert.assertTrue(rangeField.isDisjoint(disjointIntField));
+		Assert.assertTrue(rangeField.isDisjoint(disjointRangeField));
 		
 		// test asteriskField
-		assertFalse(asteriskField.isDisjoint(xField));
-		assertFalse(asteriskField.isDisjoint(asteriskField));
-		assertFalse(asteriskField.isDisjoint(intField));
-		assertFalse(asteriskField.isDisjoint(rangeField));
-		assertFalse(asteriskField.isDisjoint(disjointIntField));
-		assertFalse(asteriskField.isDisjoint(disjointRangeField));
+		Assert.assertFalse(asteriskField.isDisjoint(xField));
+		Assert.assertFalse(asteriskField.isDisjoint(asteriskField));
+		Assert.assertFalse(asteriskField.isDisjoint(intField));
+		Assert.assertFalse(asteriskField.isDisjoint(rangeField));
+		Assert.assertFalse(asteriskField.isDisjoint(disjointIntField));
+		Assert.assertFalse(asteriskField.isDisjoint(disjointRangeField));
 		
 		// test xField
-		assertFalse(xField.isDisjoint(xField));
-		assertFalse(xField.isDisjoint(asteriskField));
-		assertFalse(xField.isDisjoint(intField));
-		assertFalse(xField.isDisjoint(rangeField));
-		assertFalse(xField.isDisjoint(disjointIntField));
-		assertFalse(xField.isDisjoint(disjointRangeField));
-		
+		Assert.assertFalse(xField.isDisjoint(xField));
+		Assert.assertFalse(xField.isDisjoint(asteriskField));
+		Assert.assertFalse(xField.isDisjoint(intField));
+		Assert.assertFalse(xField.isDisjoint(rangeField));
+		Assert.assertFalse(xField.isDisjoint(disjointIntField));
+		Assert.assertFalse(xField.isDisjoint(disjointRangeField));
 	}
 
+	@Test
 	public void testIsMember() throws Exception {
 		
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -323,19 +336,19 @@ public class PatternDataFieldTest extends TestCase {
 		int nonMember = HIGH + 100;
 		
 		// test with member
-		assertTrue(intField.isMember(member));
-		assertTrue(rangeField.isMember(member));
-		assertTrue(asteriskField.isMember(member));
-		assertTrue(xField.isMember(member));
+		Assert.assertTrue(intField.isMember(member));
+		Assert.assertTrue(rangeField.isMember(member));
+		Assert.assertTrue(asteriskField.isMember(member));
+		Assert.assertTrue(xField.isMember(member));
 		
 		// test with non member
-		assertFalse(intField.isMember(nonMember));
-		assertFalse(rangeField.isMember(nonMember));
-		assertTrue(asteriskField.isMember(nonMember));
-		assertTrue(xField.isMember(nonMember));
-
+		Assert.assertFalse(intField.isMember(nonMember));
+		Assert.assertFalse(rangeField.isMember(nonMember));
+		Assert.assertTrue(asteriskField.isMember(nonMember));
+		Assert.assertTrue(xField.isMember(nonMember));
 	}
 
+	@Test
 	public void testToString() throws Exception {
 
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
@@ -343,11 +356,10 @@ public class PatternDataFieldTest extends TestCase {
 		PatternDataField asteriskField = new PatternDataField(ASTERISK, PatternUsage.GROUP);
 		PatternDataField xField = new PatternDataField(X, PatternUsage.GROUP);
 		
-		assertEquals(INT, intField.toString());
-		assertEquals(RANGE, rangeField.toString());
-		assertEquals(ASTERISK, asteriskField.toString());
-		assertEquals(X, xField.toString());
-		
+		Assert.assertEquals(INT, intField.toString());
+		Assert.assertEquals(RANGE, rangeField.toString());
+		Assert.assertEquals(ASTERISK, asteriskField.toString());
+		Assert.assertEquals(X, xField.toString());
 	}
 
 }

@@ -26,7 +26,7 @@ import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
@@ -34,6 +34,8 @@ import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.ExcludePatterns;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.IncludePatterns;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
@@ -41,15 +43,14 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSetSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.ExcludePatterns;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec.IncludePatterns;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
+import org.junit.Test;
 
 /**
  * @author swieland 
@@ -57,7 +58,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
  * the deserializer algorithm (writing to and reading from JAXB) but not the JAXB serializer 
  * itself (we safely assume it to work correctly :-) ).
  */
-public class SerializerAndDeserializerUtilsTest extends TestCase {
+public class SerializerAndDeserializerUtilsTest {
 
 	private static final long DEFAULT_ECTIME_VALUE = 1000L;
 	private static final long ECTIME_REPEAT_VALUE = 2000L;
@@ -90,6 +91,8 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 	private static final String INITIATION_CONDITION = "initiationCondition";
 	private static final String REPORT_SPEC_NAME = "reportSpecName";
 	
+
+	@Test
 	public void testECSpec() throws Exception {
 
 		ECSpec ecSpec = createDummyECSpec();
@@ -100,6 +103,7 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ensureSame(ecSpec, ecSpec2);
 	}
 
+	@Test
 	public void testSerializeECReports() throws Exception {
 		ECReports ecReports = createDummyECReports();
 		CharArrayWriter writer = new CharArrayWriter();
@@ -108,7 +112,8 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ECReports ecReports2 = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(str.getBytes()));
 		ensureSame(ecReports, ecReports2);
 	}
-
+	
+	@Test
 	public void testSerializeLRSpec() throws Exception {
 		LRSpec lrSpec = createDummyLRSpec();
 		CharArrayWriter writer = new CharArrayWriter();
@@ -118,6 +123,7 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ensureSame(lrSpec, lrSpec2);
 	}
 
+	@Test
 	public void testSerializeSetProperties() throws Exception {
 		String fn = createTemporaryFileName();
 		SetProperties setProperties = createDummySetProperties();
@@ -126,6 +132,7 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ensureSame(setProperties, setProperties2);
 	}
 
+	@Test
 	public void testSerializeRemoveReaders() throws Exception {
 		String fn = createTemporaryFileName();
 		RemoveReaders removeReaders = createDummyRemoveReaders();
@@ -134,6 +141,7 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ensureSame(removeReaders, removeReaders2);
 	}
 
+	@Test
 	public void testSerializeSetReaders() throws Exception {
 		String fn = createTemporaryFileName();
 		SetReaders setReaders = createDummySetReaders();
@@ -142,6 +150,7 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 		ensureSame(setReaders, setReaders2);
 	}
 
+	@Test
 	public void testSerializeAddReaders() throws Exception {
 		String fn = createTemporaryFileName();
 		AddReaders addReaders = createDummyAddReaders();
@@ -334,46 +343,46 @@ public class SerializerAndDeserializerUtilsTest extends TestCase {
 	
 
 	private void ensureSame(SetProperties expected, SetProperties actual) {
-		assertNotNull(actual);
-		assertEquals(expected.getName(), actual.getName());
-		assertNotNull(actual.getProperties());
-		assertEquals(expected.getProperties().getProperty().size(), actual.getProperties().getProperty().size());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(expected.getName(), actual.getName());
+		Assert.assertNotNull(actual.getProperties());
+		Assert.assertEquals(expected.getProperties().getProperty().size(), actual.getProperties().getProperty().size());
 	}
 
 	private void ensureSame(RemoveReaders expected, RemoveReaders actual) {
-		assertNotNull(actual);
-		assertEquals(expected.getName(), actual.getName());
-		assertNotNull(actual.getReaders());
-		assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(expected.getName(), actual.getName());
+		Assert.assertNotNull(actual.getReaders());
+		Assert.assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
 	}
 
 	private void ensureSame(SetReaders expected, SetReaders actual) {
-		assertNotNull(actual);
-		assertEquals(expected.getName(), actual.getName());
-		assertNotNull(actual.getReaders());
-		assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(expected.getName(), actual.getName());
+		Assert.assertNotNull(actual.getReaders());
+		Assert.assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
 	}
 
 	private void ensureSame(AddReaders expected, AddReaders actual) {
-		assertNotNull(actual);
-		assertEquals(expected.getName(), actual.getName());
-		assertNotNull(actual.getReaders());
-		assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(expected.getName(), actual.getName());
+		Assert.assertNotNull(actual.getReaders());
+		Assert.assertEquals(expected.getReaders().getReader().size(), actual.getReaders().getReader().size());
 	}
 
 	private void ensureSame(ECSpec expected, ECSpec actual) {
-		assertNotNull(actual);
-		assertNotNull(actual.getCreationDate());
-		assertEquals(expected.getCreationDate().getDay(), actual.getCreationDate().getDay());
-		assertEquals(expected.getCreationDate().getMonth(), actual.getCreationDate().getMonth());
-		assertEquals(expected.getCreationDate().getYear(), actual.getCreationDate().getYear());		
+		Assert.assertNotNull(actual);
+		Assert.assertNotNull(actual.getCreationDate());
+		Assert.assertEquals(expected.getCreationDate().getDay(), actual.getCreationDate().getDay());
+		Assert.assertEquals(expected.getCreationDate().getMonth(), actual.getCreationDate().getMonth());
+		Assert.assertEquals(expected.getCreationDate().getYear(), actual.getCreationDate().getYear());		
 	}
 
 	private void ensureSame(ECReports expected, ECReports actual) {
-		assertNotNull(actual);
+		Assert.assertNotNull(actual);
 	}
 
 	private void ensureSame(LRSpec expected, LRSpec actual) {
-		assertNotNull(actual);		
+		Assert.assertNotNull(actual);		
 	}
 }
