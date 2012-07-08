@@ -81,6 +81,9 @@ public class ALE {
 	/** index for name of report generaator which are created by immediate command. */
 	private static long nameCounter = 0;
 	
+	// contains the application properties
+	private static Properties versionProperties = null;
+	
 	/**
 	 * This method initalizes the ALE by loading properties from file and creating input generators.
 	 * 
@@ -316,14 +319,47 @@ public class ALE {
 		
 	}
 	
+
+	
+	/**
+	 * load (if not loaded yet) and return the application properties.
+	 */
+	private static synchronized Properties getAleVersionProperties() {
+		if (null == versionProperties) {
+			try {
+				// load and set the ALE vendor and standard version.
+				versionProperties = new Properties();
+				versionProperties.load(ALE.class.getResourceAsStream("/ale.version"));
+			} catch (Exception ex) {
+				LOG.error("could not read vendor version and standard version: ", ex);
+			}
+		}
+		return versionProperties;
+	}
+	
+	/**
+	 * extract a given property from the ALE versions. if the versions cannot be loaded, then "default" is returned.
+	 * @param property the property to extract.
+	 * @return the property or "undefined"
+	 */
+	private static String getVersionProperty(String property) {
+		Properties p = getAleVersionProperties();
+		final String defaultValue = "undefined";
+		if (null == p) {
+			return defaultValue;
+		}
+		return p.getProperty(property, defaultValue);
+		
+	}
+	
 	/**
 	 * This method returns the standard version to which this implementation is compatible.
 	 * 
 	 * @return standard version
 	 */
-	public static String getStandardVersion() {
-		
-		return "1.1";
+	public static final String getStandardVersion() {	
+		LOG.debug("getStandardVersion");	
+		return getVersionProperty("ale.standard.version");
 		
 	}
 	
@@ -332,10 +368,9 @@ public class ALE {
 	 * 
 	 * @return vendor version
 	 */
-	public static String getVendorVersion() {
-		
-		return "1.0.3";
-		
+	public static final String getVendorVersion() {
+		LOG.debug("getVendorVersion");
+		return getVersionProperty("ale.vendor.version");
 	}
 	
 	/**
