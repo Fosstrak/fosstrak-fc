@@ -123,7 +123,11 @@
         </executions>
       </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources/props</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
   </build>
-
-
 </project>
