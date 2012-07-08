@@ -119,9 +119,9 @@ public class LogicalReaderManager {
 	public static String getPropertyValue(String name,  String propertyName) throws NoSuchNameExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
 		LogicalReader logRd = logicalReaders.get(name);
 		List<LRProperty> propList = logRd.getProperties();
-		Iterator iterator = propList.iterator();
+		Iterator<LRProperty> iterator = propList.iterator();
 		while (iterator.hasNext()) {
-			LRProperty prop = (LRProperty) iterator.next();
+			LRProperty prop = iterator.next();
 			if (prop.getName().equalsIgnoreCase(propertyName)) {
 				return prop.getValue();
 			}
