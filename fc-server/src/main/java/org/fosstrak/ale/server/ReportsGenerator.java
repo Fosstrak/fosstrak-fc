@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
@@ -687,7 +688,7 @@ public class ReportsGenerator implements Runnable {
 			spec.getLogicalReaders().getLogicalReader();
 		if (logicalReaders != null) {
 			for (String logicalReaderName : logicalReaders) {
-				if (!LogicalReaderManager.contains(logicalReaderName)) {
+				if (!LogicalReaderManagerFactory.getLRM().contains(logicalReaderName)) {
 					throw new ECSpecValidationExceptionResponse(
 							"LogicalReader '" + logicalReaderName 
 							+ "' is unknown.");

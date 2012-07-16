@@ -1,46 +1,31 @@
 package org.fosstrak.ale.server.llrp;
 
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-
 import org.apache.log4j.Logger;
-
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
-
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
-
-import org.jdom.Document;
-import org.jdom.output.XMLOutputter;
-import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
-import org.llrp.ltk.generated.LLRPMessageFactory;
-import org.llrp.ltk.generated.messages.ADD_ROSPEC;
-import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
-import org.llrp.ltk.generated.messages.DELETE_ROSPEC;
-import org.llrp.ltk.generated.messages.DISABLE_ROSPEC;
-import org.llrp.ltk.generated.messages.ENABLE_ROSPEC;
-import org.llrp.ltk.generated.messages.ENABLE_ACCESSSPEC;
-import org.llrp.ltk.generated.messages.START_ROSPEC;
-import org.llrp.ltk.generated.messages.STOP_ROSPEC;
-import org.llrp.ltk.generated.parameters.ROSpec;
-import org.llrp.ltk.generated.parameters.AccessSpec;
-import org.llrp.ltk.types.LLRPMessage;
-import org.llrp.ltk.types.UnsignedInteger;
-
 import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
 import org.fosstrak.ale.server.persistence.WriteConfig;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
+import org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
+import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.generated.messages.DELETE_ROSPEC;
+import org.llrp.ltk.generated.messages.DISABLE_ROSPEC;
+import org.llrp.ltk.generated.messages.ENABLE_ACCESSSPEC;
+import org.llrp.ltk.generated.messages.ENABLE_ROSPEC;
+import org.llrp.ltk.generated.messages.START_ROSPEC;
+import org.llrp.ltk.generated.messages.STOP_ROSPEC;
+import org.llrp.ltk.generated.parameters.AccessSpec;
+import org.llrp.ltk.generated.parameters.ROSpec;
+import org.llrp.ltk.types.UnsignedInteger;
 
 /**
  * ORANGE: This class manages the ROSPEC.
@@ -325,7 +310,7 @@ public class LLRPControllerManager  {
 	 */
 	private static String retrievePhysicalReader (String lrSpecName) 
 		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
-		if (!LogicalReaderManager.contains(lrSpecName)) {
+		if (!LogicalReaderManagerFactory.getLRM().contains(lrSpecName)) {
 			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
 		}
 		// Test if a LR with the given name already exists or 
@@ -336,7 +321,7 @@ public class LLRPControllerManager  {
 		} 
 		String readerName = null;
 		try {
-			readerName = LogicalReaderManager.getPropertyValue(lrSpecName, "PhysicalReaderName");
+			readerName = LogicalReaderManagerFactory.getLRM().getPropertyValue(lrSpecName, "PhysicalReaderName");
 		} catch(org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
 			LOG.error("Missing property PhysicalReaderName", e);
 		} catch(ImplementationExceptionResponse e) {

@@ -177,7 +177,7 @@ public class LLRPAdaptor extends BaseReader {
 					}
 					log.debug(String.format(
 							"defining new reader with settings:" +
-							"name: %s\nip: %s\nport: %d\nclientinitiated: %b",
+							"name: %s, ip: %s, port: %d, clientinitiated: %b",
 							physicalReaderName,
 							ip,
 							port, 
@@ -218,8 +218,7 @@ public class LLRPAdaptor extends BaseReader {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Error when initializing the Reader");
+			log.error("Error when initializing the Reader", e);
 			throw new ImplementationExceptionResponse("Error when initializing the Reader");
 		}
 		

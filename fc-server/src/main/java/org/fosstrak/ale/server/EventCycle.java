@@ -36,7 +36,7 @@ import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.readers.LogicalReader;
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.ECTerminationCondition;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
@@ -46,9 +46,9 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.reader.rprm.core.msg.notification.TagType;
 
 /**
@@ -189,7 +189,7 @@ public class EventCycle implements Runnable, Observer {
 			for (String logicalReaderName : logicalReaderNames) {
 				LOG.debug("retrieving logicalReader " + logicalReaderName);
 				LogicalReader logicalReader = 
-					LogicalReaderManager.getLogicalReader(logicalReaderName);
+						LogicalReaderManagerFactory.getLRM().getLogicalReader(logicalReaderName);
 				
 				if (logicalReader != null) {
 					LOG.debug("adding logicalReader " + 

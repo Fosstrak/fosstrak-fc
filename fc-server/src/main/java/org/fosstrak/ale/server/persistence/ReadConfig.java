@@ -9,6 +9,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
@@ -195,7 +196,7 @@ public class ReadConfig extends Config {
 				
 				try {
 					LOG.debug("try to load lrspec " + fileName + " with specName = " + specName);
-					LogicalReaderManager.define(specName, lrSpec);
+					LogicalReaderManagerFactory.getLRM().define(specName, lrSpec);
 					LOG.debug("load lrspec " + fileName);
 				} catch (DuplicateNameExceptionResponse e) {
 					LOG.error("error loading lrspec xml file " + fileName, e);	
