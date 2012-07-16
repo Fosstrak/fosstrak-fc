@@ -160,7 +160,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		
 		throwNoSuchNameExceptionIfReaderNull(logRd, name);
 		throwNonCompositeReaderExceptionIfReaderNotComposite(logRd, name);
-		throwValidationExceptionIfNotAllReadersAvailable(readers);
+		//throwValidationExceptionIfNotAllReadersAvailable(readers);
 		
 		LRSpec spec = logRd.getLRSpec();
 		spec.setReaders(new LRSpec.Readers());
@@ -174,7 +174,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 
 		throwNoSuchNameExceptionIfReaderNull(logRd, name);
 		throwNonCompositeReaderExceptionIfReaderNotComposite(logRd, name);
-		throwValidationExceptionIfNotAllReadersAvailable(readers);
+		//throwValidationExceptionIfNotAllReadersAvailable(readers);
 		
 		LRSpec spec = logRd.getLRSpec();
 		if (spec.getReaders() == null) {
