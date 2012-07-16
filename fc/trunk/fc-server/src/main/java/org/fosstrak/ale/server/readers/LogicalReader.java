@@ -22,15 +22,15 @@ package org.fosstrak.ale.server.readers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
-import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
-import org.apache.log4j.Logger;
 
 /**
  * 
@@ -44,6 +44,12 @@ public abstract class LogicalReader extends Observable{
 
 	/** logger. */
 	private static final Logger log = Logger.getLogger(LogicalReader.class);
+	
+	/**
+	 * all logical readers must define this property in the properties for the automatic reader creation.<br/>
+	 * the property contains the FQN of the readers implementing class. 
+	 */
+	public static final String PROPERTY_READER_TYPE = "ReaderType";
 	
 	/** name of the reader. */
 	protected String readerName;
@@ -76,13 +82,14 @@ public abstract class LogicalReader extends Observable{
 		this.logicalReaderSpec = spec;
 		
 		if (spec.getProperties() == null) {
+			log.debug("no properties specified - aborting.");
 			throw new ImplementationExceptionResponse("no properties specified");
 		}
 		// store the properties
-			for (LRProperty prop : spec.getProperties().getProperty()) {
-				logicalReaderProperties.put(prop.getName(), prop.getValue());
-				properties.add(prop);
-			}	
+		for (LRProperty prop : spec.getProperties().getProperty()) {
+			logicalReaderProperties.put(prop.getName(), prop.getValue());
+			properties.add(prop);
+		}	
 	}
 	
 	/**
@@ -100,7 +107,7 @@ public abstract class LogicalReader extends Observable{
 	 * @return This is the spec of the logical reader.
 	 */
 	public LRSpec getLRSpec() {
-		return	logicalReaderSpec;	
+		return logicalReaderSpec;	
 	}
 	
 	/**
@@ -141,67 +148,8 @@ public abstract class LogicalReader extends Observable{
 	 * tells whether the reader is started or not.
 	 * @return boolean true or false
 	 */
-	protected boolean isStarted() {
+	public boolean isStarted() {
 		return started;
-	}
-	
-	/**
-	 * factory method to create a new reader. this can be a CompositeReader or a BaseReader.
-	 * @param name name of the reader
-	 * @param spec the specificationFile for a Reader
-	 * @return a logical reader
-	 * @throws ImplementationException when the LogicalReader could not be built by reflection
-	 */
-	public static LogicalReader createReader(String name, LRSpec spec)  throws ImplementationExceptionResponse {
-		// determine whether composite or basereader
-		if (spec.isIsComposite()) {
-			CompositeReader compositeReader = new CompositeReader();
-			// initialize the reader
-			compositeReader.initialize(name, spec);
-			return compositeReader;
-		} 
-		
-		// first test if reader is already in the LogicalReaderManager
-		LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(name);
-		if (logicalReader != null) {
-			log.debug("using already defined reader.");
-			return logicalReader;
-		}
-		
-		try {
-			// get the reader type of the reader
-			String readerType = null;
-			for (LRProperty property : spec.getProperties().getProperty()) {
-				if (property.getName().equalsIgnoreCase("ReaderType")) {
-					readerType = property.getValue();
-				}
-			}
-			
-			if (readerType == null) {
-				throw new ImplementationExceptionResponse("Property ReaderType not defined");
-			}
-			
-			Class cls = Class.forName(readerType);  
-			Object result = cls.newInstance();
-			
-			if (result instanceof LogicalReader) {
-				logicalReader = (LogicalReader) result;
-				// initialize the reader
-				logicalReader.initialize(name, spec);
-				
-				// store the reader in the logical reader manager
-				LogicalReaderManager.setLogicalReader(logicalReader);
-			} else {
-				throw new ClassCastException("constructor resulted in wrong type");
-			}
-			
-		} catch (Throwable e) {
-			log.error("could not dynamically reflect the reader type");
-			e.printStackTrace();
-			throw new ImplementationExceptionResponse();
-		}
-		
-		return logicalReader;
 	}
 	
 	/**

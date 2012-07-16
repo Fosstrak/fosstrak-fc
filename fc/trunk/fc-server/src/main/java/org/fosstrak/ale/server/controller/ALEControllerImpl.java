@@ -14,7 +14,7 @@ import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.ReportsGeneratorState;
 import org.fosstrak.ale.server.readers.LogicalReader;
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 
 /**
  * this class is a webservice wich is control ALE. Can stop/start/... ECSpec.
@@ -243,7 +243,7 @@ public class ALEControllerImpl implements ALEController {
 	public String[] getLogicalReaderNames(boolean isComposite) {
 		
 		ArrayList<String> result = new ArrayList<String>();		
-		Collection<LogicalReader> logicalReaders = LogicalReaderManager.getLogicalReaders();
+		Collection<LogicalReader> logicalReaders = LogicalReaderManagerFactory.getLRM().getLogicalReaders();
 		
 		for (LogicalReader logicalReader : logicalReaders) {			
 			if (isComposite == logicalReader.getLRSpec().isIsComposite()) {				

@@ -16,7 +16,8 @@
     		<version>7</version>
   	</parent>
 	<properties>
-		<lib-cxf-version>2.2.6</lib-cxf-version>
+		<lib-cxf-version>2.6.1</lib-cxf-version>
+		<lib-spring-version>3.0.7.RELEASE</lib-spring-version>
 	</properties>
 
 	<!-- =========================================================== -->
@@ -106,6 +107,57 @@
 				<artifactId>cxf-rt-databinding-jaxb</artifactId>
 				<version>${lib-cxf-version}</version>
 			</dependency>
+			<!-- SPRING FRAMEWORK -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-struts</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${lib-spring-version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -140,10 +192,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.12</version>
 				<configuration>
-				<!--
-					<parallel>none</parallel>
+					<parallel>method</parallel>
 					<threadCount>10</threadCount>
-					-->
 					<forkMode>pertest</forkMode>
 				</configuration>
 			</plugin>

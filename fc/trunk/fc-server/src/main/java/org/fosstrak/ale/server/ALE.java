@@ -25,7 +25,10 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.apache.log4j.Logger;
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
+import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.server.readers.rp.InputGenerator;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
@@ -41,15 +44,8 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
-import org.fosstrak.ale.server.persistence.RemoveConfig;
-import org.fosstrak.ale.server.persistence.WriteConfig;
 
 /**
  * This class represents the application level events interface.
@@ -66,7 +62,7 @@ public class ALE {
 	private static final Logger LOG = Logger.getLogger(ALE.class);
 
 	/** path to default property file. */
-	private static final String DEFAULT_PROPERTIES_PATH = "/InputGenerators.properties";
+	private static final String DEFAULT_PROPERTIES_PATH = "/ale.properties";
 	
 	/** map of report generators which create the ec reports. */
 	private static final HashMap<String, ReportsGenerator> reportGenerators = new HashMap<String, ReportsGenerator>();
@@ -80,10 +76,9 @@ public class ALE {
 	private static final String REPORT_GENERATOR_NAME_PREFIX = "ReportGenerator_";
 	/** index for name of report generaator which are created by immediate command. */
 	private static long nameCounter = 0;
-	
+
 	// contains the application properties
-	private static Properties versionProperties = null;
-	
+	private static Properties aleProperties;	
 	/**
 	 * This method initalizes the ALE by loading properties from file and creating input generators.
 	 * 
@@ -91,44 +86,30 @@ public class ALE {
 	 * @throws ImplementationException if properties could not be loaded or input generator could not be created
 	 */
 	public static void initialize(String propertiesFilePath) throws ImplementationExceptionResponse {
+		LOG.debug("initializing ALE.");
+		if (isReady) {
+			LOG.debug("ALE already initialized - abort instruction.");
+			return;
+		}
 		reportGenerators.clear();
 		inputGenerators.clear();
 		isReady = false;
 		
 		// configure Logger with properties file
-		PropertyConfigurator.configure(ALE.class.getResource("/log4j.properties"));
+		// PropertyConfigurator.configure(ALE.class.getResource("/log4j.properties"));
 		
 		// load properties file
-		Properties props = new Properties();
-		try {
-			props.load(ALE.class.getResourceAsStream(propertiesFilePath));
-		} catch (Exception e) {
+		aleProperties = getAleProperties();
+		if (null == aleProperties) {
 			throw new ImplementationExceptionResponse("Error loading properties from ALE properties file '" + propertiesFilePath + "'");
 		}
 		
-		// we need to initialize the LogicalReaderManager
-		String configFile = props.getProperty("readerAPI");
 		try {
-			if (!LogicalReaderManager.isInitialized()) {
-				LogicalReaderManager.initializeFromFile(configFile);
+			if (!LogicalReaderManagerFactory.getLRM().isInitialized()) {
+				throw new IllegalStateException("logical reader manager is not initialized.");
 			}
 			
 		} catch (Exception e) {
-			if (e instanceof ImplementationExceptionResponse) {
-				LOG.error("ImplementationException thrown: ");
-				
-			} else if (e instanceof DuplicateNameExceptionResponse) {
-				LOG.error("DuplicateNameException thrown: ");
-				
-			} else if (e instanceof SecurityExceptionResponse) {
-				LOG.error(" SecurityException thrown: ");
-				
-			} else if (e instanceof ValidationExceptionResponse) {
-				LOG.error("ValidationException thrown: ");
-				
-			}
-			
-			e.printStackTrace();
 			throw new ImplementationExceptionResponse("ALE cannot be continued");
 		} 
 
@@ -322,19 +303,20 @@ public class ALE {
 
 	
 	/**
-	 * load (if not loaded yet) and return the application properties.
+	 * load the application properties if not loaded yet.
+	 * @return the ALE application properties.
 	 */
-	private static synchronized Properties getAleVersionProperties() {
-		if (null == versionProperties) {
+	public static synchronized Properties getAleProperties() {
+		if (null == aleProperties) {
 			try {
 				// load and set the ALE vendor and standard version.
-				versionProperties = new Properties();
-				versionProperties.load(ALE.class.getResourceAsStream("/ale.version"));
+				aleProperties = new Properties();
+				aleProperties.load(ALE.class.getResourceAsStream(DEFAULT_PROPERTIES_PATH));
 			} catch (Exception ex) {
-				LOG.error("could not read vendor version and standard version: ", ex);
+				LOG.error("could not read ALE properties: ", ex);
 			}
 		}
-		return versionProperties;
+		return aleProperties;
 	}
 	
 	/**
@@ -343,7 +325,7 @@ public class ALE {
 	 * @return the property or "undefined"
 	 */
 	private static String getVersionProperty(String property) {
-		Properties p = getAleVersionProperties();
+		Properties p = getAleProperties();
 		final String defaultValue = "undefined";
 		if (null == p) {
 			return defaultValue;

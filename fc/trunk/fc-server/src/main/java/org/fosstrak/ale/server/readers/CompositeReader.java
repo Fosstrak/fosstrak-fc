@@ -68,7 +68,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 			LOG.debug(String.format("retrieving reader part %s", reader));
 			
 			// just retrieve the reader from the LogicalReaderManager
-			LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(reader);
+			LogicalReader logicalReader = LogicalReaderManagerFactory.getLRM().getLogicalReader(reader);
 			
 //			 add the reader to the observable
 			logicalReader.addObserver(this);
@@ -172,7 +172,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 				
 				// fill in the new readers
 				for (String reader : readers) {
-					LogicalReader logicalReader = LogicalReaderManager.getLogicalReader(reader);
+					LogicalReader logicalReader = LogicalReaderManagerFactory.getLRM().getLogicalReader(reader);
 					logicalReader.addObserver(this);
 					logicalReaders.put(reader, logicalReader);
 				}
