@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.StubNotFoundException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.llrp.adaptor.AsynchronousNotifiable;
 import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 
@@ -21,6 +22,9 @@ public class Callback extends UnicastRemoteObject implements AsynchronousNotifia
 	
 	/** the worker that holds this callback. */
 	private LLRPAdaptor adaptor = null;
+
+	/** logger */
+	private static final Logger LOG = Logger.getLogger(Callback.class);
 	
 	/**
 	 * creates a callback instance that retrieves asynchronous messages.
@@ -36,7 +40,7 @@ public class Callback extends UnicastRemoteObject implements AsynchronousNotifia
 			// there is no stub available -> exception. we can safely 
 			// ignore this exception.
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			LOG.debug("expected remote object exception", e);
 		}
 		this.adaptor = adaptor;
 	}
@@ -53,6 +57,6 @@ public class Callback extends UnicastRemoteObject implements AsynchronousNotifia
 	 * @see org.accada.llrp.client.adaptor.AsynchronousNotifiable#notify(byte[], java.lang.String)
 	 */
 	public void notifyError(LLRPRuntimeException e, String readerName) throws RemoteException {
-		e.printStackTrace();
+		LOG.error("error occured on reader " + readerName, e);
 	}
 }

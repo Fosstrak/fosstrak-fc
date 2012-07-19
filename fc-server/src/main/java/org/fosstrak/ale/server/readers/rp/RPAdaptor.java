@@ -106,9 +106,8 @@ public class RPAdaptor extends BaseReader {
 			// extract from LRSpec how to connect to the reader
 			extractConnectionSettings();
 		} catch (ImplementationExceptionResponse ie) {
-			ie.printStackTrace();
-			LOG.error("could not extract connection settings from LRSpec");
-			throw new ImplementationExceptionResponse();
+			LOG.error("could not extract connection settings from LRSpec", ie);
+			throw ie;
 		}
 		
 		// connect to the reader
@@ -127,8 +126,8 @@ public class RPAdaptor extends BaseReader {
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			throw new ImplementationExceptionResponse("Could not extract " + comment + " from LRProperty");
+			LOG.debug("Malformed url " + urlString, e);
+			throw new ImplementationExceptionResponse("Could not extract " + comment + " from LRProperty", e);
 		}
 		return url;
 	}
@@ -314,8 +313,7 @@ public class RPAdaptor extends BaseReader {
 			try {
 				connectReader();
 			} catch (ImplementationExceptionResponse e) {
-				e.printStackTrace();
-				
+				LOG.debug("caught exception - setting to disconnected.", e);				
 				setDisconnected();
 			}
 		}
@@ -382,8 +380,8 @@ public class RPAdaptor extends BaseReader {
 					inputGenerator.poll();
 					
 				} catch (RPProxyException e) {
-					e.printStackTrace();
-					throw new HardwareException("Could not poll the adaptor " + getName());
+					LOG.debug("caught exception", e);
+					throw new HardwareException("Could not poll the adaptor " + getName(), e);
 				}
 			} else {
 				LOG.debug("rp-proxy not ready (yet)");

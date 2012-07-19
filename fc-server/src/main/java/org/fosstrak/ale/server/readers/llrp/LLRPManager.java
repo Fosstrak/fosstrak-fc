@@ -181,14 +181,14 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 				try {
 					item.setContent(msg.toXMLString());
 				} catch (InvalidLLRPMessageException e) {
-					e.printStackTrace();
+					log.debug("caught exception", e);
 				}
 				
 				try {
 					repository.put(item);
 				} catch (Exception e) {
 					// repository might be null
-					e.printStackTrace();
+					log.debug("caught exception", e);
 				}
 			}
 		});
@@ -284,8 +284,7 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	 */
 	public void postExceptionToGUI(LLRPExceptionHandlerTypeMap eTypeMap,
 			LLRPRuntimeException e, String adaptorName, String readerName) {
-		log.error("An exception occured - printing stack-trace:");
-		e.printStackTrace();
+		log.error("An exception occured:", e);
 	}
 
 	public void handle(String adaptorName, String readerName,

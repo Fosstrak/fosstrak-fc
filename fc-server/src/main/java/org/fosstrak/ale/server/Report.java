@@ -20,7 +20,6 @@
 
 package org.fosstrak.ale.server;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,12 +34,15 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupCount;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupList;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportMemberField;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputFieldSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpecExtension;
@@ -48,9 +50,6 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpecExtension;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSightingStat;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.Stats;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMemberExtension.FieldList;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
 import org.fosstrak.tdt.TDTEngine;
@@ -294,7 +293,7 @@ public class Report {
 					try {
 						includePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
 					} catch (ECSpecValidationExceptionResponse e) {
-						e.printStackTrace();
+						LOG.debug("Specification Validation Exception: ", e);
 					}
 				}
 			}
@@ -306,7 +305,7 @@ public class Report {
 					try {
 						excludePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
 					} catch (ECSpecValidationExceptionResponse e) {
-						e.printStackTrace();
+						LOG.debug("Specification Validation Exception: ", e);
 					}
 				}
 			}
@@ -328,7 +327,7 @@ public class Report {
 				try {
 					groupPatterns.add(new Pattern(pattern, PatternUsage.GROUP));
 				} catch (ECSpecValidationExceptionResponse e) {
-					e.printStackTrace();
+					LOG.debug("Specification Validation Exception: ", e);
 				}	
 			}
 		}		
@@ -484,9 +483,7 @@ public class Report {
 				}
 			}
 		} catch (Exception e) {
-			LOG.debug("could not put tag into report as format 'Tag'");
-
-			e.printStackTrace();
+			LOG.debug("could not put tag into report as format 'Tag'", e);
 		}
 		// RAW HEX
 		try {

@@ -23,17 +23,16 @@ import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.LLRPMessageFactory;
 import org.llrp.ltk.generated.enumerations.C1G2ReadResultType;
 import org.llrp.ltk.generated.enumerations.C1G2WriteResultType;
+import org.llrp.ltk.generated.interfaces.AccessCommandOpSpecResult;
 import org.llrp.ltk.generated.interfaces.EPCParameter;
 import org.llrp.ltk.generated.messages.RO_ACCESS_REPORT;
 import org.llrp.ltk.generated.parameters.AntennaID;
 import org.llrp.ltk.generated.parameters.C1G2ReadOpSpecResult;
 import org.llrp.ltk.generated.parameters.C1G2WriteOpSpecResult;
-import org.llrp.ltk.generated.interfaces.AccessCommandOpSpecResult;
 import org.llrp.ltk.generated.parameters.EPC_96;
 import org.llrp.ltk.generated.parameters.TagReportData;
 import org.llrp.ltk.types.Integer96_HEX;
 import org.llrp.ltk.types.LLRPMessage;
-import org.llrp.ltk.types.UnsignedShort;
 import org.llrp.ltk.types.UnsignedShortArray_HEX;
 
 
@@ -122,7 +121,7 @@ public class LLRPAdaptor extends BaseReader {
 		try {
 			callback = new Callback(this);
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			log.debug("caught exception", e);
 		}
 	}
 	
@@ -291,11 +290,9 @@ public class LLRPAdaptor extends BaseReader {
 		try {
 			manager.decReferenceCount(physicalReaderName);
 		} catch (RemoteException e) {
-			log.error("there has been an rmi exception: ");
-			e.printStackTrace();
+			log.error("there has been an rmi exception: ", e);
 		} catch (LLRPRuntimeException e) {
-			log.error("there has been an exception in the reader module: ");
-			e.printStackTrace();
+			log.error("there has been an exception in the reader module: ", e);
 		}
 	}
 

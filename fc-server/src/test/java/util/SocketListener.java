@@ -25,8 +25,13 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 public class SocketListener implements Runnable {
 
+	/** logger */
+	private static final Logger LOG = Logger.getLogger(SocketListener.class);
+	
 	private final Thread thread;
 	
 	private ServerSocket serverSocket;
@@ -52,7 +57,7 @@ public class SocketListener implements Runnable {
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("caught IOException: ", e);
 		}
 		
 	}

@@ -111,7 +111,7 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
     	try {
     		ale.define(parms.getSpecName(), parms.getSpec());
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		log.error("caught exception during define:", e);
     	}
     	return new VoidHolder();
     }

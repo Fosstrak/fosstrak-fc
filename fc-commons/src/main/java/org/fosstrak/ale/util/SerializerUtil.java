@@ -57,16 +57,16 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 public class SerializerUtil {
 	
 	// object factory for ALE
-	private static final org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory s_objectFactoryALE = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
+	private static final org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory objectFactoryALE = new org.fosstrak.ale.xsd.ale.epcglobal.ObjectFactory();
 	
 	// object factory for ALELR
-	private static final org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory s_objectFactoryALELR = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
+	private static final org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objectFactoryALELR = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
 	
 	// hash-map for JAXB context.
 	private static final Map<String, JAXBContext> s_context = new ConcurrentHashMap<String, JAXBContext> ();
 	
 	// logger
-	private static final Logger s_log = Logger.getLogger(SerializerUtil.class);
+	private static final Logger log = Logger.getLogger(SerializerUtil.class);
 	
 	/**
 	 * This method serializes an ec specification to an xml and writes it into a writer.
@@ -128,7 +128,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeLRSpec(LRSpec spec, String pathName, boolean pretty) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", s_objectFactoryALE.createLRSpec(spec), pathName, pretty);
+		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", objectFactoryALE.createLRSpec(spec), pathName, pretty);
 	}
 	
 	/**
@@ -139,7 +139,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeLRSpec(LRSpec spec, Writer writer) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", s_objectFactoryALE.createLRSpec(spec), writer, true);
+		marshall("org.fosstrak.ale.wsdl.ale.epcglobal", objectFactoryALE.createLRSpec(spec), writer, true);
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeSetProperties(SetProperties props, String pathName) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createSetProperties(props), pathName, true);
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", objectFactoryALELR.createSetProperties(props), pathName, true);
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeRemoveReaders(RemoveReaders readers, String pathName) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createRemoveReaders(readers), pathName, true);
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", objectFactoryALELR.createRemoveReaders(readers), pathName, true);
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeSetReaders(SetReaders readers, String pathName) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createSetReaders(readers), pathName, true);
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", objectFactoryALELR.createSetReaders(readers), pathName, true);
 	}
 	
 	/**
@@ -179,7 +179,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeAddReaders(AddReaders readers, String pathName) throws Exception {
-		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", s_objectFactoryALELR.createAddReaders(readers), pathName, true);
+		marshall("org.fosstrak.ale.wsdl.alelr.epcglobal", objectFactoryALELR.createAddReaders(readers), pathName, true);
 	}
 	
 	
@@ -196,7 +196,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	private static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer, boolean pretty) throws Exception {
-		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECSpec(ecSpec), writer, pretty);
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", objectFactoryALE.createECSpec(ecSpec), writer, pretty);
 	}
 	
 	
@@ -207,7 +207,7 @@ public class SerializerUtil {
 	 * @throws Exception upon error.
 	 */
 	public static void serializeECSpec(ECSpec ecSpec, Writer writer) throws Exception {
-		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECSpec(ecSpec), writer, true);		
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", objectFactoryALE.createECSpec(ecSpec), writer, true);		
 	}	
 	
 	
@@ -221,7 +221,7 @@ public class SerializerUtil {
 	 * @throws IOException if deserialization fails
 	 */
 	private static void serializeECReports(ECReports ecReports, Writer writer, boolean pretty) throws Exception {
-		marshall("org.fosstrak.ale.xsd.ale.epcglobal", s_objectFactoryALE.createECReports(ecReports), writer, pretty);	
+		marshall("org.fosstrak.ale.xsd.ale.epcglobal", objectFactoryALE.createECReports(ecReports), writer, pretty);	
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class SerializerUtil {
 			}
 				
 		} catch (Exception e) {
-			s_log.error(String.format("Caught exception during marshalling:\n%s", e.getMessage()));
+			log.error(String.format("Caught exception during marshalling:\n%s", e.getMessage()));
 			throw e;
 		}
 	}
@@ -291,7 +291,7 @@ public class SerializerUtil {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 			outputter.output(document, new FileOutputStream(pathName));
 		} catch (InvalidLLRPMessageException e) {
-			e.printStackTrace();
+			log.error("could not serialize AddROSpec:", e);
 		}
 	}
 	
@@ -307,7 +307,7 @@ public class SerializerUtil {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 			outputter.output(document, writer);
 		} catch (InvalidLLRPMessageException e) {
-		e.printStackTrace();
+			log.error("could not serialize AddROSpec:", e);
 		}
 	}
 	
@@ -324,7 +324,7 @@ public class SerializerUtil {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 			outputter.output(document, new FileOutputStream(pathName));
 		} catch (InvalidLLRPMessageException e) {
-			e.printStackTrace();
+			log.error("could not serialize AddAccessSpec:", e);
 		}
 	}
 	
@@ -340,7 +340,7 @@ public class SerializerUtil {
 			XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 			outputter.output(document, writer);
 		} catch (InvalidLLRPMessageException e) {
-		e.printStackTrace();
+			log.error("could not serialize AddAccessSpec:", e);
 		}
 	}
 	
