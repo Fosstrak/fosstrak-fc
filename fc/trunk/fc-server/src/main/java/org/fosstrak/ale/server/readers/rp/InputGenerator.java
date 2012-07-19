@@ -23,17 +23,10 @@ package org.fosstrak.ale.server.readers.rp;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.Tag;
-import org.fosstrak.ale.util.HexUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.reader.rprm.core.EventType;
-import org.fosstrak.reader.rprm.core.FieldName;
-import org.fosstrak.reader.rprm.core.msg.notification.Notification;
-import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType;
-import org.fosstrak.reader.rprm.core.msg.reply.TagEventType;
-import org.fosstrak.reader.rprm.core.msg.reply.TagType;
-import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
 import org.fosstrak.reader.rp.proxy.DataSelector;
 import org.fosstrak.reader.rp.proxy.NotificationChannel;
 import org.fosstrak.reader.rp.proxy.NotificationChannelEndPoint;
@@ -48,7 +41,13 @@ import org.fosstrak.reader.rp.proxy.factories.NotificationChannelFactory;
 import org.fosstrak.reader.rp.proxy.factories.ReaderDeviceFactory;
 import org.fosstrak.reader.rp.proxy.factories.TriggerFactory;
 import org.fosstrak.reader.rp.proxy.msg.Handshake;
-import org.apache.log4j.Logger;
+import org.fosstrak.reader.rprm.core.EventType;
+import org.fosstrak.reader.rprm.core.FieldName;
+import org.fosstrak.reader.rprm.core.msg.notification.Notification;
+import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType;
+import org.fosstrak.reader.rprm.core.msg.reply.ReadReportType.SourceReport;
+import org.fosstrak.reader.rprm.core.msg.reply.TagEventType;
+import org.fosstrak.reader.rprm.core.msg.reply.TagType;
 
 /**
  * This class is the connector between the reader protocol and the ALE.
@@ -187,25 +186,25 @@ public class InputGenerator implements NotificationChannelListener {
 				readerDevice.removeTriggers(new Trigger[] {readTrigger});
 				LOG.debug("ReadTrigger '" + readTriggerName + "' successfully removed.");
 			} catch (RPProxyException e) {
-				e.printStackTrace();
+				LOG.debug("caught exception", e);
 			}
 			try {
 				readerDevice.removeTriggers(new Trigger[] {notificationTrigger});
 				LOG.debug("NotificationTrigger '" + notificationTriggerName + "' successfully removed.");
 			} catch (RPProxyException e) {
-				e.printStackTrace();
+				LOG.debug("caught exception", e);
 			}
 			try {
 				readerDevice.removeNotificationChannels(new NotificationChannel[] {notificationChannel});
 				LOG.debug("NotificationChannel '" + notificationChannelName + "' successfully removed.");
 			} catch (RPProxyException e) {
-				e.printStackTrace();
+				LOG.debug("caught exception", e);
 			}
 			try {
 				readerDevice.removeDataSelectors(new DataSelector[] {dataSelector});
 				LOG.debug("DataSelector '" + dataSelectorName + "' successfully removed.");
 			} catch (RPProxyException e) {
-				e.printStackTrace();
+				LOG.debug("caught exception", e);
 			}
 		}
 		

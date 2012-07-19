@@ -100,9 +100,9 @@ public class HALManager {
 		} else {
 			
 			try {
-				Class cls = Class.forName(ImplementingClass);
+				Class<?> cls = Class.forName(ImplementingClass);
 				// get the constructor
-				Constructor ctor = 
+				Constructor<?> ctor = 
 					cls.getConstructor(String.class, String.class);
 				
 				// invoke the constructor

@@ -7,9 +7,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ALEFactory;
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.llrp.LLRPControllerManager;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
@@ -22,11 +21,8 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
-import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
-
-
-import org.fosstrak.ale.server.llrp.LLRPControllerManager;
+import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 
 /**
  * This class is called at the startup of tomcat and load all configuration on the the ALE.

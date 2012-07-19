@@ -1,6 +1,5 @@
 package org.fosstrak.ale.server.readers.hal;
 
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -156,7 +155,7 @@ public class HALAdaptor extends BaseReader {
 				try {
 					hal.stopAsynchronousIdentify();		
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOG.error("Could not stop Asynchronous identify:", e);
 				}
 			
 			} else {
@@ -180,8 +179,7 @@ public class HALAdaptor extends BaseReader {
 				try {
 					connectReader();
 				} catch (ImplementationExceptionResponse e) {
-					LOG.info("could not start the reader " + readerName);
-					e.printStackTrace();
+					LOG.info("could not start the reader " + readerName, e);
 					
 					return;
 				}
@@ -198,7 +196,7 @@ public class HALAdaptor extends BaseReader {
 					}
 					hal.startAsynchronousIdentify(hal.getReadPointNames(), trigger);		
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOG.error("Could not start asynchronous identify: ", e);
 				}
 				
 			} else {

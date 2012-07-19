@@ -133,10 +133,10 @@ public class ReportsGenerator implements Runnable {
 		try {
 			validateSpec(spec);
 		} catch (ECSpecValidationExceptionResponse e) {
-			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
 		} catch (ImplementationExceptionResponse e) {
-			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage());
+			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
 		}
 		this.spec = spec;
@@ -259,7 +259,7 @@ public class ReportsGenerator implements Runnable {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}
 		} else {
-			throw new NoSuchSubscriberExceptionResponse();
+			throw new NoSuchSubscriberExceptionResponse("there is no subscriber on the given notification URI: " + notificationURI);
 		}
 	}
 	
@@ -278,9 +278,10 @@ public class ReportsGenerator implements Runnable {
 	 * @param epc the epc to get the value from.
 	 * @return true if value could be obtained, false otherwise.
 	 */
-	private boolean addEPC(HashSet<String> set, EPC epc)
-	{
-		if ((null == set) || (null == epc) || (null == epc.getValue())) return false;
+	private boolean addEPC(HashSet<String> set, EPC epc) {
+		if ((null == set) || (null == epc) || (null == epc.getValue())){
+			return false;
+		}
 		set.add(epc.getValue());
 		return true;
 	}
@@ -307,14 +308,14 @@ public class ReportsGenerator implements Runnable {
 		Map<String, ECReportGroup> newGroupByName = new HashMap<String, ECReportGroup> ();
 		Map<String, ECReportGroup> oldGroupByName = new HashMap<String, ECReportGroup> ();
 		boolean isOneReportRequestingEmpty = false;	// count if someone wants empty reports...
-		System.out.println("reports size: " + reports.getReports().getReport().size());
+		LOG.debug("reports size: " + reports.getReports().getReport().size());
 		try {
 		for (ECReport r : reports.getReports().getReport()) {
 			// if we only want reports that have changed, we need to compare the 
 			// old report with the current...
 			if (ec.getReportSpecByName().get(r.getReportName()).isReportIfEmpty()) {
 				isOneReportRequestingEmpty = true;
-				System.out.println("requesting empty: " + r.getReportName());
+				LOG.debug("requesting empty: " + r.getReportName());
 			}
 			if (ec.getReportSpecByName().get(r.getReportName()).isReportOnlyOnChange()) {
 				
@@ -388,13 +389,13 @@ public class ReportsGenerator implements Runnable {
 			}
 		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("caught exception while processing reports: ", e);
 		}
 		
 		// remove the equal reports
 		Reports re = reports.getReports();
 		if (null != re) re.getReport().removeAll(equalReps);
-		System.out.println("reports size2: " + reports.getReports().getReport().size());
+		LOG.debug("reports size2: " + reports.getReports().getReport().size());
 		// next step is to check, if the total report is empty
 		if (
 				((null != re) && (re.getReport().size() > 0)) 
@@ -405,9 +406,7 @@ public class ReportsGenerator implements Runnable {
 				try {
 					listener.notify(reports);
 				} catch (Exception e) {
-					LOG.error("Could not notifiy subscriber '" + 
-							listener.getURI() 
-							+ "' (" + e.getMessage() + ")");
+					LOG.error("Could not notifiy subscriber '" + listener.getURI(), e);
 				}
 			}
 		}
@@ -506,8 +505,7 @@ public class ReportsGenerator implements Runnable {
 		try {
 			eventCycle = new EventCycle(this);
 		} catch (ImplementationExceptionResponse e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("could not create a new EventCycle: ", e);
 		}
 		
 		if (startTriggerValue != null) {
@@ -534,6 +532,7 @@ public class ReportsGenerator implements Runnable {
 								state.wait();
 							}
 						} catch (InterruptedException e) {
+							LOG.debug("caught interrupted exception", e);
 							return;
 						}
 					}
@@ -616,8 +615,7 @@ public class ReportsGenerator implements Runnable {
 		ECTime repeatPeriod = spec.getBoundarySpec().getRepeatPeriod();
 		if (repeatPeriod != null) {
 			if (repeatPeriod.getUnit().compareToIgnoreCase(ECTimeUnit.MS) != 0) {
-				throw new ImplementationExceptionResponse(
-						"The only ECTimeUnit allowed is milliseconds (MS).");
+				throw new ImplementationExceptionResponse("The only ECTimeUnit allowed is milliseconds (MS).");
 			} else {
 				return repeatPeriod.getValue();
 			}
@@ -688,9 +686,7 @@ public class ReportsGenerator implements Runnable {
 		if (logicalReaders != null) {
 			for (String logicalReaderName : logicalReaders) {
 				if (!LogicalReaderManagerFactory.getLRM().contains(logicalReaderName)) {
-					throw new ECSpecValidationExceptionResponse(
-							"LogicalReader '" + logicalReaderName 
-							+ "' is unknown.");
+					throw new ECSpecValidationExceptionResponse("LogicalReader '" + logicalReaderName + "' is unknown.");
 				}
 			}
 		}
@@ -698,8 +694,7 @@ public class ReportsGenerator implements Runnable {
 		// boundaries parameter of ECSpec is null or omitted
 		ECBoundarySpec boundarySpec = spec.getBoundarySpec();
 		if (boundarySpec == null) {
-			throw new ECSpecValidationExceptionResponse(
-					"The boundaries parameter of ECSpec is null.");
+			throw new ECSpecValidationExceptionResponse("The boundaries parameter of ECSpec is null.");
 		}
 		
 		// start and stop tiggers
@@ -710,20 +705,17 @@ public class ReportsGenerator implements Runnable {
 		ECTime time;
 		if ((time = boundarySpec.getDuration()) != null) {
 			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse(
-						"The duration field of ECBoundarySpec is negative.");
+				throw new ECSpecValidationExceptionResponse("The duration field of ECBoundarySpec is negative.");
 			}
 		}
 		if ((time = boundarySpec.getStableSetInterval()) != null) {
 			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse(
-						"The stableSetInterval field of ECBoundarySpec is negative.");
+				throw new ECSpecValidationExceptionResponse("The stableSetInterval field of ECBoundarySpec is negative.");
 			}
 		}
 		if ((time = boundarySpec.getRepeatPeriod()) != null) {
 			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse(
-						"The repeatPeriod field of ECBoundarySpec is negative.");
+				throw new ECSpecValidationExceptionResponse("The repeatPeriod field of ECBoundarySpec is negative.");
 			}
 		}
 		
@@ -738,15 +730,13 @@ public class ReportsGenerator implements Runnable {
 		if ((boundarySpec.getStopTrigger() == null) 
 				&& (boundarySpec.getDuration() == null) &&
 				(boundarySpec.getStableSetInterval() == null)) {
-			throw new ECSpecValidationExceptionResponse(
-					"No stopping condition is specified in ECBoundarySpec.");
+			throw new ECSpecValidationExceptionResponse("No stopping condition is specified in ECBoundarySpec.");
 		}
 		
 		// check if there is a ECReportSpec instance
 		if ((spec.getReportSpecs() == null) ||
 				(spec.getReportSpecs().getReportSpec().size() == 0)) {
-			throw new ECSpecValidationExceptionResponse(
-					"List of ECReportSpec instances is empty.");
+			throw new ECSpecValidationExceptionResponse("List of ECReportSpec instances is empty.");
 		}
 		
 		// check if two ECReportSpec instances have identical names

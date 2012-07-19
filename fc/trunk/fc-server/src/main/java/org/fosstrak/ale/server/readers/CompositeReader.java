@@ -104,7 +104,8 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 			} else if (arg instanceof List) {
 				LOG.debug("processing multiple tags");
 				
-				// process multiple tags at once				
+				// process multiple tags at once
+				@SuppressWarnings("unchecked")				
 				List<Tag> tagList = (List<Tag>) arg;				
 				for (Tag tag : tagList) {
 					tag.setReader(getName());

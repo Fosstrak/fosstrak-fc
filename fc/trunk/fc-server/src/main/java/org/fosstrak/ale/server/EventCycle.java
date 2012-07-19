@@ -376,7 +376,8 @@ public class EventCycle implements Runnable, Observer {
 					
 					addTagBetweenEventsCycle(tag);
 					
-				} else if (arg instanceof List) {						
+				} else if (arg instanceof List) {	
+					@SuppressWarnings("unchecked")					
 					List<Tag> tagList = (List<Tag>) arg;					
 					LOG.debug("EventCycle "+ getName() + ": Received list of tags :");				
 					
@@ -398,9 +399,9 @@ public class EventCycle implements Runnable, Observer {
 					addTag(tag);
 					
 				} catch (ImplementationExceptionResponse ie) {
-					ie.printStackTrace();
+					LOG.debug("caught implementation exception: ", ie);
 				} catch (ECSpecValidationExceptionResponse ive) {
-					ive.printStackTrace();
+					LOG.debug("caught spec validation exception: ", ive);
 				}				
 			}
 			
@@ -416,22 +417,23 @@ public class EventCycle implements Runnable, Observer {
 			try {
 				addTag(tag);
 			} catch (ImplementationExceptionResponse ie) {
-				ie.printStackTrace();
+				LOG.debug("caught implementation exception: ", ie);
 			} catch (ECSpecValidationExceptionResponse ive) {
-				ive.printStackTrace();
+				LOG.debug("caught spec validation exception: ", ive);
 			}
 		} else if (arg instanceof List) {
 			// process multiple tags at once
 			
+			@SuppressWarnings("unchecked")
 			List<Tag> tagList = (List<Tag>) arg;
 			LOG.debug("EventCycle "+ getName() + ": Received list of tags :");
 			for (Tag tag : tagList) {
 				try {
 					addTag(tag);
 				} catch (ImplementationExceptionResponse ie) {
-					ie.printStackTrace();
+					LOG.debug("caught implementation exception: ", ie);
 				} catch (ECSpecValidationExceptionResponse ive) {
-					ive.printStackTrace();
+					LOG.debug("caught spec validation exception: ", ive);
 				}
 			}
 		}
@@ -495,7 +497,7 @@ public class EventCycle implements Runnable, Observer {
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					LOG.debug("caught interrupted exception");
 				}
 			}
 		}
@@ -570,19 +572,12 @@ public class EventCycle implements Runnable, Observer {
 					
 				tags = new HashSet<Tag>();
 				
-			} catch (ECSpecValidationExceptionResponse e) {
-				LOG.error("EventCycle "+ getName() + 
-						": Could not create ECReports (" + e.getMessage() + ")");
-			} catch (ImplementationExceptionResponse e) {
-				LOG.error("EventCycle "+ getName() + 
-						": Could not create ECReports (" + e.getMessage() + ")");
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("EventCycle "+ getName() + ": Could not create ECReports", e);
 			}
 			
 			
-			LOG.info("EventCycle "+ getName() + 
-					": EventCycle finished (Round " + rounds + ").");
+			LOG.info("EventCycle "+ getName() +  ": EventCycle finished (Round " + rounds + ").");
 			try {
 				// inform possibly waiting workers about the finish
 				synchronized (lock) {
