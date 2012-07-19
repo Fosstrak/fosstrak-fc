@@ -2,15 +2,15 @@ package org.fosstrak.ale.server.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.ALE;
+import org.fosstrak.ale.server.ALEFactory;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.ReportsGeneratorState;
 import org.fosstrak.ale.server.readers.LogicalReader;
@@ -38,13 +38,13 @@ public class ALEControllerImpl implements ALEController {
 		
 		LOG.info("check if " + specName + " ECSpec is started");
 		
-		if (!ALE.getReportGenerators().containsKey(specName)) {
+		if (!ALEFactory.getALE().getReportGenerators().containsKey(specName)) {
 			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
 		}
 		
 		boolean result = false;
 		
-		ReportsGenerator reportsGenerator = ALE.getReportGenerators().get(specName);
+		ReportsGenerator reportsGenerator = ALEFactory.getALE().getReportGenerators().get(specName);
 		
 		if (reportsGenerator != null) {
 		
@@ -70,7 +70,7 @@ public class ALEControllerImpl implements ALEController {
 		
 		List<String> result = new ArrayList<String>();
 		
-		HashMap<String, ReportsGenerator> reportGeneratorList = ALE.getReportGenerators();		
+		Map<String, ReportsGenerator> reportGeneratorList = ALEFactory.getALE().getReportGenerators();		
 		Set<String> reportGeneratorNameList = reportGeneratorList.keySet();
 		
 		for (String reportGeneratorName : reportGeneratorNameList) {
@@ -97,11 +97,11 @@ public class ALEControllerImpl implements ALEController {
 		
 		LOG.info("start ECSpec " + specName);
 		
-		if (!ALE.getReportGenerators().containsKey(specName)) {
+		if (!ALEFactory.getALE().getReportGenerators().containsKey(specName)) {
 			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
 		}
 		
-		ReportsGenerator reportsGenerator = ALE.getReportGenerators().get(specName);		
+		ReportsGenerator reportsGenerator = ALEFactory.getALE().getReportGenerators().get(specName);		
 		
 		if (reportsGenerator != null) {			
 			reportsGenerator.setState(ReportsGeneratorState.REQUESTED);			
@@ -119,11 +119,11 @@ public class ALEControllerImpl implements ALEController {
 		
 		LOG.info("stop ECSpec " + specName);
 				
-		if (!ALE.getReportGenerators().containsKey(specName)) {
+		if (!ALEFactory.getALE().getReportGenerators().containsKey(specName)) {
 			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
 		}
 		
-		ReportsGenerator reportsGenerator = ALE.getReportGenerators().get(specName);	
+		ReportsGenerator reportsGenerator = ALEFactory.getALE().getReportGenerators().get(specName);	
 		
 		if (reportsGenerator != null) {			
 			reportsGenerator.setState(ReportsGeneratorState.UNREQUESTED);			
@@ -166,7 +166,7 @@ public class ALEControllerImpl implements ALEController {
 		
 		boolean logicalReaderFind = false;
 		
-		HashMap<String, ReportsGenerator> reportGeneratorList = ALE.getReportGenerators();		
+		Map<String, ReportsGenerator> reportGeneratorList = ALEFactory.getALE().getReportGenerators();		
 		Set<String> reportGeneratorNameList = reportGeneratorList.keySet();
 		
 		for (String reportGeneratorName : reportGeneratorNameList) {
@@ -204,17 +204,17 @@ public class ALEControllerImpl implements ALEController {
 		
 		LOG.info("stop all ECSpec for the logical reader by spec name " + specName);
 		
-		if (!ALE.getReportGenerators().containsKey(specName)) {
+		if (!ALEFactory.getALE().getReportGenerators().containsKey(specName)) {
 			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
 		}
 		
-		List<String> logicalReaderList = ALE.getReportGenerators().get(specName).getSpec().getLogicalReaders().getLogicalReader();
+		List<String> logicalReaderList = ALEFactory.getALE().getReportGenerators().get(specName).getSpec().getLogicalReaders().getLogicalReader();
 		
 		if (logicalReaderList.size() > 0) {	
 			
 			String logicalReaderName = logicalReaderList.get(0);	
 			
-			HashMap<String, ReportsGenerator> reportGeneratorList = ALE.getReportGenerators();
+			Map<String, ReportsGenerator> reportGeneratorList = ALEFactory.getALE().getReportGenerators();
 			Set<String> reportGeneratorNameList = reportGeneratorList.keySet();
 			
 			for (String reportGeneratorName : reportGeneratorNameList) {

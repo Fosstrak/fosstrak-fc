@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
+import org.fosstrak.ale.server.ALEFactory;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.DeserializerUtil;
@@ -97,7 +98,7 @@ public class ReadConfig extends Config {
 			
 			try {
 				LOG.debug("try to load ecspec " + fileName + " with specName = " + specName);
-				ALE.define(specName, ecSpec);
+				ALEFactory.getALE().define(specName, ecSpec);
 				LOG.debug("load ecspec " + fileName);
 			} catch (DuplicateNameExceptionResponse e) {
 				LOG.error("error loading ecspec xml file " + fileName, e);	
@@ -150,7 +151,7 @@ public class ReadConfig extends Config {
 					String propertyName = (String)it.next();
 					notificationURI = properties.getProperty(propertyName);
 					
-					ALE.subscribe(specName, notificationURI);
+					ALEFactory.getALE().subscribe(specName, notificationURI);
 					
 					LOG.debug("add properties uri = " + notificationURI);					
 					

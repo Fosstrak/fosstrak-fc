@@ -272,9 +272,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @return set of tags
 	 */
 	public synchronized Set<Tag> getTags() {
-
-		return tags;
-		
+		return tags;		
 	}
 
 	/**
