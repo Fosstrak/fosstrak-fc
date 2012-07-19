@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2007 ETH Zurich
+ *
+ * This file is part of Fosstrak (www.fosstrak.org).
+ *
+ * Fosstrak is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1, as published by the Free Software Foundation.
+ *
+ * Fosstrak is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Fosstrak; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
 package org.fosstrak.ale.server.readers.test;
 
 
@@ -13,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
+import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
@@ -51,7 +71,13 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testGetVendorVersion() throws Exception {
-		Assert.assertNotNull(manager.getVendorVersion());
+		ALESettings aleSettings = EasyMock.createMock(ALESettings.class);
+		((LogicalReaderManagerImpl) manager).setAleSettings(aleSettings);
+		EasyMock.expect(aleSettings.getAleVendorVersion()).andReturn("1.1");
+		EasyMock.replay(aleSettings);
+		Assert.assertEquals("1.1", manager.getVendorVersion());
+		
+		EasyMock.verify(aleSettings);
 	}
 	
 	/**
@@ -60,7 +86,13 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testGetStandardVersion() throws Exception {
-		Assert.assertNotNull(manager.getStandardVersion());
+		ALESettings aleSettings = EasyMock.createMock(ALESettings.class);
+		((LogicalReaderManagerImpl) manager).setAleSettings(aleSettings);
+		EasyMock.expect(aleSettings.getAleStandardVersion()).andReturn("1.1.1");
+		EasyMock.replay(aleSettings);
+		Assert.assertEquals("1.1.1",manager.getStandardVersion());
+		
+		EasyMock.verify(aleSettings);
 	}
 	
 	/**
@@ -81,9 +113,6 @@ public class LogicalReaderManagerTest {
 		LogicalReader logicalReader2 = EasyMock.createMock(LogicalReader.class);
 		EasyMock.expect(logicalReader2.getName()).andReturn("reader2").atLeastOnce();
 		EasyMock.expect(logicalReader2.isStarted()).andReturn(true).atLeastOnce();
-		// start is invoked only once.
-		logicalReader2.start();
-		EasyMock.expectLastCall();
 		EasyMock.replay(logicalReader2);
 		
 		// test setters and getters -----------------
@@ -102,6 +131,9 @@ public class LogicalReaderManagerTest {
 		Assert.assertEquals(2, readerNames.size());
 		Assert.assertTrue(readerNames.contains("reader1"));
 		Assert.assertTrue(readerNames.contains("reader2"));
+		
+		EasyMock.verify(logicalReader1);
+		EasyMock.verify(logicalReader2);
 	}
 	
 	/**
@@ -134,7 +166,6 @@ public class LogicalReaderManagerTest {
 		final String readerName = "testPropertyMutators";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
 		EasyMock.expect(logicalReader.getName()).andReturn(readerName).atLeastOnce();
-		EasyMock.expect(logicalReader.isStarted()).andReturn(false).atLeastOnce();
 		List<LRProperty> props = new LinkedList<LRProperty> ();
 		LRProperty p1 = new LRProperty();
 		p1.setName("name1");
@@ -148,10 +179,6 @@ public class LogicalReaderManagerTest {
 		props.add(p2);
 		
 		EasyMock.expect(logicalReader.getProperties()).andReturn(props).atLeastOnce();
-		
-		// start is invoked only once.
-		logicalReader.start();
-		EasyMock.expectLastCall();
 		EasyMock.replay(logicalReader);
 		
 		manager.setLogicalReader(logicalReader);
@@ -159,6 +186,8 @@ public class LogicalReaderManagerTest {
 		String value = manager.getPropertyValue(readerName, "name2");
 		Assert.assertEquals("value2", value);
 		Assert.assertNull(manager.getPropertyValue(readerName, "unknown"));
+		
+		EasyMock.verify(logicalReader);
 	}
 
 	/**
@@ -194,7 +223,6 @@ public class LogicalReaderManagerTest {
 		final String logicalReaderName = "logicalReader";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
 		EasyMock.expect(logicalReader.getName()).andReturn(logicalReaderName).atLeastOnce();
-		EasyMock.expect(logicalReader.isStarted()).andReturn(false).atLeastOnce();
 
 		LRSpec.Properties lrSpecProperties = new LRSpec.Properties();
 		LRProperty p0 = new LRProperty();
@@ -226,6 +254,10 @@ public class LogicalReaderManagerTest {
 		for (LRProperty p : lrSpecProperties.getProperty()) {
 			Assert.assertNotSame("name0", p.getName());
 		}
+		
+		EasyMock.verify(logicalReader);
+		EasyMock.verify(persistenceMock);
+		EasyMock.verify(lrSpec);
 	}
 	
 	/**
@@ -247,7 +279,6 @@ public class LogicalReaderManagerTest {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
 		EasyMock.expect(logicalReader.getName()).andReturn(readerName).atLeastOnce();
-		EasyMock.expect(logicalReader.isStarted()).andReturn(false).atLeastOnce();
 		
 		LRSpec lrSpec = new LRSpec();
 		EasyMock.expect(logicalReader.getLRSpec()).andReturn(lrSpec);
@@ -256,6 +287,8 @@ public class LogicalReaderManagerTest {
 		manager.setLogicalReader(logicalReader);
 		LRSpec result = manager.getLRSpec(readerName);
 		Assert.assertEquals(lrSpec, result);
+		
+		EasyMock.verify(logicalReader);
 	}
 	
 	/**
@@ -284,6 +317,8 @@ public class LogicalReaderManagerTest {
 		
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
+		
+		EasyMock.verify(logicalReader);
 	}
 	
 	/**
@@ -308,6 +343,8 @@ public class LogicalReaderManagerTest {
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
 		Assert.assertEquals(0, manager.getLogicalReaders().size());
+		
+		EasyMock.verify(logicalReader);
 	}	
 	
 	/**
@@ -331,6 +368,8 @@ public class LogicalReaderManagerTest {
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
 		Assert.assertEquals(0, manager.getLogicalReaders().size());
+		
+		EasyMock.verify(logicalReader);
 	}	
 	
 	/**
@@ -349,6 +388,8 @@ public class LogicalReaderManagerTest {
 		
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
+		
+		EasyMock.verify(logicalReader);
 	}	
 
 	/**
@@ -439,6 +480,9 @@ public class LogicalReaderManagerTest {
 		}
 		Assert.assertEquals("theNiceTestReaderType",keyValue.get("ReaderType"));
 		Assert.assertEquals("value", keyValue.get("name"));		
+		
+		EasyMock.verify(persistenceMock);
+		EasyMock.verify(baseReader);
 	}
 	
 	/**
@@ -467,6 +511,8 @@ public class LogicalReaderManagerTest {
 		
 		// test on some not-existing reader
 		manager.setReaders(readerName, null);
+		
+		EasyMock.verify(logicalReader);	
 	}
 	
 	
@@ -485,7 +531,6 @@ public class LogicalReaderManagerTest {
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
 		EasyMock.expect(compositeReader.getName()).andReturn(compositeReaderName).atLeastOnce();
-		EasyMock.expect(compositeReader.isStarted()).andReturn(false).atLeastOnce();
 
 		LRSpec lrSpec = new LRSpec();
 		LRSpec.Readers readers = new LRSpec.Readers();
@@ -502,6 +547,9 @@ public class LogicalReaderManagerTest {
 		manager.setReaders(compositeReaderName, Arrays.asList(new String[] { "reader1" } ));
 		Assert.assertEquals(1, lrSpec.getReaders().getReader().size());
 		Assert.assertEquals("reader1", lrSpec.getReaders().getReader().get(0));
+		
+		EasyMock.verify(persistenceMock);	
+		EasyMock.verify(compositeReader);	
 	}
 	
 	/**
@@ -528,6 +576,8 @@ public class LogicalReaderManagerTest {
 		
 		manager.setLogicalReader(logicalReader);
 		manager.removeReaders(readerName, null);
+		
+		EasyMock.verify(logicalReader);	
 	}
 	
 	/**
@@ -545,7 +595,6 @@ public class LogicalReaderManagerTest {
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
 		EasyMock.expect(compositeReader.getName()).andReturn(compositeReaderName).atLeastOnce();
-		EasyMock.expect(compositeReader.isStarted()).andReturn(false).atLeastOnce();
 
 		LRSpec lrSpec = new LRSpec();
 		LRSpec.Readers readers = new LRSpec.Readers();
@@ -563,6 +612,9 @@ public class LogicalReaderManagerTest {
 		manager.removeReaders(compositeReaderName, Arrays.asList(new String[] { "reader1" } ));
 		Assert.assertEquals(1, lrSpec.getReaders().getReader().size());
 		Assert.assertEquals("reader2", lrSpec.getReaders().getReader().get(0));
+		
+		EasyMock.verify(persistenceMock);		
+		EasyMock.verify(compositeReader);
 	}
 	
 	/**
@@ -589,6 +641,8 @@ public class LogicalReaderManagerTest {
 		
 		manager.setLogicalReader(logicalReader);
 		manager.addReaders(readerName, null);
+		
+		EasyMock.verify(logicalReader);
 	}
 	
 	/**
@@ -606,7 +660,6 @@ public class LogicalReaderManagerTest {
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
 		EasyMock.expect(compositeReader.getName()).andReturn(compositeReaderName).atLeastOnce();
-		EasyMock.expect(compositeReader.isStarted()).andReturn(false).atLeastOnce();
 
 		LRSpec.Readers lrSpecReaders = new LRSpec.Readers();
 		LRSpec lrSpec = EasyMock.createMock(LRSpec.class);
@@ -625,6 +678,9 @@ public class LogicalReaderManagerTest {
 		manager.addReaders(compositeReaderName, Arrays.asList(new String[] { logicalReaderName } ));
 		Assert.assertEquals(1, lrSpecReaders.getReader().size());
 		Assert.assertEquals(logicalReaderName, lrSpecReaders.getReader().get(0));
+
+		EasyMock.verify(persistenceMock);
+		EasyMock.verify(compositeReader);
 	}
 	
 	/**
@@ -694,6 +750,9 @@ public class LogicalReaderManagerTest {
 		Assert.assertTrue(manager.contains("LogicalReader1"));
 		// assert that initialize is not called twice...
 		Assert.assertEquals(1, manager.getLogicalReaders().size());
+
+		EasyMock.verify(persistenceMock);
+		EasyMock.verify(baseReader);
 	}
 	
 	/**
@@ -705,7 +764,6 @@ public class LogicalReaderManagerTest {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		
 		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));		
 		EasyMock.expect(persistenceMock.getStreamToWhereToStoreWholeManager(EasyMock.isA(String.class))).andReturn(bout);
 		EasyMock.replay(persistenceMock);
 		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
@@ -747,5 +805,9 @@ public class LogicalReaderManagerTest {
 		// resulting string has some mock-specific characters contained in the implementing class -> replace them
 		cfg = cfg.replaceAll("\\$\\$EnhancerByCGLIB\\$\\$.{8}", "");
 		Assert.assertEquals(524, cfg.length());
+
+		EasyMock.verify(persistenceMock);
+		EasyMock.verify(compositeReader);
+		EasyMock.verify(baseReader);
 	}
 }

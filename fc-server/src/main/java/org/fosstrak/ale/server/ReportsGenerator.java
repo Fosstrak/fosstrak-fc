@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
@@ -50,9 +49,9 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
 
 /**

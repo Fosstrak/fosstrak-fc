@@ -16,6 +16,7 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
 	<context:annotation-config />
+	<context:property-placeholder location="classpath*:ale.properties"/>
 	<context:component-scan base-package="org.fosstrak.ale" />
 	
 	<jaxws:endpoint id="ALEService"

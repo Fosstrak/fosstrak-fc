@@ -1,10 +1,29 @@
+/*
+ * Copyright (C) 2007 ETH Zurich
+ *
+ * This file is part of Fosstrak (www.fosstrak.org).
+ *
+ * Fosstrak is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1, as published by the Free Software Foundation.
+ *
+ * Fosstrak is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Fosstrak; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
 package org.fosstrak.ale.server.readers.impl;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
@@ -16,6 +35,7 @@ import javax.xml.validation.Schema;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
+import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
@@ -63,7 +83,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	private LogicalReaders logicalReadersConfiguration;
 
 	/** a map of all LogicalReaders. the readers are mapped against their name.	 */
-	private java.util.Map<String, LogicalReader> logicalReaders = new HashMap<String, LogicalReader>();
+	private java.util.Map<String, LogicalReader> logicalReaders = new ConcurrentHashMap<String, LogicalReader>();
 
 	private final Schema SCHEMA_FILEPATH = null; 
 
@@ -72,18 +92,25 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	
 	// autowired
 	private PersistenceProvider persistenceProvider;
+	
 	// autowired
-	private ReaderProvider readerProvider;;
+	private ReaderProvider readerProvider;
+	
+	// autowired
+    private ALESettings aleSettings;
+
+	@Autowired
+	private ALE ale;
 	
 
 	@Override
 	public String getVendorVersion() throws ImplementationExceptionResponse {
-		return ALE.getVendorVersion();
+		return aleSettings.getAleVendorVersion();
 	}
 
 	@Override
 	public String getStandardVersion() throws ImplementationExceptionResponse {
-		return ALE.getStandardVersion();
+		return aleSettings.getAleStandardVersion();
 	}
 
 	@Override
@@ -299,14 +326,19 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		logicalReaders.put(name, logRead);
 	}
 
+	/**
+	 * initialize the Logical Reader Manager. <br/>
+     * <strong>NOTICE:</strong> Do not depend on initializer methods of other autowired components (like ALE) 
+     * as the order of the initializer methods on the injected beans is not preset -> thus, the 
+     * injected bean might already be present in the manager, but not initialized (call postconstruct) yet.
+	 */
 	@PostConstruct
-	public void initialize() throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse {
-		
-		initializeFromFile(LOAD_FILEPATH); 
-		
+	public void initialize() {		
+		LOG.debug("initialize");
+		initializeFromFile(LOAD_FILEPATH);
 	}
 	
-	public void initializeFromFile(String loadFilePath) throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse {
+	public void initializeFromFile(String loadFilePath) {
 		
 		if (isInitialized()) {
 			LOG.debug("already initialized - no need to reinitialize again - aborting");
@@ -314,50 +346,54 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		}
 		
 		LOG.debug("Initialize LogicalReaderManager");
-		
-		// if configuration file path is not set, set it to default value
-		if (loadFilePath == null) {
-			loadFilePath = LOAD_FILEPATH;
-		}
-		
-		// try to parse reader configuration file
-		LOG.debug("Parse configuration file :" + loadFilePath);
-		List<org.fosstrak.ale.server.readers.gen.LogicalReader> genLogicalReaders;
-		try {
-			// initialize jaxb context and unmarshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+		try {			
+			// if configuration file path is not set, set it to default value
+			if (loadFilePath == null) {
+				loadFilePath = LOAD_FILEPATH;
+			}
 			
-			// unmarshal logical reader configuration file
-			logicalReadersConfiguration = (LogicalReaders) unmarshaller.unmarshal(persistenceProvider.getInitializeInputStream(loadFilePath));
-			// trying to validate schema
+			// try to parse reader configuration file
+			LOG.debug("Parse configuration file :" + loadFilePath);
+			List<org.fosstrak.ale.server.readers.gen.LogicalReader> genLogicalReaders;
+			try {
+				// initialize jaxb context and unmarshaller
+				JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
+				Unmarshaller unmarshaller = context.createUnmarshaller();
+				unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+				
+				// unmarshal logical reader configuration file
+				logicalReadersConfiguration = (LogicalReaders) unmarshaller.unmarshal(persistenceProvider.getInitializeInputStream(loadFilePath));
+				// trying to validate schema
+				
+				unmarshaller.setSchema(SCHEMA_FILEPATH);
+				boolean isValidating = unmarshaller.getSchema() != null;
+				LOG.debug("is schema validated: " + isValidating);
+				
+				genLogicalReaders = logicalReadersConfiguration.getLogicalReader();
+			} catch (JAXBException e) {
+				LOG.error("could not initialize the logical reader manager from file: ", e);
+				return;
+			}
 			
-			unmarshaller.setSchema(SCHEMA_FILEPATH);
-			boolean isValidating = unmarshaller.getSchema() != null;
-			LOG.debug("is schema validated: " + isValidating);
-			
-			genLogicalReaders = logicalReadersConfiguration.getLogicalReader();
-		} catch (JAXBException e) {
-			LOG.error("could not initialize the logical reader manager from file: ", e);
-			return;
-		}
-		
-		// iterate over logical readers
-		for (org.fosstrak.ale.server.readers.gen.LogicalReader logicalReader : genLogicalReaders) {
-			// get logical reader name
-			String logName = logicalReader.getName();
-			org.fosstrak.ale.server.readers.gen.LRSpec spec = logicalReader.getLRSpec();
-			define(logName, spec);	
-		}
-			
-		// set initialized to true
-		initialized = true;
-		LOG.debug("LogicalReaderManager successfully initialized");
-
-		LOG.debug("starting the readers");
-		for (LogicalReader reader : getLogicalReaders()) {
-			reader.start();
+			// iterate over logical readers
+			for (org.fosstrak.ale.server.readers.gen.LogicalReader logicalReader : genLogicalReaders) {
+				// get logical reader name
+				String logName = logicalReader.getName();
+				org.fosstrak.ale.server.readers.gen.LRSpec spec = logicalReader.getLRSpec();
+				define(logName, spec);	
+			}
+				
+			// set initialized to true
+			initialized = true;
+			LOG.debug("LogicalReaderManager successfully initialized");
+	
+			LOG.debug("starting the readers");
+			for (LogicalReader reader : getLogicalReaders()) {
+				reader.start();
+			}
+		} catch (Exception ex) {
+			LOG.error("could not setup the logical reader manager - tear down the application.", ex);
+			throw new IllegalStateException("could not setup the logical reader manager - tear down the application.", ex);
 		}
 	}
 	
@@ -566,5 +602,14 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	@Autowired
 	public void setReaderProvider(ReaderProvider readerProvider) {
 		this.readerProvider = readerProvider;
+	}
+	
+	/**
+	 * allow to inject a new ALESettings.
+	 * @param aleSettings the new ALESettings to be used.
+	 */
+    @Autowired
+	public void setAleSettings(ALESettings aleSettings) {
+		this.aleSettings = aleSettings;
 	}
 }
