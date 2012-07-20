@@ -27,18 +27,29 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
+/**
+ * helper class to test classes/processes that have to send data through a socket connection.
+ * @author regli
+ * @author swieland
+ *
+ */
 public class SocketListener implements Runnable {
 
 	/** logger */
 	private static final Logger LOG = Logger.getLogger(SocketListener.class);
 	
-	private final Thread thread;
-	
-	private ServerSocket serverSocket;
-	
+	private final Thread thread;	
+	private ServerSocket serverSocket;	
 	private InputStream inputStream;
+	private boolean keepRunning;
 	
+	/**
+	 * create a server socket on the given port and start a new thread with this runnable as input.
+	 * @param port the port where to start the server socket on.
+	 * @throws IOException when the socket cannot be created.
+	 */
 	public SocketListener(int port) throws IOException {
+		keepRunning = true;
 		// create tcp server socket
 		serverSocket = new ServerSocket(port);
 
@@ -46,24 +57,29 @@ public class SocketListener implements Runnable {
 		thread.start();
 	}
 	
+	/**
+	 * stop the server socket and stop the processing thread.
+	 */
 	public void stop() {
+		keepRunning = false;
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
 			LOG.error("caught IOException: ", e);
 		}
-	
-		if (thread.isAlive()) {
-			thread.interrupt();
-		}
 	}
 	
+	/**
+	 * returns the input stream of the last client socket.
+	 * @return returns the input stream of the last client socket.
+	 */
 	public InputStream getInputStream() {
 		return inputStream;
 	}
 
+	@Override
 	public void run() {
-		while (!serverSocket.isClosed()) {
+		while (!serverSocket.isClosed() && keepRunning) {
 			try {
 				// wait for connection				
 				Socket socket = serverSocket.accept();
@@ -71,7 +87,7 @@ public class SocketListener implements Runnable {
 				// get inputstream
 				inputStream = socket.getInputStream();
 			} catch (IOException e) {
-				LOG.error("caught IOException: ", e);
+				LOG.debug("caught IOException: ", e);
 			}
 		}
 	}	
