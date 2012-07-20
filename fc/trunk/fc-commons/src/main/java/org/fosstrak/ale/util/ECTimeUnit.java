@@ -23,7 +23,7 @@ package org.fosstrak.ale.util;
 /**
  * For backwards compatibility this class provides a 
  * "shortcut" to the ALE ECTimeUnit.
- * @author sawielan
+ * @author swieland
  *
  */
 public class ECTimeUnit {

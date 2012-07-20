@@ -49,7 +49,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 /**
  * This class provides some methods to serialize ec specifications and reports.
  * 
- * @author sawielan
+ * @author swieland
  * @author regli
  * @author julian roche
  * @author wafa.soubra@orange.com

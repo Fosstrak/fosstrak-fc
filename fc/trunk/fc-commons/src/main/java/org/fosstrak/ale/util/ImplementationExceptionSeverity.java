@@ -3,7 +3,7 @@ package org.fosstrak.ale.util;
 /**
  * For backwards compatibility this class provides a 
  * "shortcut" to the ALE ImplementationExceptionSeverity.
- * @author sawielan
+ * @author swieland
  *
  */
 public class ImplementationExceptionSeverity {

@@ -61,7 +61,7 @@ import org.springframework.stereotype.Service;
 /**
  * standard implementation of the LogicalReaderManager.
  * 
- * @author sawielan
+ * @author swieland
  *
  */
 @Service("logicalReaderManager")

@@ -37,7 +37,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
  * Represents the abstract interface for a reader. a reader can be either a composite of 
  * different readers or a basereader
  * 
- * @author sawielan
+ * @author swieland
  *
  */
 public abstract class LogicalReader extends Observable{

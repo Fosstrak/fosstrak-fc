@@ -302,7 +302,7 @@ valid = false;
 break;
 
 
-// sawielan
+// swieland
 case 317:
 	valid = false;
 	%>

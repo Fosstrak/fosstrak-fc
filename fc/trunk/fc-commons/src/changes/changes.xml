@@ -8,8 +8,8 @@
 			<action dev="soubra" type="add">LLRP controller service to manage ROSpec using SOAP interface</action>
 		</release>
 		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
-			<action dev="sawielan" type="update">Update to cxf-2.2.6.</action>
-			<action dev="sawielan" type="fix" issue="2991458">performance degradation due to bad handling of JAXB-Context.</action>
+			<action dev="swieland" type="update">Update to cxf-2.2.6.</action>
+			<action dev="swieland" type="fix" issue="2991458">performance degradation due to bad handling of JAXB-Context.</action>
 		</release>
         <release version="0.4.0" date="2008-07-29"
             description="Project name changed to Fosstrak">
@@ -20,10 +20,10 @@
         <release version="0.3.0" date="2008-03-??"
             description="Feature release: ALE 1.1">
             <!-- general changes -->
-            <action dev="sawielan" type="add">
+            <action dev="swieland" type="add">
                new serializer method for the fc-client.
             </action>
-            <action dev="sawielan" type="update">
+            <action dev="swieland" type="update">
                fc-commons are now mostly generated automatically from wsdl.
             </action>
         </release>

@@ -53,7 +53,7 @@ import org.junit.Test;
 /**
  * unit tests for the logical reader management.
  * 
- * @author sawielan
+ * @author swieland
  *
  */
 public class LogicalReaderManagerTest {

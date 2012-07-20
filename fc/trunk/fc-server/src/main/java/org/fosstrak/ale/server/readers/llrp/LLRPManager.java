@@ -33,7 +33,7 @@ import org.llrp.ltk.types.LLRPMessage;
  * this adaptor into rmi. the adaptor is run on a thread to allow the application 
  * to proceed. if there occurs an error that does not allow the manager to proceed 
  * the error condition is signaled by the static error flag.
- * @author sawielan
+ * @author swieland
  *
  */
 public class LLRPManager implements LLRPExceptionHandler, MessageHandler {

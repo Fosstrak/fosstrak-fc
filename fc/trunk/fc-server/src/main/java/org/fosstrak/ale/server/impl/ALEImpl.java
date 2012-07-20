@@ -49,7 +49,7 @@ import org.springframework.stereotype.Service;
  * All ale operations are executed by this class.
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  * @author haennimi
  * @author benoit.plomion@orange.com
  */

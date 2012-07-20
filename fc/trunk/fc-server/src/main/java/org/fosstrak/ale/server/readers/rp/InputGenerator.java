@@ -53,7 +53,7 @@ import org.fosstrak.reader.rprm.core.msg.reply.TagType;
  * This class is the connector between the reader protocol and the ALE.
  * It creates the necessary objects on the reader device to get all required data.
  * 
- * @author sawielan
+ * @author swieland
  * @author regli
  */
 public class InputGenerator implements NotificationChannelListener {

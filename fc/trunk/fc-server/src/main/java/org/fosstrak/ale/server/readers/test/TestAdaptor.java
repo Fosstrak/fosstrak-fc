@@ -15,7 +15,7 @@ import org.fosstrak.hal.Observation;
 
 /**
  * test adaptor for the filtering and collection triggering tag in regular time intervals.
- * @author sawielan
+ * @author swieland
  *
  */
 public class TestAdaptor extends BaseReader {

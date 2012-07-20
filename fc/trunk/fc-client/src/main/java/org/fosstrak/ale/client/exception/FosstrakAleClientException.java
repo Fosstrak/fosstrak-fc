@@ -22,7 +22,7 @@ package org.fosstrak.ale.client.exception;
 
 
 /**
- * @author sawielan
+ * @author swieland
  * exception class for the fosstrak ale client.
  */
 public class FosstrakAleClientException extends Exception {

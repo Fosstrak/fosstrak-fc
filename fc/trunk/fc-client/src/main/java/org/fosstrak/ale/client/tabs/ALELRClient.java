@@ -66,7 +66,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
  * is the parameter endpoint, which specifies the address of the ale webservice which runs
  * on the server. 
  * 
- * @author sawielan
+ * @author swieland
  */
 public class ALELRClient extends AbstractTab {
 

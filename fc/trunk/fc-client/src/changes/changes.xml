@@ -4,7 +4,7 @@
     </properties>
     <body>
 		<release version="1.0.3" date="2009-08-14" description="Bugfix release">
-			<action dev="sawielan" type="add">Give the client a new look and feel.</action>
+			<action dev="swieland" type="add">Give the client a new look and feel.</action>
 		</release>
         <release version="0.4.0" date="2008-07-29"
             description="Project name changed to Fosstrak">
@@ -15,13 +15,13 @@
         <release version="0.3.0" date="2008-03-??"
             description="Feature release: ALE 1.1">
             <!-- general changes -->
-            <action dev="sawielan" type="add">
+            <action dev="swieland" type="add">
                fc-client now supports the full logical reader api.
             </action>
-            <action dev="sawielan" type="update">
+            <action dev="swieland" type="update">
                adapted fc-client to the new fc-commons.
             </action>
-	    <action dev="sawielan" type="add">
+	    <action dev="swieland" type="add">
                modified documentation according to the schema in epcis.
             </action>
         </release>
