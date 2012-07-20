@@ -27,11 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.util.ECReportSetEnum;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat.Sightings;
@@ -104,7 +102,7 @@ public class Report {
 	 * @param currentEventCycle this report belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public Report(ECReportSpec reportSpec, EventCycle currentEventCycle) throws ImplementationExceptionResponse {
+	public Report(ECReportSpec reportSpec, EventCycle currentEventCycle) throws ImplementationException {
 		
 		// set name
 		name = reportSpec.getReportName();
@@ -140,7 +138,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public void addTag(Tag tag) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public void addTag(Tag tag) throws ECSpecValidationException, ImplementationException {
 
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
@@ -161,7 +159,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public void addTag(org.fosstrak.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public void addTag(org.fosstrak.reader.rprm.core.msg.notification.TagType tag) throws ECSpecValidationException, ImplementationException {
 		Tag newtag = new Tag();
 		newtag.setTagID(tag.getTagID());
 		newtag.setTagIDAsPureURI(tag.getTagIDAsPureURI());
@@ -198,7 +196,7 @@ public class Report {
 	 * @throws ECSpecValidationException if a tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public ECReport getECReport() throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
 
 		//generate new ECReport
 		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
@@ -292,7 +290,7 @@ public class Report {
 				for (String pattern : ecIncludePatterns) {
 					try {
 						includePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
-					} catch (ECSpecValidationExceptionResponse e) {
+					} catch (ECSpecValidationException e) {
 						LOG.debug("Specification Validation Exception: ", e);
 					}
 				}
@@ -304,7 +302,7 @@ public class Report {
 				for (String pattern : ecExcludePatterns) {
 					try {
 						excludePatterns.add(new Pattern(pattern, PatternUsage.FILTER));
-					} catch (ECSpecValidationExceptionResponse e) {
+					} catch (ECSpecValidationException e) {
 						LOG.debug("Specification Validation Exception: ", e);
 					}
 				}
@@ -326,7 +324,7 @@ public class Report {
 			for (String pattern : groupSpec) {
 				try {
 					groupPatterns.add(new Pattern(pattern, PatternUsage.GROUP));
-				} catch (ECSpecValidationExceptionResponse e) {
+				} catch (ECSpecValidationException e) {
 					LOG.debug("Specification Validation Exception: ", e);
 				}	
 			}
@@ -341,7 +339,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private boolean isMember(String tagURI) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	private boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
 				
 		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
 		
@@ -385,7 +383,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private void addTagToReportGroup(Tag tag) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
+	private void addTagToReportGroup(Tag tag) throws ImplementationException, ECSpecValidationException {
 		
 		// get tag URI
 		String tagURI = tag.getTagIDAsPureURI();
@@ -654,7 +652,7 @@ public class Report {
 	 * @throws ECSpecValidationException if the tag is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private String getGroupName(String tagURI) throws ImplementationExceptionResponse, ECSpecValidationExceptionResponse {
+	private String getGroupName(String tagURI) throws ImplementationException, ECSpecValidationException {
 		
 		for (Pattern pattern : groupPatterns) {
 			if (pattern.isMember(tagURI)) {

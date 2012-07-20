@@ -27,8 +27,7 @@ import java.util.Map;
 import java.util.Observable;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 
@@ -40,7 +39,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
  * @author swieland
  *
  */
-public abstract class LogicalReader extends Observable{
+public abstract class LogicalReader extends Observable {
 
 	/** logger. */
 	private static final Logger log = Logger.getLogger(LogicalReader.class);
@@ -64,9 +63,22 @@ public abstract class LogicalReader extends Observable{
 	protected List<LRProperty> properties = new LinkedList<LRProperty>();
 	
 	/**
+	 * handle to the logical reader manager that created this reader.
+	 */
+	protected LogicalReaderManager logicalReaderManager;
+	
+	/**
 	 * constructor for the logical reader.
 	 */
 	public LogicalReader() {
+	}
+	
+	/**
+	 * set the logical reader manager that created this reader.
+	 * @param logicalReaderManager a handle onto the logical reader manager.
+	 */
+	public void setLogicalReaderManager(LogicalReaderManager logicalReaderManager) {
+		this.logicalReaderManager = logicalReaderManager;
 	}
 	
 	/**
@@ -76,14 +88,14 @@ public abstract class LogicalReader extends Observable{
 	 * @param spec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec spec) throws ImplementationException {
 
 		this.readerName = name;
 		this.logicalReaderSpec = spec;
 		
 		if (spec.getProperties() == null) {
 			log.debug("no properties specified - aborting.");
-			throw new ImplementationExceptionResponse("no properties specified");
+			throw new ImplementationException("no properties specified");
 		}
 		// store the properties
 		for (LRProperty prop : spec.getProperties().getProperty()) {
@@ -175,7 +187,7 @@ public abstract class LogicalReader extends Observable{
 	 * @param spec an LRSpec containing the changes of the reader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public abstract void update(LRSpec spec) throws ImplementationExceptionResponse;
+	public abstract void update(LRSpec spec) throws ImplementationException;
 	
 	/**
 	 * stops a reader from reading tags.

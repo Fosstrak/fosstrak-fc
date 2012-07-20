@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.llrp.adaptor.Adaptor;
 import org.fosstrak.llrp.adaptor.AdaptorManagement;
 import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
@@ -73,7 +72,7 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	
 	/**
 	 * private constructor as we need the LLRPManager to act as a singleton.
-	 * @throws ImplementationExceptionResponse whenever the LLRPManager cannot be created.
+	 * @throws ImplementationException whenever the LLRPManager cannot be created.
 	 */
 	private LLRPManager() throws Exception {
 		try {
@@ -258,7 +257,7 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	/**
 	 * create the singleton instance of the LLRPManager.
 	 * @return an instance of the singleton LLRPManager.
-	 * @throws ImplementationExceptionResponse 
+	 * @throws ImplementationException 
 	 */
 	public static synchronized LLRPManager getInstance() {
 		if (LLRPManager.instance == null) {

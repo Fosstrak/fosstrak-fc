@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareException;
@@ -70,7 +70,7 @@ public class TestAdaptor extends BaseReader {
 	}
 	
 	@Override
-	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec spec) throws ImplementationException {
 		super.initialize(name, spec);
 	}
 	

@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
 import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 import org.llrp.ltk.generated.messages.DELETE_ROSPEC;
@@ -78,7 +77,7 @@ public class LLRPControllerManager  {
 	 //* We can call the "define" webmethod in the LLRPControllerImpl which will call 
 	 //* the "define" function below ==> MUST BE TESTED. 
 	 
-	public void define (String lrSpecName, String pathFile) throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+	public void define (String lrSpecName, String pathFile) throws DuplicateNameException, NoSuchNameException {
 		ADD_ROSPEC addRoSpec = null;
 		try {
 			LOG.debug("pathfile of add_rospec is " + pathFile);
@@ -100,7 +99,7 @@ public class LLRPControllerManager  {
 	 */
 	
 	public void define(String lrSpecName, ADD_ROSPEC addRoSpec) 
-		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+		throws DuplicateNameException, NoSuchNameException {
 		if (addRoSpec != null) {
 			LOG.debug("Define an ADD_ROSPEC for " + lrSpecName);
 			// init the Connection and the LLRP context
@@ -136,10 +135,10 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the name of the logical reader
 	 */
 	
-	public void undefine(String lrSpecName) throws NoSuchNameExceptionResponse {
+	public void undefine(String lrSpecName) throws NoSuchNameException {
 		LOG.debug("Undefine ROSPEC for " + lrSpecName);
 		if (!lrROSpecMap.containsKey(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		ROSpec roSpec = lrROSpecMap.get(lrSpecName);
 		if (roSpec != null) {
@@ -165,10 +164,10 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the logical reader name
 	 */
 	
-	public void start (String lrSpecName) throws NoSuchNameExceptionResponse {
+	public void start (String lrSpecName) throws NoSuchNameException {
 		LOG.debug("Start ROSPEC for " + lrSpecName);
 		if (!lrROSpecMap.containsKey(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		ROSpec roSpec = lrROSpecMap.get(lrSpecName);
 		String readerName = lrPhysicalMap.get(lrSpecName);
@@ -185,10 +184,10 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the logical reader name
 	 */
 	
-	public void stop(String lrSpecName) throws NoSuchNameExceptionResponse {
+	public void stop(String lrSpecName) throws NoSuchNameException {
 		LOG.debug("Stop ROSPEC for " + lrSpecName);
 		if (!lrROSpecMap.containsKey(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		ROSpec roSpec = lrROSpecMap.get(lrSpecName);
 		String readerName = lrPhysicalMap.get(lrSpecName);
@@ -205,10 +204,10 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the logical reader name
 	 */
 	
-	public void enable(String lrSpecName) throws NoSuchNameExceptionResponse {
+	public void enable(String lrSpecName) throws NoSuchNameException {
 		LOG.debug("Enable ROSPEC for " + lrSpecName);
 		if (!lrROSpecMap.containsKey(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		ROSpec roSpec = lrROSpecMap.get(lrSpecName);
 		String readerName = lrPhysicalMap.get(lrSpecName);
@@ -225,10 +224,10 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the logical reader name
 	 */
 	
-	public void disable(String lrSpecName) throws NoSuchNameExceptionResponse {
+	public void disable(String lrSpecName) throws NoSuchNameException {
 		LOG.debug("Disable ROSPEC for " + lrSpecName);
 		if (!lrROSpecMap.containsKey(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		ROSpec roSpec = lrROSpecMap.get(lrSpecName);
 		String readerName = lrPhysicalMap.get(lrSpecName);
@@ -249,7 +248,7 @@ public class LLRPControllerManager  {
 		for (String lrSpecName : lrROSpecMap.keySet()) {			
 			try {
 				disable(lrSpecName);
-			} catch (NoSuchNameExceptionResponse e) {
+			} catch (NoSuchNameException e) {
 				LOG.error("try to stop lrSpec " + lrSpecName, e);
 			}			
 		}
@@ -309,24 +308,23 @@ public class LLRPControllerManager  {
 	 * @return the physical reader name
 	 */
 	private static String retrievePhysicalReader (String lrSpecName) 
-		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+		throws DuplicateNameException, NoSuchNameException {
 		if (!LogicalReaderManagerFactory.getLRM().contains(lrSpecName)) {
-			throw new NoSuchNameExceptionResponse("this logical reader doesn't exist");
+			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		// Test if a LR with the given name already exists or 
 		// if we are adding another ROSpec to the same reader.
 		if (lrROSpecMap.containsKey(lrSpecName) ) { 
-			throw new DuplicateNameExceptionResponse
-				(DuplicateNameExceptionResponse.DUPLICATE_NAME_EXCEPTION);
+			throw new DuplicateNameException("This reader is already used");
 		} 
 		String readerName = null;
 		try {
 			readerName = LogicalReaderManagerFactory.getLRM().getPropertyValue(lrSpecName, "PhysicalReaderName");
-		} catch(org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
 			LOG.error("Missing property PhysicalReaderName", e);
-		} catch(ImplementationExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
 			LOG.error("Error when trying to get property PhysicalReaderName", e);
-		} catch(SecurityExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
 			LOG.error("Error when trying to get property PhysicalReaderName", e);
 		}
 		return readerName;
@@ -394,7 +392,7 @@ public class LLRPControllerManager  {
 	 * @param addAccessSpec the ADD_ACCESSSPEC
 	 */
 	public static void defineAccessSpec (String lrSpecName, ADD_ACCESSSPEC addAccessSpec) 
-		throws DuplicateNameExceptionResponse, NoSuchNameExceptionResponse {
+		throws DuplicateNameException, NoSuchNameException {
 		if (addAccessSpec != null) {
 		LOG.debug("Define an ADD_ACCESSSPEC for " + lrSpecName);
 		

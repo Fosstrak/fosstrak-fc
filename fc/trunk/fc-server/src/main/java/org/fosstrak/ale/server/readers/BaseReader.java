@@ -22,9 +22,8 @@ package org.fosstrak.ale.server.readers;
 
 import java.util.List;
 
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareException;
 import org.fosstrak.hal.Observation;
@@ -51,7 +50,7 @@ public abstract class BaseReader extends LogicalReader {
 	 * @throws ImplementationException whenever an internal error occurs.
 
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec spec) throws ImplementationException {
 		super.initialize(name, spec);
 	}
 	
@@ -84,21 +83,21 @@ public abstract class BaseReader extends LogicalReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 *
 	 */
-	public abstract void connectReader() throws ImplementationExceptionResponse;
+	public abstract void connectReader() throws ImplementationException;
 
 	/**
 	 * destroys a reader.
 	 * @throws ImplementationException whenever an internal error occured
 	 *
 	 */
-	public abstract void disconnectReader() throws ImplementationExceptionResponse;
+	public abstract void disconnectReader() throws ImplementationException;
 
 	/**
 	 * updates a reader according the specified LRSpec.
 	 * @param spec LRSpec for the reader
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
-	public abstract void update(LRSpec spec) throws ImplementationExceptionResponse;
+	public abstract void update(LRSpec spec) throws ImplementationException;
 	
 	/**
 	 * Triggers the identification of all tags that are currently available 

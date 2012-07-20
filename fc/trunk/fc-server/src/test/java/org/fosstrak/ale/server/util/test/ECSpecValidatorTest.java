@@ -24,19 +24,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.easymock.EasyMock;
+import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.util.ECSpecValidator;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -48,28 +47,28 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify that null as input for the readers list is not allowed.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReadersAvailableNullAsInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReadersAvailableNullAsInput() throws ECSpecValidationException {
 		ECSpecValidator.checkReadersAvailable(null, null);
 	}
 	
 	/**
 	 * verify that at least one reader has to be specified.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReadersAvailableNoReaderSpecified() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReadersAvailableNoReaderSpecified() throws ECSpecValidationException {
 		ECSpecValidator.checkReadersAvailable(new LogicalReaders(), null);		
 	}
 	
 	/**
 	 * no reader specified or null as input.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReadersAvailableNoReaderInALE() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReadersAvailableNoReaderInALE() throws ECSpecValidationException {
 		LogicalReaderManager manager = EasyMock.createMock(LogicalReaderManager.class);
 		EasyMock.expect(manager.contains("logicalReader1")).andReturn(true);
 		EasyMock.expect(manager.contains("logicalReader2")).andReturn(false);
@@ -83,10 +82,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * readers must be all set and present in the ALE.
-	 * @throws ECSpecValidationExceptionResponse test failure.
+	 * @throws ECSpecValidationException test failure.
 	 */
 	@Test
-	public void testCheckReadersAvailable() throws ECSpecValidationExceptionResponse {
+	public void testCheckReadersAvailable() throws ECSpecValidationException {
 		LogicalReaderManager manager = EasyMock.createMock(LogicalReaderManager.class);
 		EasyMock.expect(manager.contains("logicalReader1")).andReturn(true);
 		EasyMock.expect(manager.contains("logicalReader2")).andReturn(true);
@@ -102,10 +101,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify the check on the boundary spec.
-	 * @throws ECSpecValidationExceptionResponse test failure.
+	 * @throws ECSpecValidationException test failure.
 	 */
 	@Test
-	public void testCheckBoundarySpec() throws ECSpecValidationExceptionResponse {
+	public void testCheckBoundarySpec() throws ECSpecValidationException {
 		ECBoundarySpec ecBoundarySpec = new ECBoundarySpec();
 		ECTime time = new ECTime();
 		time.setValue(1000);
@@ -115,19 +114,19 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify the check on the boundary spec.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckBoundarySpecNullNotAllowed() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckBoundarySpecNullNotAllowed() throws ECSpecValidationException {
 		ECSpecValidator.checkBoundarySpec(null);
 	}
 
 	/**
 	 * verify illegal time values (negative ones).
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckTimeNotNegative() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckTimeNotNegative() throws ECSpecValidationException {
 		// first if we input null, all must be OK.
 		Assert.assertTrue(ECSpecValidator.checkTimeNotNegative(null, null));
 		
@@ -138,10 +137,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify illegal stopping condition in the boundary spec.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckStartTriggerConstraintsOnRepeatPeriodIllegalInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckStartTriggerConstraintsOnRepeatPeriodIllegalInput() throws ECSpecValidationException {
 		ECBoundarySpec ecBoundarySpec = new ECBoundarySpec();
 		ecBoundarySpec.setStartTrigger("startTrigger");
 		ECTime ecTime = new ECTime();
@@ -152,10 +151,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify illegal stopping condition in the boundary spec.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
 	@Test
-	public void testCheckStartTriggerConstraintsOnRepeatPeriod() throws ECSpecValidationExceptionResponse {
+	public void testCheckStartTriggerConstraintsOnRepeatPeriod() throws ECSpecValidationException {
 		ECBoundarySpec ecBoundarySpec = new ECBoundarySpec();
 		ecBoundarySpec.setStartTrigger("startTrigger");
 		ecBoundarySpec.setRepeatPeriod(new ECTime());
@@ -164,37 +163,37 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * verify illegal stopping condition in the boundary spec.
-	 * @throws ECSpecValidationExceptionResponse expected test result.
+	 * @throws ECSpecValidationException expected test result.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckBoundarySpecStoppingConditionIllegalInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckBoundarySpecStoppingConditionIllegalInput() throws ECSpecValidationException {
 		ECSpecValidator.checkBoundarySpecStoppingCondition(new ECBoundarySpec());		
 	}
 	
 	/**
 	 * test the report spec validation.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReportSpecsNullIsIllegal() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReportSpecsNullIsIllegal() throws ECSpecValidationException {
 		ECSpecValidator.checkReportSpecs(null);		
 	}
 	
 	/**
 	 * test the report spec validation.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReportSpecsEmptyIllegal() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReportSpecsEmptyIllegal() throws ECSpecValidationException {
 		ECSpecValidator.checkReportSpecs(new ECSpec.ReportSpecs());
 	}
 	
 	/**
 	 * test the report spec validation.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testCheckReportSpecs() throws ECSpecValidationExceptionResponse {
+	public void testCheckReportSpecs() throws ECSpecValidationException {
 		ECSpec.ReportSpecs reportSpecs = new ECSpec.ReportSpecs();
 		
 		ECReportSpec spec1 = new ECReportSpec();
@@ -217,10 +216,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test the report spec validation - specifically test that no two report specs can have the same name.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testCheckReportSpecNoDuplicateReportSpecNames() throws ECSpecValidationExceptionResponse {
+	public void testCheckReportSpecNoDuplicateReportSpecNames() throws ECSpecValidationException {
 		ECReportSpec spec1 = new ECReportSpec();
 		spec1.setReportName("spec1");
 		ECReportSpec spec2 = new ECReportSpec();
@@ -238,10 +237,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test the report spec validation - specifically test that no two report specs can have the same name - give illegal input.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testCheckReportSpecNoDuplicateReportSpecNamesIllegalInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testCheckReportSpecNoDuplicateReportSpecNamesIllegalInput() throws ECSpecValidationException {
 		ECReportSpec spec1 = new ECReportSpec();
 		spec1.setReportName("spec1");
 		ECReportSpec spec2 = new ECReportSpec();
@@ -256,19 +255,19 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test the report output spec validation - must throw exception here as all report specs must have an output spec.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testReportOutputSpecNoNullSpecAllowed() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testReportOutputSpecNoNullSpecAllowed() throws ECSpecValidationException {
 		ECSpecValidator.checkReportOutputSpec(null, null);
 	}
 
 	/**
 	 * test the report output spec validation - must throw exception here as no output definition is given.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testReportOutputSpecNoOutputFormatGiven() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testReportOutputSpecNoOutputFormatGiven() throws ECSpecValidationException {
 		final String reportName = "reportName";
 		final ECReportOutputSpec outputSpec = new ECReportOutputSpec();
 		ECSpecValidator.checkReportOutputSpec(reportName, outputSpec);
@@ -276,10 +275,10 @@ public class ECSpecValidatorTest {
 
 	/**
 	 * test the report output spec validation
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testReportOutputSpec() throws ECSpecValidationExceptionResponse {
+	public void testReportOutputSpec() throws ECSpecValidationException {
 		final String reportName = "reportName";
 		ECReportOutputSpec outputSpec;
 		
@@ -306,19 +305,19 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * the method must not stumble over null value as input.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testGroupSpecNull() throws ECSpecValidationExceptionResponse {
+	public void testGroupSpecNull() throws ECSpecValidationException {
 		Assert.assertTrue(ECSpecValidator.checkGroupSpec(null));
 	}
 	
 	/**
 	 * test the group spec validation.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testGroupSpec() throws ECSpecValidationExceptionResponse {
+	public void testGroupSpec() throws ECSpecValidationException {
 		ECGroupSpec groupSpec = new ECGroupSpec();
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[3-4].*.*");
@@ -329,10 +328,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test the group spec validation - must throw exception here
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testGroupSpecInvalidInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testGroupSpecInvalidInput() throws ECSpecValidationException {
 		ECGroupSpec groupSpec = new ECGroupSpec();
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
@@ -342,10 +341,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test the group spec validation - must throw exception here
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testGroupSpecInvalidInput2() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testGroupSpecInvalidInput2() throws ECSpecValidationException {
 		ECGroupSpec groupSpec = new ECGroupSpec();
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[3-4].*.*");
@@ -356,19 +355,19 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * the method must not stumble over null value as input.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testFilterSpecNull() throws ECSpecValidationExceptionResponse {
+	public void testFilterSpecNull() throws ECSpecValidationException {
 		Assert.assertTrue(ECSpecValidator.checkFilterSpec(null));
 	}
 	
 	/**
 	 * test the filter spec validation.
-	 * @throws ECSpecValidationExceptionResponse violation against the specification.
+	 * @throws ECSpecValidationException violation against the specification.
 	 */
 	@Test
-	public void testFilterSpec() throws ECSpecValidationExceptionResponse {
+	public void testFilterSpec() throws ECSpecValidationException {
 		ECFilterSpec.IncludePatterns includePatterns = new ECFilterSpec.IncludePatterns();
 		includePatterns.getIncludePattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		ECFilterSpec.ExcludePatterns excludePatterns = new ECFilterSpec.ExcludePatterns();
@@ -388,10 +387,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test that an exception is thrown when pattern are equal.
-	 * @throws ECSpecValidationExceptionResponse test failure.
+	 * @throws ECSpecValidationException test failure.
 	 */
 	@Test
-	public void testPatternDisjoint() throws ECSpecValidationExceptionResponse {
+	public void testPatternDisjoint() throws ECSpecValidationException {
 		String p1 = "urn:epc:pat:sgtin-64:1.1.X.*";
 		String p2 = "urn:epc:pat:sgtin-64:1.2.X.*";
 		String p3 = "urn:epc:pat:sgtin-64:1.3.X.*";
@@ -402,10 +401,10 @@ public class ECSpecValidatorTest {
 	
 	/**
 	 * test that an exception is thrown when pattern are equal.
-	 * @throws ECSpecValidationExceptionResponse test expectation.
+	 * @throws ECSpecValidationException test expectation.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testPatternDisjointIllegalInput() throws ECSpecValidationExceptionResponse {
+	@Test(expected = ECSpecValidationException.class)
+	public void testPatternDisjointIllegalInput() throws ECSpecValidationException {
 		String p1 = "urn:epc:pat:sgtin-64:1.1.X.*";
 		String p2 = "fdsfdsfdsfds";
 		// must throw an exception

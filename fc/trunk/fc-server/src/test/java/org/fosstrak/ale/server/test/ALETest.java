@@ -25,6 +25,8 @@ import junit.framework.Assert;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.easymock.EasyMock;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.ReportsGenerator;
@@ -32,8 +34,6 @@ import org.fosstrak.ale.server.impl.ALEImpl;
 import org.fosstrak.ale.server.impl.type.InputGeneratorProvider;
 import org.fosstrak.ale.server.impl.type.ReportsGeneratorsProvider;
 import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.junit.Before;
@@ -117,7 +117,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking define on an existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = DuplicateNameExceptionResponse.class)
+	@Test(expected = DuplicateNameException.class)
 	public void testDefineDuplicateNameException() throws Exception {
 		
 		ReportsGeneratorsProvider rgenProvider = EasyMock.createMock(ReportsGeneratorsProvider.class);
@@ -161,7 +161,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking undefine on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testUndefineThrowNoSuchNameException() throws Exception {
 		ale.undefine("noSuchSpec");
 	}
@@ -197,7 +197,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking getECSpec on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testGetECSpecThrowNoSuchNameException() throws Exception {
 		ale.getECSpec("noSuchSpec");
 	}
@@ -240,7 +240,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking subscribe on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testSubscribeThrowNoSuchNameException() throws Exception {
 		ale.subscribe("noSuchSpec", "");
 	}
@@ -280,7 +280,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking unsubscribe on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testUnsubscribeThrowNoSuchNameException() throws Exception {
 		ale.unsubscribe("noSuchSpec", "");
 	}
@@ -330,7 +330,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking poll on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testPollThrowNoSuchNameException() throws Exception {
 		ale.poll("noSuchSpec");
 	}
@@ -366,7 +366,7 @@ public class ALETest {
 	 * tests that exception is thrown when invoking getSubscribers on not existing specification.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testGetSubscribersThrowNoSuchNameException() throws Exception {
 		ale.getSubscribers("noSuchSpec");
 	}

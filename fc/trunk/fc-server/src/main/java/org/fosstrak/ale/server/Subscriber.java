@@ -28,12 +28,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InvalidURIException;
 //import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.util.SerializerUtil;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.apache.log4j.Logger;
 
@@ -90,14 +88,14 @@ public class Subscriber {
 	 * @param notificationURI of the subscriber 
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
-	public Subscriber(String notificationURI) throws InvalidURIExceptionResponse {
+	public Subscriber(String notificationURI) throws InvalidURIException {
 		
 		this.uri = notificationURI;
 		
 		String[] parts = notificationURI.split(":");
 		
 		if (parts.length < 2 || parts.length > 3 || parts[1].length() < 3 || !parts[1].startsWith("//")) {
-			throw new InvalidURIExceptionResponse(INVALID_URI_EXCEPTION_TEXT);
+			throw new InvalidURIException(INVALID_URI_EXCEPTION_TEXT);
 		}
 		
 		if (HTTP_PREFIX.equals(parts[0])) {
@@ -121,7 +119,7 @@ public class Subscriber {
 				try {
 					port = Integer.parseInt(slashPos < 0 ? parts[2] : parts[2].substring(0, slashPos));
 				} catch (NumberFormatException e) {
-					throw new InvalidURIExceptionResponse("Invalid port. " + INVALID_URI_EXCEPTION_TEXT);
+					throw new InvalidURIException("Invalid port. " + INVALID_URI_EXCEPTION_TEXT);
 				}
 				path = slashPos < 0 ? "" : parts[2].substring(slashPos + 1);
 				
@@ -132,14 +130,14 @@ public class Subscriber {
 			protocol = TCP;
 			
 			if (parts.length != 3) {
-				throw new InvalidURIExceptionResponse(INVALID_URI_EXCEPTION_TEXT);
+				throw new InvalidURIException(INVALID_URI_EXCEPTION_TEXT);
 			}
 			
 			host = parts[1].substring(2);
 			try {
 				port = Integer.parseInt(parts[2]);
 			} catch (NumberFormatException e) {
-				throw new InvalidURIExceptionResponse("Invalid port. " + INVALID_URI_EXCEPTION_TEXT);
+				throw new InvalidURIException("Invalid port. " + INVALID_URI_EXCEPTION_TEXT);
 			}
 			
 			
@@ -152,14 +150,14 @@ public class Subscriber {
 				if (parts[1].startsWith("//") && parts[1].length() < 5) {
 					parts[1] = parts[1] + ":" + parts[2];
 				} else {
-					throw new InvalidURIExceptionResponse(INVALID_URI_EXCEPTION_TEXT);
+					throw new InvalidURIException(INVALID_URI_EXCEPTION_TEXT);
 				}
 			}
 			
 			int slashPos = parts[1].indexOf("/", 2);
 			
 			if (slashPos < 0) {
-				throw new InvalidURIExceptionResponse("Invalid path. " + INVALID_URI_EXCEPTION_TEXT);
+				throw new InvalidURIException("Invalid path. " + INVALID_URI_EXCEPTION_TEXT);
 			}
 			
 			if (slashPos == 2) {
@@ -173,7 +171,7 @@ public class Subscriber {
 		} else {
 			
 			// invalid url
-			throw new InvalidURIExceptionResponse("Invalid protocol. " + INVALID_URI_EXCEPTION_TEXT);
+			throw new InvalidURIException("Invalid protocol. " + INVALID_URI_EXCEPTION_TEXT);
 			
 		}
 		
@@ -262,7 +260,7 @@ public class Subscriber {
 	 * @param reports to notify the subscriber about
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	public void notify(ECReports reports) throws ImplementationExceptionResponse {
+	public void notify(ECReports reports) throws ImplementationException {
 		
 		if (isHttp()) {
 			
@@ -295,7 +293,7 @@ public class Subscriber {
 	 * @param data to write to the socket
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	private void writeToSocket(String data) throws ImplementationExceptionResponse {
+	private void writeToSocket(String data) throws ImplementationException {
 	
 		Socket socket;
 		try {
@@ -314,9 +312,9 @@ public class Subscriber {
 			socket.close();
 			
 		} catch (UnknownHostException e) {
-			throw new ImplementationExceptionResponse("Host '" + host + "' not found.");
+			throw new ImplementationException("Host '" + host + "' not found.");
 		} catch (IOException e) {
-			throw new ImplementationExceptionResponse("Could not write data to socket at '" + host + ":" + port + "'.");
+			throw new ImplementationException("Could not write data to socket at '" + host + ":" + port + "'.");
 		}
 		
 	}
@@ -327,7 +325,7 @@ public class Subscriber {
 	 * @param reports to write to the file
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	private void writeNotificationToFile(ECReports reports) throws ImplementationExceptionResponse {
+	private void writeNotificationToFile(ECReports reports) throws ImplementationException {
 		
 		// append reports as xml to file
 		LOG.debug("Append reports '" + reports.getSpecName() + "' as xml to file '" + path + "'.");
@@ -342,7 +340,7 @@ public class Subscriber {
 				try {
 					file.createNewFile();
 				} catch (IOException e) {
-					throw new ImplementationExceptionResponse("Could not create new file '" + path + "'.");
+					throw new ImplementationException("Could not create new file '" + path + "'.");
 				}
 			}
 			
@@ -362,11 +360,11 @@ public class Subscriber {
 				fileOutputStream.close();
 				
 			} catch (IOException e) {
-				throw new ImplementationExceptionResponse("Could not write to file '" + path + "'.");
+				throw new ImplementationException("Could not write to file '" + path + "'.");
 			}
 		
 		} else {
-			throw new ImplementationExceptionResponse("This implementation can not write reports to a remote file.");
+			throw new ImplementationException("This implementation can not write reports to a remote file.");
 		}
 		
 	}
@@ -378,13 +376,13 @@ public class Subscriber {
 	 * @return xml representation of the ec reports
 	 * @throws ImplementationException if a implementation exception occurs
 	 */
-	private String getXml(ECReports reports) throws ImplementationExceptionResponse {
+	private String getXml(ECReports reports) throws ImplementationException {
 	
 		CharArrayWriter writer = new CharArrayWriter();
 		try {			
 			SerializerUtil.serializeECReports(reports, writer);
 		} catch (Exception e) {
-			throw new ImplementationExceptionResponse("Unable to serialze reports. (" + e.getMessage() + ")");
+			throw new ImplementationException("Unable to serialze reports. (" + e.getMessage() + ")");
 		}
 		return writer.toString();
 		
@@ -397,13 +395,13 @@ public class Subscriber {
 	 * @return well formed xml representation of the ec reports
 	 * @throws ImplementationException if a implementation exception occurs
 	 */
-	private String getPrettyXml(ECReports reports) throws ImplementationExceptionResponse {
+	private String getPrettyXml(ECReports reports) throws ImplementationException {
 		
 		CharArrayWriter writer = new CharArrayWriter();
 		try {
 			SerializerUtil.serializeECReports(reports, writer);
 		} catch (Exception e) {
-			throw new ImplementationExceptionResponse("Unable to serialze reports. (" + e.getMessage() + ")");
+			throw new ImplementationException("Unable to serialze reports. (" + e.getMessage() + ")");
 		}
 		return writer.toString();
 		
@@ -416,7 +414,7 @@ public class Subscriber {
 	 * @return post request containing an xml representation of the reports
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private String getPostRequest(ECReports reports) throws ImplementationExceptionResponse {
+	private String getPostRequest(ECReports reports) throws ImplementationException {
 		
 		LOG.debug("Create POST request with reports '" + reports.getSpecName() + "'.");
 		

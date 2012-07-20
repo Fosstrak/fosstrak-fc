@@ -34,6 +34,15 @@ import javax.xml.validation.Schema;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.ImmutableReaderException;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InUseException;
+import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.exception.NonCompositeReaderException;
+import org.fosstrak.ale.exception.ReaderLoopException;
+import org.fosstrak.ale.exception.SecurityException;
+import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.readers.BaseReader;
@@ -44,15 +53,6 @@ import org.fosstrak.ale.server.readers.gen.LogicalReaders;
 import org.fosstrak.ale.server.readers.gen.ObjectFactory;
 import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.impl.type.ReaderProvider;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ImmutableReaderExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.NonCompositeReaderExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ReaderLoopExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,18 +104,21 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	
 
 	@Override
-	public String getVendorVersion() throws ImplementationExceptionResponse {
+	public String getVendorVersion() throws ImplementationException {
 		return aleSettings.getAleVendorVersion();
 	}
 
 	@Override
-	public String getStandardVersion() throws ImplementationExceptionResponse {
+	public String getStandardVersion() throws ImplementationException {
 		return aleSettings.getAleStandardVersion();
 	}
 
 	@Override
-	public String getPropertyValue(String name, String propertyName) throws NoSuchNameExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public String getPropertyValue(String name, String propertyName) throws NoSuchNameException, SecurityException, ImplementationException {
+				
 		LogicalReader logRd = logicalReaders.get(name);
+		throwNoSuchNameExceptionIfReaderNull(logRd, name);
+		
 		List<LRProperty> propList = logRd.getProperties();
 		for (LRProperty prop : propList) {
 			if (prop.getName().equalsIgnoreCase(propertyName)) {
@@ -126,9 +129,9 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void setProperties(String name, List<LRProperty> properties)	throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void setProperties(String name, List<LRProperty> properties)	throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, SecurityException, ImplementationException {
 
-		throwValidationExceptionResponseOnNullInput(properties);
+		throwValidationExceptionOnNullInput(properties);
 		
 		LogicalReader logRd = logicalReaders.get(name);
 
@@ -144,15 +147,15 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		LOG.debug("set the properties");
 		try {
 			update(name, spec);
-		} catch (ReaderLoopExceptionResponse e) {
+		} catch (ReaderLoopException e) {
 			String errMsg = "ReaderLoopException during update.";
 			LOG.debug(errMsg, e);
-			throw new ImplementationExceptionResponse(errMsg, e);			
+			throw new ImplementationException(errMsg, e);			
 		}		
 	}
 
 	@Override
-	public void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, NonCompositeReaderExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void removeReaders(String name, java.util.List<String> readers) throws NoSuchNameException, InUseException, ImmutableReaderException, NonCompositeReaderException, SecurityException, ImplementationException {
 		LogicalReader lgRd = logicalReaders.get(name);
 
 		throwNoSuchNameExceptionIfReaderNull(lgRd, name);
@@ -174,20 +177,20 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		spec.getReaders().getReader().addAll(res);
 		try {
 			update(name, spec);
-		} catch (ValidationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
-		} catch (ReaderLoopExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (ValidationException e) {
+			throw new ImplementationException(e.getMessage());
+		} catch (ReaderLoopException e) {
+			throw new ImplementationException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, NonCompositeReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void setReaders(String name, java.util.List<String> readers)  throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, NonCompositeReaderException, ReaderLoopException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
 		
 		throwNoSuchNameExceptionIfReaderNull(logRd, name);
 		throwNonCompositeReaderExceptionIfReaderNotComposite(logRd, name);
-		//throwValidationExceptionIfNotAllReadersAvailable(readers);
+		throwValidationExceptionIfNotAllReadersAvailable(readers);
 		
 		LRSpec spec = logRd.getLRSpec();
 		spec.setReaders(new LRSpec.Readers());
@@ -196,12 +199,12 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void addReaders(String name, java.util.List<String> readers) throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse, ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse, NonCompositeReaderExceptionResponse {
+	public void addReaders(String name, java.util.List<String> readers) throws NoSuchNameException, ValidationException, InUseException, ImmutableReaderException, ReaderLoopException, SecurityException, ImplementationException, NonCompositeReaderException {
 		LogicalReader logRd = logicalReaders.get(name);
 
 		throwNoSuchNameExceptionIfReaderNull(logRd, name);
 		throwNonCompositeReaderExceptionIfReaderNotComposite(logRd, name);
-		//throwValidationExceptionIfNotAllReadersAvailable(readers);
+		throwValidationExceptionIfNotAllReadersAvailable(readers);
 		
 		LRSpec spec = logRd.getLRSpec();
 		if (spec.getReaders() == null) {
@@ -216,7 +219,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public LRSpec getLRSpec(String name) throws NoSuchNameExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public LRSpec getLRSpec(String name) throws NoSuchNameException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
 
 		throwNoSuchNameExceptionIfReaderNull(logRd, name);
@@ -225,7 +228,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public java.util.List<String> getLogicalReaderNames() throws SecurityExceptionResponse, ImplementationExceptionResponse {
+	public java.util.List<String> getLogicalReaderNames() throws SecurityException, ImplementationException {
 		List<String> rdNames = new ArrayList<String>();
 		Iterable<String> it = logicalReaders.keySet();
 		for (String reader : it) {
@@ -235,7 +238,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void undefine(String name) throws NoSuchNameExceptionResponse, InUseExceptionResponse, SecurityExceptionResponse, ImmutableReaderExceptionResponse, ImplementationExceptionResponse {
+	public void undefine(String name) throws NoSuchNameException, InUseException, SecurityException, ImmutableReaderException, ImplementationException {
 		// the logicalReader must delete himself from its observables
 		LOG.debug("undefining reader " + name);
 		LogicalReader reader = getLogicalReader(name);
@@ -246,7 +249,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		// an active CC or EC pointing to the reader
 		// this raises an InUseException
 		if (reader.countObservers() > 0) {
-			throw new InUseExceptionResponse();
+			throw new InUseException();
 		}
 		
 		if (reader instanceof CompositeReader) {
@@ -257,7 +260,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 			basereader.disconnectReader();
 			basereader.cleanup();
 		} else {
-			throw new ImplementationExceptionResponse("try to undefine unknown reader type - ALE knows BaseReader and CompositeReader - atomic readers must subclass BaseReader, composite readers (collections of readers) must subclass CompositeReader - this is a serious problem!!! reader-name: " + name);
+			throw new ImplementationException("try to undefine unknown reader type - ALE knows BaseReader and CompositeReader - atomic readers must subclass BaseReader, composite readers (collections of readers) must subclass CompositeReader - this is a serious problem!!! reader-name: " + name);
 		}
 		
 		getPersistenceProvider().removeLRSpec(name);
@@ -266,8 +269,10 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void update(String name, LRSpec spec)  throws NoSuchNameExceptionResponse, ValidationExceptionResponse, InUseExceptionResponse,  ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void update(String name, LRSpec spec)  throws NoSuchNameException, ValidationException, InUseException,  ImmutableReaderException, ReaderLoopException, SecurityException, ImplementationException {
 		LogicalReader logRd = logicalReaders.get(name);
+		throwNoSuchNameExceptionIfReaderNull(logRd, name);
+		
 		logRd.update(spec);
 		
 		getPersistenceProvider().removeLRSpec(name);
@@ -275,10 +280,10 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
 
-		throwValidationExceptionResponseOnNullInput(name, "parameter name is null");
-		throwValidationExceptionResponseOnNullInput(spec, "parameter spec is null");
+		throwValidationExceptionOnNullInput(name, "parameter name is null");
+		throwValidationExceptionOnNullInput(spec, "parameter spec is null");
 		
 		LRSpec thespec = new LRSpec();
 		
@@ -310,10 +315,10 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void define(String name, LRSpec spec) throws DuplicateNameExceptionResponse, ValidationExceptionResponse, SecurityExceptionResponse, ImplementationExceptionResponse {
+	public void define(String name, LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
 
-		throwValidationExceptionResponseOnNullInput(name, "parameter name is null");
-		throwValidationExceptionResponseOnNullInput(spec, "parameter spec is null");
+		throwValidationExceptionOnNullInput(name, "parameter name is null");
+		throwValidationExceptionOnNullInput(spec, "parameter spec is null");
 		
 		LogicalReader logRead = getReaderProvider().createReader(name, spec);
 		// establish connection when basereader
@@ -401,13 +406,13 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	 * This method stores the current setting of logicalreaders to a .xml file.
 	 * 
 	 * @param storeFilePath configurationFilePath to initialize
-	 * @throws ImplementationExceptionResponse whenever something goes wrong inside the implementation 
-	 * @throws SecurityExceptionResponse the operation was not permitted due to access restrictions
-	 * @throws DuplicateNameExceptionResponse when a reader name is already defined
-	 * @throws ValidationExceptionResponse the provided LRSpec is invalid
-	 * @throws FileNotFoundExceptionResponse the provided file was not found
+	 * @throws ImplementationException whenever something goes wrong inside the implementation 
+	 * @throws SecurityException the operation was not permitted due to access restrictions
+	 * @throws DuplicateNameException when a reader name is already defined
+	 * @throws ValidationException the provided LRSpec is invalid
+	 * @throws FileNotFoundException the provided file was not found
 	 */
-	public void storeToFile(String storeFilePath) throws ImplementationExceptionResponse, SecurityExceptionResponse, DuplicateNameExceptionResponse, ValidationExceptionResponse, FileNotFoundException {
+	public void storeToFile(String storeFilePath) throws ImplementationException, SecurityException, DuplicateNameException, ValidationException, FileNotFoundException {
 		
 		LOG.debug("Store LogicalReaderManager");
 		
@@ -488,12 +493,16 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	}
 
 	@Override
-	public void setLogicalReader(LogicalReader reader) throws ImplementationExceptionResponse {
+	public void setLogicalReader(LogicalReader reader) throws ImplementationException {
 		if (logicalReaders.containsKey(reader.getName())) {
-			throw new ImplementationExceptionResponse();	//	"reader duplicated");
+			throw new ImplementationException("reader duplicated");
 		}
 		
 		logicalReaders.put(reader.getName(), reader);
+	}
+	
+	private boolean containsNoInitialize(String readerName) {
+		return logicalReaders.containsKey(readerName);
 	}
 
 	@Override
@@ -507,7 +516,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		} catch (Exception e) {
 			LOG.error("could not initialize Logical Reader Manager", e);
 		}
-		return logicalReaders.containsKey(logicalReaderName);
+		return containsNoInitialize(logicalReaderName);
 	}
 
 	@Override
@@ -520,13 +529,13 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	 * assert that the given reader is not null. if so, throws Exception.
 	 * @param logRd the logical reader to test.
 	 * @param name the name of the reader.
-	 * @throws NoSuchNameExceptionResponse if the given reader is null.
+	 * @throws NoSuchNameException if the given reader is null.
 	 */
-	protected void throwNoSuchNameExceptionIfReaderNull(LogicalReader logRd, String name) throws NoSuchNameExceptionResponse {
+	protected void throwNoSuchNameExceptionIfReaderNull(LogicalReader logRd, String name) throws NoSuchNameException {
 		if (null == logRd) {
 			String errMsg = String.format("There is no such reader %s", name);
 			LOG.debug(errMsg);
-			throw new NoSuchNameExceptionResponse(errMsg);
+			throw new NoSuchNameException(errMsg);
 		}
 	}
 
@@ -534,38 +543,38 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	 * assert that the given reader is a composite reader. if not, throws exception.
 	 * @param logRd the logical reader that is to be tested.
 	 * @param name the name of the reader.
-	 * @throws NonCompositeReaderExceptionResponse if the given reader is not composite.
+	 * @throws NonCompositeReaderException if the given reader is not composite.
 	 */
-	protected void throwNonCompositeReaderExceptionIfReaderNotComposite(LogicalReader logRd, String name) throws NonCompositeReaderExceptionResponse {
+	protected void throwNonCompositeReaderExceptionIfReaderNotComposite(LogicalReader logRd, String name) throws NonCompositeReaderException {
 		if (! (logRd instanceof CompositeReader)) {
 			String errMsg = "reader " + name + " is not composite";
 			LOG.debug(errMsg);
-			throw new NonCompositeReaderExceptionResponse(errMsg);
+			throw new NonCompositeReaderException(errMsg);
 		}
 	}
 
 	/**
 	 * assert that the given input parameter is not null. if so, throws exception.
 	 * @param inputParameter the input parameter to test on null.
-	 * @throws ValidationExceptionResponse if the given input parameter is null.
+	 * @throws ValidationException if the given input parameter is null.
 	 */
-	protected void throwValidationExceptionResponseOnNullInput(Object inputParameter, String... parameters) throws ValidationExceptionResponse {
+	protected void throwValidationExceptionOnNullInput(Object inputParameter, String... parameters) throws ValidationException {
 		if (null == inputParameter) {
 			String errMsg = "given input parameter is null. " + StringUtils.join(parameters);
 			LOG.debug(errMsg);
-			throw new ValidationExceptionResponse(errMsg);
+			throw new ValidationException(errMsg);
 		}
 	}
-
+	
 	/**
 	 * assert that the given list of readers are all present/defined.
 	 * @param readers the readers to test.
-	 * @throws ValidationExceptionResponse if at least one of the requested readers is not existing.
+	 * @throws ValidationException if at least one of the requested readers is not existing.
 	 */
-	protected void throwValidationExceptionIfNotAllReadersAvailable(List<String> readers) throws ValidationExceptionResponse {
+	protected void throwValidationExceptionIfNotAllReadersAvailable(List<String> readers) throws ValidationException {
 		for (String readerName : readers) {
-			if (!contains(readerName)) {
-				throw new ValidationExceptionResponse("the requested reader is not defined: " + readerName);
+			if (!containsNoInitialize(readerName)) {
+				throw new ValidationException("the requested reader is not defined: " + readerName);
 			}
 		}
 	}

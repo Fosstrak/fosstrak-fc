@@ -20,8 +20,7 @@
 
 package org.fosstrak.ale.server;
 
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.exception.ECSpecValidationException;
 
 /**
  * This clas represents a data field of a tag, filter or group pattern.
@@ -55,7 +54,7 @@ public class PatternDataField {
 	 * @param usage of the pattern this data field belongs to
 	 * @throws ECSpecValidationException if the data field is invalid
 	 */
-	public PatternDataField(String stringRepresentation, PatternUsage usage) throws ECSpecValidationExceptionResponse {
+	public PatternDataField(String stringRepresentation, PatternUsage usage) throws ECSpecValidationException {
 		
 		this.stringRepresentation = stringRepresentation;
 		
@@ -86,21 +85,21 @@ public class PatternDataField {
 		} catch(NumberFormatException e) {
 			
 			if (usage == PatternUsage.TAG) {
-				throw new ECSpecValidationExceptionResponse("Invalid data field '" + stringRepresentation + "'. " +
+				throw new ECSpecValidationException("Invalid data field '" + stringRepresentation + "'. " +
 						"Only 'int' is allowed.");
 			}
 			
 			// check for range
 			String[] parts = stringRepresentation.split("-");
 			if (parts.length != 2 || !parts[0].startsWith("[") || !parts[1].endsWith("]")) {
-				throw new ECSpecValidationExceptionResponse("Invalid data field '" + stringRepresentation + "'. " +
+				throw new ECSpecValidationException("Invalid data field '" + stringRepresentation + "'. " +
 						"Only '*', " + (usage == PatternUsage.GROUP ? "'X', " : "") + "'[lo-hi]' or 'int' are allowed.");
 			}
 			try {
 				low = Integer.parseInt(parts[0].substring(1));
 				high = Integer.parseInt(parts[1].substring(0, parts[1].length() - 1));
 			} catch (NumberFormatException e1) {
-				throw new ECSpecValidationExceptionResponse("Invalid data field '" + stringRepresentation + "'. " +
+				throw new ECSpecValidationException("Invalid data field '" + stringRepresentation + "'. " +
 						"Only '*', " + (usage == PatternUsage.GROUP ? "'X', " : "") + "'[lo-hi]' or 'int' are allowed.");
 			}
 			
@@ -108,7 +107,7 @@ public class PatternDataField {
 			if (low <= high) {
 				isRange = true;
 			} else {
-				throw new ECSpecValidationExceptionResponse("Invalid range '" + stringRepresentation + "'. " + "Range must have the form '[lo-hi]' with lo <= hi.");
+				throw new ECSpecValidationException("Invalid range '" + stringRepresentation + "'. " + "Range must have the form '[lo-hi]' with lo <= hi.");
 			}
 			isInt = false;
 			return;
@@ -118,7 +117,7 @@ public class PatternDataField {
 		if (value >= 0) {
 			isInt = true;
 		} else {
-			throw new ECSpecValidationExceptionResponse("Invalid data field '" + stringRepresentation + "' in pattern '. " +
+			throw new ECSpecValidationException("Invalid data field '" + stringRepresentation + "' in pattern '. " +
 					"Only positive int is allowed.");
 		}
 		isRange = false;
@@ -173,14 +172,14 @@ public class PatternDataField {
 	 * and throws an exception otherwise.
 	 * 
 	 * @return value of data field
-	 * @throws ECSpecValidationExceptionResponse if the data field contains not an int
+	 * @throws ECSpecValidationException if the data field contains not an int
 	 */
-	public int getValue() throws ECSpecValidationExceptionResponse {
+	public int getValue() throws ECSpecValidationException {
 
 		if (isInt) {
 			return value;
 		} else {
-			throw new ECSpecValidationExceptionResponse("Data field is not an int.");
+			throw new ECSpecValidationException("Data field is not an int.");
 		}
 		
 	}
@@ -190,14 +189,14 @@ public class PatternDataField {
 	 * contains a range and throws an exception otherwise.
 	 * 
 	 * @return lower limit of the range of this data field
-	 * @throws ECSpecValidationExceptionResponse if the data field contains not a range
+	 * @throws ECSpecValidationException if the data field contains not a range
 	 */
-	public int getLow() throws ECSpecValidationExceptionResponse {
+	public int getLow() throws ECSpecValidationException {
 		
 		if (isRange) {
 			return low;
 		} else {
-			throw new ECSpecValidationExceptionResponse("Data field is not a range.");
+			throw new ECSpecValidationException("Data field is not a range.");
 		}
 		
 	}
@@ -207,14 +206,14 @@ public class PatternDataField {
 	 * contains a range and throws an exception otherwise.
 	 * 
 	 * @return higher limit of the range of this data field
-	 * @throws ECSpecValidationExceptionResponse if the data field contains not a range
+	 * @throws ECSpecValidationException if the data field contains not a range
 	 */
-	public int getHigh() throws ECSpecValidationExceptionResponse {
+	public int getHigh() throws ECSpecValidationException {
 		
 		if (isRange) {
 			return high;
 		} else {
-			throw new ECSpecValidationExceptionResponse("Data field is not a range.");
+			throw new ECSpecValidationException("Data field is not a range.");
 		}
 		
 	}
@@ -224,9 +223,9 @@ public class PatternDataField {
 	 * 
 	 * @param field to check disjointness
 	 * @return true if the data field are disjoint and false otherwise
-	 * @throws ECSpecValidationExceptionResponse if an implementation exception occurs
+	 * @throws ECSpecValidationException if an implementation exception occurs
 	 */
-	public boolean isDisjoint(PatternDataField field) throws ECSpecValidationExceptionResponse {
+	public boolean isDisjoint(PatternDataField field) throws ECSpecValidationException {
 
 		if (isAsterisk || isX || field.isAsterisk() || field.isX()) {
 			return false;

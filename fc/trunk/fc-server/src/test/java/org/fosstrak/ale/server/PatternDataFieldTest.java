@@ -25,7 +25,7 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +62,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(RANGE, PatternUsage.TAG);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + RANGE + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
@@ -76,7 +76,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(ASTERISK, PatternUsage.TAG);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + ASTERISK + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
@@ -90,7 +90,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(X, PatternUsage.TAG);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + X + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
@@ -104,7 +104,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.TAG);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + ABC + "'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
@@ -127,7 +127,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(X, PatternUsage.FILTER);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + X + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
@@ -141,7 +141,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.FILTER);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + ABC + "'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
@@ -164,7 +164,7 @@ public class PatternDataFieldTest {
 		
 		try {
 			new PatternDataField(ABC, PatternUsage.GROUP);
-		} catch(ECSpecValidationExceptionResponse e) {
+		} catch(ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '" + ABC + "'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
@@ -213,11 +213,11 @@ public class PatternDataFieldTest {
 	}
 
 	/**
-	 * must throw an ECSpecValidationExceptionResponse because data field is not an of type int.
-	 * @throws ECSpecValidationExceptionResponse test expected.
+	 * must throw an ECSpecValidationException because data field is not an of type int.
+	 * @throws ECSpecValidationException test expected.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
-	public void testGetValueWithNonIntDataField() throws ECSpecValidationExceptionResponse {	
+	@Test(expected = ECSpecValidationException.class)
+	public void testGetValueWithNonIntDataField() throws ECSpecValidationException {	
 		PatternDataField rangeField = new PatternDataField(RANGE, PatternUsage.GROUP);
 		rangeField.getValue();		
 	}
@@ -232,10 +232,10 @@ public class PatternDataFieldTest {
 	}
 
 	/**
-	 * must throw an ECSpecValidationExceptionResponse because data field is not of type range.
-	 * @throws ECSpecValidationExceptionResponse test expected.
+	 * must throw an ECSpecValidationException because data field is not of type range.
+	 * @throws ECSpecValidationException test expected.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
+	@Test(expected = ECSpecValidationException.class)
 	public void testGetLowWithNonRangeDataField() throws Exception {
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
 		intField.getLow();
@@ -251,10 +251,10 @@ public class PatternDataFieldTest {
 	}
 
 	/**
-	 * must throw an ECSpecValidationExceptionResponse because data field is not of type range.
-	 * @throws ECSpecValidationExceptionResponse test expected.
+	 * must throw an ECSpecValidationException because data field is not of type range.
+	 * @throws ECSpecValidationException test expected.
 	 */
-	@Test(expected = ECSpecValidationExceptionResponse.class)
+	@Test(expected = ECSpecValidationException.class)
 	public void testGetHighWithNonRangeDataField() throws Exception {
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
 		intField.getHigh();

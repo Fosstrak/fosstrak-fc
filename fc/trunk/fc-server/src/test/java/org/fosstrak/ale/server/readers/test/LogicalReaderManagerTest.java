@@ -32,6 +32,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InUseException;
+import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.exception.NonCompositeReaderException;
+import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
@@ -40,11 +45,6 @@ import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.impl.LogicalReaderManagerImpl;
 import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.impl.type.ReaderProvider;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.InUseExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.NonCompositeReaderExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.junit.Before;
@@ -140,7 +140,7 @@ public class LogicalReaderManagerTest {
 	 * verify that the setting a reader twice is not allowed.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ImplementationExceptionResponse.class)
+	@Test(expected = ImplementationException.class)
 	public void testSetLogicalReadersNotSetTwice() throws Exception {
 		LogicalReader logicalReader1 = EasyMock.createMock(LogicalReader.class);
 		EasyMock.expect(logicalReader1.getName()).andReturn("reader1").atLeastOnce();
@@ -194,7 +194,7 @@ public class LogicalReaderManagerTest {
 	 * test property setter when illegal null input.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ValidationExceptionResponse.class)
+	@Test(expected = ValidationException.class)
 	public void testSetPropertyIllegalNullInput() throws Exception {
 		manager.setProperties("notExistingReader", null);
 	}
@@ -203,7 +203,7 @@ public class LogicalReaderManagerTest {
 	 * test property setter on non existing reader
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testSetPropertyNotExistingReader() throws Exception {
 		manager.setProperties("notExistingReader", new LinkedList<LRProperty> ());
 	}	
@@ -264,7 +264,7 @@ public class LogicalReaderManagerTest {
 	 * test that the LR specification of a reader can be queried.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testGetLRSpecNoSuchReader() throws Exception {
 		// test on some not-existing reader
 		manager.getLRSpec("virtualReader");
@@ -295,7 +295,7 @@ public class LogicalReaderManagerTest {
 	 * test no unknown reader can be undefined.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testUndefineNoSuchReader() throws Exception {
 		// test on some not-existing reader
 		manager.undefine("virtualReader");
@@ -305,7 +305,7 @@ public class LogicalReaderManagerTest {
 	 * test that readers in use are not undefined.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = InUseExceptionResponse.class)
+	@Test(expected = InUseException.class)
 	public void testUndefineReaderInUse() throws Exception {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -376,7 +376,7 @@ public class LogicalReaderManagerTest {
 	 * test that composite readers are undefined.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ImplementationExceptionResponse.class)
+	@Test(expected = ImplementationException.class)
 	public void testUndefineUnsupportedReaderType() throws Exception {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -396,7 +396,7 @@ public class LogicalReaderManagerTest {
 	 * test that define is not allowing null as input
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ValidationExceptionResponse.class)
+	@Test(expected = ValidationException.class)
 	public void testDefineIllegalInputName() throws Exception {
 		manager.define(null, (org.fosstrak.ale.server.readers.gen.LRSpec) null);
 	}
@@ -405,7 +405,7 @@ public class LogicalReaderManagerTest {
 	 * test that define is not allowing null as input
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ValidationExceptionResponse.class)
+	@Test(expected = ValidationException.class)
 	public void testDefineIllegalInputSpec() throws Exception {
 		manager.define("name", (org.fosstrak.ale.server.readers.gen.LRSpec) null);
 	}
@@ -414,7 +414,7 @@ public class LogicalReaderManagerTest {
 	 * test that define is not allowing null as input
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ValidationExceptionResponse.class)
+	@Test(expected = ValidationException.class)
 	public void testDefine2IllegalInputName() throws Exception {
 		manager.define(null, (LRSpec) null);
 	} 
@@ -423,7 +423,7 @@ public class LogicalReaderManagerTest {
 	 * test that define is not allowing null as input
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = ValidationExceptionResponse.class)
+	@Test(expected = ValidationException.class)
 	public void testDefine2IllegalInputSpec() throws Exception {
 		manager.define("name", (LRSpec) null);
 	}
@@ -450,7 +450,7 @@ public class LogicalReaderManagerTest {
 		ReaderProvider readerProvider = EasyMock.createMock(ReaderProvider.class);
 		EasyMock.expect(readerProvider.createReader(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class))).andDelegateTo(new ReaderProvider() {
 			@Override
-			public LogicalReader createReader(String name, org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theSpec)  throws ImplementationExceptionResponse {
+			public LogicalReader createReader(String name, org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theSpec)  throws ImplementationException {
 				ref.set(theSpec);
 				return baseReader;
 			}
@@ -489,7 +489,7 @@ public class LogicalReaderManagerTest {
 	 * test that the readers of a composite reader can be set.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testSetReadersNoSuchReader() throws Exception {
 		// test on some not-existing reader
 		manager.setReaders("virtualReader", null);
@@ -499,7 +499,7 @@ public class LogicalReaderManagerTest {
 	 * test that the readers of a composite reader can be set.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NonCompositeReaderExceptionResponse.class)
+	@Test(expected = NonCompositeReaderException.class)
 	public void testSetReadersNonCompositeReader() throws Exception {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -541,22 +541,29 @@ public class LogicalReaderManagerTest {
 		compositeReader.update(lrSpec);
 		EasyMock.expectLastCall().atLeastOnce();
 		EasyMock.replay(compositeReader);
-
+		
 		manager.setLogicalReader(compositeReader);
 		
+		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
+		EasyMock.expect(logicalReader.getName()).andReturn("reader1").atLeastOnce();
+		EasyMock.replay(logicalReader);
+		
+		manager.setLogicalReader(logicalReader);
+	
 		manager.setReaders(compositeReaderName, Arrays.asList(new String[] { "reader1" } ));
 		Assert.assertEquals(1, lrSpec.getReaders().getReader().size());
 		Assert.assertEquals("reader1", lrSpec.getReaders().getReader().get(0));
 		
 		EasyMock.verify(persistenceMock);	
 		EasyMock.verify(compositeReader);	
+		EasyMock.verify(logicalReader);	
 	}
 	
 	/**
 	 * test that the readers of a composite reader can be removed.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testRemoveReadersNoSuchReader() throws Exception {
 		// test on some not-existing reader
 		manager.removeReaders("virtualReader", null);
@@ -566,7 +573,7 @@ public class LogicalReaderManagerTest {
 	 * test that the readers of a composite reader can be removed.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NonCompositeReaderExceptionResponse.class)
+	@Test(expected = NonCompositeReaderException.class)
 	public void testRemoveReadersNonCompositeReader() throws Exception {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -621,7 +628,7 @@ public class LogicalReaderManagerTest {
 	 * test that new readers can be added to a composite reader.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NoSuchNameExceptionResponse.class)
+	@Test(expected = NoSuchNameException.class)
 	public void testAddReadersNoSuchReader() throws Exception {
 		// test on some not-existing reader
 		manager.addReaders("virtualReader", null);
@@ -631,7 +638,7 @@ public class LogicalReaderManagerTest {
 	 * test that new readers can be added to a composite reader.
 	 * @throws Exception test failure (or see what is expected by the test).
 	 */
-	@Test(expected = NonCompositeReaderExceptionResponse.class)
+	@Test(expected = NonCompositeReaderException.class)
 	public void testAddReaderNonCompositeReader() throws Exception {
 		final String readerName = "readerName";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -675,12 +682,19 @@ public class LogicalReaderManagerTest {
 
 		manager.setLogicalReader(compositeReader);
 		
+		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
+		EasyMock.expect(logicalReader.getName()).andReturn(logicalReaderName).atLeastOnce();
+		EasyMock.replay(logicalReader);
+		
+		manager.setLogicalReader(logicalReader);
+		
 		manager.addReaders(compositeReaderName, Arrays.asList(new String[] { logicalReaderName } ));
 		Assert.assertEquals(1, lrSpecReaders.getReader().size());
 		Assert.assertEquals(logicalReaderName, lrSpecReaders.getReader().get(0));
 
 		EasyMock.verify(persistenceMock);
-		EasyMock.verify(compositeReader);
+		EasyMock.verify(compositeReader);	
+		EasyMock.verify(logicalReader);	
 	}
 	
 	/**
@@ -720,7 +734,7 @@ public class LogicalReaderManagerTest {
 		final AtomicReference<org.fosstrak.ale.xsd.ale.epcglobal.LRSpec> ref = new AtomicReference<org.fosstrak.ale.xsd.ale.epcglobal.LRSpec>(); 
 		EasyMock.expect(readerProvider.createReader(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class))).andDelegateTo(new ReaderProvider() {
 			@Override
-			public LogicalReader createReader(String name, org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theSpec)  throws ImplementationExceptionResponse {
+			public LogicalReader createReader(String name, org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theSpec)  throws ImplementationException {
 				ref.set(theSpec);
 				return baseReader;
 			}

@@ -29,16 +29,26 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#setReaders(org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.SetReadersResult setReaders(SetReaders parms) throws ValidationExceptionResponse , InUseExceptionResponse , ImplementationExceptionResponse , NonCompositeReaderExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse , ReaderLoopExceptionResponse    {
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.SetReadersResult setReaders(SetReaders parms) throws ValidationExceptionResponse, InUseExceptionResponse, ImplementationExceptionResponse, NonCompositeReaderExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse    {
     	LOG.debug("setReaders");    	
     	try {
 			logicalReaderManager.setReaders(parms.getName(), parms.getReaders().getReader());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.NonCompositeReaderException e) {
+			throw new NonCompositeReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ValidationException e) {
+			throw new ValidationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ReaderLoopException e) {
+			throw new ReaderLoopExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -46,16 +56,20 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#undefine(org.fosstrak.ale.wsdl.alelr.epcglobal.Undefine  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.UndefineResult undefine(Undefine parms) throws InUseExceptionResponse , ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse    {
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.UndefineResult undefine(Undefine parms) throws InUseExceptionResponse, ImplementationExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse    {
     	LOG.debug("undefine");
     	try {
 			logicalReaderManager.undefine(parms.getName());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
 		}
     	return null;
     }
@@ -63,16 +77,22 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#setProperties(org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.SetPropertiesResult setProperties(SetProperties parms) throws ValidationExceptionResponse , InUseExceptionResponse , ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse    {
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.SetPropertiesResult setProperties(SetProperties parms) throws ValidationExceptionResponse, InUseExceptionResponse, ImplementationExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse    {
     	LOG.debug("setProperties");
     	try {
 			logicalReaderManager.setProperties(parms.getName(), parms.getProperties().getProperty());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
 			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
 			throw new SecurityExceptionResponse(e.getMessage(), e);
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
 			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ValidationException e) {
+			throw new ValidationExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -80,16 +100,24 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#update(org.fosstrak.ale.wsdl.alelr.epcglobal.Update  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.UpdateResult update(Update parms) throws ValidationExceptionResponse , InUseExceptionResponse , ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse , ReaderLoopExceptionResponse    { 
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.UpdateResult update(Update parms) throws ValidationExceptionResponse, InUseExceptionResponse, ImplementationExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse    { 
     	LOG.debug("update");
     	try {
 			logicalReaderManager.update(parms.getName(), parms.getSpec());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ValidationException e) {
+			throw new ValidationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ReaderLoopException e) {
+			throw new ReaderLoopExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -97,16 +125,26 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#addReaders(org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.AddReadersResult addReaders(AddReaders parms) throws ValidationExceptionResponse , InUseExceptionResponse , ImplementationExceptionResponse , NonCompositeReaderExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse , ReaderLoopExceptionResponse    { 
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.AddReadersResult addReaders(AddReaders parms) throws ValidationExceptionResponse, InUseExceptionResponse, ImplementationExceptionResponse, NonCompositeReaderExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse, ReaderLoopExceptionResponse    { 
     	LOG.debug("addReaders");
     	try {
 			logicalReaderManager.addReaders(parms.getName(), parms.getReaders().getReader());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ValidationException e) {
+			throw new ValidationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ReaderLoopException e) {
+			throw new ReaderLoopExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.NonCompositeReaderException e) {
+			throw new NonCompositeReaderExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -114,16 +152,18 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#define(org.fosstrak.ale.wsdl.alelr.epcglobal.Define  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.DefineResult define(Define parms) throws ValidationExceptionResponse , ImplementationExceptionResponse , DuplicateNameExceptionResponse , SecurityExceptionResponse    { 
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.DefineResult define(Define parms) throws ValidationExceptionResponse, ImplementationExceptionResponse, DuplicateNameExceptionResponse, SecurityExceptionResponse    { 
     	LOG.debug("define");
     	try {
 			logicalReaderManager.define(parms.getName(), parms.getSpec());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse e) {
-			throw new DuplicateNameExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ValidationException e) {
+			throw new ValidationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.DuplicateNameException e) {
+			throw new DuplicateNameExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -131,32 +171,38 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#getPropertyValue(org.fosstrak.ale.wsdl.alelr.epcglobal.GetPropertyValue  parms )*
      */
-    public java.lang.String getPropertyValue(GetPropertyValue parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse    { 
+    public java.lang.String getPropertyValue(GetPropertyValue parms) throws ImplementationExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse    { 
     	LOG.debug("getPropertyValue");
     	try {
 			return logicalReaderManager.getPropertyValue(parms.getName(), parms.getPropertyName());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
     }
 
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#removeReaders(org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReadersResult removeReaders(RemoveReaders parms) throws InUseExceptionResponse , ImplementationExceptionResponse , NonCompositeReaderExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , ImmutableReaderExceptionResponse    { 
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReadersResult removeReaders(RemoveReaders parms) throws InUseExceptionResponse, ImplementationExceptionResponse, NonCompositeReaderExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse, ImmutableReaderExceptionResponse    { 
     	LOG.debug("removeReaders");
     	try {
 			logicalReaderManager.removeReaders(parms.getName(), parms.getReaders().getReader());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InUseException e) {
+			throw new InUseExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImmutableReaderException e) {
+			throw new ImmutableReaderExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.NonCompositeReaderException e) {
+			throw new NonCompositeReaderExceptionResponse(e.getMessage(), e);
 		}
 		return null;
     }
@@ -168,24 +214,24 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     	LOG.debug("getVendorVersion");
     	try {
 			return logicalReaderManager.getVendorVersion();
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
     }
 
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#getLRSpec(org.fosstrak.ale.wsdl.alelr.epcglobal.GetLRSpec  parms )*
      */
-    public org.fosstrak.ale.xsd.ale.epcglobal.LRSpec getLRSpec(GetLRSpec parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse    {
+    public org.fosstrak.ale.xsd.ale.epcglobal.LRSpec getLRSpec(GetLRSpec parms) throws ImplementationExceptionResponse, SecurityExceptionResponse, NoSuchNameExceptionResponse    {
     	LOG.debug("getLRSpec");
     	try {
 			return logicalReaderManager.getLRSpec(parms.getName());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
-			throw new NoSuchNameExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
     }
 
@@ -196,23 +242,23 @@ public class ALELRServicePortTypeImpl implements ALELRServicePortType {
     	LOG.debug("getStandardVersion");
     	try {
 			return logicalReaderManager.getStandardVersion();
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
     }
 
     /* (non-Javadoc)
      * @see org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortType#getLogicalReaderNames(org.fosstrak.ale.wsdl.alelr.epcglobal.EmptyParms  parms )*
      */
-    public org.fosstrak.ale.wsdl.alelr.epcglobal.ArrayOfString getLogicalReaderNames(EmptyParms parms) throws ImplementationExceptionResponse , SecurityExceptionResponse {
+    public org.fosstrak.ale.wsdl.alelr.epcglobal.ArrayOfString getLogicalReaderNames(EmptyParms parms) throws ImplementationExceptionResponse, SecurityExceptionResponse {
     	LOG.debug("getLogicalReaderNames");
     	ArrayOfString aof = new ArrayOfString();
     	try {
 			aof.getString().addAll(logicalReaderManager.getLogicalReaderNames());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse e) {
-			throw new SecurityExceptionResponse(e.getMessage());
-		} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+		} catch (org.fosstrak.ale.exception.SecurityException e) {
+			throw new SecurityExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
 		}
         return aof;
     }

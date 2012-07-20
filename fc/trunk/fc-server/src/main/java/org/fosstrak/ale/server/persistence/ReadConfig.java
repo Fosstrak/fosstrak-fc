@@ -7,18 +7,18 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.DuplicateSubscriptionException;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InvalidURIException;
+import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.exception.SecurityException;
+import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALEFactory;
 import org.fosstrak.ale.server.llrp.LLRPControllerManager;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.DeserializerUtil;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.SecurityExceptionResponse;
-import org.fosstrak.ale.wsdl.alelr.epcglobal.ValidationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
@@ -96,11 +96,11 @@ public class ReadConfig extends Config {
 				LOG.debug("try to load ecspec " + fileName + " with specName = " + specName);
 				ALEFactory.getALE().define(specName, ecSpec);
 				LOG.debug("load ecspec " + fileName);
-			} catch (DuplicateNameExceptionResponse e) {
+			} catch (DuplicateNameException e) {
 				LOG.error("error loading ecspec xml file " + fileName, e);	
-			} catch (ECSpecValidationExceptionResponse e) {
+			} catch (ECSpecValidationException e) {
 				LOG.error("error ecspec validation for xml file " + fileName, e);	
-			} catch (ImplementationExceptionResponse e) {
+			} catch (ImplementationException e) {
 				LOG.error("error loading ecspec xml file " + fileName, e);	
 			}
 			
@@ -153,11 +153,11 @@ public class ReadConfig extends Config {
 					
 				}
 								
-			} catch (NoSuchNameExceptionResponse e) {
+			} catch (NoSuchNameException e) {
 				LOG.error("error loading ecspec subscriber properties file " + fileName + " with uri=" + notificationURI, e);
-			} catch (InvalidURIExceptionResponse e) {
+			} catch (InvalidURIException e) {
 				LOG.error("error uri (" + notificationURI + ") subscriber properties file " + fileName, e);
-			} catch (DuplicateSubscriptionExceptionResponse e) {
+			} catch (DuplicateSubscriptionException e) {
 				LOG.error("error loading ecspec subscriber properties file " + fileName + " with uri=" + notificationURI, e);
 			}
 			
@@ -195,13 +195,13 @@ public class ReadConfig extends Config {
 					LOG.debug("try to load lrspec " + fileName + " with specName = " + specName);
 					LogicalReaderManagerFactory.getLRM().define(specName, lrSpec);
 					LOG.debug("load lrspec " + fileName);
-				} catch (DuplicateNameExceptionResponse e) {
+				} catch (DuplicateNameException e) {
 					LOG.error("error loading lrspec xml file " + fileName, e);	
-				} catch (ImplementationExceptionResponse e) {
+				} catch (ImplementationException e) {
 					LOG.error("error loading lrspec xml file " + fileName, e);	
-				} catch (ValidationExceptionResponse e) {
+				} catch (ValidationException e) {
 					LOG.error("error lrspec validation for xml file " + fileName, e);
-				} catch (SecurityExceptionResponse e) {
+				} catch (SecurityException e) {
 					LOG.error("error lrspec security for xml file " + fileName, e);	
 				}
 				
@@ -240,9 +240,9 @@ public class ReadConfig extends Config {
 			
 			try {
 				llrpControllerManager.define(specName, addRoSpec);
-			} catch (org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse e) {
+			} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
 				LOG.error("error when trying to define add_rospec ", e);
-			} catch(org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse e) {
+			} catch(DuplicateNameException e) {
 				LOG.error("error when trying to define add_rospec ", e);
 			}
 			
@@ -276,9 +276,9 @@ public class ReadConfig extends Config {
 				LOG.debug("try to define add_accessspec " + fileName + " with specName = " + specName);
 				try {
 					llrpControllerManager.defineAccessSpec(specName, addAccessSpec);
-				} catch (org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse e) {
+				} catch (NoSuchNameException e) {
 					LOG.error("error when trying to define add_accessspec ", e);
-				} catch(org.fosstrak.ale.server.llrp.DuplicateNameExceptionResponse e) {
+				} catch (DuplicateNameException e) {
 					LOG.error("error when trying to define add_acccessspec ", e);
 				}
 				LOG.debug("add_acccessspec defined  " + fileName);

@@ -24,13 +24,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Pattern;
 import org.fosstrak.ale.server.PatternUsage;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
@@ -82,7 +80,7 @@ public class ECSpecValidator {
 	 * @throws ECSpecValidationException if the specification is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public static void validateSpec(ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public static void validateSpec(ECSpec spec) throws ECSpecValidationException, ImplementationException {
 				
 		// check if the logical readers are known to the implementation
 		checkReadersAvailable(spec.getLogicalReaders(), logicalReaderManager);
@@ -96,9 +94,9 @@ public class ECSpecValidator {
 	 * @param logicalReaders the logical reader definition from the ECSpec.
 	 * @param readerManager handle to the logical reader manager.
 	 * @return true if OK, throws exception otherwise.
-	 * @throws ECSpecValidationExceptionResponse if no reader specified or the specified readers do not exist in the ALE.
+	 * @throws ECSpecValidationException if no reader specified or the specified readers do not exist in the ALE.
 	 */
-	public static boolean checkReadersAvailable(LogicalReaders logicalReaders, LogicalReaderManager readerManager) throws ECSpecValidationExceptionResponse {
+	public static boolean checkReadersAvailable(LogicalReaders logicalReaders, LogicalReaderManager readerManager) throws ECSpecValidationException {
 		if ((null == logicalReaders) || (logicalReaders.getLogicalReader().size() == 0)) {
 			throw logAndCreateECSpecValidationException("ECSpec does not specify at least one reader"); 
 		}
@@ -113,10 +111,10 @@ public class ECSpecValidator {
 	/**
 	 * verifies the boundary spec of an ECSpec.
 	 * @param boundarySpec the boundary spec to verify.
-	 * @throws ECSpecValidationExceptionResponse if the specification does not meet the specification.
+	 * @throws ECSpecValidationException if the specification does not meet the specification.
 	 * @return true if OK, throws exception otherwise.
 	 */
-	public static boolean checkBoundarySpec(ECBoundarySpec boundarySpec) throws ECSpecValidationExceptionResponse {
+	public static boolean checkBoundarySpec(ECBoundarySpec boundarySpec) throws ECSpecValidationException {
 
 		// boundaries parameter of ECSpec is null or omitted
 		if (boundarySpec == null) {
@@ -146,9 +144,9 @@ public class ECSpecValidator {
 	 * @param duration the time value to check.
 	 * @param string a message string to show in the exception.
 	 * @return true if OK, throws Exception otherwise.
-	 * @throws ECSpecValidationExceptionResponse if the time value is negative.
+	 * @throws ECSpecValidationException if the time value is negative.
 	 */
-	public static boolean checkTimeNotNegative(ECTime duration, String string) throws ECSpecValidationExceptionResponse {		
+	public static boolean checkTimeNotNegative(ECTime duration, String string) throws ECSpecValidationException {		
 		if (duration != null) {
 			if (duration.getValue() < 0) {
 				throw logAndCreateECSpecValidationException("The duration field of ECBoundarySpec is negative.");
@@ -161,9 +159,9 @@ public class ECSpecValidator {
 	 * if a start trigger is specified, then the repeat period must be 0.
 	 * @param boundarySpec the boundary spec to test.
 	 * @return true if OK, throws exception otherwise.
-	 * @throws ECSpecValidationExceptionResponse if a start trigger is specified, then the repeat period must be 0. if not, throw an exception.
+	 * @throws ECSpecValidationException if a start trigger is specified, then the repeat period must be 0. if not, throw an exception.
 	 */
-	public static boolean checkStartTriggerConstraintsOnRepeatPeriod(ECBoundarySpec boundarySpec) throws ECSpecValidationExceptionResponse {
+	public static boolean checkStartTriggerConstraintsOnRepeatPeriod(ECBoundarySpec boundarySpec) throws ECSpecValidationException {
 		if ((boundarySpec.getStartTrigger() != null) && (boundarySpec.getRepeatPeriod().getValue() != 0)) {
 			throw logAndCreateECSpecValidationException("The startTrigger field of ECBoundarySpec is non-empty and the repeatPeriod field of ECBoundarySpec is non-zero.");
 		}
@@ -175,9 +173,9 @@ public class ECSpecValidator {
 	 * if there is no stop trigger or no duration value or no stableSetInterval, throw an exception.
 	 * @param boundarySpec the boundary spec to test.
 	 * @return true if OK, throws exception otherwise.
-	 * @throws ECSpecValidationExceptionResponse if there is no stop trigger or no duration value or no stableSetInterval, throw an exception.
+	 * @throws ECSpecValidationException if there is no stop trigger or no duration value or no stableSetInterval, throw an exception.
 	 */
-	public static boolean checkBoundarySpecStoppingCondition(ECBoundarySpec boundarySpec) throws ECSpecValidationExceptionResponse {
+	public static boolean checkBoundarySpecStoppingCondition(ECBoundarySpec boundarySpec) throws ECSpecValidationException {
 		if ((boundarySpec.getStopTrigger() == null) && (boundarySpec.getDuration() == null) && (boundarySpec.getStableSetInterval() == null)) {
 			throw logAndCreateECSpecValidationException("No stopping condition is specified in ECBoundarySpec.");
 		}
@@ -187,10 +185,10 @@ public class ECSpecValidator {
 	/**
 	 * checks the report specs.
 	 * @param reportSpecs the report specs to verify.
-	 * @throws ECSpecValidationExceptionResponse when the specifications do not meet the requirements.
+	 * @throws ECSpecValidationException when the specifications do not meet the requirements.
 	 * @return true if the specification is OK, throws exception otherwise.
 	 */
-	public static boolean checkReportSpecs(ReportSpecs reportSpecs) throws ECSpecValidationExceptionResponse {
+	public static boolean checkReportSpecs(ReportSpecs reportSpecs) throws ECSpecValidationException {
 		// check if there is a ECReportSpec instance
 		if ((reportSpecs == null) || (reportSpecs.getReportSpec().size() == 0)) {
 			throw logAndCreateECSpecValidationException("List of ECReportSpec is empty or null.");
@@ -221,9 +219,9 @@ public class ECSpecValidator {
 	 * verify that no two report specs have the same name.
 	 * @param reportSpecList the list of report specs to check.
 	 * @return a list containing all the names of the different report specs.
-	 * @throws ECSpecValidationExceptionResponse when there are two report specs with the same name.
+	 * @throws ECSpecValidationException when there are two report specs with the same name.
 	 */
-	public static Set<String> checkReportSpecNoDuplicateReportSpecNames(List<ECReportSpec> reportSpecList) throws ECSpecValidationExceptionResponse {
+	public static Set<String> checkReportSpecNoDuplicateReportSpecNames(List<ECReportSpec> reportSpecList) throws ECSpecValidationException {
 		Set<String> reportSpecNames = new HashSet<String>();
 		for (ECReportSpec reportSpec : reportSpecList) {
 			if (reportSpecNames.contains(reportSpec.getReportName())) {
@@ -239,9 +237,9 @@ public class ECSpecValidator {
 	 * verify the report output specification.
 	 * @param outputSpec the output specification.
 	 * @return true if the specification is OK, otherwise throws exception.
-	 * @throws ECSpecValidationExceptionResponse violates the specification.
+	 * @throws ECSpecValidationException violates the specification.
 	 */
-	public static boolean checkReportOutputSpec(String reportName, ECReportOutputSpec outputSpec) throws ECSpecValidationExceptionResponse {
+	public static boolean checkReportOutputSpec(String reportName, ECReportOutputSpec outputSpec) throws ECSpecValidationException {
 		if (null == outputSpec) {
 			throw logAndCreateECSpecValidationException("there is no output spec for report spec: " + reportName);
 		}
@@ -259,10 +257,10 @@ public class ECSpecValidator {
 	 * 	<li>no pattern at all is allowed</li>
 	 * </ul>
 	 * @param groupSpec the group spec to tested.
-	 * @throws ECSpecValidationExceptionResponse upon violation.
+	 * @throws ECSpecValidationException upon violation.
 	 * @return true if filter group spec is valid. exception otherwise.
 	 */
-	public static boolean checkGroupSpec(ECGroupSpec groupSpec) throws ECSpecValidationExceptionResponse {
+	public static boolean checkGroupSpec(ECGroupSpec groupSpec) throws ECSpecValidationException {
 		if (groupSpec != null) {
 			String[] patterns = groupSpec.getPattern().toArray(new String[] {});
 			for (int i=0; i<patterns.length-1; i++) {
@@ -281,10 +279,10 @@ public class ECSpecValidator {
 	/**
 	 * check the filter spec. if the filter spec is null, it is ignored.
 	 * @param filterSpec the filter spec to verify.
-	 * @throws ECSpecValidationExceptionResponse upon violation of the filter pattern.
+	 * @throws ECSpecValidationException upon violation of the filter pattern.
 	 * @return true if filter spec is valid. exception otherwise.
 	 */
-	public static boolean checkFilterSpec(ECFilterSpec filterSpec) throws ECSpecValidationExceptionResponse {			
+	public static boolean checkFilterSpec(ECFilterSpec filterSpec) throws ECSpecValidationException {			
 		if (filterSpec != null) {
 			// check include patterns
 			if (filterSpec.getIncludePatterns() != null) {
@@ -309,7 +307,7 @@ public class ECSpecValidator {
 	 * @param pattern2 the second pattern.
 	 * @return true if pattern not disjoint, false otherwise.
 	 */
-	public static boolean patternDisjoint(String pattern1, String pattern2) throws ECSpecValidationExceptionResponse {
+	public static boolean patternDisjoint(String pattern1, String pattern2) throws ECSpecValidationException {
 		Pattern pattern = new Pattern(pattern1, PatternUsage.GROUP);
 		return pattern.isDisjoint(pattern2);
 	}
@@ -319,9 +317,9 @@ public class ECSpecValidator {
 	 * @param string the log and exception string.
 	 * @return the ECSpecValidationException created from the input string.
 	 */
-	private static ECSpecValidationExceptionResponse logAndCreateECSpecValidationException(String string) {
+	private static ECSpecValidationException logAndCreateECSpecValidationException(String string) {
 		LOG.debug(string);
-		return new ECSpecValidationExceptionResponse(string);
+		return new ECSpecValidationException(string);
 	}
 
 	/**
@@ -330,7 +328,7 @@ public class ECSpecValidator {
 	 * @param trigger to check
 	 * @throws ECSpecValidationException if the trigger is invalid.
 	 */
-	private static void checkTrigger(String trigger) throws ECSpecValidationExceptionResponse {		
+	private static void checkTrigger(String trigger) throws ECSpecValidationException {		
 		// TODO: implement checkTrigger
 		LOG.debug("CHECK TRIGGER not implemented");
 	}

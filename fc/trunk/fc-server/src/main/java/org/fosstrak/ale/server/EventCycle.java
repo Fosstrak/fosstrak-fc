@@ -35,14 +35,12 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
 import org.fosstrak.ale.util.ECTerminationCondition;
 import org.fosstrak.ale.util.ECTimeUnit;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
@@ -146,7 +144,7 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public EventCycle(ReportsGenerator generator) 
-		throws ImplementationExceptionResponse {
+		throws ImplementationException {
 		
 		// set name
 		name = generator.getName() + "_" + number++;
@@ -229,8 +227,8 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs.
 	 */
 	private ECReports getECReports() 
-		throws ECSpecValidationExceptionResponse, 
-		ImplementationExceptionResponse {
+		throws ECSpecValidationException, 
+		ImplementationException {
 		
 		// create ECReports
 		ECReports reports = new ECReports();
@@ -283,8 +281,8 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
 	public synchronized void addTag(Tag tag) 
-		throws ImplementationExceptionResponse, 
-		ECSpecValidationExceptionResponse {
+		throws ImplementationException, 
+		ECSpecValidationException {
 		
 		if (!isAcceptingTags()) {
 			return;
@@ -310,8 +308,8 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
 	public void addTag(TagType tag) 
-		throws ImplementationExceptionResponse, 
-		ECSpecValidationExceptionResponse {
+		throws ImplementationException, 
+		ECSpecValidationException {
 		
 		Tag newTag = new Tag();
 		newTag.setTagID(tag.getTagID());
@@ -398,9 +396,9 @@ public class EventCycle implements Runnable, Observer {
 					LOG.debug("add tags from period between two evencycles: " + tag.getTagIDAsPureURI());					
 					addTag(tag);
 					
-				} catch (ImplementationExceptionResponse ie) {
+				} catch (ImplementationException ie) {
 					LOG.debug("caught implementation exception: ", ie);
-				} catch (ECSpecValidationExceptionResponse ive) {
+				} catch (ECSpecValidationException ive) {
 					LOG.debug("caught spec validation exception: ", ive);
 				}				
 			}
@@ -416,9 +414,9 @@ public class EventCycle implements Runnable, Observer {
 			//tag.prettyPrint(LOG);
 			try {
 				addTag(tag);
-			} catch (ImplementationExceptionResponse ie) {
+			} catch (ImplementationException ie) {
 				LOG.debug("caught implementation exception: ", ie);
-			} catch (ECSpecValidationExceptionResponse ive) {
+			} catch (ECSpecValidationException ive) {
 				LOG.debug("caught spec validation exception: ", ive);
 			}
 		} else if (arg instanceof List) {
@@ -430,9 +428,9 @@ public class EventCycle implements Runnable, Observer {
 			for (Tag tag : tagList) {
 				try {
 					addTag(tag);
-				} catch (ImplementationExceptionResponse ie) {
+				} catch (ImplementationException ie) {
 					LOG.debug("caught implementation exception: ", ie);
-				} catch (ECSpecValidationExceptionResponse ive) {
+				} catch (ECSpecValidationException ive) {
 					LOG.debug("caught spec validation exception: ", ive);
 				}
 			}
@@ -619,8 +617,8 @@ public class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs.
 	 */
 	private List<ECReport> getReportList() 
-		throws ECSpecValidationExceptionResponse, 
-		ImplementationExceptionResponse {
+		throws ECSpecValidationException, 
+		ImplementationException {
 
 		ArrayList<ECReport> ecReports = new ArrayList<ECReport>();
 		for (Report report : reports) {
@@ -637,14 +635,14 @@ public class EventCycle implements Runnable, Observer {
 	 * @return duration value in milliseconds
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	private long getDurationValue() throws ImplementationExceptionResponse {
+	private long getDurationValue() throws ImplementationException {
 		if (spec.getBoundarySpec() != null) {
 			ECTime duration = spec.getBoundarySpec().getDuration();
 			if (duration != null) {
 				if (duration.getUnit().compareToIgnoreCase(ECTimeUnit.MS) == 0) {
 					return duration.getValue();
 				} else {
-					throw new ImplementationExceptionResponse(
+					throw new ImplementationException(
 							"The only ECTimeUnit allowed is milliseconds (MS).");
 				}
 			}
@@ -659,12 +657,12 @@ public class EventCycle implements Runnable, Observer {
 	 * @return repeat period value
 	 * @throws ImplementationException if the time unit in use is unknown
 	 */
-	private long getRepeatPeriodValue() throws ImplementationExceptionResponse {
+	private long getRepeatPeriodValue() throws ImplementationException {
 		if (spec.getBoundarySpec() != null) {		
 			ECTime repeatPeriod = spec.getBoundarySpec().getRepeatPeriod();
 			if (repeatPeriod != null) {
 				if (repeatPeriod.getUnit().compareToIgnoreCase(ECTimeUnit.MS) != 0) {
-					throw new ImplementationExceptionResponse(
+					throw new ImplementationException(
 							"The only ECTimeUnit allowed is milliseconds (MS).");
 				} else {
 					return repeatPeriod.getValue();
