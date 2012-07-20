@@ -55,7 +55,7 @@ import org.fosstrak.ale.client.tabs.ALELRClient;
 import org.fosstrak.ale.client.tabs.EventSink;
 
 /**
- * @author sawielan
+ * @author swieland
  * 
  * Main class for the fosstrak ale client. reads the configuration, 
  * generates the tabs and runs the client.

@@ -13,7 +13,7 @@ import org.fosstrak.ale.client.tabs.EventSink;
 
 /**
  * standalone event sink.
- * @author sawielan
+ * @author swieland
  *
  */
 public class FosstrakEventSinkStandalone extends JFrame {

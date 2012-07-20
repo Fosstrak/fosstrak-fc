@@ -22,7 +22,7 @@ package org.fosstrak.ale.util;
 
 /**
  * backwards compatibility to provide ECReportSetEnum values.
- * @author sawielan
+ * @author swieland
  *
  */
 public class ECReportSetEnum {

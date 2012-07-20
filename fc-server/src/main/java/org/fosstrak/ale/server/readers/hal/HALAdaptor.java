@@ -20,7 +20,7 @@ import org.fosstrak.tdt.TDTEngine;
 /**
  * adaptor for all HAL devices.
  * this adaptor allows to attach HAL devices directly to the ale
- * @author sawielan
+ * @author swieland
  *
  */
 public class HALAdaptor extends BaseReader {

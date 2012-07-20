@@ -55,7 +55,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 /**
  * Event sink tab to display Event Cycle reports.
  * 
- * @author sawielan
+ * @author swieland
  */
 public class EventSink extends JPanel implements ReportHandlerListener {
 

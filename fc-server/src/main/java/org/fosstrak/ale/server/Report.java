@@ -59,7 +59,7 @@ import org.fosstrak.tdt.TDTEngine;
  * It filters and groups tags, add them to the report and build ec reports.
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  * @author wafa.soubra@orange.com
  */
 public class Report {

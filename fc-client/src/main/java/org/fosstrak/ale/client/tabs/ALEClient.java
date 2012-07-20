@@ -73,7 +73,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
  * which specifies the address of the ale webservice which runs on the server.
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  */
 public class ALEClient extends AbstractTab {
 

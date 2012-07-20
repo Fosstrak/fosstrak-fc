@@ -21,7 +21,7 @@
 package org.fosstrak.ale.client.exception;
 
 /**
- * @author sawielan
+ * @author swieland
  *
  * exception to denote when a service is down or not reachable.
  */

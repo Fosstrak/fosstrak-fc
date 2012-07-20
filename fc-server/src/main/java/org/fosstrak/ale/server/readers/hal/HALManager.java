@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 /**
  * the HALManager creates and maintains instances of the HAL readers. 
- * @author sawielan
+ * @author swieland
  *
  */
 public class HALManager {
@@ -18,7 +18,6 @@ public class HALManager {
 	/** 
 	 * internal helper class to store HardwareAbstraction readers with 
 	 * a reference counter.
-	 * @author sawielan
 	 *
 	 */
 	private class HALManagerEntry {

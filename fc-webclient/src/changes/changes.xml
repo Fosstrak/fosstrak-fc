@@ -12,16 +12,16 @@
         <release version="0.3.0" date="2008-03-??"
             description="Feature release: ALE 1.1">
             <!-- general changes -->
-            <action dev="sawielan" type="add">
+            <action dev="swieland" type="add">
                fc-webclient now supports the full logical reader api.
             </action>
-            <action dev="sawielan" type="update">
+            <action dev="swieland" type="update">
                adapted fc-webclient to the new fc-commons.
             </action>
-	    <action dev="sawielan" type="add">
+	    <action dev="swieland" type="add">
                modified documentation according to the schema in epcis.
             </action>
-	    <action dev="sawielan" type="add">
+	    <action dev="swieland" type="add">
                integration of Logical Reader API into ALEService. 
 	       adaption of the webclient UI to support the new methods.
             </action>

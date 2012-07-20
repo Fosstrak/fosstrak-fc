@@ -22,7 +22,7 @@ package org.fosstrak.ale.util;
 
 /**
  * for backwards compatibility to provide the ECTerminationConditions.
- * @author sawielan
+ * @author swieland
  *
  */
 public class ECTerminationCondition {

@@ -31,7 +31,7 @@ import org.fosstrak.hal.Observation;
 
 /**
  * represents an abstract superclass for basereaders.
- * @author sawielan
+ * @author swieland
  *
  */
 public abstract class BaseReader extends LogicalReader {

@@ -10,7 +10,7 @@ import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 
 /**
  * creates a callback instance that retrieves asynchronous messages.
- * @author sawielan
+ * @author swieland
  *
  */
 public class Callback extends UnicastRemoteObject implements AsynchronousNotifiable {

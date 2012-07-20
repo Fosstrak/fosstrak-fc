@@ -54,7 +54,7 @@ import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 import org.fosstrak.ale.client.exception.FosstrakAleClientServiceDownException;
 
 /**
- * @author sawielan
+ * @author swieland
  *
  * abstract super class for all the sub tabs in the GUI. the class provides helper 
  * methods to maintain the service proxy, default panels, ...

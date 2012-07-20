@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>identify()</code> of the associated <code>AutoIdController</code>. 
  * 
  * @author Stefan Schlegel (schlstef@student.ethz.ch)
- * @author sawielan
+ * @author swieland
  */
 public class IdentifyThread implements Runnable {
 	

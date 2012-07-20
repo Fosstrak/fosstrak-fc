@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.fosstrak.ale.client.exception.FosstrakAleClientException;
 
 /**
- * @author sawielan
+ * @author swieland
  * configuration class.
  */
 public class Configuration {

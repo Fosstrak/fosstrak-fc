@@ -33,7 +33,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 
 /**
  * represents a compositeReader that is a composition of different logicalreaders.
- * @author sawielan
+ * @author swieland
  *
  */
 public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalReader implements Observer  {

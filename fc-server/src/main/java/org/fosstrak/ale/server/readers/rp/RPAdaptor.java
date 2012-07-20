@@ -40,7 +40,7 @@ import org.fosstrak.reader.rp.proxy.RPProxyException;
 
 /**
  * represents an adaptor to the RP reader.
- * @author sawielan
+ * @author swieland
  *
  */
 public class RPAdaptor extends BaseReader {

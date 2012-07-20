@@ -47,7 +47,7 @@ import org.llrp.ltk.types.UnsignedShortArray_HEX;
  * read notifications. whenever such a notification occurs the epc codes (if 
  * contained) are extracted from the notification and are then propagated to 
  * the filtering and collection framework.
- * @author sawielan
+ * @author swieland
  * @author wafa.soubra@orange.com
  *
  */

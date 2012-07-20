@@ -44,7 +44,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
  * All ale operations are executed by this class.
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  * @author haennimi
  * @author benoit.plomion@orange.com
  */

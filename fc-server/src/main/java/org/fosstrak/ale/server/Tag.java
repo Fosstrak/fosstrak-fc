@@ -11,7 +11,7 @@ import org.fosstrak.tdt.TDTException;
 
 /**
  * represents a tag that has been read on one of the readers in the Logical Reader API.
- * @author sawielan
+ * @author swieland
  * @author alessio orlando
  * @author roberto vergallo
  * @author wafa.soubra@orange.com

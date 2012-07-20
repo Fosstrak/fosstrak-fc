@@ -54,7 +54,7 @@ import org.fosstrak.ale.xsd.epcglobal.EPC;
  * It validates the ec specifications, starts and stops the event cycles and manages the subscribers.  
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  * @author benoit.plomion@orange.com
  */
 public class ReportsGenerator implements Runnable {

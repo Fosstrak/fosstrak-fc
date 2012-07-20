@@ -56,7 +56,7 @@ import org.fosstrak.reader.rprm.core.msg.notification.TagType;
  * reports.
  * 
  * @author regli
- * @author sawielan
+ * @author swieland
  * @author benoit.plomion@orange.com
  * @author nkef@ait.edu.gr
  */
