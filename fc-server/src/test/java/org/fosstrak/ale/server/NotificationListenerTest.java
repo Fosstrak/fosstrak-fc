@@ -277,12 +277,13 @@ public class NotificationListenerTest {
 	
 	@Test
 	public void testNotify_Http() throws Exception {
+		int testPort = NOTIFICATION_PORT + 1;
 		
 		// create socket listener
-		SocketListener socketListener = new SocketListener(NOTIFICATION_PORT);
+		SocketListener socketListener = new SocketListener(testPort);
 		
 		// create notification listener
-		Subscriber notificationListener = new Subscriber("http://localhost:" + NOTIFICATION_PORT);
+		Subscriber notificationListener = new Subscriber("http://localhost:" + testPort);
 		
 		// create reports
 		ECReports reports = ECElementsUtils.createECReports();
