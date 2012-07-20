@@ -39,50 +39,40 @@ public class SocketListener implements Runnable {
 	private InputStream inputStream;
 	
 	public SocketListener(int port) throws IOException {
-		
 		// create tcp server socket
 		serverSocket = new ServerSocket(port);
 
 		thread = new Thread(this);
 		thread.start();
-		
 	}
 	
 	public void stop() {
-	
-		if (thread.isAlive()) {
-			thread.interrupt();
-		}
-		
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
 			LOG.error("caught IOException: ", e);
 		}
-		
+	
+		if (thread.isAlive()) {
+			thread.interrupt();
+		}
 	}
 	
 	public InputStream getInputStream() {
-		
 		return inputStream;
-		
 	}
 
 	public void run() {
-		
 		while (!serverSocket.isClosed()) {
 			try {
-				
 				// wait for connection				
 				Socket socket = serverSocket.accept();
 				
 				// get inputstream
 				inputStream = socket.getInputStream();
-
 			} catch (IOException e) {
+				LOG.error("caught IOException: ", e);
 			}
 		}
-		
-	}
-	
+	}	
 }

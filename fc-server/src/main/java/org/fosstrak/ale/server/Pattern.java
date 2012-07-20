@@ -156,9 +156,7 @@ public class Pattern {
 	 * @return list of data fields
 	 */
 	public List<PatternDataField> getDataFields() {
-		
 		return dataFields;
-		
 	}
 	
 	/**
@@ -167,12 +165,9 @@ public class Pattern {
 	 * @param pattern to check disjointness
 	 * @return true if the patterns are disjoint and false otherwise
 	 * @throws ECSpecValidationException if the pattern is invalid
-	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public boolean isDisjoint(String pattern) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
-		
+	public boolean isDisjoint(String pattern) throws ECSpecValidationExceptionResponse {
 		return isDisjoint(new Pattern(pattern, PatternUsage.GROUP));
-		
 	}
 	
 	/**
@@ -180,10 +175,9 @@ public class Pattern {
 	 * 
 	 * @param pattern to chek disjointness
 	 * @return true if the patterns are disjoint and false otherwise
-	 * @throws ImplementationException if an implementation exception occures
+	 * @throws ECSpecValidationExceptionResponse the pattern cannot be validated.
 	 */
-	public boolean isDisjoint(Pattern pattern) throws ImplementationExceptionResponse {
-		 
+	public boolean isDisjoint(Pattern pattern) throws ECSpecValidationExceptionResponse {
 		if (!type.equals(pattern.getType())) {
 			
 			// if types are different, then the patterns are disjoint

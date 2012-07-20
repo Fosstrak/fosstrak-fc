@@ -804,7 +804,7 @@ public class LogicalReaderManagerTest {
 		cfg = cfg.replaceAll(">[\\s|\r\n|\n|\t]*<", "><").trim();
 		// resulting string has some mock-specific characters contained in the implementing class -> replace them
 		cfg = cfg.replaceAll("\\$\\$EnhancerByCGLIB\\$\\$.{8}", "");
-		Assert.assertEquals(524, cfg.length());
+		Assert.assertEquals(524, cfg.trim().length());
 
 		EasyMock.verify(persistenceMock);
 		EasyMock.verify(compositeReader);

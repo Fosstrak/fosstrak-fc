@@ -19,12 +19,6 @@
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/*</url-pattern>
-		<!-- 
-		<init-param>
-			<param-name>config-location</param-name>
-			<param-value>/WEB-INF/cxf-servlet.xml</param-value>
-		</init-param>
-		 -->
 	</servlet-mapping>
 
 	<servlet>    	
