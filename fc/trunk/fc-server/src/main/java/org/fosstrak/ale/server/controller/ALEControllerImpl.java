@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
-
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ReportsGenerator;
@@ -21,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * this class is a webservice wich is control ALE. Can stop/start/... ECSpec.
  * @author benoit.plomion@orange.com
  */
-@WebService(endpointInterface = "org.fosstrak.ale.server.controller.ALEController")
 public class ALEControllerImpl implements ALEController {
 
 	/**	logger. */
@@ -35,12 +31,7 @@ public class ALEControllerImpl implements ALEController {
 	@Autowired
 	private LogicalReaderManager logicalReaderManager;
 	
-	/**
-	 * this method return the status of an ECSpec: started or not
-	 * @param specName
-	 * @throws NoSuchNameGPIOExceptionResponse 
-	 */
-	@WebMethod
+	@Override
 	public boolean ecSpecIsStarted(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {			
 		
 		LOG.info("check if " + specName + " ECSpec is started");
@@ -66,11 +57,8 @@ public class ALEControllerImpl implements ALEController {
 		return result;
 		
 	}
-
-	/**
-	 * this method return all ECSpec which is started
-	 */
-	@WebMethod
+	
+	@Override
 	public List<String> getAllECSpecNameStarted() {
 
 		LOG.info("get all ECSpec started");
@@ -93,13 +81,8 @@ public class ALEControllerImpl implements ALEController {
 		return result;
 		
 	}
-	
-	/**
-	 * this method start a specified ECSpec
-	 * @param specName
-	 * @throws NoSuchNameGPIOExceptionResponse 
-	 */
-	@WebMethod
+
+	@Override
 	public void startECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
 		
 		LOG.info("start ECSpec " + specName);
@@ -116,12 +99,7 @@ public class ALEControllerImpl implements ALEController {
 		
 	}
 
-	/**
-	 * this method stop a specified ECSpec
-	 * @param specName
-	 * @throws NoSuchNameGPIOExceptionResponse 
-	 */
-	@WebMethod
+	@Override
 	public void stopECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
 		
 		LOG.info("stop ECSpec " + specName);
@@ -138,10 +116,7 @@ public class ALEControllerImpl implements ALEController {
 		
 	}
 	
-	/**
-	 * this method is used to stop all ECSpec
-	 */
-	@WebMethod
+	@Override
 	public void stopAllECSpec() {
 		
 		LOG.info("stop all ECSpec");
@@ -161,12 +136,7 @@ public class ALEControllerImpl implements ALEController {
 		
 	}
 	
-	/**
-	 * this method is used to stop all ECSpec started for one LogicalReader
-	 * @param logicalReaderName
-	 * @throws NoSuchNameGPIOExceptionResponse 
-	 */
-	@WebMethod
+	@Override
 	public void stopAllECSpec4LogicalReader(String logicalReaderName) throws org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse {
 		
 		LOG.info("stop all ECSpec for the logical reader " + logicalReaderName);
@@ -200,13 +170,7 @@ public class ALEControllerImpl implements ALEController {
 		}
 		
 	}
-
-	/**
-	 * this method is used to stop all ECSpec started for one LogicalReader searching by ecspec
-	 * @param specName
-	 * @throws NoSuchNameGPIOExceptionResponse 
-	 */
-	@WebMethod
+	@Override
 	public void stopAllECSpec4LogicalReaderByECSpecName(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
 		
 		LOG.info("stop all ECSpec for the logical reader by spec name " + specName);
@@ -237,16 +201,12 @@ public class ALEControllerImpl implements ALEController {
 						reportsGenerator.setState(ReportsGeneratorState.UNREQUESTED);
 						
 					}
-					
 				}
-				
 			}
-			
 		}
-		
 	}
 	
-	@WebMethod
+	@Override
 	public String[] getLogicalReaderNames(boolean isComposite) {
 		
 		ArrayList<String> result = new ArrayList<String>();		

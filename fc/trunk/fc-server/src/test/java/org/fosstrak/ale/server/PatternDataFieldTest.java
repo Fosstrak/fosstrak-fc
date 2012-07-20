@@ -26,7 +26,6 @@ import junit.framework.Assert;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -213,20 +212,14 @@ public class PatternDataFieldTest {
 		
 	}
 
-	@Test
-	public void testGetValueWithNonIntDataField() throws Exception {
-	
+	/**
+	 * must throw an ECSpecValidationExceptionResponse because data field is not an of type int.
+	 * @throws ECSpecValidationExceptionResponse test expected.
+	 */
+	@Test(expected = ECSpecValidationExceptionResponse.class)
+	public void testGetValueWithNonIntDataField() throws ECSpecValidationExceptionResponse {	
 		PatternDataField rangeField = new PatternDataField(RANGE, PatternUsage.GROUP);
-		
-		try {
-			rangeField.getValue();
-		} catch(ImplementationExceptionResponse e) {
-			Assert.assertEquals("Data field is not an int.", e.getMessage());
-			return;
-		}
-		
-		Assert.fail("Should throw an ImplementationException because data field is not an of type int.");
-		
+		rangeField.getValue();		
 	}
 
 	@Test
@@ -238,20 +231,14 @@ public class PatternDataFieldTest {
 		
 	}
 
-	@Test
+	/**
+	 * must throw an ECSpecValidationExceptionResponse because data field is not of type range.
+	 * @throws ECSpecValidationExceptionResponse test expected.
+	 */
+	@Test(expected = ECSpecValidationExceptionResponse.class)
 	public void testGetLowWithNonRangeDataField() throws Exception {
-		
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
-		
-		try {
-			intField.getLow();
-		} catch(ImplementationExceptionResponse e) {
-			Assert.assertEquals("Data field is not a range.", e.getMessage());
-			return;
-		}
-		
-		Assert.fail("Should throw an ImplementationException because data field is not of type range.");
-		
+		intField.getLow();
 	}
 
 	@Test
@@ -263,20 +250,14 @@ public class PatternDataFieldTest {
 		
 	}
 
-	@Test
+	/**
+	 * must throw an ECSpecValidationExceptionResponse because data field is not of type range.
+	 * @throws ECSpecValidationExceptionResponse test expected.
+	 */
+	@Test(expected = ECSpecValidationExceptionResponse.class)
 	public void testGetHighWithNonRangeDataField() throws Exception {
-		
 		PatternDataField intField = new PatternDataField(INT, PatternUsage.GROUP);
-		
-		try {
-			intField.getHigh();
-		} catch(ImplementationExceptionResponse e) {
-			Assert.assertEquals("Data field is not a range.", e.getMessage());
-			return;
-		}
-		
-		Assert.fail("Should throw an ImplementationException because data field is not of type range.");
-		
+		intField.getHigh();
 	}
 
 	@Test

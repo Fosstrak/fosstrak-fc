@@ -22,8 +22,6 @@ package org.fosstrak.ale.server;
 
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 
 /**
  * This clas represents a data field of a tag, filter or group pattern.
@@ -110,8 +108,7 @@ public class PatternDataField {
 			if (low <= high) {
 				isRange = true;
 			} else {
-				throw new ECSpecValidationExceptionResponse("Invalid range '" + stringRepresentation + "'. " +
-						"Range must have the form '[lo-hi]' with lo <= hi.");
+				throw new ECSpecValidationExceptionResponse("Invalid range '" + stringRepresentation + "'. " + "Range must have the form '[lo-hi]' with lo <= hi.");
 			}
 			isInt = false;
 			return;
@@ -176,14 +173,14 @@ public class PatternDataField {
 	 * and throws an exception otherwise.
 	 * 
 	 * @return value of data field
-	 * @throws ImplementationException if the data field contains not an int
+	 * @throws ECSpecValidationExceptionResponse if the data field contains not an int
 	 */
-	public int getValue() throws ImplementationExceptionResponse {
+	public int getValue() throws ECSpecValidationExceptionResponse {
 
 		if (isInt) {
 			return value;
 		} else {
-			throw new ImplementationExceptionResponse("Data field is not an int.");
+			throw new ECSpecValidationExceptionResponse("Data field is not an int.");
 		}
 		
 	}
@@ -193,14 +190,14 @@ public class PatternDataField {
 	 * contains a range and throws an exception otherwise.
 	 * 
 	 * @return lower limit of the range of this data field
-	 * @throws ImplementationException if the data field contains not a range
+	 * @throws ECSpecValidationExceptionResponse if the data field contains not a range
 	 */
-	public int getLow() throws ImplementationExceptionResponse {
+	public int getLow() throws ECSpecValidationExceptionResponse {
 		
 		if (isRange) {
 			return low;
 		} else {
-			throw new ImplementationExceptionResponse("Data field is not a range.");
+			throw new ECSpecValidationExceptionResponse("Data field is not a range.");
 		}
 		
 	}
@@ -210,14 +207,14 @@ public class PatternDataField {
 	 * contains a range and throws an exception otherwise.
 	 * 
 	 * @return higher limit of the range of this data field
-	 * @throws ImplementationException if the data field contains not a range
+	 * @throws ECSpecValidationExceptionResponse if the data field contains not a range
 	 */
-	public int getHigh() throws ImplementationExceptionResponse {
+	public int getHigh() throws ECSpecValidationExceptionResponse {
 		
 		if (isRange) {
 			return high;
 		} else {
-			throw new ImplementationExceptionResponse("Data field is not a range.");
+			throw new ECSpecValidationExceptionResponse("Data field is not a range.");
 		}
 		
 	}
@@ -227,9 +224,9 @@ public class PatternDataField {
 	 * 
 	 * @param field to check disjointness
 	 * @return true if the data field are disjoint and false otherwise
-	 * @throws ImplementationException if an implementation exception occurs
+	 * @throws ECSpecValidationExceptionResponse if an implementation exception occurs
 	 */
-	public boolean isDisjoint(PatternDataField field) throws ImplementationExceptionResponse {
+	public boolean isDisjoint(PatternDataField field) throws ECSpecValidationExceptionResponse {
 
 		if (isAsterisk || isX || field.isAsterisk() || field.isX()) {
 			return false;

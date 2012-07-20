@@ -26,10 +26,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
+import org.fosstrak.ale.server.util.ECSpecValidator;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
@@ -41,13 +40,9 @@ import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
 import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReportOutputSpec;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
@@ -131,7 +126,7 @@ public class ReportsGenerator implements Runnable {
 		
 		// set spec
 		try {
-			validateSpec(spec);
+			ECSpecValidator.validateSpec(spec);
 		} catch (ECSpecValidationExceptionResponse e) {
 			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
@@ -666,154 +661,6 @@ public class ReportsGenerator implements Runnable {
 			return stableSetInterval.getValue();
 		}
 		return -1;
-		
-	}
-
-	/**
-	 * This method validates an ec specification under criterias of chapter 
-	 * 8.2.11 of ALE specification version 1.0.
-	 * @param spec to validate
-	 * @throws ECSpecValidationException if the specification is invalid
-	 * @throws ImplementationException if an implementation exception occurs
-	 */
-	private void validateSpec(ECSpec spec) 
-		throws ECSpecValidationExceptionResponse, 
-		ImplementationExceptionResponse {
-				
-		// check if the logical readers are known to the implementation
-		List<String> logicalReaders = 
-			spec.getLogicalReaders().getLogicalReader();
-		if (logicalReaders != null) {
-			for (String logicalReaderName : logicalReaders) {
-				if (!LogicalReaderManagerFactory.getLRM().contains(logicalReaderName)) {
-					throw new ECSpecValidationExceptionResponse("LogicalReader '" + logicalReaderName + "' is unknown.");
-				}
-			}
-		}
-		
-		// boundaries parameter of ECSpec is null or omitted
-		ECBoundarySpec boundarySpec = spec.getBoundarySpec();
-		if (boundarySpec == null) {
-			throw new ECSpecValidationExceptionResponse("The boundaries parameter of ECSpec is null.");
-		}
-		
-		// start and stop tiggers
-		checkTrigger(boundarySpec.getStartTrigger());
-		checkTrigger(boundarySpec.getStopTrigger());
-		
-		// check if duration, stableSetInterval or repeatPeriod is negative
-		ECTime time;
-		if ((time = boundarySpec.getDuration()) != null) {
-			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse("The duration field of ECBoundarySpec is negative.");
-			}
-		}
-		if ((time = boundarySpec.getStableSetInterval()) != null) {
-			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse("The stableSetInterval field of ECBoundarySpec is negative.");
-			}
-		}
-		if ((time = boundarySpec.getRepeatPeriod()) != null) {
-			if (time.getValue() < 0) {
-				throw new ECSpecValidationExceptionResponse("The repeatPeriod field of ECBoundarySpec is negative.");
-			}
-		}
-		
-		// check if start trigger is non-empty and repeatPeriod is non-zero
-		if ((boundarySpec.getStartTrigger() != null) && (boundarySpec.getRepeatPeriod().getValue() != 0)) {
-			throw new ECSpecValidationExceptionResponse(
-					"The startTrigger field of ECBoundarySpec is non-empty and " +
-					"the repeatPeriod field of ECBoundarySpec is non-zero.");
-		}
-		
-		// check if a stopping condition is specified
-		if ((boundarySpec.getStopTrigger() == null) 
-				&& (boundarySpec.getDuration() == null) &&
-				(boundarySpec.getStableSetInterval() == null)) {
-			throw new ECSpecValidationExceptionResponse("No stopping condition is specified in ECBoundarySpec.");
-		}
-		
-		// check if there is a ECReportSpec instance
-		if ((spec.getReportSpecs() == null) ||
-				(spec.getReportSpecs().getReportSpec().size() == 0)) {
-			throw new ECSpecValidationExceptionResponse("List of ECReportSpec instances is empty.");
-		}
-		
-		// check if two ECReportSpec instances have identical names
-		Set<String> reportSpecNames = new HashSet<String>();
-		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
-			if (reportSpecNames.contains(reportSpec.getReportName())) {
-				throw new ECSpecValidationExceptionResponse(
-						"Two ReportSpecs instances have identical names '" +
-						reportSpec.getReportName() + "'.");
-			} else {
-				reportSpecNames.add(reportSpec.getReportName());
-			}
-		}
-		
-		// check filters
-		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
-			ECFilterSpec filterSpec = reportSpec.getFilterSpec();
-			
-			if (filterSpec != null) {
-				// check include patterns
-				if (filterSpec.getIncludePatterns() != null) {
-					for (String pattern : filterSpec.getIncludePatterns().
-							getIncludePattern()) {
-						
-						new Pattern(pattern, PatternUsage.FILTER);
-					}
-				}
-				
-				// check exclude patterns
-				if (filterSpec.getExcludePatterns() != null) {
-					for (String pattern : filterSpec.getExcludePatterns().
-							getExcludePattern()) {
-						
-						new Pattern(pattern, PatternUsage.FILTER);
-					}
-				}
-			}
-			
-		}
-		
-		// check grouping patterns
-		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
-			if (reportSpec.getGroupSpec() != null) {
-				for (String pattern1 : reportSpec.getGroupSpec().getPattern()) {
-					Pattern pattern = new Pattern(pattern1, PatternUsage.GROUP);
-					for (String pattern2 : reportSpec.getGroupSpec().getPattern()) {
-						if (pattern1 != pattern2 && !pattern.isDisjoint(pattern2)) {
-							throw new ECSpecValidationExceptionResponse(
-									"The two grouping patterns '" + pattern1 +
-									"' and '" + pattern2 + "' are not disjoint.");
-						}
-					}
-				}
-			}
-		}
-		
-		// check if there is a output type specified for each ECReportSpec
-		for (ECReportSpec reportSpec : spec.getReportSpecs().getReportSpec()) {
-			ECReportOutputSpec outputSpec = reportSpec.getOutput();
-			if (!outputSpec.isIncludeEPC() && !outputSpec.isIncludeTag() && !outputSpec.isIncludeRawHex() &&
-					!outputSpec.isIncludeRawDecimal() && !outputSpec.isIncludeCount()) {
-				throw new ECSpecValidationExceptionResponse("The ECReportOutputSpec of ReportSpec '" +
-						reportSpec.getReportName() + "' has no output type specified.");
-			}
-		}
-		
-	}
-	
-	/**
-	 * This method checks if the trigger is valid or not.
-	 * 
-	 * @param trigger to check
-	 * @throws ECSpecValidationException if the trigger is invalid.
-	 */
-	private void checkTrigger(String trigger) throws ECSpecValidationExceptionResponse {
-		
-		// TODO: implement checkTrigger
 		
 	}
 	
