@@ -23,7 +23,7 @@ public class ALEControllerImpl implements ALEController {
 	/**	logger. */
 	private static final Logger LOG = Logger.getLogger(ALEControllerImpl.class.getName());
 		
-	//FIXME => modifier tous les NoSuchNameGPIOExceptionResponse avec les bons NoSuchNameException
+	//FIXME => modifier tous les NoSuchNameGPIOException avec les bons NoSuchNameException
 	
 	@Autowired
 	private ALE ale;
@@ -32,12 +32,12 @@ public class ALEControllerImpl implements ALEController {
 	private LogicalReaderManager logicalReaderManager;
 	
 	@Override
-	public boolean ecSpecIsStarted(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {			
+	public boolean ecSpecIsStarted(String specName) throws org.fosstrak.ale.exception.NoSuchNameException {			
 		
 		LOG.info("check if " + specName + " ECSpec is started");
 		
 		if (!ale.getReportGenerators().containsKey(specName)) {
-			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
+			throw new org.fosstrak.ale.exception.NoSuchNameException();			
 		}
 		
 		boolean result = false;
@@ -83,12 +83,12 @@ public class ALEControllerImpl implements ALEController {
 	}
 
 	@Override
-	public void startECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
+	public void startECSpec(String specName) throws org.fosstrak.ale.exception.NoSuchNameException {
 		
 		LOG.info("start ECSpec " + specName);
 		
 		if (!ale.getReportGenerators().containsKey(specName)) {
-			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
+			throw new org.fosstrak.ale.exception.NoSuchNameException();			
 		}
 		
 		ReportsGenerator reportsGenerator = ale.getReportGenerators().get(specName);		
@@ -100,12 +100,12 @@ public class ALEControllerImpl implements ALEController {
 	}
 
 	@Override
-	public void stopECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
+	public void stopECSpec(String specName) throws org.fosstrak.ale.exception.NoSuchNameException {
 		
 		LOG.info("stop ECSpec " + specName);
 				
 		if (!ale.getReportGenerators().containsKey(specName)) {
-			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
+			throw new org.fosstrak.ale.exception.NoSuchNameException();			
 		}
 		
 		ReportsGenerator reportsGenerator = ale.getReportGenerators().get(specName);	
@@ -128,7 +128,7 @@ public class ALEControllerImpl implements ALEController {
 			try {
 				LOG.info("stop ECSepcs " + ecSpecName);
 				stopECSpec(ecSpecName);
-			} catch (org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse e) {
+			} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
 				LOG.error("error to stop ecspec at startup", e);
 			}
 		
@@ -137,7 +137,7 @@ public class ALEControllerImpl implements ALEController {
 	}
 	
 	@Override
-	public void stopAllECSpec4LogicalReader(String logicalReaderName) throws org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse {
+	public void stopAllECSpec4LogicalReader(String logicalReaderName) throws org.fosstrak.ale.exception.NoSuchNameException {
 		
 		LOG.info("stop all ECSpec for the logical reader " + logicalReaderName);
 		
@@ -166,17 +166,17 @@ public class ALEControllerImpl implements ALEController {
 		}
 		
 		if (!logicalReaderFind) {
-			throw new org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse();
+			throw new org.fosstrak.ale.exception.NoSuchNameException();
 		}
 		
 	}
 	@Override
-	public void stopAllECSpec4LogicalReaderByECSpecName(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse {
+	public void stopAllECSpec4LogicalReaderByECSpecName(String specName) throws org.fosstrak.ale.exception.NoSuchNameException {
 		
 		LOG.info("stop all ECSpec for the logical reader by spec name " + specName);
 		
 		if (!ale.getReportGenerators().containsKey(specName)) {
-			throw new org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse();			
+			throw new org.fosstrak.ale.exception.NoSuchNameException();			
 		}
 		
 		List<String> logicalReaderList = ale.getReportGenerators().get(specName).getSpec().getLogicalReaders().getLogicalReader();

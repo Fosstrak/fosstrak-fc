@@ -26,9 +26,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 
 /**
@@ -58,7 +57,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 	 * @param aspec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec aspec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec aspec) throws ImplementationException {
 		super.initialize(name, aspec);
 
 		// create the sub parts by calling the factory method
@@ -68,7 +67,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 			LOG.debug(String.format("retrieving reader part %s", reader));
 			
 			// just retrieve the reader from the LogicalReaderManager
-			LogicalReader logicalReader = LogicalReaderManagerFactory.getLRM().getLogicalReader(reader);
+			LogicalReader logicalReader = logicalReaderManager.getLogicalReader(reader);
 			
 //			 add the reader to the observable
 			logicalReader.addObserver(this);
@@ -145,7 +144,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
 	@Override
-	public  synchronized void update(LRSpec aspec) throws ImplementationExceptionResponse {
+	public  synchronized void update(LRSpec aspec) throws ImplementationException {
 		// get a lock on the logicalReaders
 	 	synchronized (logicalReaders) {
 	 		// test whether we need to update the reader or just the properties
@@ -173,7 +172,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 				
 				// fill in the new readers
 				for (String reader : readers) {
-					LogicalReader logicalReader = LogicalReaderManagerFactory.getLRM().getLogicalReader(reader);
+					LogicalReader logicalReader = logicalReaderManager.getLogicalReader(reader);
 					logicalReader.addObserver(this);
 					logicalReaders.put(reader, logicalReader);
 				}

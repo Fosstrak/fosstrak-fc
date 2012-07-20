@@ -24,9 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.reader.rp.proxy.DataSelector;
 import org.fosstrak.reader.rp.proxy.NotificationChannel;
 import org.fosstrak.reader.rp.proxy.NotificationChannelEndPoint;
@@ -104,8 +103,6 @@ public class InputGenerator implements NotificationChannelListener {
 	/** notification channel end point. */
 	private NotificationChannelEndPoint notificationChannelEndPoint;
 	
-	/** reader device name. */
-	private String readerName;
 	/** notification channel name. */
 	private String notificationChannelName = DEFAULT_NOTIFICATION_CHANNEL_NAME;
 	/** data selector name. */
@@ -129,7 +126,7 @@ public class InputGenerator implements NotificationChannelListener {
 	 * @param adaptor the adaptor holding this inputGenerator
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public InputGenerator(RPAdaptor adaptor) throws ImplementationExceptionResponse {
+	public InputGenerator(RPAdaptor adaptor) throws ImplementationException {
 
 		this.adaptor = adaptor;
 
@@ -137,7 +134,7 @@ public class InputGenerator implements NotificationChannelListener {
 		try {
 			new Initializer(this).start();
 		} catch (Exception e) {
-			throw new ImplementationExceptionResponse(e.getMessage());
+			throw new ImplementationException("could not initialize the input generator", e);
 		}
 		
 	}
@@ -346,7 +343,6 @@ public class InputGenerator implements NotificationChannelListener {
 			handshake.setMessageFormat(Handshake.FORMAT_XML);
 			readerDevice = ReaderDeviceFactory.getReaderDevice(adaptor.getCommandChannelHost(),
 					adaptor.getCommandChannelPort(), handshake);
-			readerName = readerDevice.getName();
 
 			// create notification channel endpoint and add listener
 			LOG.debug("Try to create NotificationChannelEndpoint at port '" + adaptor.getNotificationChannelPort() + "'...");

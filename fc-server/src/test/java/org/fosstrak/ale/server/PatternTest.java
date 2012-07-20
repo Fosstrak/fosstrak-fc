@@ -25,7 +25,7 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,7 +60,7 @@ public class PatternTest {
 	public void testCreateTagPatternWithInvalidStringRepresentation() throws Exception {
 		try {
 			new Pattern(FILTER_PATTERN, PatternUsage.TAG);
-		} catch (ECSpecValidationExceptionResponse e) {
+		} catch (ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field '[1-2]'. Only 'int' is allowed.", e.getMessage());
 			return;
 		}
@@ -78,7 +78,7 @@ public class PatternTest {
 	public void testCreateFilterPatternWithInvalidStringRepresentation() throws Exception {
 		try {
 			new Pattern(GROUP_PATTERN, PatternUsage.FILTER);
-		} catch (ECSpecValidationExceptionResponse e) {
+		} catch (ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field 'X'. Only '*', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}
@@ -97,7 +97,7 @@ public class PatternTest {
 	public void testCreateGroupPatternWithInvalidStringRepresentation() throws Exception {
 		try {
 			new Pattern(INVALID_PATTERN, PatternUsage.GROUP);
-		} catch (ECSpecValidationExceptionResponse e) {
+		} catch (ECSpecValidationException e) {
 			Assert.assertEquals("Invalid data field 'a'. Only '*', 'X', '[lo-hi]' or 'int' are allowed.", e.getMessage());
 			return;
 		}

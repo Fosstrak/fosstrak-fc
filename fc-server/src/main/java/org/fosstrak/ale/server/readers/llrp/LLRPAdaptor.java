@@ -8,10 +8,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareException;
 import org.fosstrak.hal.Observation;
@@ -133,12 +132,12 @@ public class LLRPAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occurs.
 
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec spec) throws ImplementationException {
 		super.initialize(name, spec);
 		
 		if ((name == null) || (spec == null)) {
 			log.error("reader name or LRSpec is null.");
-			throw new ImplementationExceptionResponse("reader name or LRSpec is null.");
+			throw new ImplementationException("reader name or LRSpec is null.");
 		}
 		
 		//ORANGE: initialize properties for the LLRPAdaptor
@@ -171,7 +170,7 @@ public class LLRPAdaptor extends BaseReader {
 					if (ip == null) {
 						log.error("llrp reader '" + physicalReaderName + "' is missing " +
 								"and not enough parameters specified. (Needs PhysicalReaderName, ip, port) !");
-						throw new ImplementationExceptionResponse("llrp reader is missing and not " +
+						throw new ImplementationException("llrp reader is missing and not " +
 								"enough parameters specified. (Needs PhysicalReaderName, ip, port, clientInitiated) !");
 					}
 					log.debug(String.format(
@@ -212,13 +211,13 @@ public class LLRPAdaptor extends BaseReader {
 				}
 			} else {
 				log.error("could not get an instance of the LLRPManager - aborting");
-				throw new ImplementationExceptionResponse("could not get an instance of the LLRPManager - aborting");
+				throw new ImplementationException("could not get an instance of the LLRPManager - aborting");
 			}
 			
 			
 		} catch (Exception e) {
 			log.error("Error when initializing the Reader", e);
-			throw new ImplementationExceptionResponse("Error when initializing the Reader");
+			throw new ImplementationException("Error when initializing the Reader");
 		}
 		
 		manager.incReference(physicalReaderName);
@@ -246,7 +245,7 @@ public class LLRPAdaptor extends BaseReader {
 	}
 
 	@Override
-	public void connectReader() throws ImplementationExceptionResponse {
+	public void connectReader() throws ImplementationException {
 		// get the required reader and register for asynchronous messages.
 		try {
 			Reader llrpReader = manager.getAdaptor().getReader(physicalReaderName);
@@ -255,12 +254,12 @@ public class LLRPAdaptor extends BaseReader {
 			
 		} catch (RemoteException e) {
 			log.error("could not connect to the reader");
-			throw new ImplementationExceptionResponse("Error when connecting the Reader");
+			throw new ImplementationException("Error when connecting the Reader");
 		}
 	}
 
 	@Override
-	public void disconnectReader() throws ImplementationExceptionResponse {
+	public void disconnectReader() throws ImplementationException {
 		// get the required reader and register for asynchronous messages.
 		try {
 			Reader llrpReader = manager.getAdaptor().getReader(physicalReaderName);
@@ -269,7 +268,7 @@ public class LLRPAdaptor extends BaseReader {
 			
 		} catch (RemoteException e) {
 			log.error("could not disconnect from the reader");
-			throw new ImplementationExceptionResponse("Error when disconnecting the Reader");
+			throw new ImplementationException("Error when disconnecting the Reader");
 		}
 	}
 
@@ -297,7 +296,7 @@ public class LLRPAdaptor extends BaseReader {
 	}
 
 	@Override
-	public void update(LRSpec spec) throws ImplementationExceptionResponse {
+	public void update(LRSpec spec) throws ImplementationException {
 		log.info("you cannot update the reader through fc yet. use the llrp gui client for this purpose please.");
 	}
 
@@ -437,13 +436,13 @@ public class LLRPAdaptor extends BaseReader {
 	 * @param propertiesFilePath the filepath to the properties file
 	 * @throws ImplementationException if properties could not be loaded
 	 */
-	public void inititializeLLRPAdaptorProperties (String propertiesFilePath) throws ImplementationExceptionResponse {
+	public void inititializeLLRPAdaptorProperties (String propertiesFilePath) throws ImplementationException {
 		Properties props = new Properties();
 		//TODO : to test the different cases !!!!
 		try {
 			props.load(LLRPAdaptor.class.getResourceAsStream(propertiesFilePath));
 		} catch (Exception e) {
-			throw new ImplementationExceptionResponse
+			throw new ImplementationException
 			("Error loading properties from LLRPAdaptor '" + propertiesFilePath + "'");
 		}
 		// we need to initialize the User Memory OpSpecID

@@ -29,8 +29,8 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.fosstrak.ale.exception.InvalidURIException;
 import org.fosstrak.ale.util.DeserializerUtil;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.junit.Before;
 import org.junit.Test;
@@ -119,7 +119,7 @@ public class NotificationListenerTest {
 		
 		try {
 			new Subscriber("http://::");
-		} catch(InvalidURIExceptionResponse e) {
+		} catch(InvalidURIException e) {
 			Assert.assertEquals(INVALID_URI_EXCEPTION_TEXT, e.getMessage());
 			return;
 		}
@@ -132,7 +132,7 @@ public class NotificationListenerTest {
 		
 		try {
 			new Subscriber("http://myhost.com:achttausend/abc");
-		} catch(InvalidURIExceptionResponse e) {
+		} catch(InvalidURIException e) {
 			Assert.assertEquals("Invalid port. " + INVALID_URI_EXCEPTION_TEXT, e.getMessage());
 			return;
 		}
@@ -155,7 +155,7 @@ public class NotificationListenerTest {
 		
 		try {
 			new Subscriber("tcp://localhost:123456/");
-		} catch (InvalidURIExceptionResponse e) {
+		} catch (InvalidURIException e) {
 			Assert.assertEquals("Invalid port. " + INVALID_URI_EXCEPTION_TEXT, e.getMessage());
 			return;
 		}
@@ -203,7 +203,7 @@ public class NotificationListenerTest {
 		
 		try {
 			new Subscriber("file://localhost");
-		} catch (InvalidURIExceptionResponse e) {
+		} catch (InvalidURIException e) {
 			Assert.assertEquals("Invalid path. " + INVALID_URI_EXCEPTION_TEXT, e.getMessage());
 			return;
 		}
@@ -216,7 +216,7 @@ public class NotificationListenerTest {
 		
 		try {
 			new Subscriber("htt://myhost.com");
-		} catch(InvalidURIExceptionResponse e) {
+		} catch(InvalidURIException e) {
 			Assert.assertEquals("Invalid protocol. " + INVALID_URI_EXCEPTION_TEXT, e.getMessage());
 			return;
 		}

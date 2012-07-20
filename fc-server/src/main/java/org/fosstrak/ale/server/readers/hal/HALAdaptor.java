@@ -5,11 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.IdentifyThread;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareAbstraction;
 import org.fosstrak.hal.HardwareException;
@@ -80,7 +79,7 @@ public class HALAdaptor extends BaseReader {
 	 * @param spec the specification that describes the current reader.
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
-	public void initialize(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	public void initialize(String name, LRSpec spec) throws ImplementationException {
 		super.initialize(name, spec);
 
 		pollingFrequency = Long.parseLong(logicalReaderProperties.get(PARAM_READTIME_INTERVAL));
@@ -127,7 +126,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void connectReader() throws ImplementationExceptionResponse {
+	public void connectReader() throws ImplementationException {
 		if (!isConnected()) {
 			LOG.debug("Connecting reader " + getName());
 			if (!isAutoPolling()) {
@@ -149,7 +148,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occured
 	 */
 	@Override
-	public void disconnectReader() throws ImplementationExceptionResponse {
+	public void disconnectReader() throws ImplementationException {
 		if (isConnected()) {
 			if (isAutoPolling()) {
 				try {
@@ -178,7 +177,7 @@ public class HALAdaptor extends BaseReader {
 		if (!isConnected()) {
 				try {
 					connectReader();
-				} catch (ImplementationExceptionResponse e) {
+				} catch (ImplementationException e) {
 					LOG.info("could not start the reader " + readerName, e);
 					
 					return;
@@ -238,7 +237,7 @@ public class HALAdaptor extends BaseReader {
 	 * @throws ImplementationException whenever an internal error occurs
 	 */
 	@Override
-	public synchronized  void update(LRSpec spec) throws ImplementationExceptionResponse {
+	public synchronized  void update(LRSpec spec) throws ImplementationException {
 		try {
 			// we update the properties, so stop the reader from retrieving tags
 			stop();
@@ -260,7 +259,7 @@ public class HALAdaptor extends BaseReader {
 			// restart the reader
 			start();
 		} catch (Exception e) {
-			 throw new ImplementationExceptionResponse(e.getMessage(), e);
+			 throw new ImplementationException(e.getMessage(), e);
 		}
 	}
 	

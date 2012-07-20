@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.ReportsGenerator;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 
 /**
@@ -47,10 +47,10 @@ public class ReportsGeneratorsProvider implements Map<String, ReportsGenerator> 
 	 * @param specName the name of the specification.
 	 * @param spec the specification.
 	 * @return the new reports generator.
-	 * @throws ImplementationExceptionResponse internal exception in the implementation.
-	 * @throws ECSpecValidationExceptionResponse specification is not valid.
+	 * @throws ImplementationException internal exception in the implementation.
+	 * @throws ECSpecValidationException specification is not valid.
 	 */
-	public ReportsGenerator createNewReportGenerator(String specName, ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public ReportsGenerator createNewReportGenerator(String specName, ECSpec spec) throws ECSpecValidationException, ImplementationException {
 		return new ReportsGenerator(specName, spec);
 	}
 	

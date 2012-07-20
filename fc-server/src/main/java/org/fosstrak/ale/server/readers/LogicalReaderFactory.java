@@ -1,8 +1,7 @@
 package org.fosstrak.ale.server.readers;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
+import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 
@@ -20,14 +19,11 @@ public class LogicalReaderFactory {
 	private LogicalReaderFactory() {
 	}
 	
-	private static LogicalReader createCompositeReader(String name, LRSpec spec) throws ImplementationExceptionResponse {
-		CompositeReader compositeReader = new CompositeReader();
-		// initialize the reader
-		compositeReader.initialize(name, spec);
-		return compositeReader;
+	private static LogicalReader createCompositeReader(String name, LRSpec spec) throws ImplementationException {
+		return new CompositeReader();
 	}
 	
-	private static LogicalReader createBaseReader(String name, LRSpec spec) throws ImplementationExceptionResponse {
+	private static LogicalReader createBaseReader(String name, LRSpec spec) throws ImplementationException {
 		LogicalReader logicalReader;
 		try {
 			// get the reader type of the reader
@@ -40,16 +36,15 @@ public class LogicalReaderFactory {
 			
 			if (readerType == null) {
 				log.debug("Property " + LogicalReader.PROPERTY_READER_TYPE + " not defined - aborting");
-				throw new ImplementationExceptionResponse("Property " + LogicalReader.PROPERTY_READER_TYPE + " not defined");
+				throw new ImplementationException("Property " + LogicalReader.PROPERTY_READER_TYPE + " not defined");
 			}
 			
 			Class<?> cls = Class.forName(readerType);  
 			Object result = cls.newInstance();
 			
 			if (result instanceof LogicalReader) {
-				logicalReader = (LogicalReader) result;
-				// initialize the reader
-				logicalReader.initialize(name, spec);
+				logicalReader = (LogicalReader) result;				
+				return logicalReader;
 			} else {
 				log.debug("constructor resulted in wrong type - aborting: " + result.getClass().getCanonicalName());
 				throw new ClassCastException("constructor resulted in wrong type");
@@ -57,16 +52,14 @@ public class LogicalReaderFactory {
 			
 		} catch (Throwable e) {
 			log.error("could not dynamically reflect the reader type", e);
-			throw new ImplementationExceptionResponse();
+			throw new ImplementationException("could not dynamically reflect the reader type", e);
 		}
-		
-		return logicalReader;
 	}
 	
-	private static boolean isCompositeReader(LRSpec spec) throws ImplementationExceptionResponse {
+	private static boolean isCompositeReader(LRSpec spec) throws ImplementationException {
 		if (null == spec) {
 			log.debug("spec is null - aborting");
-			throw new ImplementationExceptionResponse("spec is null");
+			throw new ImplementationException("spec is null");
 		}
 		return spec.isIsComposite();
 	}
@@ -80,7 +73,7 @@ public class LogicalReaderFactory {
 	 * @return a logical reader
 	 * @throws ImplementationException when the LogicalReader could not be built by reflection
 	 */
-	public static LogicalReader createReader(String name, LRSpec spec, LogicalReaderManager logicalReaderManager) throws ImplementationExceptionResponse {
+	public static LogicalReader createReader(String name, LRSpec spec, LogicalReaderManager logicalReaderManager) throws ImplementationException {
 		// first test if reader is already in the LogicalReaderManager
 		LogicalReader logicalReader = logicalReaderManager.getLogicalReader(name);
 		if (logicalReader != null) {
@@ -91,9 +84,12 @@ public class LogicalReaderFactory {
 		// determine whether composite or basereader
 		if (isCompositeReader(spec)) {
 			log.debug("creating composite reader");
-			return createCompositeReader(name, spec);
+			logicalReader = createCompositeReader(name, spec);
 		}
 		log.debug("creating base reader");
-		return createBaseReader(name, spec);
+		logicalReader = createBaseReader(name, spec);
+		logicalReader.setLogicalReaderManager(logicalReaderManager);
+		logicalReader.initialize(name, spec);
+		return logicalReader;
 	}
 }

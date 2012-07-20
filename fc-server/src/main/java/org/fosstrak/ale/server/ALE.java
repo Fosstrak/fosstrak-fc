@@ -22,20 +22,13 @@ package org.fosstrak.ale.server;
 
 import java.util.Map;
 
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.DuplicateSubscriptionException;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InvalidURIException;
+import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.exception.NoSuchSubscriberException;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 
@@ -66,7 +59,7 @@ public interface ALE {
 	 * @throws ECSpecValidationException if the ec specification is not valid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	void define(String specName, ECSpec spec) throws DuplicateNameExceptionResponse, ECSpecValidationExceptionResponse, ImplementationExceptionResponse;
+	void define(String specName, ECSpec spec) throws DuplicateNameException, ECSpecValidationException, ImplementationException;
 	
 	/**
 	 * With this method an ec specification can be undefined.
@@ -74,7 +67,7 @@ public interface ALE {
 	 * @param specName of the ec specification to undefine
 	 * @throws NoSuchNameException if there is no ec specification with this name defined
 	 */
-	void undefine(String specName) throws NoSuchNameExceptionResponse;
+	void undefine(String specName) throws NoSuchNameException;
 	
 	/**
 	 * This method returns an ec specification depending on a given name.
@@ -83,7 +76,7 @@ public interface ALE {
 	 * @return ec specification with the specified name
 	 * @throws NoSuchNameException if no such ec specification exists
 	 */
-	ECSpec getECSpec(String specName) throws NoSuchNameExceptionResponse;
+	ECSpec getECSpec(String specName) throws NoSuchNameException;
 	
 	/**
 	 * This method returns the names of all defined ec specifications.
@@ -101,7 +94,7 @@ public interface ALE {
 	 * @throws InvalidURIException if the specified notification uri is invalid
 	 * @throws DuplicateSubscriptionException if the same subscription is already done
 	 */
-	void subscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, InvalidURIExceptionResponse, DuplicateSubscriptionExceptionResponse;
+	void subscribe(String specName, String notificationURI) throws NoSuchNameException, InvalidURIException, DuplicateSubscriptionException;
 
 	/**
 	 * With this method a notification uri can be unsubscribed from a defined ec specification.
@@ -112,7 +105,7 @@ public interface ALE {
 	 * @throws NoSuchSubscriberException if the specified notification uri is not subscribed to the ec specification.
 	 * @throws InvalidURIException if the specified notification uri is invalid
 	 */
-	void unsubscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, NoSuchSubscriberExceptionResponse, InvalidURIExceptionResponse;
+	void unsubscribe(String specName, String notificationURI) throws NoSuchNameException, NoSuchSubscriberException, InvalidURIException;
 
 	/**
 	 * With this method a defined ec specification can be polled.
@@ -123,7 +116,7 @@ public interface ALE {
 	 * @return ec report of the next event cycle
 	 * @throws NoSuchNameException if there is no ec specification with the given name defined
 	 */
-	ECReports poll(String specName) throws NoSuchNameExceptionResponse;
+	ECReports poll(String specName) throws NoSuchNameException;
 	
 	/**
 	 * With this method a undefined ec specifcation can be executed.
@@ -134,7 +127,7 @@ public interface ALE {
 	 * @throws ECSpecValidationException if the ec specification is not valid
 	 * @throws ImplementationException if an implementation exception occures
 	 */
-	ECReports immediate(ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse;
+	ECReports immediate(ECSpec spec) throws ECSpecValidationException, ImplementationException;
 	
 	/**
 	 * This method returns all subscribers to a given ec specification name.
@@ -143,7 +136,7 @@ public interface ALE {
 	 * @return array of string with notification uris
 	 * @throws NoSuchNameException if there is no ec specification with the given name is defined
 	 */
-	String[] getSubscribers(String specName) throws NoSuchNameExceptionResponse;
+	String[] getSubscribers(String specName) throws NoSuchNameException;
 		
 	/**
 	 * This method returns the standard version to which this implementation is compatible.

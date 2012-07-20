@@ -24,6 +24,13 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.DuplicateNameException;
+import org.fosstrak.ale.exception.DuplicateSubscriptionException;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InvalidURIException;
+import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.exception.NoSuchSubscriberException;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.ReportsGenerator;
@@ -32,13 +39,6 @@ import org.fosstrak.ale.server.impl.type.ReportsGeneratorsProvider;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.rp.InputGenerator;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,17 +108,17 @@ public class ALEImpl implements ALE {
 	}	
 
 	@Override
-	public void define(String specName, ECSpec spec) throws DuplicateNameExceptionResponse, ECSpecValidationExceptionResponse, ImplementationExceptionResponse {
+	public void define(String specName, ECSpec spec) throws DuplicateNameException, ECSpecValidationException, ImplementationException {
 		if (reportGeneratorsProvider.containsKey(specName)) {
 			LOG.debug("spec already defined: " + specName);
-			throw new DuplicateNameExceptionResponse("ECSpec already defined with name: " + specName);
+			throw new DuplicateNameException("ECSpec already defined with name: " + specName);
 		}
 		reportGeneratorsProvider.put(specName, reportGeneratorsProvider.createNewReportGenerator(specName, spec));			
 		persistenceProvider.writeECSpec(specName, spec);
 	}
 	
 	@Override
-	public void undefine(String specName) throws NoSuchNameExceptionResponse {		
+	public void undefine(String specName) throws NoSuchNameException {		
 
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
@@ -127,7 +127,7 @@ public class ALEImpl implements ALE {
 	}
 	
 	@Override
-	public ECSpec getECSpec(String specName) throws NoSuchNameExceptionResponse {		
+	public ECSpec getECSpec(String specName) throws NoSuchNameException {		
 
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
@@ -140,7 +140,7 @@ public class ALEImpl implements ALE {
 	}
 	
 	@Override
-	public void subscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, InvalidURIExceptionResponse, DuplicateSubscriptionExceptionResponse {
+	public void subscribe(String specName, String notificationURI) throws NoSuchNameException, InvalidURIException, DuplicateSubscriptionException {
 
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
@@ -149,7 +149,7 @@ public class ALEImpl implements ALE {
 	}
 
 	@Override
-	public void unsubscribe(String specName, String notificationURI) throws NoSuchNameExceptionResponse, NoSuchSubscriberExceptionResponse, InvalidURIExceptionResponse {
+	public void unsubscribe(String specName, String notificationURI) throws NoSuchNameException, NoSuchSubscriberException, InvalidURIException {
 		
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
@@ -158,23 +158,23 @@ public class ALEImpl implements ALE {
 	}
 
 	@Override
-	public ECReports poll(String specName) throws NoSuchNameExceptionResponse {
+	public ECReports poll(String specName) throws NoSuchNameException {
 
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		return poll(reportGeneratorsProvider.get(specName));		
 	}
 	
 	@Override
-	public ECReports immediate(ECSpec spec) throws ECSpecValidationExceptionResponse, ImplementationExceptionResponse {		
+	public ECReports immediate(ECSpec spec) throws ECSpecValidationException, ImplementationException {		
 		try {
 			return poll(new ReportsGenerator(getNextReportGeneratorName(), spec));
-		} catch (NoSuchNameExceptionResponse e) {
-			throw new ImplementationExceptionResponse("immediate failed");
+		} catch (NoSuchNameException e) {
+			throw new ImplementationException("immediate failed");
 		}
 	}
 	
 	@Override
-	public String[] getSubscribers(String specName) throws NoSuchNameExceptionResponse {
+	public String[] getSubscribers(String specName) throws NoSuchNameException {
 		
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		return reportGeneratorsProvider.get(specName).getSubscribers().toArray(new String[0]);
@@ -203,7 +203,7 @@ public class ALEImpl implements ALE {
 		}		
 	}
 	
-	private ECReports poll(ReportsGenerator reportGenerator) throws NoSuchNameExceptionResponse {
+	private ECReports poll(ReportsGenerator reportGenerator) throws NoSuchNameException {
 		
 		ECReports reports = null;
 		reportGenerator.poll();
@@ -238,11 +238,11 @@ public class ALEImpl implements ALE {
 	/**
 	 * throws an exception if the given specification name is not existing.
 	 * @param specName the name of the specification to verify.
-	 * @throws NoSuchNameExceptionResponse when name not existing.
+	 * @throws NoSuchNameException when name not existing.
 	 */
-	protected void throwNoSuchNameExceptionIfNoSuchSpec(String specName) throws NoSuchNameExceptionResponse {
+	protected void throwNoSuchNameExceptionIfNoSuchSpec(String specName) throws NoSuchNameException {
 		if (!reportGeneratorsProvider.containsKey(specName)) {
-			throw new NoSuchNameExceptionResponse("No ECSpec with such name defined: " + specName);
+			throw new NoSuchNameException("No ECSpec with such name defined: " + specName);
 		}
 	}
 	/**

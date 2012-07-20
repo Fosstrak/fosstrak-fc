@@ -20,8 +20,7 @@
 
 package org.fosstrak.ale.server;
 
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
+import org.fosstrak.ale.exception.ECSpecValidationException;
 
 /**
  * This enumeration defines the possible pattern types.
@@ -63,7 +62,7 @@ public enum PatternType {
 	 * @return pattern type
 	 * @throws ECSpecValidationException if the string representation is invalid
 	 */
-	public static PatternType getType(String type) throws ECSpecValidationExceptionResponse {
+	public static PatternType getType(String type) throws ECSpecValidationException {
 
 		if (GID_96_STRING.equals(type)) {
 			return GID_96;
@@ -78,7 +77,7 @@ public enum PatternType {
 		}else if (GRAI_96_STRING.equals(type)){
 			return GRAI_96;
 		}else {
-			throw new ECSpecValidationExceptionResponse("Unknown Tag Format '" + type + "'. Known formats are" +
+			throw new ECSpecValidationException("Unknown Tag Format '" + type + "'. Known formats are" +
 					" '" + GID_96_STRING + "', '" + SGTIN_64_STRING + "', '" + SGTIN_96_STRING + "' and '" + SSCC_64_STRING + "', '" + SSCC_96_STRING + "', '" + GRAI_96_STRING + "'.");
 		}
 		

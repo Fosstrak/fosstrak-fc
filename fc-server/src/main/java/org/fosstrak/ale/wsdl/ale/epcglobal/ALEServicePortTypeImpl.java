@@ -28,7 +28,13 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.xsd.ale.epcglobal.ECReports immediate(Immediate parms) throws ECSpecValidationExceptionResponse , ImplementationExceptionResponse , SecurityExceptionResponse    {
     	log.debug("immediate");
-        return ale.immediate(parms.getSpec());
+        try {
+			return ale.immediate(parms.getSpec());
+		} catch (org.fosstrak.ale.exception.ECSpecValidationException e) {
+			throw new ECSpecValidationExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.ImplementationException e) {
+			throw new ImplementationExceptionResponse(e.getMessage(), e);
+		}
     }
 
     /* (non-Javadoc)
@@ -44,7 +50,15 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder unsubscribe(Unsubscribe parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , NoSuchSubscriberExceptionResponse , InvalidURIExceptionResponse    {
     	log.debug("unsubscribe");
-    	ale.unsubscribe(parms.getSpecName(), parms.getNotificationURI());
+    	try {
+			ale.unsubscribe(parms.getSpecName(), parms.getNotificationURI());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.NoSuchSubscriberException e) {
+			throw new NoSuchSubscriberExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InvalidURIException e) {
+			throw new InvalidURIExceptionResponse(e.getMessage(), e);
+		}
     	return new VoidHolder();
     }
 
@@ -53,7 +67,11 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.xsd.ale.epcglobal.ECSpec getECSpec(GetECSpec parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse    {
     	log.debug("getECSpec");
-    	return ale.getECSpec(parms.getSpecName());
+    	try {
+			return ale.getECSpec(parms.getSpecName());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		}
     }
 
     /* (non-Javadoc)
@@ -69,7 +87,15 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder subscribe(Subscribe parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse , InvalidURIExceptionResponse , DuplicateSubscriptionExceptionResponse    {
     	log.debug("subscribe");
-    	ale.subscribe(parms.getSpecName(), parms.getNotificationURI());
+    	try {
+			ale.subscribe(parms.getSpecName(), parms.getNotificationURI());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.InvalidURIException e) {
+			throw new InvalidURIExceptionResponse(e.getMessage(), e);
+		} catch (org.fosstrak.ale.exception.DuplicateSubscriptionException e) {
+			throw new DuplicateSubscriptionExceptionResponse(e.getMessage(), e);
+		}
     	return new VoidHolder();
     }
 
@@ -78,7 +104,11 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.xsd.ale.epcglobal.ECReports poll(Poll parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse    {
     	log.debug("poll");
-    	return ale.poll(parms.getSpecName());
+    	try {
+			return ale.poll(parms.getSpecName());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		}
     }
 
     /* (non-Javadoc)
@@ -88,9 +118,13 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
     	log.debug("getSubscribers");
     	ArrayOfString aof = new ArrayOfString();
     	
-    	for (String sub : ale.getSubscribers(parms.getSpecName())) {
-    		aof.getString().add(sub);
-    	}
+    	try {
+			for (String sub : ale.getSubscribers(parms.getSpecName())) {
+				aof.getString().add(sub);
+			}
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		}
     	return aof;
     }
 
@@ -99,7 +133,11 @@ public class ALEServicePortTypeImpl implements ALEServicePortType {
      */
     public org.fosstrak.ale.wsdl.ale.epcglobal.VoidHolder undefine(Undefine parms) throws ImplementationExceptionResponse , SecurityExceptionResponse , NoSuchNameExceptionResponse    {
     	log.debug("undefine");
-    	ale.undefine(parms.getSpecName());
+    	try {
+			ale.undefine(parms.getSpecName());
+		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
+			throw new NoSuchNameExceptionResponse(e.getMessage(), e);
+		}
     	return new VoidHolder();
     }
 

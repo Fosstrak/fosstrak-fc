@@ -17,10 +17,10 @@ public interface ALEController {
 	 * this method return the status of an ECSpec: started or not
 	 * @param specName the name of the specification to test.
 	 * @return true if the specification is running, false otherwise.
-	 * @throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse the requested ECSpec does not exist. 
+	 * @throws org.fosstrak.ale.exception.NoSuchNameException the requested ECSpec does not exist. 
 	 */
 	@WebMethod	
-	public boolean ecSpecIsStarted(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+	public boolean ecSpecIsStarted(String specName) throws org.fosstrak.ale.exception.NoSuchNameException;
 
 	/**
 	 * this method return all ECSpec which is started
@@ -31,18 +31,18 @@ public interface ALEController {
 	/**
 	 * this method start a specified ECSpec
 	 * @param specName
-	 * @throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse the requested ECSpec does not exist. 
+	 * @throws org.fosstrak.ale.exception.NoSuchNameException the requested ECSpec does not exist. 
 	 */	
 	@WebMethod
-	public void startECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+	public void startECSpec(String specName) throws org.fosstrak.ale.exception.NoSuchNameException;
 	
 	/**
 	 * this method stop a specified ECSpec
 	 * @param specName
-	 * @throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse the requested ECSpec does not exist. 
+	 * @throws org.fosstrak.ale.exception.NoSuchNameException the requested ECSpec does not exist. 
 	 */
 	@WebMethod
-	public void stopECSpec(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+	public void stopECSpec(String specName) throws org.fosstrak.ale.exception.NoSuchNameException;
 	
 	/**
 	 * this method is used to stop all ECSpec
@@ -53,18 +53,18 @@ public interface ALEController {
 	/**
 	 * this method is used to stop all ECSpec started for one LogicalReader
 	 * @param logicalReaderName
-	 * @throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse the requested ECSpec does not exist. 
+	 * @throws org.fosstrak.ale.exception.NoSuchNameException the requested ECSpec does not exist. 
 	 */
 	@WebMethod
-	public void stopAllECSpec4LogicalReader(String logicalReaderName) throws org.fosstrak.ale.wsdl.alelr.epcglobal.NoSuchNameExceptionResponse;
+	public void stopAllECSpec4LogicalReader(String logicalReaderName) throws org.fosstrak.ale.exception.NoSuchNameException;
 
 	/**
 	 * this method is used to stop all ECSpec started for one LogicalReader searching by ecspec
 	 * @param specName
-	 * @throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse the requested ECSpec does not exist. 
+	 * @throws org.fosstrak.ale.exception.NoSuchNameException the requested ECSpec does not exist. 
 	 */
 	@WebMethod
-	public void stopAllECSpec4LogicalReaderByECSpecName(String specName) throws org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchNameExceptionResponse;
+	public void stopAllECSpec4LogicalReaderByECSpecName(String specName) throws org.fosstrak.ale.exception.NoSuchNameException;
 	
 	/**
 	 * obtain all the names of the logical readers.

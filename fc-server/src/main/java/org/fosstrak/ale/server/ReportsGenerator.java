@@ -28,18 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.exception.DuplicateSubscriptionException;
+import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.exception.InvalidURIException;
+import org.fosstrak.ale.exception.NoSuchSubscriberException;
 import org.fosstrak.ale.server.util.ECSpecValidator;
 import org.fosstrak.ale.util.ECTimeUnit;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.DuplicateSubscriptionExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ECSpecValidationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.InvalidURIExceptionResponse;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberException;
-import org.fosstrak.ale.wsdl.ale.epcglobal.NoSuchSubscriberExceptionResponse;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
@@ -116,8 +111,8 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public ReportsGenerator(String name, ECSpec spec) 
-		throws ECSpecValidationExceptionResponse, 
-		ImplementationExceptionResponse {
+		throws ECSpecValidationException, 
+		ImplementationException {
 
 		LOG.debug("Try to create new ReportGenerator '" + name + "'.");
 		
@@ -127,10 +122,10 @@ public class ReportsGenerator implements Runnable {
 		// set spec
 		try {
 			ECSpecValidator.validateSpec(spec);
-		} catch (ECSpecValidationExceptionResponse e) {
+		} catch (ECSpecValidationException e) {
 			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
-		} catch (ImplementationExceptionResponse e) {
+		} catch (ImplementationException e) {
 			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
 		}
@@ -206,15 +201,15 @@ public class ReportsGenerator implements Runnable {
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
 	public void subscribe(String notificationURI) 
-		throws DuplicateSubscriptionExceptionResponse, 
-		InvalidURIExceptionResponse {
+		throws DuplicateSubscriptionException, 
+		InvalidURIException {
 		
 		Subscriber uri = new Subscriber(notificationURI);
 		
 		//ORANGE: persistence can only add one URI
 		/* Original code
 		if (subscribers.containsKey(notificationURI)) {
-			throw new DuplicateSubscriptionExceptionResponse();
+			throw new DuplicateSubscriptionException();
 		} else {
 			subscribers.put(notificationURI, uri);
 			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
@@ -224,7 +219,7 @@ public class ReportsGenerator implements Runnable {
 		}
 		*/
 		if (!subscribers.isEmpty()) {
-			throw new DuplicateSubscriptionExceptionResponse();
+			throw new DuplicateSubscriptionException();
 		} else {
 			subscribers.put(notificationURI, uri);
 			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
@@ -243,7 +238,7 @@ public class ReportsGenerator implements Runnable {
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
 	public void unsubscribe(String notificationURI) 
-		throws NoSuchSubscriberExceptionResponse, InvalidURIExceptionResponse {
+		throws NoSuchSubscriberException, InvalidURIException {
 		
 		new Subscriber(notificationURI);
 		if (subscribers.containsKey(notificationURI)) {
@@ -254,7 +249,7 @@ public class ReportsGenerator implements Runnable {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}
 		} else {
-			throw new NoSuchSubscriberExceptionResponse("there is no subscriber on the given notification URI: " + notificationURI);
+			throw new NoSuchSubscriberException("there is no subscriber on the given notification URI: " + notificationURI);
 		}
 	}
 	
@@ -499,7 +494,7 @@ public class ReportsGenerator implements Runnable {
 		
 		try {
 			eventCycle = new EventCycle(this);
-		} catch (ImplementationExceptionResponse e) {
+		} catch (ImplementationException e) {
 			LOG.error("could not create a new EventCycle: ", e);
 		}
 		
@@ -605,12 +600,12 @@ public class ReportsGenerator implements Runnable {
 	 * @return repeat period value
 	 * @throws ImplementationException if the time unit in use is unknown
 	 */
-	private long getRepeatPeriodValue() throws ImplementationExceptionResponse {
+	private long getRepeatPeriodValue() throws ImplementationException {
 		
 		ECTime repeatPeriod = spec.getBoundarySpec().getRepeatPeriod();
 		if (repeatPeriod != null) {
 			if (repeatPeriod.getUnit().compareToIgnoreCase(ECTimeUnit.MS) != 0) {
-				throw new ImplementationExceptionResponse("The only ECTimeUnit allowed is milliseconds (MS).");
+				throw new ImplementationException("The only ECTimeUnit allowed is milliseconds (MS).");
 			} else {
 				return repeatPeriod.getValue();
 			}
