@@ -50,7 +50,7 @@ public class FileSubscriberOutputChannel extends AbstractSubscriberOutputChannel
 	public FileSubscriberOutputChannel(String notificationURI) throws InvalidURIException {
 		super(notificationURI);
 		try {
-			uri = new URI(notificationURI);
+			uri = new URI(notificationURI.replaceAll("\\\\", "/"));
 			path = StringUtils.startsWithIgnoreCase(uri.getPath(), "/") ? uri.getPath().substring(1) : uri.getPath();
 			if ("".equalsIgnoreCase(path) || StringUtils.endsWithIgnoreCase(path, "/")) {
 				throw new InvalidURIException("missing filename");				

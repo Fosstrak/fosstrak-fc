@@ -32,7 +32,9 @@ import org.fosstrak.ale.exception.InvalidURIException;
 import org.fosstrak.ale.server.type.FileSubscriberOutputChannel;
 import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import util.ECElementsUtils;
 
@@ -90,6 +92,11 @@ public class FileSubscriberOutputChannelTest {
 		new FileSubscriberOutputChannel(null);
 	}
 	
+	@Test
+	public void testInvalidFileURIsdfs_InvalidURI() throws Exception {
+		new FileSubscriberOutputChannel("file:///c:/test");
+	}
+	
 	@Test(expected = ImplementationException.class)
 	public void testFileNotExistsCannotCreate() throws Exception {
 		final String filename = "file://localhost/dir/dir";
@@ -115,23 +122,21 @@ public class FileSubscriberOutputChannelTest {
 		tcp.notify(ECElementsUtils.createECReports());
 	}
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    
 	@Test
 	public void testNotify_File() throws Exception {
 		// create file
-		File notificationFile = File.createTempFile("NotifiactionListenerTest", null);
-		
+		File notificationFile = folder.newFile("test");		
 		// create notification listener
 		FileSubscriberOutputChannel file = new FileSubscriberOutputChannel("file:///" + notificationFile.getAbsolutePath());
-		
 		// create reports
 		ECReports reports = ECElementsUtils.createECReports();
-		
 		// notify listener about reports
 		file.notify(reports);
-		
 		// read file
 		ECReports resultReports = DeserializerUtil.deserializeECReports(new FileInputStream(notificationFile));
-		
 		// check result
 		ECElementsUtils.assertEquals(reports, resultReports);
 	}
