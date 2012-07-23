@@ -18,6 +18,10 @@
 	</appender>
 
 	<category name="org.fosstrak">
+		<priority value="INFO" />
+	</category>
+
+	<category name="org.fosstrak.ale">
 		<priority value="DEBUG" />
 	</category>
 	

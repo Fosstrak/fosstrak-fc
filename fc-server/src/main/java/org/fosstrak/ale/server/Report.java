@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.server.util.TagHelper;
 import org.fosstrak.ale.util.ECReportSetEnum;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReaderStat;
@@ -389,7 +390,7 @@ public class Report {
 		String tagURI = tag.getTagIDAsPureURI();
 		// if this one is null, try something different to compense crashes...
 		if (null == tagURI) {
-			tagURI = Tag.getTDTEngine().bin2hex(tag.getTagAsBinary());
+			tagURI = TagHelper.getTDTEngine().bin2hex(tag.getTagAsBinary());
 		}
 		
 		// get group name (use group patterns)
@@ -445,87 +446,23 @@ public class Report {
 		
 		// create group list member
 		ECReportGroupListMember groupMember = new ECReportGroupListMember();
-		
-		// RAW DECIMAL
-		TDTEngine tdt = Tag.getTDTEngine();
-		try {
-			if (reportSpec.getOutput().isIncludeRawDecimal()) {
-				String bin = tag.getTagAsBinary();
-				if (null != bin) {
-					EPC epc = new EPC();
-					epc.setValue(
-							createRepresentationAsRawDecimal(
-									bin.length(), 
-									tdt.bin2dec(bin)));
-					groupMember.setRawDecimal(epc);
-				} else {
-					throw new Exception("missing binary representation of the tag");
-				}
-			}
-		} catch (Exception e) {
-			LOG.debug("could not put tag into report as format 'RawDecimal'");
+			
+		TDTEngine tdt = TagHelper.getTDTEngine();
+		// RAW DECIMAL	
+		if (TagHelper.isReportOutputSpecIncludeRawDecimal(reportSpec.getOutput())) {
+			TagHelper.addTagAsRawDecimal(tdt, groupMember, tag);
 		}
-		// TAG FORMAT
-		try {
-			if (reportSpec.getOutput().isIncludeTag()) {
-				if (null != tag.getTagAsBinary()) {
-					EPC epc = new EPC();
-					epc.setValue(Tag.convert_to_TAG_ENCODING(
-							tag.getTagLength(), 
-							tag.getFilter(), 
-							tag.getCompanyPrefixLength(), 
-							tag.getTagAsBinary()));
-					groupMember.setTag(epc);	
-				} else {
-					throw new Exception("missing binary representation of the tag");
-				}
-			}
-		} catch (Exception e) {
-			LOG.debug("could not put tag into report as format 'Tag'", e);
+		// TAG ENCODING
+		if (TagHelper.isReportOutputSpecIncludeTagEncoding(reportSpec.getOutput())) {
+			TagHelper.addTagAsTagEncoding(tdt, groupMember, tag);
 		}
 		// RAW HEX
-		try {
-			if (reportSpec.getOutput().isIncludeRawHex()) {
-				String bin = tag.getTagAsBinary();
-				if (null != bin) {
-					EPC epc = new EPC();
-					epc.setValue(
-							createRepresentationAsRawHex(
-									bin.length(), 
-									tdt.bin2hex(bin)));
-					groupMember.setRawHex(epc);
-				} else {
-					throw new Exception("missing binary representation of the tag");
-				}
-			}
-		} catch (Exception e) {
-			LOG.debug("could not put tag into report as format 'RawHex'");
+		if (TagHelper.isReportOutputSpecIncludeRawHex(reportSpec.getOutput())) {
+			TagHelper.addTagAsRawHex(tdt, groupMember, tag);
 		}
 		// EPC
-		try {
-			if (reportSpec.getOutput().isIncludeEPC()) {
-				String bin = tag.getTagAsBinary();
-				try {
-					if (null != bin) {
-						EPC epc = new EPC();
-						epc.setValue(Tag.convert_to_PURE_IDENTITY(
-								tag.getTagLength(), 
-								tag.getFilter(), 
-								tag.getCompanyPrefixLength(), 
-								bin));
-						groupMember.setEpc(epc);
-					}
-				} catch (Exception ex) {
-					LOG.debug("extracting epc via binary failed.");
-				}
-				if ((null == groupMember.getEpc()) && (null != tag.getTagIDAsPureURI())) {
-					EPC epc = new EPC();
-					epc.setValue(tag.getTagIDAsPureURI());
-					groupMember.setEpc(epc);
-				}
-			}
-		} catch (Exception e) {
-			LOG.debug("could not put tag into report as format 'EPC'");
+		if (TagHelper.isReportOutputSpecIncludeEPC(reportSpec.getOutput())) {
+			TagHelper.addTagAsEPC(tdt, groupMember, tag);
 		}
 		
 		// check if we need to add tag stats
@@ -566,30 +503,6 @@ public class Report {
 		
 		LOG.debug("Tag '" + tagURI + "' successfully added to group '" + groupName + "' of report '" + name + "'");
 		
-	}
-
-	/**
-	 * creates a raw epc-decimal representation of a given tag.
-	 * @param bitStringLength the length of the bit-string (binary representation).
-	 * @param dec the decimal representation of the tag.
-	 * @return the formatted epc-decimal representation.
-	 */
-	private String createRepresentationAsRawDecimal(int bitStringLength, String dec) {
-		return String.format("urn:epc:raw:%d.%s", 
-				bitStringLength, 
-				dec);
-	}
-	
-	/**
-	 * creates a epc-hex representation of a given tag.
-	 * @param bitStringLength the length of the bit-string (binary representation).
-	 * @param hex the hex representation of the tag.
-	 * @return the formatted epc-hex representation.
-	 */
-	private String createRepresentationAsRawHex(int bitStringLength, String hex) {
-		return String.format("urn:epc:raw:%d.x%s", 
-				bitStringLength, 
-				hex);
 	}
 
 	/**

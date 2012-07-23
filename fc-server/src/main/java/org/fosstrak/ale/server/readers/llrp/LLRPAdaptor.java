@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
+import org.fosstrak.ale.server.util.TagHelper;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareException;
 import org.fosstrak.hal.Observation;
@@ -337,7 +338,7 @@ public class LLRPAdaptor extends BaseReader {
 						Integer96_HEX hex = epc96.getEPC();
 						String hx = hex.toString();
 						Tag tag = null;
-						TDTEngine tdt = Tag.getTDTEngine();
+						TDTEngine tdt = TagHelper.getTDTEngine();
 						try {
 							String binary = tdt.hex2bin(hx);
 							if (binary.startsWith("1") && 
@@ -404,7 +405,7 @@ public class LLRPAdaptor extends BaseReader {
 //										tag.getTagAsBinary());
 								
 								//ORANGE : by this one more generic.
-								String pureID =	Tag.convert_to_PURE_IDENTITY(
+								String pureID =	TagHelper.convert_to_PURE_IDENTITY(
 										tag.getTagLength(),
 										tag.getFilter(),
 										tag.getCompanyPrefixLength(),
