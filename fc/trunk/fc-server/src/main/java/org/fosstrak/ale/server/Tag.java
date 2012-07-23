@@ -1,13 +1,6 @@
 package org.fosstrak.ale.server;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.epcglobalinc.tdt.LevelTypeList;
-import org.fosstrak.tdt.TDTEngine;
-import org.fosstrak.tdt.TDTException;
 
 /**
  * represents a tag that has been read on one of the readers in the Logical Reader API.
@@ -18,9 +11,6 @@ import org.fosstrak.tdt.TDTException;
  *
  */
 public class Tag {
-		
-	/** logger. */
-	private static final Logger log = Logger.getLogger(Tag.class);
 	
 	/** name of the (composite) reader where the tag has been read. */
 	private String reader = null;
@@ -167,19 +157,10 @@ public class Tag {
 		return trace;
 	}
 	
-	/**
-	 * prints a pretty print to the provided logger.
-	 * @param log log facility to write the pretty print to
-	 */
-	public void prettyPrint(Logger log, Level level) {
-		log.log(level, String.format("--------------------------------\n"));
-		log.log(level, String.format("ReaderName: %s\n", getReader()));
-		log.log(level, String.format("OriginName: %s\n", getOrigin()));
-		log.log(level, String.format("Timestamp: %d\n", getTimestamp()));
-		log.log(level, String.format("Tag id: %s\n", getTagID()));
-		log.log(level, String.format("Trace: %s\n:", getTrace()));
-		log.log(level, String.format("Binary: %s\n:", getTagAsBinary()));
-		log.log(level, String.format("PureID: %s\n:", getTagIDAsPureURI()));
+	@Override
+	public String toString() {
+		return String.format("[Tag id: %s, ReaderName: %s, OriginName: %s, Trace: %s, Timestamp: %d, Binary: %s, PureID: %s]", 
+				getTagID(), getReader(), getOrigin(), getTrace(), getTimestamp(), getTagAsBinary(), getTagIDAsPureURI());
 	}
 
 	/**
@@ -358,122 +339,5 @@ public class Tag {
 	 */
 	public void setUserMemory(String userMemory) {
 		this.userMemory = userMemory;
-	}
-
-	/** instance of the TDT engine used for tag conversion. */
-	private static TDTEngine engine = null;
-	
-	/**
-	 * start the TDT engine.
-	 */
-	private static synchronized void startTDTEngine() {
-		try {
-			if (null == engine) {
-				engine = new TDTEngine();
-			}
-		} catch (Exception e) {
-			log.error(
-					"exception when creating the tdt engine: " + e.getMessage()
-					);
-		}
-	}
-	
-	public static TDTEngine getTDTEngine() {
-		if (null != engine) {
-			return engine;
-		}
-		
-		startTDTEngine();
-		return engine;
-	}
-	
-	/**
-	 * run the actual tdt conversion.
-	 * @param input the tag to convert in binary format or in TAG_ENCODING.
-	 * @param extraparms conversion parameters.
-	 * @param outputLevel the destination format.
-	 * @return the converted tag.
-	 * @throws TDTException whenever a tag conversion error occurs.
-	 * @throws NullPointerException when there is some other error...
-	 */
-	private static synchronized String convert(
-			String input,
-			HashMap<String, String> extraparms,
-			LevelTypeList outputLevel) 
-	
-		throws TDTException, NullPointerException {
-		
-		if (null == engine) {
-			startTDTEngine();
-		}
-		return engine.convert(input, extraparms, outputLevel);		
-	}
-	
-	/**
-	 * converts a given tag through tdt into LEGACY format.
-	 * @param tagLength the inbound taglength must be specified as "64" or "96".
-	 * @param filter the inbound filter value must be specified - range 
-	 * depends on coding scheme.
-	 * @param companyPrefixLength length of the EAN.UCC Company Prefix must be 
-	 * specified for GS1 coding schemes. if set to null paramter is ignored.
-	 * @param tag the tag to convert in binary format or in TAG_ENCODING.
-	 * @return a converted tag or null if exception during conversion.
-	 */
-	public static synchronized String convert_to_LEGACY(
-			String tagLength,
-			String filter,
-			String companyPrefixLength,
-			String tag) {
-		
-		LevelTypeList outputLevel = LevelTypeList.LEGACY;
-		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		if (null != tagLength) extraparms.put("taglength", tagLength);
-		if (null != filter) extraparms.put("filter", filter);
-		if (null != companyPrefixLength)
-			extraparms.put("companyprefixlength", companyPrefixLength);
-		
-		return convert(tag, extraparms, outputLevel);
-	}
-	
-	/**
-	 * converts a given tag through tdt into PURE_IDENTITY format.
-	 * @param tagLength the inbound taglength must be specified as "64" or "96".
-	 * @param filter the inbound filter value must be specified - range 
-	 * depends on coding scheme.
-	 * @param companyPrefixLength length of the EAN.UCC Company Prefix must be 
-	 * specified for GS1 coding schemes. if set to null paramter is ignored.
-	 * @param tag the tag to convert in binary format or in TAG_ENCODING.
-	 * @return a converted tag or null if exception during conversion.
-	 */
-	public static synchronized String convert_to_PURE_IDENTITY(
-			String tagLength,
-			String filter,
-			String companyPrefixLength,
-			String tag) {
-		
-		LevelTypeList outputLevel = LevelTypeList.PURE_IDENTITY;
-		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		if (null != tagLength) extraparms.put("taglength", tagLength);
-		if (null != filter) extraparms.put("filter", filter);
-		if (null != companyPrefixLength)
-			extraparms.put("companyprefixlength", companyPrefixLength);
-		
-		return convert(tag, extraparms, outputLevel);		
-	}
-	
-	public static synchronized String convert_to_TAG_ENCODING(
-			String tagLength,
-			String filter,
-			String companyPrefixLength,
-			String tag) {
-		
-		LevelTypeList outputLevel = LevelTypeList.TAG_ENCODING;
-		HashMap<String, String> extraparms = new HashMap<String, String> ();
-		if (null != tagLength) extraparms.put("taglength", tagLength);
-		if (null != filter) extraparms.put("filter", filter);
-		if (null != companyPrefixLength)
-			extraparms.put("companyprefixlength", companyPrefixLength);
-		
-		return convert(tag, extraparms, outputLevel);
 	}
 }

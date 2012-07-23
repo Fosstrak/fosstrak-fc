@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.server.util.TagHelper;
 import org.fosstrak.reader.rp.proxy.DataSelector;
 import org.fosstrak.reader.rp.proxy.NotificationChannel;
 import org.fosstrak.reader.rp.proxy.NotificationChannelEndPoint;
@@ -262,7 +263,7 @@ public class InputGenerator implements NotificationChannelListener {
 											Tag nt = new Tag(
 													adaptor.getName(), 
 													tag.getTagID(), 
-													Tag.convert_to_PURE_IDENTITY(
+													TagHelper.convert_to_PURE_IDENTITY(
 															"64",
 															"1",
 															"7",

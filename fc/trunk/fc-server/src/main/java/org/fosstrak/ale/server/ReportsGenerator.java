@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.DuplicateSubscriptionException;
@@ -64,8 +65,7 @@ public class ReportsGenerator implements Runnable {
 	private final ECSpec spec;
 	
 	/** map of subscribers of this report generator */
-	private final Map<String, Subscriber> subscribers = 
-		new HashMap<String, Subscriber>();
+	private final Map<String, Subscriber> subscribers = new ConcurrentHashMap<String, Subscriber>();
 	
 	// boundary spec values
 	
@@ -137,14 +137,8 @@ public class ReportsGenerator implements Runnable {
 		repeatPeriodValue = getRepeatPeriodValue();
 		stableSetInterval = getStableSetInterval();
 		
-		LOG.debug(
-				String.format("startTriggerValue: %s\nstopTriggerValue: " +
-						"%s\nrepeatPeriodValue: %s\nstableSetInterval: %s\n",
-						startTriggerValue, 
-						stopTriggerValue, 
-						repeatPeriodValue, 
-						stableSetInterval));
-		
+		LOG.debug(String.format("[startTriggerValue: %s, stopTriggerValue: %s, repeatPeriodValue: %s, stableSetInterval: %s]",
+						startTriggerValue, stopTriggerValue, repeatPeriodValue, stableSetInterval));
 		LOG.debug("ReportGenerator '" + name + "' successfully created.");
 	}
 	
@@ -173,8 +167,7 @@ public class ReportsGenerator implements Runnable {
 		synchronized (this.state) {
 			this.state.notifyAll();
 		}
-		LOG.debug("ReportGenerator '" + name + "' change state from '" 
-				+ oldState + "' to '" + state + "'");
+		LOG.debug("ReportGenerator '" + name + "' change state from '" + oldState + "' to '" + state + "'");
 		
 		if (state == ReportsGeneratorState.REQUESTED && !isRunning) {
 			start();
@@ -205,19 +198,6 @@ public class ReportsGenerator implements Runnable {
 		InvalidURIException {
 		
 		Subscriber uri = new Subscriber(notificationURI);
-		
-		//ORANGE: persistence can only add one URI
-		/* Original code
-		if (subscribers.containsKey(notificationURI)) {
-			throw new DuplicateSubscriptionException();
-		} else {
-			subscribers.put(notificationURI, uri);
-			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
-			if (state == ReportsGeneratorState.UNREQUESTED) {
-				setState(ReportsGeneratorState.REQUESTED);
-			}
-		}
-		*/
 		if (!subscribers.isEmpty()) {
 			throw new DuplicateSubscriptionException();
 		} else {
@@ -387,16 +367,13 @@ public class ReportsGenerator implements Runnable {
 		if (null != re) re.getReport().removeAll(equalReps);
 		LOG.debug("reports size2: " + reports.getReports().getReport().size());
 		// next step is to check, if the total report is empty
-		if (
-				((null != re) && (re.getReport().size() > 0)) 
-				|| 
-				(isOneReportRequestingEmpty)) {		
+		if (hasReports(re) || (isOneReportRequestingEmpty)) {		
 			// notify subscribers 
 			for (Subscriber listener : subscribers.values()) {
 				try {
 					listener.notify(reports);
 				} catch (Exception e) {
-					LOG.error("Could not notifiy subscriber '" + listener.getURI(), e);
+					LOG.error("Could not notifiy subscriber '" + listener.toString(), e);
 				}
 			}
 		}
@@ -424,6 +401,15 @@ public class ReportsGenerator implements Runnable {
 				this.notifyAll();
 			}
 		}	
+	}
+
+	/**
+	 * determines if the given report is null or empty.
+	 * @param re the report to test.
+	 * @return true if not null and containing reports. false otherwise.
+	 */
+	private boolean hasReports(Reports re) {
+		return ((null != re) && (re.getReport().size() > 0)); 
 	}
 
 	/**

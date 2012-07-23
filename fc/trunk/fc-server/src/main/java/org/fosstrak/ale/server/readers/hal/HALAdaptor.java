@@ -9,6 +9,7 @@ import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.IdentifyThread;
+import org.fosstrak.ale.server.util.TagHelper;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.fosstrak.hal.HardwareAbstraction;
 import org.fosstrak.hal.HardwareException;
@@ -334,7 +335,7 @@ public class HALAdaptor extends BaseReader {
 						for (String tagobserved : observation.getIds()) {
 							Tag tag = new Tag(getName());
 							
-							TDTEngine tdt = Tag.getTDTEngine();
+							TDTEngine tdt = TagHelper.getTDTEngine();
 							String bin = tdt.hex2bin(tagobserved);
 							tag.setTagAsBinary(bin);
 							
@@ -351,23 +352,21 @@ public class HALAdaptor extends BaseReader {
 							
 							try {
 								tag.setTagIDAsPureURI(
-									Tag.convert_to_PURE_IDENTITY(
+										TagHelper.convert_to_PURE_IDENTITY(
 											null,
 											null,
 											null,
 											bin)
 									);
 							} catch (Exception myE) {
-								LOG.debug("exception when converting tag: " 
-										+ myE.getMessage());
+								LOG.debug("exception when converting tag: ", myE);
 							}
 
 							tag.setTimestamp(observation.getTimestamp());
 							tags.add(tag);
 						}	// \\END FOR
 					} catch (Exception e) {
-						LOG.debug("exception when processing tags: " 
-								+ e.getMessage());
+						LOG.debug("exception when processing tags: ", e);
 					}
 				}
 				
