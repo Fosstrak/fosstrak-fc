@@ -50,7 +50,6 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpecExtension;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSightingStat;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTagStat.StatBlocks;
-import org.fosstrak.ale.xsd.epcglobal.EPC;
 import org.fosstrak.tdt.TDTEngine;
 
 /**
@@ -78,10 +77,7 @@ public class Report {
 	private final Set<Pattern> excludePatterns = new HashSet<Pattern>();
 	/** patterns to group the tags of this report. */
 	private final Set<Pattern> groupPatterns = new HashSet<Pattern>();
-	
-	/** set of tags of the last event cycle. */
-	private final Set<String> lastEventCycleTags = new HashSet<String>();
-	
+		
 	/** type of this report (current, additions or deletions). */
 	private String reportType;
 
@@ -89,12 +85,6 @@ public class Report {
 	private ECReport report;
 	/** ec report specification. */
 	private ECReportSpec reportSpec;
-	
-	/**
-	 * This boolean indicates if the report is ready to create ec reports.
-	 * In some cases the last event cycle must be terminated before a new report can be generated.
-	 */
-	private boolean readyToCreateReport;
 	
 	/**
 	 * Constructor set parameters, read specifiaction and initializes patterns.
@@ -128,7 +118,6 @@ public class Report {
 		// init patterns
 		initFilterPatterns();
 		initGroupPatterns();
-		readyToCreateReport = true;
 
 	}
 
@@ -171,7 +160,7 @@ public class Report {
 	 * helper method to display tags that were added or deleted.
 	 * @param reportTags a map holding the tags that were either added or deleted.
 	 */
-	private void writeDebugInformation(Map<String, Tag> reportTags) {
+	private void writeTraceInformation(Map<String, Tag> reportTags) {
 		String out = '\n' + "+++++++++++++++++++++++++++++++++++++++++++++++++++++" + '\n';
 		out +=  '\t' + "eventcycle " + currentEventCycle.getName() + '\n';
 		out +=  '\t' + "round " + currentEventCycle.getRounds() + '\n';
@@ -187,7 +176,7 @@ public class Report {
 			out += '\t' + tag.getTagIDAsPureURI() + '\n';
 		}
 		out +=  "+++++++++++++++++++++++++++++++++++++++++++++++++++++" + '\n';
-		LOG.info(out);
+		LOG.trace(out);
 	}
 	
 	/**
@@ -216,9 +205,6 @@ public class Report {
 					reportTags.remove(tag.getTagIDAsPureURI());
 				}
 			}
-				
-			// add tags to report with filtering
-			readyToCreateReport = true;
 
 			for (Tag tag : reportTags.values()) {
 				addTag(tag);
@@ -251,11 +237,12 @@ public class Report {
 			}
 				
 			// add tags to report with filtering
-			readyToCreateReport = true;
 			for (Tag tag : reportTags.values()) {
 				addTag(tag);
 			}
-			//writeDebugInformation(reportTags);
+			if (LOG.isTraceEnabled()) {
+				writeTraceInformation(reportTags);
+			}
 		}
 
 		if (reportSpec.isReportIfEmpty() || !isEmpty()) {

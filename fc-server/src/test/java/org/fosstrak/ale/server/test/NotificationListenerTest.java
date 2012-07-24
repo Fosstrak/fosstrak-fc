@@ -18,13 +18,14 @@
  * Boston, MA  02110-1301  USA
  */
 
-package org.fosstrak.ale.server;
+package org.fosstrak.ale.server.test;
 
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.exception.InvalidURIException;
+import org.fosstrak.ale.server.Subscriber;
 import org.fosstrak.ale.server.type.SubscriberOutputChannel;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.junit.Test;

@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.readers.LogicalReader;
-import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
+import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.util.ECTerminationCondition;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
@@ -137,14 +137,19 @@ public class EventCycle implements Runnable, Observer {
 	/** tells how many times this EventCycle has been scheduled. */
 	private int rounds = 0;
 	
+	/** handle onto the logical reader manager. */
+	private LogicalReaderManager logicalReaderManager;
+	
 	/**
 	 * Constructor sets parameter and starts thread.
 	 * 
 	 * @param generator to which this event cycle belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public EventCycle(ReportsGenerator generator) 
-		throws ImplementationException {
+	public EventCycle(ReportsGenerator generator) throws ImplementationException {
+		
+		// get a handle on the logical reader manager.
+		logicalReaderManager = ALEApplicationContext.getBean(LogicalReaderManager.class);
 		
 		// set name
 		name = generator.getName() + "_" + number++;
@@ -186,8 +191,7 @@ public class EventCycle implements Runnable, Observer {
 				spec.getLogicalReaders().getLogicalReader();
 			for (String logicalReaderName : logicalReaderNames) {
 				LOG.debug("retrieving logicalReader " + logicalReaderName);
-				LogicalReader logicalReader = 
-						LogicalReaderManagerFactory.getLRM().getLogicalReader(logicalReaderName);
+				LogicalReader logicalReader = logicalReaderManager.getLogicalReader(logicalReaderName);
 				
 				if (logicalReader != null) {
 					LOG.debug("adding logicalReader " + 

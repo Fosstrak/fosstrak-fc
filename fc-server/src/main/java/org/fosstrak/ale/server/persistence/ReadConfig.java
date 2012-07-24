@@ -15,9 +15,10 @@ import org.fosstrak.ale.exception.InvalidURIException;
 import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.exception.SecurityException;
 import org.fosstrak.ale.exception.ValidationException;
-import org.fosstrak.ale.server.ALEFactory;
+import org.fosstrak.ale.server.ALE;
+import org.fosstrak.ale.server.ALEApplicationContext;
 import org.fosstrak.ale.server.llrp.LLRPControllerManager;
-import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
+import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
@@ -94,7 +95,7 @@ public class ReadConfig extends Config {
 			
 			try {
 				LOG.debug("try to load ecspec " + fileName + " with specName = " + specName);
-				ALEFactory.getALE().define(specName, ecSpec);
+				ALEApplicationContext.getBean(ALE.class).define(specName, ecSpec);
 				LOG.debug("load ecspec " + fileName);
 			} catch (DuplicateNameException e) {
 				LOG.error("error loading ecspec xml file " + fileName, e);	
@@ -147,7 +148,7 @@ public class ReadConfig extends Config {
 					String propertyName = (String)it.next();
 					notificationURI = properties.getProperty(propertyName);
 					
-					ALEFactory.getALE().subscribe(specName, notificationURI);
+					ALEApplicationContext.getBean(ALE.class).subscribe(specName, notificationURI);
 					
 					LOG.debug("add properties uri = " + notificationURI);					
 					
@@ -193,7 +194,7 @@ public class ReadConfig extends Config {
 				
 				try {
 					LOG.debug("try to load lrspec " + fileName + " with specName = " + specName);
-					LogicalReaderManagerFactory.getLRM().define(specName, lrSpec);
+					ALEApplicationContext.getBean(LogicalReaderManager.class).define(specName, lrSpec);
 					LOG.debug("load lrspec " + fileName);
 				} catch (DuplicateNameException e) {
 					LOG.error("error loading lrspec xml file " + fileName, e);	
@@ -275,6 +276,7 @@ public class ReadConfig extends Config {
 				LLRPControllerManager llrpControllerManager = new LLRPControllerManager();
 				LOG.debug("try to define add_accessspec " + fileName + " with specName = " + specName);
 				try {
+					// FIXME: there seems to be a mess between static parts and non static parts in the controller manager.
 					llrpControllerManager.defineAccessSpec(specName, addAccessSpec);
 				} catch (NoSuchNameException e) {
 					LOG.error("error when trying to define add_accessspec ", e);
