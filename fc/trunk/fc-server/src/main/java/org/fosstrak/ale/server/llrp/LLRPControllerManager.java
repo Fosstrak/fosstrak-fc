@@ -10,10 +10,11 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.DuplicateNameException;
 import org.fosstrak.ale.exception.NoSuchNameException;
+import org.fosstrak.ale.server.ALEApplicationContext;
 import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
 import org.fosstrak.ale.server.persistence.WriteConfig;
-import org.fosstrak.ale.server.readers.LogicalReaderManagerFactory;
+import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 import org.llrp.ltk.generated.messages.DELETE_ROSPEC;
@@ -261,7 +262,6 @@ public class LLRPControllerManager  {
 	 */
 	public static void redefine (String readerName) {
 		LOG.debug("Start Redefine for " + readerName);
-		ROSpec roSpec = null;
 		String logicalName = physicalLRMap.get(readerName);
 		if (logicalName != null) {
 			redefineROSpec (readerName,logicalName);
@@ -309,7 +309,7 @@ public class LLRPControllerManager  {
 	 */
 	private static String retrievePhysicalReader (String lrSpecName) 
 		throws DuplicateNameException, NoSuchNameException {
-		if (!LogicalReaderManagerFactory.getLRM().contains(lrSpecName)) {
+		if (!ALEApplicationContext.getBean(LogicalReaderManager.class).contains(lrSpecName)) {
 			throw new NoSuchNameException("this logical reader doesn't exist");
 		}
 		// Test if a LR with the given name already exists or 
@@ -319,7 +319,7 @@ public class LLRPControllerManager  {
 		} 
 		String readerName = null;
 		try {
-			readerName = LogicalReaderManagerFactory.getLRM().getPropertyValue(lrSpecName, "PhysicalReaderName");
+			readerName = ALEApplicationContext.getBean(LogicalReaderManager.class).getPropertyValue(lrSpecName, "PhysicalReaderName");
 		} catch (org.fosstrak.ale.exception.NoSuchNameException e) {
 			LOG.error("Missing property PhysicalReaderName", e);
 		} catch (org.fosstrak.ale.exception.ImplementationException e) {

@@ -18,7 +18,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package org.fosstrak.ale.server;
+package org.fosstrak.ale.server.test;
 
 import java.net.URL;
 
@@ -26,6 +26,8 @@ import junit.framework.Assert;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.fosstrak.ale.exception.ECSpecValidationException;
+import org.fosstrak.ale.server.PatternDataField;
+import org.fosstrak.ale.server.PatternUsage;
 import org.junit.Before;
 import org.junit.Test;
 
