@@ -46,6 +46,9 @@ import util.ECElementsUtils;
  */
 public class FileSubscriberOutputChannelTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
 	@Test
 	public void testFileURIs() throws InvalidURIException {
 		
@@ -121,9 +124,6 @@ public class FileSubscriberOutputChannelTest {
 		FileSubscriberOutputChannel tcp = new NotifyFile(filename, mock);
 		tcp.notify(ECElementsUtils.createECReports());
 	}
-
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
     
 	@Test
 	public void testNotify_File() throws Exception {

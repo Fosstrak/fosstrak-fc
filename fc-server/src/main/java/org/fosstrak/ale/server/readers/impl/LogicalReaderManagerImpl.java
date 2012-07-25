@@ -45,6 +45,8 @@ import org.fosstrak.ale.exception.SecurityException;
 import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ALESettings;
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
@@ -92,6 +94,12 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	
 	// autowired
 	private PersistenceProvider persistenceProvider;
+
+	// autowired
+	private RemoveConfig persistenceRemoveAPI;
+	
+	// autowired
+	private WriteConfig persistenceWriteAPI;
 	
 	// autowired
 	private ReaderProvider readerProvider;
@@ -249,7 +257,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		// an active CC or EC pointing to the reader
 		// this raises an InUseException
 		if (reader.countObservers() > 0) {
-			throw new InUseException();
+			throw new InUseException(name + "is still in use.");
 		}
 		
 		if (reader instanceof CompositeReader) {
@@ -263,7 +271,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 			throw new ImplementationException("try to undefine unknown reader type - ALE knows BaseReader and CompositeReader - atomic readers must subclass BaseReader, composite readers (collections of readers) must subclass CompositeReader - this is a serious problem!!! reader-name: " + name);
 		}
 		
-		getPersistenceProvider().removeLRSpec(name);
+		persistenceRemoveAPI.removeLRSpec(name);
 		
 		logicalReaders.remove(name);
 	}
@@ -275,8 +283,8 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		
 		logRd.update(spec);
 		
-		getPersistenceProvider().removeLRSpec(name);
-		getPersistenceProvider().writeLRSpec(name, spec);
+		persistenceRemoveAPI.removeLRSpec(name);
+		persistenceWriteAPI.writeLRSpec(name, spec);
 	}
 
 	@Override
@@ -326,7 +334,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 			((BaseReader)logRead).connectReader();
 		}
 		
-		getPersistenceProvider().writeLRSpec(name, spec);
+		persistenceWriteAPI.writeLRSpec(name, spec);
 		
 		logicalReaders.put(name, logRead);
 	}
@@ -620,5 +628,23 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
     @Autowired
 	public void setAleSettings(ALESettings aleSettings) {
 		this.aleSettings = aleSettings;
+	}
+
+	/**
+	 * allow to inject the persistence delete API.
+	 * @param persistenceRemoveAPI the persistence delete API.
+	 */
+    @Autowired
+	public void setPersistenceRemoveAPI(RemoveConfig persistenceRemoveAPI) {
+		this.persistenceRemoveAPI = persistenceRemoveAPI;
+	}
+
+    /**
+     * allow to inject the persistence write API.
+     * @param persistenceWriteAPI the persistence write API.
+     */
+    @Autowired
+	public void setPersistenceWriteAPI(WriteConfig persistenceWriteAPI) {
+		this.persistenceWriteAPI = persistenceWriteAPI;
 	}
 }

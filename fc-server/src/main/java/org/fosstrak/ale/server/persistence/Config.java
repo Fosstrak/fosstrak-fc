@@ -8,10 +8,15 @@ import org.apache.log4j.Logger;
 /**
  * this class manage path to get webapp path
  * @author benoit.plomion@orange.com
+ * @author swieland
  *
  */
 public class Config {
 
+	public static final String FILE_ENDING_XML = "xml";
+	public static final String FILE_ENDING_LLRP = "llrp";
+	public static final String FILE_ENDING_PROPERTES = "properties";
+	
 	/**	logger. */
 	private static final Logger LOG = Logger.getLogger(Config.class.getName());
 	
@@ -19,7 +24,7 @@ public class Config {
      *  default path, modified by servlet startup
      *  @see org.fosstrak.ale.server.persistence.PersistenceServlet 
      */
-	private static String realPathWebapp = "C:\\Program Files\\apache-tomcat-6.0.14\\webapps\\fc-server";
+	private static String realPathWebapp = null;
 	
 	private static final String LR_SPECS_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "lrspecs" + File.separator;
 	private static final String EC_SPECS_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "ecspecs" + File.separator;
@@ -29,7 +34,7 @@ public class Config {
 	private static final String LLRP_WEBAPP_PATH = File.separator + "WEB-INF" + File.separator + "config" + File.separator + "llrp" + File.separator;
 	
 	/**
-	 * this method is called at the startup tomcat by the PersistenceServlet and set the real path of the webapp
+	 * this method is called at the startup of the application server by the PersistenceServlet and set the real path of the webapp
 	 * @param realPathWebapp
 	 */
 	public static void setRealPathWebapp(String realPathWebapp) {
@@ -37,109 +42,106 @@ public class Config {
 		LOG.debug("set real path of webapp: " + realPathWebapp);
 	}
 	
-	protected static String getRealPathWebapp() {
+	/**
+	 * @return absolute path of the web applications deployment directory.
+	 */
+	public static String getRealPathWebapp() {
 		return Config.realPathWebapp;		
 	}
-		
-	protected static String  getRealPathLRSpecDir() {
+	
+	/**
+	 * @return absolute path to the LRSpecs persistence path.
+	 */
+	public static String getRealPathLRSpecDir() {
 		return Config.realPathWebapp + Config.LR_SPECS_WEBAPP_PATH;
 	}
 	
-	protected static String  getRealPathECSpecDir() {
+	/**
+	 * @return absolute path to the LRSpecs persistence path.
+	 */
+	public static String getRealPathECSpecDir() {
 		return Config.realPathWebapp + Config.EC_SPECS_WEBAPP_PATH;
 	}
 	
-	protected static String  getRealPathECSpecSubscriberDir() {
+	/**
+	 * @return absolute path to the ECSpecSubscriber persistence path.
+	 */
+	public static String getRealPathECSpecSubscriberDir() {
 		return Config.realPathWebapp + Config.EC_SPEC_SUBSCRIBER_WEBAPP_PATH;
 	}
-		
-	protected static String  getRealPathROSpecDir() {
+
+	/**
+	 * @return absolute path to the RoSpec persistence path.
+	 */
+	public static String getRealPathROSpecDir() {
 		return Config.realPathWebapp + Config.RO_SPECS_WEBAPP_PATH;
 	}
 	
-	protected static String  getRealPathAccessSpecDir() {
+	/**
+	 * @return absolute path to the AccessSpec persistence path.
+	 */
+	public static String getRealPathAccessSpecDir() {
 		return Config.realPathWebapp + Config.ACCESS_SPECS_WEBAPP_PATH;
 	}
 	
-	public static String  getRealPathLLRPSpecDir() {
+	/**
+	 * @return absolute path to the LLRP messages persistence path.
+	 */
+	public static String getRealPathLLRPSpecDir() {
 		return Config.realPathWebapp + Config.LLRP_WEBAPP_PATH;
 	}
 	
-	protected static boolean fileExist(String fileName, String filePath) {
-		
-		boolean fileExist = false;
-		
-		String[] filesName;		
-		filesName = new File(filePath).list();		
-		int i;		
-		
-		if (filesName != null) {
-			for(i=0; i<filesName.length; i++){				
-				if (fileName.trim().equalsIgnoreCase(filesName[i].trim())) {
-					fileExist = true;	
-					break;
-				}			
-			}
+	/**
+	 * check if a given file exists on the given path.
+	 * @param fileName the filename to check.
+	 * @param filePath the path where the file should be located.
+	 * @return true if the file exists, false otherwise.
+	 */
+	public static boolean fileExist(String fileName, String filePath) {
+		File f = new File(filePath + File.separator + fileName);
+		if (f.exists()) {
+			return true;
 		}
-		
-		return fileExist;
-		
+		return false;		
 	}
 	
-	protected static ArrayList<String> getFilesName(String directoryPath) {
-		
+	/**
+	 * get the filenames contained in the given directory.
+	 * @param directoryPath the path of the directory.
+	 * @param fileEnding the fileEnding of the files. if null, return all the files.
+	 * @return a list of all contained filenames.
+	 */
+	public static ArrayList<String> getFilesName(String directoryPath, String fileEnding) {		
 		String[] filesName;		
 		filesName = new File(directoryPath).list();		
-		int i;		
-		
 		ArrayList<String> filesNameList = new ArrayList<String>();		
 				
-		if (filesName != null) {
-		
-			for(i=0; i<filesName.length; i++){		
-					
-				String fileName = filesName[i];
-				
-				if (!fileName.contains(".m4")) {
-					filesNameList.add(fileName);	
+		if (filesName != null) {		
+			for (String fileName : filesName) {
+				if (null == fileEnding) {
+					filesNameList.add(fileName);
 					LOG.debug("add file " + fileName + " to list to read");
-				}
-						
+				} else if (fileName.endsWith("." + fileEnding)) {
+					filesNameList.add(fileName);	
+					LOG.debug("add file " + fileName + " to list to read");					
+				} else {
+					LOG.debug("not adding file " + fileName + " to list to read");
+				}		
 			}
-		
 		}
 		
-		LOG.info("list of file: " + filesNameList);
-		
+		LOG.debug("list of file: " + filesNameList);
 		return filesNameList;
-			
 	}
 	
-	protected static boolean removeFile(String directoryPath, String fileName) {
-		
-		boolean result = false;
-		
-		File[] files = new File(directoryPath).listFiles();		
-		int i;		
-			
-		if (files != null) {
-		
-			for(i=0; i<files.length; i++){			
-				
-				File file = files[i];
-				
-				if (file.getName().equalsIgnoreCase(fileName)) {
-					result = file.delete();
-				}
-									
-				LOG.debug("remove file " + fileName + " = " + result + " on path = " + directoryPath);
-				
-			}
-		
-		}
-		
-		return result;
-			
+	/**
+	 * delete a file from the given path.
+	 * @param directoryPath the directory path.
+	 * @param fileName the files name.
+	 * @return whether the file was deleted or not.
+	 */
+	public static boolean removeFile(String directoryPath, String fileName) {
+		return new File(directoryPath + File.separator + fileName).delete(); 
 	}
 	
 }

@@ -28,14 +28,16 @@ import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 /**
  * This class is called at the startup of tomcat and load all configuration on the the ALE.
  * @author benoit plomion Orange
+ * 
+ * FIXME: I need some serious refactoring...
  */
-public class ReadConfig extends Config {
+public class ReadConfig {
 
 	/**	logger. */
 	private static final Logger LOG = Logger.getLogger(ReadConfig.class.getName());
 	
 	/**
-	 * this method is called at the startup tomcat by the PersistenceServlet and set the real path of the webapp
+	 * this method is called at the startup of the application server by the PersistenceServlet and set the real path of the webapp
 	 * @param realPathWebapp
 	 */
 	public static void initialize() {
@@ -76,7 +78,7 @@ public class ReadConfig extends Config {
 		
 		LOG.info("start read and load all ecspec");
 		
-		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathECSpecDir());
+		ArrayList<String> filesNameList = Config.getFilesName(Config.getRealPathECSpecDir(), Config.FILE_ENDING_XML);
 		
 		for (String fileName : filesNameList){
 			
@@ -115,7 +117,7 @@ public class ReadConfig extends Config {
 		
 		LOG.info("start read and load all ecspec subscriber");
 		
-		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathECSpecSubscriberDir());
+		ArrayList<String> filesNameList = Config.getFilesName(Config.getRealPathECSpecSubscriberDir(), Config.FILE_ENDING_PROPERTES);
 		
 		for (String fileName : filesNameList){
 			
@@ -175,7 +177,7 @@ public class ReadConfig extends Config {
 		
 		LOG.info("start read and load all lrspec");
 		
-		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathLRSpecDir());
+		ArrayList<String> filesNameList = Config.getFilesName(Config.getRealPathLRSpecDir(), Config.FILE_ENDING_XML);
 		
 		for (String fileName : filesNameList){
 			
@@ -216,7 +218,7 @@ public class ReadConfig extends Config {
 		
 		LOG.info("start read and load all rospecs");
 		
-		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathROSpecDir());
+		ArrayList<String> filesNameList = Config.getFilesName(Config.getRealPathROSpecDir(), Config.FILE_ENDING_LLRP);
 		
 		for (String fileName : filesNameList) {
 			
@@ -258,7 +260,7 @@ public class ReadConfig extends Config {
 	
 	private static void readAddAccessSpecs() {
 		LOG.info("start read and load all accessspecs");
-		ArrayList<String> filesNameList = ReadConfig.getFilesName(Config.getRealPathAccessSpecDir());
+		ArrayList<String> filesNameList = Config.getFilesName(Config.getRealPathAccessSpecDir(), Config.FILE_ENDING_LLRP);
 		for (String fileName : filesNameList) {
 			String specName = fileName.substring(0,fileName.length()-5); // remove ".llrp"
 			ADD_ACCESSSPEC addAccessSpec = null;
