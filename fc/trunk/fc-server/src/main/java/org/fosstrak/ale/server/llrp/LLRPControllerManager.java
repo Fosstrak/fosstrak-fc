@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.DuplicateNameException;
 import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.server.ALEApplicationContext;
-import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
 import org.fosstrak.ale.server.persistence.WriteConfig;
+import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
@@ -343,7 +343,7 @@ public class LLRPControllerManager  {
 			// try to load the properties file
 			try {
 				FileInputStream fileInputStream = 
-					new FileInputStream(Config.getRealPathLLRPSpecDir() + LLRP_CONFIG_PROP_FILE);	
+					new FileInputStream(ALEApplicationContext.getBean(PersistenceConfig.class).getRealPathLLRPSpecDir() + LLRP_CONFIG_PROP_FILE);	
 				props.load(fileInputStream);
 				Boolean rifidi = new Boolean(props.getProperty("rifidiEmulator"));
 				Boolean wait = new Boolean (props.getProperty("waitConnection"));

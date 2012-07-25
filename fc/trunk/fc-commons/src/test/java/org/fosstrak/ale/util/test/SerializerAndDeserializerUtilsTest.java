@@ -17,10 +17,13 @@
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-package org.fosstrak.ale.util;
+package org.fosstrak.ale.util.test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -28,6 +31,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import junit.framework.Assert;
 
+import org.fosstrak.ale.util.DeserializerUtil;
+import org.fosstrak.ale.util.ECTimeUnit;
+import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
@@ -93,8 +99,7 @@ public class SerializerAndDeserializerUtilsTest {
 	
 
 	@Test
-	public void testECSpec() throws Exception {
-
+	public void testSerializeECSpec() throws Exception {
 		ECSpec ecSpec = createDummyECSpec();
 		CharArrayWriter writer = new CharArrayWriter();
 		SerializerUtil.serializeECSpec(ecSpec, writer);
@@ -102,12 +107,58 @@ public class SerializerAndDeserializerUtilsTest {
 		ECSpec ecSpec2 = DeserializerUtil.deserializeECSpec(new ByteArrayInputStream(str.getBytes()));
 		ensureSame(ecSpec, ecSpec2);
 	}
+	
+	@Test
+	public void testSerializeECSpecWithOutputStream() throws Exception {
+		ECSpec ecSpec = createDummyECSpec();
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		SerializerUtil.serializeECSpec(ecSpec, bous);
+		String str = bous.toString();
+		ECSpec ecSpec2 = DeserializerUtil.deserializeECSpec(new ByteArrayInputStream(str.getBytes()));
+		ensureSame(ecSpec, ecSpec2);
+	}	
+	
+	@Test
+	public void testSerializeECSpecPretty() throws Exception {
+		ECSpec ecSpec = createDummyECSpec();
+		ByteArrayOutputStream bous = new ByteArrayOutputStream();
+		SerializerUtil.serializeECSpecPretty(ecSpec, bous);
+		String str = bous.toString();
+		ECSpec ecSpec2 = DeserializerUtil.deserializeECSpec(new ByteArrayInputStream(str.getBytes()));
+		ensureSame(ecSpec, ecSpec2);
+	}
+	
+	/**
+	 * test the deserialization of the ECSpec from File.
+	 * @throws Exception test failure.
+	 */
+	@Test
+	public void testDeserializeECSpec() throws Exception {
+		ECSpec ecSpec = createDummyECSpec();
+		File f = File.createTempFile("testDeserializeECSpec", ".xml");
+		FileOutputStream fof = new FileOutputStream(f);
+		SerializerUtil.serializeECSpec(ecSpec, fof);
+		fof.close();
+		
+		ECSpec deserialized = DeserializerUtil.deserializeECSpec(f.getAbsolutePath());
+		ensureSame(ecSpec, deserialized);		
+	}
 
 	@Test
 	public void testSerializeECReports() throws Exception {
 		ECReports ecReports = createDummyECReports();
 		CharArrayWriter writer = new CharArrayWriter();
 		SerializerUtil.serializeECReports(ecReports, writer);
+		String str = writer.toString();
+		ECReports ecReports2 = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(str.getBytes()));
+		ensureSame(ecReports, ecReports2);
+	}
+
+	@Test
+	public void testSerializeECReportsPretty() throws Exception {
+		ECReports ecReports = createDummyECReports();
+		CharArrayWriter writer = new CharArrayWriter();
+		SerializerUtil.serializeECReportsPretty(ecReports, writer);
 		String str = writer.toString();
 		ECReports ecReports2 = DeserializerUtil.deserializeECReports(new ByteArrayInputStream(str.getBytes()));
 		ensureSame(ecReports, ecReports2);

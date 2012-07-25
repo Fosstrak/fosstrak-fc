@@ -10,8 +10,10 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
+import org.fosstrak.ale.server.persistence.util.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("removeConfigImpl")
@@ -19,37 +21,43 @@ public class RemoveConfigImpl implements RemoveConfig {
 
 	/**	logger. */
 	private static final Logger LOG = Logger.getLogger(RemoveConfigImpl.class.getName());
+	
+	@Autowired
+	private PersistenceConfig config;
+	
+	@Autowired
+	private FileUtils fileUtils;
 
 	@Override
 	public void removeECSpec(String specName) {
 		
-		LOG.info("start remove file for ecspec: " + specName + ".xml");
+		LOG.debug("start remove file for ecspec: " + specName + ".xml");
 		
-		String path = Config.getRealPathECSpecDir();
+		String path = config.getRealPathECSpecDir();
 		String fileName = specName + ".xml";
 			 
-		if (Config.fileExist(fileName, path)) {
+		if (fileUtils.fileExist(fileName, path)) {
 			
 				LOG.debug("try to remove file for ecspec: " + fileName);
 				
-				Config.removeFile(path, fileName);				
+				fileUtils.removeFile(path, fileName);				
 				
-				LOG.info("ecspec file " + fileName + " removed on path: " + path);	
+				LOG.debug("ecspec file " + fileName + " removed on path: " + path);	
 					
 		} else {			
-			LOG.info("ecspec file " + fileName + " does not exist on path: " + path);			
+			LOG.debug("ecspec file " + fileName + " does not exist on path: " + path);			
 		}
 	}
 
 	@Override
 	public void removeECSpecSubscriber(String specName, String notificationURI) {
 		
-		LOG.info("start remove ecspec subscriber from file: " + specName + ".properties");
+		LOG.debug("start remove ecspec subscriber from file: " + specName + ".properties");
 		
-		String path = Config.getRealPathECSpecSubscriberDir();
+		String path = config.getRealPathECSpecSubscriberDir();
 		String fileName = specName + ".properties";
 		
-		if (Config.fileExist(fileName, path)) {
+		if (fileUtils.fileExist(fileName, path)) {
 			
 			LOG.debug("file " + specName + ".properties exist");
 			
@@ -79,7 +87,7 @@ public class RemoveConfigImpl implements RemoveConfig {
 					} catch (IOException e) {
 						LOG.error("error to close ecspec subscriber properties empty file " + fileName, e);
 					}
-					Config.removeFile(path, fileName);					
+					fileUtils.removeFile(path, fileName);					
 						
 				// properties file is not empty => delete uri corresponding
 				} else {
@@ -116,7 +124,7 @@ public class RemoveConfigImpl implements RemoveConfig {
 						} catch (IOException e) {
 							LOG.error("error to close ecspec subscriber properties file " + fileName, e);
 						}
-						Config.removeFile(path, fileName);					
+						fileUtils.removeFile(path, fileName);					
 						
 						// create again file if other uri than the uri deleted
 						if (listURI.size() > 0) {
@@ -162,49 +170,44 @@ public class RemoveConfigImpl implements RemoveConfig {
 			
 		}
 		
-		LOG.info("end remove ecspec subscriber from file: " + specName + ".properties");
+		LOG.debug("end remove ecspec subscriber from file: " + specName + ".properties");
 		
 	}
 
 	@Override
 	public void removeLRSpec(String specName) {
+		LOG.debug("start remove file for lrspec: " + specName + ".xml");
 		
-		LOG.info("start remove file for lrspec: " + specName + ".xml");
-		
-		String path = Config.getRealPathLRSpecDir();
+		String path = config.getRealPathLRSpecDir();
 		String fileName = specName + ".xml";
 			 
-		if (Config.fileExist(fileName, path)) {
-			
-				LOG.debug("try to remove file for lrspec: " + fileName);
-				
-				Config.removeFile(path, fileName);				
-				
-				LOG.info("lrspec file " + fileName + " removed on path: " + path);	
-					
+		if (fileUtils.fileExist(fileName, path)) {		
+			LOG.debug("try to remove file for lrspec: " + fileName);				
+			fileUtils.removeFile(path, fileName);								
+			LOG.debug("lrspec file " + fileName + " removed on path: " + path);					
 		} else {			
-			LOG.info("lrspec file " + fileName + " does not exist on path: " + path);			
+			LOG.debug("lrspec file " + fileName + " does not exist on path: " + path);			
 		}
 	}
 
 	@Override
 	public void removeROSpec(String lrSpecName) {
 		
-		LOG.info("start remove file for rospec: " + lrSpecName + ".llrp");
+		LOG.debug("start remove file for rospec: " + lrSpecName + ".llrp");
 		
-		String path = Config.getRealPathROSpecDir();
+		String path = config.getRealPathROSpecDir();
 		String fileName = lrSpecName + ".llrp";
 			 
-		if (Config.fileExist(fileName, path)) {
+		if (fileUtils.fileExist(fileName, path)) {
 			
 				LOG.debug("try to remove file for rospec: " + fileName);
 				
-				Config.removeFile(path, fileName);				
+				fileUtils.removeFile(path, fileName);				
 				
-				LOG.info("rospec file " + fileName + " removed on path: " + path);	
+				LOG.debug("rospec file " + fileName + " removed on path: " + path);	
 					
 		} else {			
-			LOG.info("rospec file " + fileName + " does not exist on path: " + path);			
+			LOG.debug("rospec file " + fileName + " does not exist on path: " + path);			
 		}
 	}
 
