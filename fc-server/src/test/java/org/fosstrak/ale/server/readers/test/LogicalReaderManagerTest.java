@@ -38,7 +38,6 @@ import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.exception.NonCompositeReaderException;
 import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALESettings;
-import org.fosstrak.ale.server.impl.ALEImpl;
 import org.fosstrak.ale.server.persistence.RemoveConfig;
 import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.server.readers.BaseReader;

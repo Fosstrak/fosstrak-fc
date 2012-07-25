@@ -17,35 +17,35 @@
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-package org.fosstrak.ale.server.persistence.test;
+
+package org.fosstrak.ale.server.persistence.type.test;
 
 import java.io.File;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.fosstrak.ale.server.persistence.Config;
+import org.fosstrak.ale.server.persistence.util.FileUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * test the config class of the persistence framework.
+ * test the persistence file utils.
  * @author swieland
  *
  */
-public class ConfigTest {
+public class FileUtilsTest {
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
-	
-    /**
-     * test set real path.
-     */
-    @Test
-    public void testSetRealPath() {
-    	Config.setRealPathWebapp("myRealPath");
-    	Assert.assertEquals("myRealPath", Config.getRealPathWebapp());
+    
+    private FileUtils fileUtils;
+    
+    @Before
+    public void beforeTests() {
+    	fileUtils = new FileUtils();
     }
     
 	/**
@@ -59,9 +59,9 @@ public class ConfigTest {
 		// absolute path encodes the filename, thus remove it.
 		String path = f.getAbsolutePath().replace(fileName, "");
 		
-		Assert.assertTrue(Config.fileExist(fileName, path));
-		Assert.assertFalse(Config.fileExist("test" + fileName, path));
-		Assert.assertFalse(Config.fileExist(fileName, "someotherpath"));
+		Assert.assertTrue(fileUtils.fileExist(fileName, path));
+		Assert.assertFalse(fileUtils.fileExist("test" + fileName, path));
+		Assert.assertFalse(fileUtils.fileExist(fileName, "someotherpath"));
 	}
 	
 	/**
@@ -80,23 +80,23 @@ public class ConfigTest {
 		tempFolder.newFile(fileProperties);
 		
 		List<String> result;
-		result = Config.getFilesName(tempFolder.getRoot().getAbsolutePath(), null);
+		result = fileUtils.getFilesName(tempFolder.getRoot().getAbsolutePath(), null);
 		Assert.assertNotNull(result);
 		for (String file : new String[] {fileXML, fileLLRP, fileProperties} ) {
 			Assert.assertTrue(result.contains(file));
 		}
 		
-		result = Config.getFilesName(tempFolder.getRoot().getAbsolutePath(), "xml");
+		result = fileUtils.getFilesName(tempFolder.getRoot().getAbsolutePath(), "xml");
 		Assert.assertNotNull(result);
 		Assert.assertEquals(1, result.size());
 		Assert.assertTrue(result.contains(fileXML));
 		
-		result = Config.getFilesName(tempFolder.getRoot().getAbsolutePath(), "llrp");
+		result = fileUtils.getFilesName(tempFolder.getRoot().getAbsolutePath(), "llrp");
 		Assert.assertNotNull(result);
 		Assert.assertEquals(1, result.size());
 		Assert.assertTrue(result.contains(fileLLRP));		
 
-		Assert.assertNotNull(Config.getFilesName("someOtherPath", null));
+		Assert.assertNotNull(fileUtils.getFilesName("someOtherPath", null));
 	}
 	
 	/**
@@ -111,8 +111,8 @@ public class ConfigTest {
 		// absolute path encodes the filename, thus remove it.
 		String path = f.getAbsolutePath().replace(fileXML, "");
 		
-		Assert.assertFalse(Config.removeFile(path, "nonexistingFile"));
-		Assert.assertTrue(Config.removeFile(path, fileXML));
-		Assert.assertFalse(Config.removeFile(path, fileXML));
+		Assert.assertFalse(fileUtils.removeFile(path, "nonexistingFile"));
+		Assert.assertTrue(fileUtils.removeFile(path, fileXML));
+		Assert.assertFalse(fileUtils.removeFile(path, fileXML));
 	}
 }

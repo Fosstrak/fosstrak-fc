@@ -10,13 +10,15 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.persistence.Config;
 import org.fosstrak.ale.server.persistence.WriteConfig;
+import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
+import org.fosstrak.ale.server.persistence.util.FileUtils;
 import org.fosstrak.ale.util.SerializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("writeConfigImpl")
@@ -25,29 +27,30 @@ public class WriteConfigImpl implements WriteConfig {
 	/**	logger. */
 	private static final Logger LOG = Logger.getLogger(WriteConfigImpl.class.getName());
 
+	@Autowired
+	private PersistenceConfig config;
+	
+	@Autowired
+	private FileUtils fileUtils;
+	
 	@Override
 	public void writeECSpec(String specName, ECSpec spec) {
-		writeECSpec(specName, spec, Config.getRealPathECSpecDir());
-	}
-	
-	private void writeECSpec(String name, ECSpec spec, String path) {
-		
-		String fileName = name + ".xml";
+		final String path = config.getRealPathECSpecDir();
+		final String fileName = specName + ".xml";
 			 
-		if (!Config.fileExist(fileName, path)) {
-			
+		if (!fileUtils.fileExist(fileName, path)) {			
 			try {
 				
 				boolean dirCreated = new File(path).mkdirs();
 				
 				if (!dirCreated) {
-					LOG.info("cannot create directories or directories already exist : " + path);
+					LOG.debug("cannot create directories or directories already exist : " + path);
 				}		
 				
 				LOG.debug("try to create file for ecspec: " + fileName);
 				FileOutputStream fileOutputStream = new FileOutputStream(path + fileName);
 				SerializerUtil.serializeECSpec(spec, fileOutputStream);
-				LOG.info("ecspec file " + fileName + " created on path: " + path);	
+				LOG.debug("ecspec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
 				LOG.error("error create ecspec file: " + path + fileName, e);		
@@ -58,26 +61,25 @@ public class WriteConfigImpl implements WriteConfig {
 			}
 		
 		} else {			
-			LOG.info("ecspec file " + fileName + " already exist on path: " + path);			
+			LOG.debug("ecspec file " + fileName + " already exist on path: " + path);			
 		}
-		
 	}
 
 	@Override
 	public void writeECSpecSubscriber(String specName, String notificationURI) {
 		
-		LOG.info("start create file for ecspec subscriber: " + specName + ".properties");
+		LOG.debug("start create file for ecspec subscriber: " + specName + ".properties");
 		
-		String path = Config.getRealPathECSpecSubscriberDir();
+		String path = config.getRealPathECSpecSubscriberDir();
 		String fileName = specName + ".properties";
 		
 		// create file and directory
-		if (!Config.fileExist(fileName, path)) {
+		if (!fileUtils.fileExist(fileName, path)) {
 			
 			boolean dirCreated = new File(path).mkdirs();
 			
 			if (!dirCreated) {
-				LOG.info("cannot create directories or directories already exist : " + path);
+				LOG.debug("cannot create directories or directories already exist : " + path);
 			}	
 			
 			try {
@@ -157,24 +159,24 @@ public class WriteConfigImpl implements WriteConfig {
 
 	@Override
 	public void writeLRSpec(String specName, LRSpec spec) {
-		LOG.info("start create file for lrspec: " + specName + ".xml");
+		LOG.debug("start create file for lrspec: " + specName + ".xml");
 	
-		String path = Config.getRealPathLRSpecDir();
+		String path = config.getRealPathLRSpecDir();
 		String fileName = specName + ".xml";
 			 
-		if (!Config.fileExist(fileName, path)) {
+		if (!fileUtils.fileExist(fileName, path)) {
 			
 			try {
 				
 				boolean dirCreated = new File(path).mkdirs();
 				
 				if (!dirCreated) {
-					LOG.info("cannot create directories or directories already exist : " + path);
+					LOG.debug("cannot create directories or directories already exist : " + path);
 				}		
 				
 				LOG.debug("try to create file for lrspec: " + fileName);
 				SerializerUtil.serializeLRSpec(spec, path + fileName, false);
-				LOG.info("lrspec file " + fileName + " created on path: " + path);	
+				LOG.debug("lrspec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
 				LOG.error("error create lrspec file: " + path + fileName, e);		
@@ -185,25 +187,25 @@ public class WriteConfigImpl implements WriteConfig {
 			}
 		
 		} else {			
-			LOG.info("lrspec file " + fileName + " already exist on path: " + path);			
+			LOG.debug("lrspec file " + fileName + " already exist on path: " + path);			
 		}
 	}
 
 	@Override
 	public void writeAddROSpec(String specName, ADD_ROSPEC addRoSpec) {
-		LOG.info("start write file for add_rospec: " + specName + ".llrp");
+		LOG.debug("start write file for add_rospec: " + specName + ".llrp");
 		
-		String path = Config.getRealPathROSpecDir();
+		String path = config.getRealPathROSpecDir();
 		String fileName = specName + ".llrp";
-		if (!Config.fileExist(fileName, path)) {
+		if (!fileUtils.fileExist(fileName, path)) {
 			try {
 				boolean dirCreated = new File(path).mkdirs();
 				if (!dirCreated) {
-					LOG.info("cannot create directories or directories already exist : " + path);
+					LOG.debug("cannot create directories or directories already exist : " + path);
 				}		
 				LOG.debug("try to create file for add_rospec: " + fileName);
 				SerializerUtil.serializeAddROSpec(addRoSpec, path + fileName);
-				LOG.info("add_rospec file " + fileName + " created on path: " + path);	
+				LOG.debug("add_rospec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
 				LOG.error("error create rospec file: " + path + fileName, e);		
@@ -212,25 +214,25 @@ public class WriteConfigImpl implements WriteConfig {
 			}
 		
 		} else {			
-			LOG.info("rospec file " + fileName + " already exist on path: " + path);			
+			LOG.debug("rospec file " + fileName + " already exist on path: " + path);			
 		}
 	}
 
 	@Override
 	public void writeAddAccessSpec(String specName, ADD_ACCESSSPEC addAccessSpec) {
-		LOG.info("start write file for add_accessspec: " + specName + ".llrp");
+		LOG.debug("start write file for add_accessspec: " + specName + ".llrp");
 		
-		String path = Config.getRealPathAccessSpecDir();
+		String path = config.getRealPathAccessSpecDir();
 		String fileName = specName + ".llrp";
-		if (!Config.fileExist(fileName, path)) {
+		if (!fileUtils.fileExist(fileName, path)) {
 			try {
 				boolean dirCreated = new File(path).mkdirs();
 				if (!dirCreated) {
-					LOG.info("cannot create directories or directories already exist : " + path);
+					LOG.debug("cannot create directories or directories already exist : " + path);
 				}		
 				LOG.debug("try to create file for add_accessspec: " + fileName);
 				SerializerUtil.serializeAddAccessSpec(addAccessSpec, path + fileName);
-				LOG.info("add_accessspec file " + fileName + " created on path: " + path);	
+				LOG.debug("add_accessspec file " + fileName + " created on path: " + path);	
 								
 			} catch (FileNotFoundException e) {
 				LOG.error("error create accessspec file: " + path + fileName, e);		
@@ -239,7 +241,7 @@ public class WriteConfigImpl implements WriteConfig {
 			}
 		
 		} else {			
-			LOG.info("accessspec file " + fileName + " already exist on path: " + path);			
+			LOG.debug("accessspec file " + fileName + " already exist on path: " + path);			
 		}
 	}
 

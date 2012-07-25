@@ -22,6 +22,7 @@ package org.fosstrak.ale.util;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,13 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
-import org.jdom.Document;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
-import org.llrp.ltk.generated.messages.ADD_ROSPEC;
-import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
@@ -45,6 +39,12 @@ import org.fosstrak.ale.wsdl.alelr.epcglobal.SetReaders;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
+import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 
 /**
  * This class provides some methods to serialize ec specifications and reports.
@@ -63,7 +63,7 @@ public class SerializerUtil {
 	private static final org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory objectFactoryALELR = new org.fosstrak.ale.wsdl.alelr.epcglobal.ObjectFactory();
 	
 	// hash-map for JAXB context.
-	private static final Map<String, JAXBContext> s_context = new ConcurrentHashMap<String, JAXBContext> ();
+	private static final Map<String, JAXBContext> contexts = new ConcurrentHashMap<String, JAXBContext> ();
 	
 	// logger
 	private static final Logger log = Logger.getLogger(SerializerUtil.class);
@@ -75,10 +75,8 @@ public class SerializerUtil {
 	 * @param writer containing the xml
 	 * @throws Exception upon error.
 	 */
-	public static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer) throws Exception {
-	
-		serializeECSpec(ecSpec, writer, false);
-		
+	public static void serializeECSpec(ECSpec ecSpec, OutputStream writer) throws Exception {	
+		serializeECSpec(ecSpec, writer, false);		
 	}
 	
 	/**
@@ -88,10 +86,8 @@ public class SerializerUtil {
 	 * @param writer to write the well formed xml into
 	 * @throws Exception upon error.
 	 */
-	public static void serializeECSpecPretty(ECSpec ecSpec, FileOutputStream writer) throws Exception {
-		
-		serializeECSpec(ecSpec, writer, true);
-		
+	public static void serializeECSpecPretty(ECSpec ecSpec, OutputStream writer) throws Exception {		
+		serializeECSpec(ecSpec, writer, true);		
 	}
 	
 	/**
@@ -101,10 +97,8 @@ public class SerializerUtil {
 	 * @param writer to write the xml into
 	 * @throws Exception upon error.
 	 */
-	public static void serializeECReports(ECReports ecReports, Writer writer) throws Exception {
-		
-		serializeECReports(ecReports, writer, false);
-		
+	public static void serializeECReports(ECReports ecReports, Writer writer) throws Exception {		
+		serializeECReports(ecReports, writer, false);		
 	}
 	
 	/**
@@ -114,10 +108,8 @@ public class SerializerUtil {
 	 * @param writer to write the well formed xml into
 	 * @throws Exception upon error.
 	 */
-	public static void serializeECReportsPretty(ECReports ecReports, Writer writer) throws Exception {
-		
-		serializeECReports(ecReports, writer, true);
-		
+	public static void serializeECReportsPretty(ECReports ecReports, Writer writer) throws Exception {		
+		serializeECReports(ecReports, writer, true);		
 	}
 		
 	/**
@@ -195,7 +187,7 @@ public class SerializerUtil {
 	 * @param pretty indicates if the xml should be well formed or not
 	 * @throws Exception upon error.
 	 */
-	private static void serializeECSpec(ECSpec ecSpec, FileOutputStream writer, boolean pretty) throws Exception {
+	private static void serializeECSpec(ECSpec ecSpec, OutputStream writer, boolean pretty) throws Exception {
 		marshall("org.fosstrak.ale.xsd.ale.epcglobal", objectFactoryALE.createECSpec(ecSpec), writer, pretty);
 	}
 	
@@ -238,11 +230,11 @@ public class SerializerUtil {
 			if (of instanceof Writer) {
 				marshaller.marshal(o, (Writer) of);
 			} else {
-				FileOutputStream fof = null;
+				OutputStream fof = null;
 				if (of instanceof String) {
 					fof = new FileOutputStream((String) of);
-				} else if (of instanceof FileOutputStream) {
-					fof = (FileOutputStream) of;
+				} else if (of instanceof OutputStream) {
+					fof = (OutputStream) of;
 				} else {
 					throw new Exception("Wrong writer provided.");
 				}
@@ -250,7 +242,7 @@ public class SerializerUtil {
 			}
 				
 		} catch (Exception e) {
-			log.error(String.format("Caught exception during marshalling:\n%s", e.getMessage()));
+			log.error(String.format("Caught exception during marshalling:\n%s", e));
 			throw e;
 		}
 	}
@@ -264,11 +256,11 @@ public class SerializerUtil {
 	 */
 	private static Marshaller getMarshaller(String jaxbContext, boolean pretty) throws JAXBException {
 		JAXBContext context = null;
-		synchronized (s_context) {
-			context = s_context.get(jaxbContext);
+		synchronized (contexts) {
+			context = contexts.get(jaxbContext);
 			if (null == context) {
 				context = JAXBContext.newInstance(jaxbContext);
-				s_context.put(jaxbContext, context);
+				contexts.put(jaxbContext, context);
 			}
 		}
 		Marshaller marshaller = null;
