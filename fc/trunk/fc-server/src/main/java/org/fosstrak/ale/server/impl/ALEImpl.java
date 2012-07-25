@@ -36,8 +36,9 @@ import org.fosstrak.ale.server.ALESettings;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.impl.type.InputGeneratorProvider;
 import org.fosstrak.ale.server.impl.type.ReportsGeneratorsProvider;
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
-import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.rp.InputGenerator;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
@@ -75,9 +76,12 @@ public class ALEImpl implements ALE {
 
 	@Autowired
     private LogicalReaderManager logicalReaderManager;
-    
+
 	// autowired
-	private PersistenceProvider persistenceProvider;
+	private RemoveConfig persistenceRemoveAPI;
+	
+	// autowired
+	private WriteConfig persistenceWriteAPI;
     
     // autowired
     private ALESettings aleSettings;
@@ -114,7 +118,7 @@ public class ALEImpl implements ALE {
 			throw new DuplicateNameException("ECSpec already defined with name: " + specName);
 		}
 		reportGeneratorsProvider.put(specName, reportGeneratorsProvider.createNewReportGenerator(specName, spec));			
-		persistenceProvider.writeECSpec(specName, spec);
+		persistenceWriteAPI.writeECSpec(specName, spec);
 	}
 	
 	@Override
@@ -123,7 +127,7 @@ public class ALEImpl implements ALE {
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
 		reportGeneratorsProvider.remove(specName);
-		persistenceProvider.removeECSpec(specName);
+		persistenceRemoveAPI.removeECSpec(specName);
 	}
 	
 	@Override
@@ -145,7 +149,7 @@ public class ALEImpl implements ALE {
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
 		reportGeneratorsProvider.get(specName).subscribe(notificationURI);
-		persistenceProvider.writeECSpecSubscriber(specName, notificationURI);		
+		persistenceWriteAPI.writeECSpecSubscriber(specName, notificationURI);		
 	}
 
 	@Override
@@ -154,7 +158,7 @@ public class ALEImpl implements ALE {
 		throwNoSuchNameExceptionIfNoSuchSpec(specName);
 		
 		reportGeneratorsProvider.get(specName).unsubscribe(notificationURI);
-		persistenceProvider.removeECSpecSubscriber(specName, notificationURI);
+		persistenceRemoveAPI.removeECSpecSubscriber(specName, notificationURI);
 	}
 
 	@Override
@@ -245,14 +249,6 @@ public class ALEImpl implements ALE {
 			throw new NoSuchNameException("No ECSpec with such name defined: " + specName);
 		}
 	}
-	/**
-	 * allow to inject a new persistence provider.
-	 * @param persistenceProvider the new persistence provider to be used.
-	 */
-	@Autowired
-	public void setPersistenceProvider(PersistenceProvider persistenceProvider) {
-		this.persistenceProvider = persistenceProvider;
-	}
 	
 	/**
 	 * allow to inject a new ALESettings.
@@ -277,5 +273,23 @@ public class ALEImpl implements ALE {
 	 */
 	public void setInputGenerators(InputGeneratorProvider inputGenerators) {
 		this.inputGenerators = inputGenerators;
+	}
+
+	/**
+	 * allow to inject the persistence delete API.
+	 * @param persistenceRemoveAPI the persistence delete API.
+	 */
+    @Autowired
+	public void setPersistenceRemoveAPI(RemoveConfig persistenceRemoveAPI) {
+		this.persistenceRemoveAPI = persistenceRemoveAPI;
+	}
+
+    /**
+     * allow to inject the persistence write API.
+     * @param persistenceWriteAPI the persistence write API.
+     */
+    @Autowired
+	public void setPersistenceWriteAPI(WriteConfig persistenceWriteAPI) {
+		this.persistenceWriteAPI = persistenceWriteAPI;
 	}
 }

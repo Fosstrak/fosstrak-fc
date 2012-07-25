@@ -38,6 +38,9 @@ import org.fosstrak.ale.exception.NoSuchNameException;
 import org.fosstrak.ale.exception.NonCompositeReaderException;
 import org.fosstrak.ale.exception.ValidationException;
 import org.fosstrak.ale.server.ALESettings;
+import org.fosstrak.ale.server.impl.ALEImpl;
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
@@ -214,11 +217,18 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testSetProperty() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeLRSpec(EasyMock.isA(String.class));
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
+
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceWriteMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceWriteMock);
+		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		final String logicalReaderName = "logicalReader";
 		LogicalReader logicalReader = EasyMock.createMock(LogicalReader.class);
@@ -256,7 +266,8 @@ public class LogicalReaderManagerTest {
 		}
 		
 		EasyMock.verify(logicalReader);
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceWriteMock);
+		EasyMock.verify(persistenceRemoveMock);
 		EasyMock.verify(lrSpec);
 	}
 	
@@ -338,13 +349,19 @@ public class LogicalReaderManagerTest {
 		EasyMock.expectLastCall();
 		
 		EasyMock.replay(logicalReader);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(new PersistenceProvider());
+		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
 		Assert.assertEquals(0, manager.getLogicalReaders().size());
 		
 		EasyMock.verify(logicalReader);
+		EasyMock.verify(persistenceRemoveMock);
 	}	
 	
 	/**
@@ -362,14 +379,19 @@ public class LogicalReaderManagerTest {
 		EasyMock.expectLastCall();
 		
 		EasyMock.replay(logicalReader);
-
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(new PersistenceProvider());
+		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		manager.setLogicalReader(logicalReader);
 		manager.undefine(readerName);
 		Assert.assertEquals(0, manager.getLogicalReaders().size());
 		
 		EasyMock.verify(logicalReader);
+		EasyMock.verify(persistenceRemoveMock);
 	}	
 	
 	/**
@@ -434,10 +456,10 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testDefine() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.replay(persistenceWriteMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceWriteMock);
 		
 		final BaseReader baseReader = EasyMock.createMock(BaseReader.class);
 		baseReader.connectReader();
@@ -481,7 +503,7 @@ public class LogicalReaderManagerTest {
 		Assert.assertEquals("theNiceTestReaderType",keyValue.get("ReaderType"));
 		Assert.assertEquals("value", keyValue.get("name"));		
 		
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceWriteMock);
 		EasyMock.verify(baseReader);
 	}
 	
@@ -522,12 +544,19 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testSetReader() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeLRSpec(EasyMock.isA(String.class));
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
+
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceWriteMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceWriteMock);
 		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
+				
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
 		EasyMock.expect(compositeReader.getName()).andReturn(compositeReaderName).atLeastOnce();
@@ -553,8 +582,9 @@ public class LogicalReaderManagerTest {
 		manager.setReaders(compositeReaderName, Arrays.asList(new String[] { "reader1" } ));
 		Assert.assertEquals(1, lrSpec.getReaders().getReader().size());
 		Assert.assertEquals("reader1", lrSpec.getReaders().getReader().get(0));
-		
-		EasyMock.verify(persistenceMock);	
+
+		EasyMock.verify(persistenceWriteMock);
+		EasyMock.verify(persistenceRemoveMock);	
 		EasyMock.verify(compositeReader);	
 		EasyMock.verify(logicalReader);	
 	}
@@ -593,11 +623,18 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testRemoveReader() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeLRSpec(EasyMock.isA(String.class));
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
+
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceWriteMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceWriteMock);
+		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
@@ -619,8 +656,9 @@ public class LogicalReaderManagerTest {
 		manager.removeReaders(compositeReaderName, Arrays.asList(new String[] { "reader1" } ));
 		Assert.assertEquals(1, lrSpec.getReaders().getReader().size());
 		Assert.assertEquals("reader2", lrSpec.getReaders().getReader().get(0));
-		
-		EasyMock.verify(persistenceMock);		
+
+		EasyMock.verify(persistenceWriteMock);
+		EasyMock.verify(persistenceRemoveMock);		
 		EasyMock.verify(compositeReader);
 	}
 	
@@ -658,11 +696,18 @@ public class LogicalReaderManagerTest {
 	 */
 	@Test
 	public void testAddReader() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeLRSpec(EasyMock.isA(String.class));
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
+
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceWriteMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceWriteMock);
+		
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeLRSpec(EasyMock.isA(String.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		final String compositeReaderName = "compositeReader";
 		LogicalReader compositeReader = EasyMock.createMock(CompositeReader.class);
@@ -692,7 +737,8 @@ public class LogicalReaderManagerTest {
 		Assert.assertEquals(1, lrSpecReaders.getReader().size());
 		Assert.assertEquals(logicalReaderName, lrSpecReaders.getReader().get(0));
 
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceWriteMock);
+		EasyMock.verify(persistenceRemoveMock);
 		EasyMock.verify(compositeReader);	
 		EasyMock.verify(logicalReader);	
 	}
@@ -716,8 +762,13 @@ public class LogicalReaderManagerTest {
 		
 		ByteArrayInputStream bis = new ByteArrayInputStream(cfg.getBytes());
 		
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));		
+		WriteConfig persistenceRemoveMock = EasyMock.createMock(WriteConfig.class);
+		persistenceRemoveMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
+		EasyMock.expectLastCall();
+		EasyMock.replay(persistenceRemoveMock);
+		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceRemoveMock);
+		
+		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);	
 		EasyMock.expect(persistenceMock.getInitializeInputStream(EasyMock.isA(String.class))).andReturn(bis);
 		EasyMock.replay(persistenceMock);
 		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
@@ -766,6 +817,7 @@ public class LogicalReaderManagerTest {
 		Assert.assertEquals(1, manager.getLogicalReaders().size());
 
 		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceRemoveMock);
 		EasyMock.verify(baseReader);
 	}
 	

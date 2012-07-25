@@ -123,7 +123,7 @@ public class LLRPControllerManager  {
 			//TODO: case of composite reader
 			lrLLRPCheckMap.put(lrSpecName, new LLRPChecking(readerName));
 			// persistence
-			WriteConfig.writeAddROSpec(lrSpecName, addRoSpec);
+			ALEApplicationContext.getBean(WriteConfig.class).writeAddROSpec(lrSpecName, addRoSpec);
 			LOG.debug("End Define an ADD_ROSPEC for " + lrSpecName);
 		} else {
 			LOG.error("ERROR !!!! ADD_ROSPEC is null for " + lrSpecName);
@@ -154,7 +154,7 @@ public class LLRPControllerManager  {
 			 // remove the lrSpecName from the HashMap
 			 lrROSpecMap.remove(lrSpecName); 
 			 //persistence
-			 RemoveConfig.removeROSpec(lrSpecName);
+			 ALEApplicationContext.getBean(RemoveConfig.class).removeROSpec(lrSpecName);
 		}
 		LOG.debug("End Undefine ROSPEC for " + lrSpecName);
 	}
@@ -410,7 +410,7 @@ public class LLRPControllerManager  {
 		// init the internal data
 		lrAccessSpecMap.put(lrSpecName, addAccessSpec.getAccessSpec());
 		// persistence
-		WriteConfig.writeAddAccessSpec(lrSpecName, addAccessSpec);
+		ALEApplicationContext.getBean(WriteConfig.class).writeAddAccessSpec(lrSpecName, addAccessSpec);
 		LOG.info("End define an ADD_ACCESSSPEC for " + lrSpecName);
 		} else {
 			LOG.error("ERROR !!!! ADD_ACCESSSPEC is null for " + lrSpecName);

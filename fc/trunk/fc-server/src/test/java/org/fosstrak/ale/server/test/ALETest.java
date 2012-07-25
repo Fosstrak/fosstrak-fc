@@ -33,7 +33,8 @@ import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.impl.ALEImpl;
 import org.fosstrak.ale.server.impl.type.InputGeneratorProvider;
 import org.fosstrak.ale.server.impl.type.ReportsGeneratorsProvider;
-import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
+import org.fosstrak.ale.server.persistence.RemoveConfig;
+import org.fosstrak.ale.server.persistence.WriteConfig;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.junit.Before;
@@ -136,11 +137,11 @@ public class ALETest {
 	public void testDefine() throws Exception {		
 		ECSpec ecSpec = new ECSpec();
 		
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.writeECSpec("spec", ecSpec);
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeECSpec("spec", ecSpec);
 		EasyMock.expectLastCall();
-		EasyMock.replay(persistenceMock);
-		((ALEImpl) ale).setPersistenceProvider(persistenceMock);
+		EasyMock.replay(persistenceWriteMock);
+		((ALEImpl) ale).setPersistenceWriteAPI(persistenceWriteMock);
 		
 		ReportsGenerator rg = EasyMock.createMock(ReportsGenerator.class);
 		
@@ -154,7 +155,7 @@ public class ALETest {
 		ale.define("spec", ecSpec);
 		
 		EasyMock.verify(rgenProvider);
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceWriteMock);
 	}
 	
 	/**
@@ -173,11 +174,11 @@ public class ALETest {
 	 */
 	@Test
 	public void testUndefine() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeECSpec("spec");
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeECSpec("spec");
 		EasyMock.expectLastCall();
-		EasyMock.replay(persistenceMock);
-		((ALEImpl) ale).setPersistenceProvider(persistenceMock);
+		EasyMock.replay(persistenceRemoveMock);
+		((ALEImpl) ale).setPersistenceRemoveAPI(persistenceRemoveMock);
 
 		ReportsGenerator reportGenerator = EasyMock.createMock(ReportsGenerator.class);
 		
@@ -190,7 +191,7 @@ public class ALETest {
 		ale.undefine("spec");
 		
 		EasyMock.verify(rgenProvider);
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceRemoveMock);
 	}
 	
 	/**
@@ -251,11 +252,11 @@ public class ALETest {
 	 */
 	@Test
 	public void testSubscribe() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.writeECSpecSubscriber(EasyMock.isA(String.class), EasyMock.isA(String.class));
+		WriteConfig persistenceWriteMock = EasyMock.createMock(WriteConfig.class);
+		persistenceWriteMock.writeECSpecSubscriber(EasyMock.isA(String.class), EasyMock.isA(String.class));
 		EasyMock.expectLastCall();
-		EasyMock.replay(persistenceMock);
-		((ALEImpl) ale).setPersistenceProvider(persistenceMock);
+		EasyMock.replay(persistenceWriteMock);
+		((ALEImpl) ale).setPersistenceWriteAPI(persistenceWriteMock);
 		
 		final String notificationURI = "test";
 		ReportsGenerator reportGenerator = EasyMock.createMock(ReportsGenerator.class);
@@ -271,7 +272,7 @@ public class ALETest {
 		
 		ale.subscribe("spec", notificationURI);
 
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceWriteMock);
 		EasyMock.verify(reportGenerator);
 		EasyMock.verify(rgenProvider);
 	}
@@ -291,11 +292,11 @@ public class ALETest {
 	 */
 	@Test
 	public void testUnsubscribe() throws Exception {
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		persistenceMock.removeECSpecSubscriber(EasyMock.isA(String.class), EasyMock.isA(String.class));
+		RemoveConfig persistenceRemoveMock = EasyMock.createMock(RemoveConfig.class);
+		persistenceRemoveMock.removeECSpecSubscriber(EasyMock.isA(String.class), EasyMock.isA(String.class));
 		EasyMock.expectLastCall();
-		EasyMock.replay(persistenceMock);
-		((ALEImpl) ale).setPersistenceProvider(persistenceMock);
+		EasyMock.replay(persistenceRemoveMock);
+		((ALEImpl) ale).setPersistenceRemoveAPI(persistenceRemoveMock);
 		
 		final String notificationURI = "test";
 		ReportsGenerator reportGenerator = EasyMock.createMock(ReportsGenerator.class);
@@ -311,7 +312,7 @@ public class ALETest {
 		
 		ale.unsubscribe("spec", notificationURI);
 
-		EasyMock.verify(persistenceMock);
+		EasyMock.verify(persistenceRemoveMock);
 		EasyMock.verify(reportGenerator);
 		EasyMock.verify(rgenProvider);
 	}
