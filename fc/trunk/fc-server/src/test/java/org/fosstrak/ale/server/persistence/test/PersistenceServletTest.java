@@ -27,7 +27,6 @@ import org.easymock.EasyMock;
 import org.fosstrak.ale.server.persistence.PersistenceServlet;
 import org.fosstrak.ale.server.persistence.ReadConfig;
 import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -35,7 +34,6 @@ import org.junit.Test;
  * @author swieland
  *
  */
-@Ignore
 public class PersistenceServletTest {
 	
 	/**
@@ -62,9 +60,8 @@ public class PersistenceServletTest {
 		PersistenceServlet servlet = new PersistenceServlet();
 		servlet.setPersistenceConfig(pConfig);
 		servlet.setPersistenceReadConfig(readConfig);
-		servlet.setServletContext(servletContext);
 		
-		servlet.init();
+		servlet.init(servletContext);
 		
 		EasyMock.verify(pConfig);
 		EasyMock.verify(readConfig);

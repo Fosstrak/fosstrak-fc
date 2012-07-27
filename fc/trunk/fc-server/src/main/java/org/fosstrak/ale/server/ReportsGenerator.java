@@ -121,7 +121,7 @@ public class ReportsGenerator implements Runnable {
 		
 		// set spec
 		try {
-			ECSpecValidator.validateSpec(spec);
+			ALEApplicationContext.getBean(ECSpecValidator.class).validateSpec(spec);
 		} catch (ECSpecValidationException e) {
 			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
