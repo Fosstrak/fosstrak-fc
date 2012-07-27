@@ -1,6 +1,5 @@
 package org.fosstrak.ale.server.persistence;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -8,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.ServletContextAware;
 
 /**
  * Persistence servlet is run at the startup of the application server
@@ -18,14 +16,11 @@ import org.springframework.web.context.ServletContextAware;
  * @author benoit.plomion@orange.com
  */
 @Component("persistenceServlet")
-public class PersistenceServlet implements ServletContextAware {
+public class PersistenceServlet {
    
 	private static final Logger LOG = Logger.getLogger(PersistenceServlet.class.getName());
 	   	 
 	static final long serialVersionUID = 1L;
-	
-	// injected at construction time.
-	private ServletContext servletContext;
 	
 	// autowired
 	private PersistenceConfig persistenceConfig;
@@ -36,8 +31,12 @@ public class PersistenceServlet implements ServletContextAware {
 	public PersistenceServlet() {
 	}
 	
-	@PostConstruct
-	public void init() throws ServletException {
+	/**
+	 * initialize the persistence.
+	 * @param servletContext
+	 * @throws ServletException
+	 */
+	public void init(ServletContext servletContext) throws ServletException {
 		try {			
 			LOG.info("ALE Persistence => start");
 			String path = servletContext.getRealPath("/");
@@ -71,9 +70,4 @@ public class PersistenceServlet implements ServletContextAware {
 	public void setPersistenceReadConfig(ReadConfig persistenceReadConfig) {
 		this.persistenceReadConfig = persistenceReadConfig;
 	}
-
-    @Override
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	} 	  	    
 }

@@ -36,6 +36,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -45,13 +46,20 @@ import org.junit.Test;
  */
 public class ECSpecValidatorTest {
 	
+	private ECSpecValidator validator;
+	
+	@Before
+	public void beforeTests() {
+		validator = new ECSpecValidator();
+	}
+	
 	/**
 	 * verify that null as input for the readers list is not allowed.
 	 * @throws ECSpecValidationException expected test result.
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckReadersAvailableNullAsInput() throws ECSpecValidationException {
-		ECSpecValidator.checkReadersAvailable(null, null);
+		validator.checkReadersAvailable(null, null);
 	}
 	
 	/**
@@ -60,7 +68,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckReadersAvailableNoReaderSpecified() throws ECSpecValidationException {
-		ECSpecValidator.checkReadersAvailable(new LogicalReaders(), null);		
+		validator.checkReadersAvailable(new LogicalReaders(), null);		
 	}
 	
 	/**
@@ -77,7 +85,7 @@ public class ECSpecValidatorTest {
 		logicalReaders.getLogicalReader().add("logicalReader1");
 		logicalReaders.getLogicalReader().add("logicalReader2");
 		
-		ECSpecValidator.checkReadersAvailable(logicalReaders, manager);		
+		validator.checkReadersAvailable(logicalReaders, manager);		
 	}
 	
 	/**
@@ -94,7 +102,7 @@ public class ECSpecValidatorTest {
 		logicalReaders.getLogicalReader().add("logicalReader1");
 		logicalReaders.getLogicalReader().add("logicalReader2");
 		
-		Assert.assertTrue(ECSpecValidator.checkReadersAvailable(logicalReaders, manager));
+		Assert.assertTrue(validator.checkReadersAvailable(logicalReaders, manager));
 		
 		EasyMock.verify(manager);
 	}
@@ -109,7 +117,7 @@ public class ECSpecValidatorTest {
 		ECTime time = new ECTime();
 		time.setValue(1000);
 		ecBoundarySpec.setDuration(time);
-		Assert.assertTrue(ECSpecValidator.checkBoundarySpec(ecBoundarySpec));
+		Assert.assertTrue(validator.checkBoundarySpec(ecBoundarySpec));
 	}
 	
 	/**
@@ -118,7 +126,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckBoundarySpecNullNotAllowed() throws ECSpecValidationException {
-		ECSpecValidator.checkBoundarySpec(null);
+		validator.checkBoundarySpec(null);
 	}
 
 	/**
@@ -128,11 +136,11 @@ public class ECSpecValidatorTest {
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckTimeNotNegative() throws ECSpecValidationException {
 		// first if we input null, all must be OK.
-		Assert.assertTrue(ECSpecValidator.checkTimeNotNegative(null, null));
+		Assert.assertTrue(validator.checkTimeNotNegative(null, null));
 		
 		ECTime time = new ECTime();
 		time.setValue(-1);
-		ECSpecValidator.checkTimeNotNegative(time, "successful test failure");
+		validator.checkTimeNotNegative(time, "successful test failure");
 	}
 	
 	/**
@@ -146,7 +154,7 @@ public class ECSpecValidatorTest {
 		ECTime ecTime = new ECTime();
 		ecTime.setValue(1000);
 		ecBoundarySpec.setRepeatPeriod(ecTime);
-		ECSpecValidator.checkStartTriggerConstraintsOnRepeatPeriod(ecBoundarySpec);	
+		validator.checkStartTriggerConstraintsOnRepeatPeriod(ecBoundarySpec);	
 	}
 	
 	/**
@@ -158,7 +166,7 @@ public class ECSpecValidatorTest {
 		ECBoundarySpec ecBoundarySpec = new ECBoundarySpec();
 		ecBoundarySpec.setStartTrigger("startTrigger");
 		ecBoundarySpec.setRepeatPeriod(new ECTime());
-		ECSpecValidator.checkStartTriggerConstraintsOnRepeatPeriod(ecBoundarySpec);		
+		validator.checkStartTriggerConstraintsOnRepeatPeriod(ecBoundarySpec);		
 	}
 	
 	/**
@@ -167,7 +175,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckBoundarySpecStoppingConditionIllegalInput() throws ECSpecValidationException {
-		ECSpecValidator.checkBoundarySpecStoppingCondition(new ECBoundarySpec());		
+		validator.checkBoundarySpecStoppingCondition(new ECBoundarySpec());		
 	}
 	
 	/**
@@ -176,7 +184,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckReportSpecsNullIsIllegal() throws ECSpecValidationException {
-		ECSpecValidator.checkReportSpecs(null);		
+		validator.checkReportSpecs(null);		
 	}
 	
 	/**
@@ -185,7 +193,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testCheckReportSpecsEmptyIllegal() throws ECSpecValidationException {
-		ECSpecValidator.checkReportSpecs(new ECSpec.ReportSpecs());
+		validator.checkReportSpecs(new ECSpec.ReportSpecs());
 	}
 	
 	/**
@@ -211,7 +219,7 @@ public class ECSpecValidatorTest {
 		
 		reportSpecs.getReportSpec().add(spec1);
 		reportSpecs.getReportSpec().add(spec2);
-		Assert.assertTrue(ECSpecValidator.checkReportSpecs(reportSpecs));
+		Assert.assertTrue(validator.checkReportSpecs(reportSpecs));
 	}
 	
 	/**
@@ -229,7 +237,7 @@ public class ECSpecValidatorTest {
 		reportSpecList.add(spec1);
 		reportSpecList.add(spec2);
 		
-		Set<String> names = ECSpecValidator.checkReportSpecNoDuplicateReportSpecNames(reportSpecList);
+		Set<String> names = validator.checkReportSpecNoDuplicateReportSpecNames(reportSpecList);
 		Assert.assertNotNull(names);
 		Assert.assertTrue(names.contains("spec1"));
 		Assert.assertTrue(names.contains("spec2"));
@@ -250,7 +258,7 @@ public class ECSpecValidatorTest {
 		reportSpecList.add(spec1);
 		reportSpecList.add(spec2);
 		
-		ECSpecValidator.checkReportSpecNoDuplicateReportSpecNames(reportSpecList);
+		validator.checkReportSpecNoDuplicateReportSpecNames(reportSpecList);
 	}
 	
 	/**
@@ -259,7 +267,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test(expected = ECSpecValidationException.class)
 	public void testReportOutputSpecNoNullSpecAllowed() throws ECSpecValidationException {
-		ECSpecValidator.checkReportOutputSpec(null, null);
+		validator.checkReportOutputSpec(null, null);
 	}
 
 	/**
@@ -270,7 +278,7 @@ public class ECSpecValidatorTest {
 	public void testReportOutputSpecNoOutputFormatGiven() throws ECSpecValidationException {
 		final String reportName = "reportName";
 		final ECReportOutputSpec outputSpec = new ECReportOutputSpec();
-		ECSpecValidator.checkReportOutputSpec(reportName, outputSpec);
+		validator.checkReportOutputSpec(reportName, outputSpec);
 	}
 
 	/**
@@ -284,23 +292,23 @@ public class ECSpecValidatorTest {
 		
 		outputSpec = new ECReportOutputSpec();
 		outputSpec.setIncludeCount(true);
-		Assert.assertTrue(ECSpecValidator.checkReportOutputSpec(reportName, outputSpec));
+		Assert.assertTrue(validator.checkReportOutputSpec(reportName, outputSpec));
 		
 		outputSpec = new ECReportOutputSpec();
 		outputSpec.setIncludeEPC(true);
-		Assert.assertTrue(ECSpecValidator.checkReportOutputSpec(reportName, outputSpec));
+		Assert.assertTrue(validator.checkReportOutputSpec(reportName, outputSpec));
 		
 		outputSpec = new ECReportOutputSpec();
 		outputSpec.setIncludeRawDecimal(true);
-		Assert.assertTrue(ECSpecValidator.checkReportOutputSpec(reportName, outputSpec));
+		Assert.assertTrue(validator.checkReportOutputSpec(reportName, outputSpec));
 		
 		outputSpec = new ECReportOutputSpec();
 		outputSpec.setIncludeRawHex(true);
-		Assert.assertTrue(ECSpecValidator.checkReportOutputSpec(reportName, outputSpec));
+		Assert.assertTrue(validator.checkReportOutputSpec(reportName, outputSpec));
 		
 		outputSpec = new ECReportOutputSpec();
 		outputSpec.setIncludeTag(true);
-		Assert.assertTrue(ECSpecValidator.checkReportOutputSpec(reportName, outputSpec));
+		Assert.assertTrue(validator.checkReportOutputSpec(reportName, outputSpec));
 	}
 	
 	/**
@@ -309,7 +317,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test
 	public void testGroupSpecNull() throws ECSpecValidationException {
-		Assert.assertTrue(ECSpecValidator.checkGroupSpec(null));
+		Assert.assertTrue(validator.checkGroupSpec(null));
 	}
 	
 	/**
@@ -323,7 +331,7 @@ public class ECSpecValidatorTest {
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[3-4].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[5-6].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[7-8].*.*");
-		Assert.assertTrue(ECSpecValidator.checkGroupSpec(groupSpec));
+		Assert.assertTrue(validator.checkGroupSpec(groupSpec));
 	}
 	
 	/**
@@ -336,7 +344,7 @@ public class ECSpecValidatorTest {
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[1-2].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[5-6].*.*");
-		ECSpecValidator.checkGroupSpec(groupSpec);
+		validator.checkGroupSpec(groupSpec);
 	}
 	
 	/**
@@ -350,7 +358,7 @@ public class ECSpecValidatorTest {
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[3-4].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[5-6].*.*");
 		groupSpec.getPattern().add("urn:epc:pat:sgtin-64:1.[5-6].*.*");
-		ECSpecValidator.checkGroupSpec(groupSpec);
+		validator.checkGroupSpec(groupSpec);
 	}
 	
 	/**
@@ -359,7 +367,7 @@ public class ECSpecValidatorTest {
 	 */
 	@Test
 	public void testFilterSpecNull() throws ECSpecValidationException {
-		Assert.assertTrue(ECSpecValidator.checkFilterSpec(null));
+		Assert.assertTrue(validator.checkFilterSpec(null));
 	}
 	
 	/**
@@ -376,13 +384,13 @@ public class ECSpecValidatorTest {
 		ECFilterSpec filterSpec = new ECFilterSpec();
 
 		// test without pattern.
-		Assert.assertTrue(ECSpecValidator.checkFilterSpec(filterSpec));
+		Assert.assertTrue(validator.checkFilterSpec(filterSpec));
 		
 		filterSpec.setIncludePatterns(includePatterns);
 		filterSpec.setExcludePatterns(excludePatterns);
 		
 		// test with patterns.
-		Assert.assertTrue(ECSpecValidator.checkFilterSpec(filterSpec));
+		Assert.assertTrue(validator.checkFilterSpec(filterSpec));
 	}
 	
 	/**
@@ -394,9 +402,9 @@ public class ECSpecValidatorTest {
 		String p1 = "urn:epc:pat:sgtin-64:1.1.X.*";
 		String p2 = "urn:epc:pat:sgtin-64:1.2.X.*";
 		String p3 = "urn:epc:pat:sgtin-64:1.3.X.*";
-		Assert.assertFalse(ECSpecValidator.patternDisjoint(p1, p1));
-		Assert.assertTrue(ECSpecValidator.patternDisjoint(p1, p2));
-		Assert.assertTrue(ECSpecValidator.patternDisjoint(p2, p3));
+		Assert.assertFalse(validator.patternDisjoint(p1, p1));
+		Assert.assertTrue(validator.patternDisjoint(p1, p2));
+		Assert.assertTrue(validator.patternDisjoint(p2, p3));
 	}
 	
 	/**
@@ -408,6 +416,6 @@ public class ECSpecValidatorTest {
 		String p1 = "urn:epc:pat:sgtin-64:1.1.X.*";
 		String p2 = "fdsfdsfdsfds";
 		// must throw an exception
-		ECSpecValidator.patternDisjoint(p1, p2);
+		validator.patternDisjoint(p1, p2);
 	}
 }

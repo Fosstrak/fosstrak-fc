@@ -20,11 +20,16 @@
 
 package org.fosstrak.ale.server;
 
+import javax.servlet.ServletContext;
+
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.server.persistence.PersistenceServlet;
+import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * wrapper returning a reference to the spring application context 
@@ -34,11 +39,12 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component("aleApplicationContext")
-public final class ALEApplicationContext implements ApplicationContextAware {
+public final class ALEApplicationContext implements ApplicationContextAware, ServletContextAware {
 
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(ALEApplicationContext.class);
-	private static ApplicationContext applicationContext;
+	private static ApplicationContext applicationContext;	
+	
 	
 	/**
 	 * private constructor for utility classes.
@@ -53,7 +59,29 @@ public final class ALEApplicationContext implements ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		LOG.info("initializing ALEApplicationContext");
 		ALEApplicationContext.applicationContext = applicationContext;
-		LOG.info("initialized ALEApplicationContext");
+		LOG.info("initialized ALEApplicationContext.");
+	}
+
+    @Override
+	public void setServletContext(ServletContext servletContext) {
+		initializeApplication(servletContext);
+	}
+	
+	private void initializeApplication(ServletContext servletContext) {
+    	LOG.debug("initializing application ...");
+		try {
+			LogicalReaderManager lrm = getBean(LogicalReaderManager.class);
+			LOG.debug("instantiated LogicalReaderManager: " + lrm.getClass().getCanonicalName());
+			ALE ale = getBean(ALE.class);
+			LOG.debug("instantiated ALE: " + ale.getClass().getCanonicalName());
+			PersistenceServlet persistence = getBean(PersistenceServlet.class);
+			LOG.debug("instantiated Persistence: " + persistence.getClass().getCanonicalName());
+			persistence.init(servletContext);
+		} catch (Exception ex) {
+			LOG.error("caught exception during setup of the critical components.", ex);
+			throw new IllegalStateException("caught exception during setup of the critical components.", ex);
+		}
+    	LOG.debug("... initialization done.");
 	}
 	
 	/**

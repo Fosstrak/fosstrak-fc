@@ -289,7 +289,6 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 
 	@Override
 	public void define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
-
 		throwValidationExceptionOnNullInput(name, "parameter name is null");
 		throwValidationExceptionOnNullInput(spec, "parameter spec is null");
 		
@@ -324,6 +323,7 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 
 	@Override
 	public void define(String name, LRSpec spec) throws DuplicateNameException, ValidationException, SecurityException, ImplementationException {
+		LOG.debug("define");
 
 		throwValidationExceptionOnNullInput(name, "parameter name is null");
 		throwValidationExceptionOnNullInput(spec, "parameter spec is null");
@@ -336,7 +336,10 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		
 		persistenceWriteAPI.writeLRSpec(name, spec);
 		
+		LOG.debug("saving reader: " + name + " " + logRead.getClass().getCanonicalName());
 		logicalReaders.put(name, logRead);
+
+		LOG.debug("successfully executed define");
 	}
 
 	/**
