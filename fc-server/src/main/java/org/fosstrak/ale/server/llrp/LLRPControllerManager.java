@@ -26,12 +26,14 @@ import org.llrp.ltk.generated.messages.STOP_ROSPEC;
 import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.generated.parameters.ROSpec;
 import org.llrp.ltk.types.UnsignedInteger;
+import org.springframework.stereotype.Component;
 
 /**
  * ORANGE: This class manages the ROSPEC.
  * 
  * @author wafa.soubra@orange.com
  */
+@Component("llrpControllerManager")
 public class LLRPControllerManager  {
 
 	/**	logger. */
@@ -260,7 +262,7 @@ public class LLRPControllerManager  {
 	 * Add again the ROSpec and enable it. 
 	 * @param readerName the physical reader name
 	 */
-	public static void redefine (String readerName) {
+	public void redefine (String readerName) {
 		LOG.debug("Start Redefine for " + readerName);
 		String logicalName = physicalLRMap.get(readerName);
 		if (logicalName != null) {
@@ -277,7 +279,7 @@ public class LLRPControllerManager  {
 	 * @param readerName the physical reader name
 	 * @param logicalName the logical reader name
 	 */
-	private static void redefineROSpec (String readerName, String logicalName) {
+	private void redefineROSpec (String readerName, String logicalName) {
 		ROSpec roSpec = lrROSpecMap.get(logicalName);
 		if (roSpec != null) {	
 			ADD_ROSPEC addRoSpec = new ADD_ROSPEC();
@@ -297,7 +299,7 @@ public class LLRPControllerManager  {
 	 * @param readerName the name of the physical reader
 	 * @param connected boolean if true the connection is established
 	 */
-	public static void setReaderConnected (String readerName, boolean connected) {
+	public void setReaderConnected (String readerName, boolean connected) {
 		physicalConnectedMap.put(readerName, connected);
 	}
 	
@@ -307,7 +309,7 @@ public class LLRPControllerManager  {
 	 * @param readerName the name of the physical reader
 	 * @return the physical reader name
 	 */
-	private static String retrievePhysicalReader (String lrSpecName) 
+	private String retrievePhysicalReader (String lrSpecName) 
 		throws DuplicateNameException, NoSuchNameException {
 		if (!ALEApplicationContext.getBean(LogicalReaderManager.class).contains(lrSpecName)) {
 			throw new NoSuchNameException("this logical reader doesn't exist");
@@ -337,7 +339,7 @@ public class LLRPControllerManager  {
 	 *    is never sent to messageHandler in Fosstrak.
 	 * 2) waitConnection = false, if we don't want to wait for ACK of the connection.
 	 */
-	private static void getLLRPConfiguration () {
+	private void getLLRPConfiguration () {
 		if (props == null) {
 			props = new Properties();
 			// try to load the properties file
@@ -367,7 +369,7 @@ public class LLRPControllerManager  {
 	 * messages from the LLRPChecking thread. 
 	 * @param readerName the name of the physical reader
 	 */
-	private static void initClientConnection (String readerName) {
+	private void initClientConnection (String readerName) {
 		if (toWaitForConnection) {
 			while (physicalConnectedMap.get(readerName)== null || !physicalConnectedMap.get(readerName)) {
 				try {
@@ -391,7 +393,7 @@ public class LLRPControllerManager  {
 	 * @param lrSpecName the logical reader name
 	 * @param addAccessSpec the ADD_ACCESSSPEC
 	 */
-	public static void defineAccessSpec (String lrSpecName, ADD_ACCESSSPEC addAccessSpec) 
+	public void defineAccessSpec (String lrSpecName, ADD_ACCESSSPEC addAccessSpec) 
 		throws DuplicateNameException, NoSuchNameException {
 		if (addAccessSpec != null) {
 		LOG.debug("Define an ADD_ACCESSSPEC for " + lrSpecName);
@@ -422,7 +424,7 @@ public class LLRPControllerManager  {
 	 * @param readerName the physical reader name
 	 * @param logicalName the logical reader name
 	 */
-	private static void redefineAccessSpec (String readerName, String logicalName) {
+	private void redefineAccessSpec (String readerName, String logicalName) {
 		AccessSpec accessSpec = lrAccessSpecMap.get(logicalName);
 		if (accessSpec != null) {	
 			ADD_ACCESSSPEC addAccessSpec = new ADD_ACCESSSPEC();

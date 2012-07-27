@@ -31,15 +31,20 @@ import org.springframework.stereotype.Component;
  */
 @Component("aleSettings")
 public class ALESettings {
+	
 	@Value(value = "${ale.standard.version}")
 	private String aleStandardVersion;
 	
-	@Value(value = "${ale.vendor.version}")
-	private String aleVendorVersion;
+	@Value(value = "${lr.standard.version}")
+	private String lrStandardVersion;
 	
-	@Value(value = "${ale.lr.readerAPI}")
-	private String aleLRReaderAPI;
+	@Value(value = "${vendor.version}")
+	private String vendorVersion;
 
+	/**
+	 * return the current standard version of the ALE.
+	 * @return current standard version.
+	 */
 	public String getAleStandardVersion() {
 		return aleStandardVersion;
 	}
@@ -48,19 +53,27 @@ public class ALESettings {
 		this.aleStandardVersion = aleStandardVersion;
 	}
 
-	public String getAleVendorVersion() {
-		return aleVendorVersion;
+	/**
+	 * return the current standard version of the logical reader management.
+	 * @return current standard version.
+	 */
+	public String getLrStandardVersion() {
+		return lrStandardVersion;
+	}
+	
+	public void setLrStandardVersion(String lrStandardVersion) {
+		this.lrStandardVersion = lrStandardVersion;
 	}
 
-	public void setAleVendorVersion(String aleVendorVersion) {
-		this.aleVendorVersion = aleVendorVersion;
+	/**
+	 * encodes the current vendor version of this filtering and collection - the current build.
+	 * @return current vendor version.
+	 */
+	public String getVendorVersion() {
+		return vendorVersion;
 	}
 
-	public String getAleLRReaderAPI() {
-		return aleLRReaderAPI;
-	}
-
-	public void setAleLRReaderAPI(String aleLRReaderAPI) {
-		this.aleLRReaderAPI = aleLRReaderAPI;
+	public void setVendorVersion(String vendorVersion) {
+		this.vendorVersion = vendorVersion;
 	}
 }

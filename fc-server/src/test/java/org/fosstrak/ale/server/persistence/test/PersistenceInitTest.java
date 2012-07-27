@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.easymock.EasyMock;
-import org.fosstrak.ale.server.persistence.PersistenceServlet;
+import org.fosstrak.ale.server.persistence.PersistenceInit;
 import org.fosstrak.ale.server.persistence.ReadConfig;
 import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
 import org.junit.Test;
@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author swieland
  *
  */
-public class PersistenceServletTest {
+public class PersistenceInitTest {
 	
 	/**
 	 * verify that the servlets context settings are correctly passed to the persistence API.
@@ -49,7 +49,7 @@ public class PersistenceServletTest {
 		EasyMock.replay(pConfig);
 		
 		ReadConfig readConfig = EasyMock.createMock(ReadConfig.class);
-		readConfig.initialize();
+		readConfig.init();
 		EasyMock.expectLastCall();
 		EasyMock.replay(readConfig);
 		
@@ -57,11 +57,11 @@ public class PersistenceServletTest {
 		EasyMock.expect(servletContext.getRealPath("/")).andReturn(realPath);
 		EasyMock.replay(servletContext);
 		
-		PersistenceServlet servlet = new PersistenceServlet();
-		servlet.setPersistenceConfig(pConfig);
-		servlet.setPersistenceReadConfig(readConfig);
+		PersistenceInit persistenceInit = new PersistenceInit();
+		persistenceInit.setPersistenceConfig(pConfig);
+		persistenceInit.setPersistenceReadConfig(readConfig);
 		
-		servlet.init(servletContext);
+		persistenceInit.init(servletContext);
 		
 		EasyMock.verify(pConfig);
 		EasyMock.verify(readConfig);

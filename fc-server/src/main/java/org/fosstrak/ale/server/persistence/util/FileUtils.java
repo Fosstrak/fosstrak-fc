@@ -22,6 +22,7 @@ package org.fosstrak.ale.server.persistence.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -61,7 +62,7 @@ public class FileUtils {
 	 * @param fileEnding the fileEnding of the files. if null, return all the files.
 	 * @return a list of all contained filenames.
 	 */
-	public ArrayList<String> getFilesName(String directoryPath, String fileEnding) {		
+	public List<String> getFilesName(String directoryPath, String fileEnding) {		
 		String[] filesName;		
 		filesName = new File(directoryPath).list();		
 		ArrayList<String> filesNameList = new ArrayList<String>();		

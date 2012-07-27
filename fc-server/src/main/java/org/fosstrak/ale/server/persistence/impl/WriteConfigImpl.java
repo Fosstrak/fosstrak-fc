@@ -21,6 +21,12 @@ import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * reference implementation of the persistence write API.
+ * @author swieland
+ * @author benoit.plomion@orange.com
+ *
+ */
 @Component("writeConfigImpl")
 public class WriteConfigImpl implements WriteConfig {
 	

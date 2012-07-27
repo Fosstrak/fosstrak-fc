@@ -63,7 +63,7 @@ public class ALETest {
 	public void testGetVendorVersion() throws Exception {
 		ALESettings aleSettings = EasyMock.createMock(ALESettings.class);
 		((ALEImpl) ale).setAleSettings(aleSettings);
-		EasyMock.expect(aleSettings.getAleVendorVersion()).andReturn("1.1");
+		EasyMock.expect(aleSettings.getVendorVersion()).andReturn("1.1");
 		EasyMock.replay(aleSettings);
 		Assert.assertEquals("1.1", ale.getVendorVersion());
 		

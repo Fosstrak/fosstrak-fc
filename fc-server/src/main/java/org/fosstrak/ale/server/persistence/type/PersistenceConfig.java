@@ -26,7 +26,7 @@ public class PersistenceConfig {
 	
 	/**
      *  default path, modified by servlet startup
-     *  @see org.fosstrak.ale.server.persistence.PersistenceServlet 
+     *  @see org.fosstrak.ale.server.persistence.InitPersistence 
      */
 	private String realPathWebapp = null;
 	

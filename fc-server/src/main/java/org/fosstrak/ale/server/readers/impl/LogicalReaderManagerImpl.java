@@ -19,18 +19,10 @@
  */
 package org.fosstrak.ale.server.readers.impl;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,9 +43,6 @@ import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
-import org.fosstrak.ale.server.readers.gen.LogicalReaders;
-import org.fosstrak.ale.server.readers.gen.ObjectFactory;
-import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.impl.type.ReaderProvider;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
@@ -71,29 +60,9 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(LogicalReaderManager.class);
-	
-	/** package containing the generated jaxb classes. */
-	private static final String JAXB_CONTEXT = "org.fosstrak.ale.server.readers.gen";
-	
-	/** default path to file which contains the initial logical reader configuration. */
-	private static final String LOAD_FILEPATH = "/LogicalReaders.xml";
-	
-	/** default path to file which contains the current setting of logical readers. */
-	private static final String STORE_FILEPATH = "/StoreLogicalReaders.xml";
-	
-	/** logical reader configuration loaded from file. */
-	private LogicalReaders logicalReadersConfiguration;
 
 	/** a map of all LogicalReaders. the readers are mapped against their name.	 */
 	private java.util.Map<String, LogicalReader> logicalReaders = new ConcurrentHashMap<String, LogicalReader>();
-
-	private final Schema SCHEMA_FILEPATH = null; 
-
-	/** indicates if the manager is initialized or not. */
-	private static boolean initialized = false;
-	
-	// autowired
-	private PersistenceProvider persistenceProvider;
 
 	// autowired
 	private RemoveConfig persistenceRemoveAPI;
@@ -113,12 +82,12 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 
 	@Override
 	public String getVendorVersion() throws ImplementationException {
-		return aleSettings.getAleVendorVersion();
+		return aleSettings.getVendorVersion();
 	}
 
 	@Override
 	public String getStandardVersion() throws ImplementationException {
-		return aleSettings.getAleStandardVersion();
+		return aleSettings.getLrStandardVersion();
 	}
 
 	@Override
@@ -342,149 +311,6 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		LOG.debug("successfully executed define");
 	}
 
-	/**
-	 * initialize the Logical Reader Manager. <br/>
-     * <strong>NOTICE:</strong> Do not depend on initializer methods of other autowired components (like ALE) 
-     * as the order of the initializer methods on the injected beans is not preset -> thus, the 
-     * injected bean might already be present in the manager, but not initialized (call postconstruct) yet.
-	 */
-	@PostConstruct
-	public void initialize() {		
-		LOG.debug("initialize");
-		initializeFromFile(LOAD_FILEPATH);
-	}
-	
-	public void initializeFromFile(String loadFilePath) {
-		
-		if (isInitialized()) {
-			LOG.debug("already initialized - no need to reinitialize again - aborting");
-			return;
-		}
-		
-		LOG.debug("Initialize LogicalReaderManager");
-		try {			
-			// if configuration file path is not set, set it to default value
-			if (loadFilePath == null) {
-				loadFilePath = LOAD_FILEPATH;
-			}
-			
-			// try to parse reader configuration file
-			LOG.debug("Parse configuration file :" + loadFilePath);
-			List<org.fosstrak.ale.server.readers.gen.LogicalReader> genLogicalReaders;
-			try {
-				// initialize jaxb context and unmarshaller
-				JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-				Unmarshaller unmarshaller = context.createUnmarshaller();
-				unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
-				
-				// unmarshal logical reader configuration file
-				logicalReadersConfiguration = (LogicalReaders) unmarshaller.unmarshal(persistenceProvider.getInitializeInputStream(loadFilePath));
-				// trying to validate schema
-				
-				unmarshaller.setSchema(SCHEMA_FILEPATH);
-				boolean isValidating = unmarshaller.getSchema() != null;
-				LOG.debug("is schema validated: " + isValidating);
-				
-				genLogicalReaders = logicalReadersConfiguration.getLogicalReader();
-			} catch (JAXBException e) {
-				LOG.error("could not initialize the logical reader manager from file: ", e);
-				return;
-			}
-			
-			// iterate over logical readers
-			for (org.fosstrak.ale.server.readers.gen.LogicalReader logicalReader : genLogicalReaders) {
-				// get logical reader name
-				String logName = logicalReader.getName();
-				org.fosstrak.ale.server.readers.gen.LRSpec spec = logicalReader.getLRSpec();
-				define(logName, spec);	
-			}
-				
-			// set initialized to true
-			initialized = true;
-			LOG.debug("LogicalReaderManager successfully initialized");
-	
-			LOG.debug("starting the readers");
-			for (LogicalReader reader : getLogicalReaders()) {
-				reader.start();
-			}
-		} catch (Exception ex) {
-			LOG.error("could not setup the logical reader manager - tear down the application.", ex);
-			throw new IllegalStateException("could not setup the logical reader manager - tear down the application.", ex);
-		}
-	}
-	
-	/**
-	 * This method stores the current setting of logicalreaders to a .xml file.
-	 * 
-	 * @param storeFilePath configurationFilePath to initialize
-	 * @throws ImplementationException whenever something goes wrong inside the implementation 
-	 * @throws SecurityException the operation was not permitted due to access restrictions
-	 * @throws DuplicateNameException when a reader name is already defined
-	 * @throws ValidationException the provided LRSpec is invalid
-	 * @throws FileNotFoundException the provided file was not found
-	 */
-	public void storeToFile(String storeFilePath) throws ImplementationException, SecurityException, DuplicateNameException, ValidationException, FileNotFoundException {
-		
-		LOG.debug("Store LogicalReaderManager");
-		
-		// if store file path is not set, set it to default value
-		if (storeFilePath == null) {
-			storeFilePath = STORE_FILEPATH;
-		}
-		
-		// try to generate store file
-		LOG.debug("Generate store file");
-		
-		try {
-			// initialize jaxb context and marshaller
-			JAXBContext context = JAXBContext.newInstance(JAXB_CONTEXT);
-			Marshaller marshaller = context.createMarshaller();
-
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
-			ObjectFactory objFactory = new ObjectFactory();
-			
-			LogicalReaders genLogReaders = (LogicalReaders) objFactory.createLogicalReaders();
-			Iterable<String> names = logicalReaders.keySet();
-			for (String name : names){
-				LogicalReader logRd = logicalReaders.get(name);
-				LRSpec spec = logRd.getLRSpec();
-				org.fosstrak.ale.server.readers.gen.LogicalReader genLogRd = objFactory.createLogicalReader();
-				genLogRd.setName(logRd.getName());
-				genLogRd.setName(name);
-				org.fosstrak.ale.server.readers.gen.LRSpec genSpec = objFactory.createLRSpec();
-				genSpec.setIsComposite(spec.isIsComposite());
-				if (genSpec.isIsComposite()) {
-					if (spec.getReaders() != null) {
-						for (String readerName : spec.getReaders().getReader()) {
-							genSpec.getReaders().add(readerName);
-						}
-					}
-				} else {
-					for (LRProperty property : logRd.getProperties()) {
-						if (LogicalReader.PROPERTY_READER_TYPE .equals(property.getName())) {
-							// skip this property as set further down on the attribute
-						} else {
-							org.fosstrak.ale.server.readers.gen.LRProperty genProp = objFactory.createLRProperty();
-							genProp.setName(property.getName());
-							genProp.setValue(property.getValue());
-							genSpec.getLRProperty().add(genProp);
-						}
-					}
-				}
-				genLogRd.setLRSpec(genSpec);
-				genSpec.setReaderType(logRd.getClass().getCanonicalName());
-				genLogReaders.getLogicalReader().add(genLogRd);
-			}
-			// store the file to the file path
-			marshaller.marshal(genLogReaders, persistenceProvider.getStreamToWhereToStoreWholeManager(storeFilePath));			
-
-		} catch (JAXBException e) {
-			LOG.error("could not store the logical reader manager to file: ", e);
-		}
-		
-		LOG.info("LogicalReaderManager successfully stored");
-	}
-
 	@Override
 	public LogicalReader getLogicalReader(String readerName) {
 		LogicalReader reader = null;
@@ -511,30 +337,11 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 		
 		logicalReaders.put(reader.getName(), reader);
 	}
-	
-	private boolean containsNoInitialize(String readerName) {
-		return logicalReaders.containsKey(readerName);
-	}
 
 	@Override
 	public boolean contains(String logicalReaderName) {
-		
-		// initialize if necessary
-		try {
-			if (!initialized) {
-				initialize();
-			}
-		} catch (Exception e) {
-			LOG.error("could not initialize Logical Reader Manager", e);
-		}
-		return containsNoInitialize(logicalReaderName);
+		return logicalReaders.containsKey(logicalReaderName);
 	}
-
-	@Override
-	public boolean isInitialized() {
-		return initialized;
-	}
-
 
 	/**
 	 * assert that the given reader is not null. if so, throws Exception.
@@ -584,27 +391,10 @@ public class LogicalReaderManagerImpl implements LogicalReaderManager {
 	 */
 	protected void throwValidationExceptionIfNotAllReadersAvailable(List<String> readers) throws ValidationException {
 		for (String readerName : readers) {
-			if (!containsNoInitialize(readerName)) {
+			if (!contains(readerName)) {
 				throw new ValidationException("the requested reader is not defined: " + readerName);
 			}
 		}
-	}
-
-	/**
-	 * a handle to the currently used persistence provider.
-	 * @return the currently used persistence provider.
-	 */
-	public PersistenceProvider getPersistenceProvider() {
-		return persistenceProvider;
-	}
-
-	/**
-	 * allow to inject a new persistence provider.
-	 * @param persistenceProvider the new persistence provider to be used.
-	 */
-	@Autowired
-	public void setPersistenceProvider(PersistenceProvider persistenceProvider) {
-		this.persistenceProvider = persistenceProvider;
 	}
 
 	/**
