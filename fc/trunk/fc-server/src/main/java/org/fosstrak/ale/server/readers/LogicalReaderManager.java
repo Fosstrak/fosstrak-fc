@@ -202,10 +202,4 @@ public interface LogicalReaderManager {
 	 * @return true if the logical reader exists and false otherwise
 	 */
 	boolean contains(String logicalReaderName);
-	
-	/**
-	 * indicates whether the reader management is intialized or not.
-	 * @return true if initialized, false otherwise.
-	 */
-	boolean isInitialized();	
 }

@@ -9,16 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Persistence servlet is run at the startup of the application server
- * this servlet:
+ * Persistence init is run at the startup of the application server:
  * - get and set the real path of webapp to give it to the write config api
  * - call the read config api to load all configuration written before
  * @author benoit.plomion@orange.com
  */
 @Component("persistenceServlet")
-public class PersistenceServlet {
+public class PersistenceInit {
    
-	private static final Logger LOG = Logger.getLogger(PersistenceServlet.class.getName());
+	private static final Logger LOG = Logger.getLogger(PersistenceInit.class.getName());
 	   	 
 	static final long serialVersionUID = 1L;
 	
@@ -28,7 +27,7 @@ public class PersistenceServlet {
 	// autowired
 	private ReadConfig persistenceReadConfig;
 	
-	public PersistenceServlet() {
+	public PersistenceInit() {
 	}
 	
 	/**
@@ -37,14 +36,14 @@ public class PersistenceServlet {
 	 * @throws ServletException
 	 */
 	public void init(ServletContext servletContext) throws ServletException {
-		try {			
+		try {
 			LOG.info("ALE Persistence => start");
 			String path = servletContext.getRealPath("/");
 			LOG.debug("ALE Persistence real path of the webapp: " + path);
 			persistenceConfig.setRealPathWebapp(path);
 			
 			LOG.info("ALE Persistence initialize configuration");
-			persistenceReadConfig.initialize();
+			persistenceReadConfig.init();
 			
 			LOG.info("ALE Persistence => end");
 		} catch (Exception ex) {

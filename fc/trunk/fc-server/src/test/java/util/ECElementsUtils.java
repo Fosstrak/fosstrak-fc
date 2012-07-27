@@ -23,6 +23,9 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
+
 import org.fosstrak.ale.util.ECReportSetEnum;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
@@ -40,9 +43,6 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
-
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 
 public class ECElementsUtils extends Assert {
 
@@ -96,6 +96,7 @@ public class ECElementsUtils extends Assert {
 		
 		// create spec
 		ECSpec spec = new ECSpec();
+		spec.setLogicalReaders(new ECSpec.LogicalReaders());
 		
 		// set parameters
 		spec.setBoundarySpec(createECBoundarySpec());

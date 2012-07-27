@@ -20,8 +20,6 @@
 package org.fosstrak.ale.server.readers.test;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,7 +43,6 @@ import org.fosstrak.ale.server.readers.CompositeReader;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.impl.LogicalReaderManagerImpl;
-import org.fosstrak.ale.server.readers.impl.type.PersistenceProvider;
 import org.fosstrak.ale.server.readers.impl.type.ReaderProvider;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
@@ -75,7 +72,7 @@ public class LogicalReaderManagerTest {
 	public void testGetVendorVersion() throws Exception {
 		ALESettings aleSettings = EasyMock.createMock(ALESettings.class);
 		((LogicalReaderManagerImpl) manager).setAleSettings(aleSettings);
-		EasyMock.expect(aleSettings.getAleVendorVersion()).andReturn("1.1");
+		EasyMock.expect(aleSettings.getVendorVersion()).andReturn("1.1");
 		EasyMock.replay(aleSettings);
 		Assert.assertEquals("1.1", manager.getVendorVersion());
 		
@@ -90,7 +87,7 @@ public class LogicalReaderManagerTest {
 	public void testGetStandardVersion() throws Exception {
 		ALESettings aleSettings = EasyMock.createMock(ALESettings.class);
 		((LogicalReaderManagerImpl) manager).setAleSettings(aleSettings);
-		EasyMock.expect(aleSettings.getAleStandardVersion()).andReturn("1.1.1");
+		EasyMock.expect(aleSettings.getLrStandardVersion()).andReturn("1.1.1");
 		EasyMock.replay(aleSettings);
 		Assert.assertEquals("1.1.1",manager.getStandardVersion());
 		
@@ -491,6 +488,7 @@ public class LogicalReaderManagerTest {
 		final String readerName = "readerName";
 		manager.define(readerName, spec);
 		
+		Assert.assertTrue(manager.contains(readerName));
 		org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theNewSpec = ref.get();
 		Assert.assertNotNull(theNewSpec);
 		Assert.assertTrue(theNewSpec.isIsComposite());
@@ -740,139 +738,5 @@ public class LogicalReaderManagerTest {
 		EasyMock.verify(persistenceRemoveMock);
 		EasyMock.verify(compositeReader);	
 		EasyMock.verify(logicalReader);	
-	}
-	
-	/**
-	 * test the initializer method.
-	 * @throws Exception test failure (or see what is expected by the test).
-	 */
-	@Test
-	public void testInitializeAndContains() throws Exception {		
-		String cfg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		cfg += "<LogicalReaders xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"/LogicalReaders.xsd\">";
-			cfg += "<LogicalReader name=\"LogicalReader1\">";
-				cfg += "<LRSpec isComposite=\"false\"";; 
-					cfg += " readerType=\"org.fosstrak.ale.server.readers.llrp.LLRPAdaptor\">";
-						cfg += " <LRProperty name=\"ImplClass\" value=\"org.fosstrak.ale.server.readers.llrp.LLRPAdaptor\"/>";
-						cfg += " <LRProperty name=\"clientInitiated\" value=\"true\"/>";
-				cfg += "</LRSpec>";
-			cfg += "</LogicalReader>";
-		cfg += "</LogicalReaders>";
-		
-		ByteArrayInputStream bis = new ByteArrayInputStream(cfg.getBytes());
-		
-		WriteConfig persistenceRemoveMock = EasyMock.createMock(WriteConfig.class);
-		persistenceRemoveMock.writeLRSpec(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class));
-		EasyMock.expectLastCall();
-		EasyMock.replay(persistenceRemoveMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceWriteAPI(persistenceRemoveMock);
-		
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);	
-		EasyMock.expect(persistenceMock.getInitializeInputStream(EasyMock.isA(String.class))).andReturn(bis);
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
-		
-		final BaseReader baseReader = EasyMock.createMock(BaseReader.class);
-		baseReader.connectReader();
-		EasyMock.expectLastCall();
-		baseReader.start();
-		EasyMock.expectLastCall();
-		EasyMock.replay(baseReader);
-		ReaderProvider readerProvider = EasyMock.createMock(ReaderProvider.class);
-		
-		// need a handle onto the spec delivered for the reader creation.
-		final AtomicReference<org.fosstrak.ale.xsd.ale.epcglobal.LRSpec> ref = new AtomicReference<org.fosstrak.ale.xsd.ale.epcglobal.LRSpec>(); 
-		EasyMock.expect(readerProvider.createReader(EasyMock.isA(String.class), EasyMock.isA(LRSpec.class))).andDelegateTo(new ReaderProvider() {
-			@Override
-			public LogicalReader createReader(String name, org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theSpec)  throws ImplementationException {
-				ref.set(theSpec);
-				return baseReader;
-			}
-		});
-		EasyMock.replay(readerProvider);
-		((LogicalReaderManagerImpl) manager).setReaderProvider(readerProvider);
-
-		Assert.assertFalse(manager.isInitialized());
-		// contains initializes the Logical Reader Manager
-		Assert.assertTrue(manager.contains("LogicalReader1"));
-		((LogicalReaderManagerImpl) manager).initialize();
-		
-		Assert.assertEquals(1, manager.getLogicalReaders().size());
-		
-		org.fosstrak.ale.xsd.ale.epcglobal.LRSpec theNewSpec = ref.get();
-		Assert.assertNotNull(theNewSpec);
-		Assert.assertFalse(theNewSpec.isIsComposite());
-		Assert.assertEquals(3, theNewSpec.getProperties().getProperty().size());
-		Map<String, String> keyValue = new HashMap<String, String> ();
-		for (LRProperty pr : theNewSpec.getProperties().getProperty()) {
-			keyValue.put(pr.getName(), pr.getValue());
-		}
-		Assert.assertEquals("org.fosstrak.ale.server.readers.llrp.LLRPAdaptor",keyValue.get(LogicalReader.PROPERTY_READER_TYPE));
-		Assert.assertEquals("org.fosstrak.ale.server.readers.llrp.LLRPAdaptor", keyValue.get("ImplClass"));
-		Assert.assertEquals("true", keyValue.get("clientInitiated"));
-		Assert.assertTrue(manager.isInitialized());
-		Assert.assertTrue(manager.contains("LogicalReader1"));
-		// assert that initialize is not called twice...
-		Assert.assertEquals(1, manager.getLogicalReaders().size());
-
-		EasyMock.verify(persistenceMock);
-		EasyMock.verify(persistenceRemoveMock);
-		EasyMock.verify(baseReader);
-	}
-	
-	/**
-	 * test the store to file method.
-	 * @throws Exception test failure (or see what is expected by the test).
-	 */
-	@Test
-	public void testStoreToFile() throws Exception {
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		
-		PersistenceProvider persistenceMock = EasyMock.createMock(PersistenceProvider.class);
-		EasyMock.expect(persistenceMock.getStreamToWhereToStoreWholeManager(EasyMock.isA(String.class))).andReturn(bout);
-		EasyMock.replay(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setPersistenceProvider(persistenceMock);
-		((LogicalReaderManagerImpl) manager).setReaderProvider(new ReaderProvider());		
-		
-		LRSpec lrSpec = new LRSpec();
-		lrSpec.setIsComposite(true);
-		LRSpec.Readers readers = new LRSpec.Readers();
-		readers.getReader().add("treader1");	readers.getReader().add("treader2");
-		lrSpec.setReaders(readers);
-		
-		final CompositeReader compositeReader = EasyMock.createMock(CompositeReader.class);
-		EasyMock.expect(compositeReader.getName()).andReturn("compositeReader1").anyTimes();
-		EasyMock.expect(compositeReader.getLRSpec()).andReturn(lrSpec);
-		EasyMock.replay(compositeReader);
-		manager.setLogicalReader(compositeReader);
-		
-		LRSpec lrSpec2 = new LRSpec();
-		lrSpec2.setIsComposite(false);
-		lrSpec2.setReaders(readers);
-		
-		LRProperty p0 = new LRProperty();
-		p0.setName("ImplClass");
-		p0.setValue("org.fosstrak.ale.server.readers.llrp.LLRPAdaptor");
-		
-		final BaseReader baseReader = EasyMock.createMock(BaseReader.class);
-		EasyMock.expect(baseReader.getName()).andReturn("baseReader1").anyTimes();
-		EasyMock.expect(baseReader.getLRSpec()).andReturn(lrSpec2);
-		EasyMock.expect(baseReader.getProperties()).andReturn(Arrays.asList(new LRProperty[] { p0 } ));
-		EasyMock.replay(baseReader);
-		manager.setLogicalReader(baseReader);
-		
-		((LogicalReaderManagerImpl) manager).storeToFile(null);
-		
-		String cfg = bout.toString();
-		
-		// generated cfg is nicely formatted with newlines etc -> remove these
-		cfg = cfg.replaceAll(">[\\s|\r\n|\n|\t]*<", "><").trim();
-		// resulting string has some mock-specific characters contained in the implementing class -> replace them
-		cfg = cfg.replaceAll("\\$\\$EnhancerByCGLIB\\$\\$.{8}", "");
-		Assert.assertTrue(cfg.trim().length() > 520);
-
-		EasyMock.verify(persistenceMock);
-		EasyMock.verify(compositeReader);
-		EasyMock.verify(baseReader);
 	}
 }

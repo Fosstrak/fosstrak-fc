@@ -16,6 +16,12 @@ import org.fosstrak.ale.server.persistence.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * reference implementation of the persistence remove API.
+ * @author swieland
+ * @author benoit.plomion@orange.com
+ *
+ */
 @Component("removeConfigImpl")
 public class RemoveConfigImpl implements RemoveConfig {
 

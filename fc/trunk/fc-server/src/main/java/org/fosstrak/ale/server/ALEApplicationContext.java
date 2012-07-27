@@ -23,7 +23,7 @@ package org.fosstrak.ale.server;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
-import org.fosstrak.ale.server.persistence.PersistenceServlet;
+import org.fosstrak.ale.server.persistence.PersistenceInit;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -74,7 +74,7 @@ public final class ALEApplicationContext implements ApplicationContextAware, Ser
 			LOG.debug("instantiated LogicalReaderManager: " + lrm.getClass().getCanonicalName());
 			ALE ale = getBean(ALE.class);
 			LOG.debug("instantiated ALE: " + ale.getClass().getCanonicalName());
-			PersistenceServlet persistence = getBean(PersistenceServlet.class);
+			PersistenceInit persistence = getBean(PersistenceInit.class);
 			LOG.debug("instantiated Persistence: " + persistence.getClass().getCanonicalName());
 			persistence.init(servletContext);
 		} catch (Exception ex) {

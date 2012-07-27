@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.fosstrak.ale.server.ALEApplicationContext;
 import org.fosstrak.ale.server.readers.llrp.LLRPManager;
 import org.fosstrak.llrp.adaptor.Adaptor;
 import org.fosstrak.llrp.adaptor.AdaptorManagement;
@@ -212,7 +213,7 @@ public class AdaptorMgmt {
 						String connectionStatusStr = connectionStatus.toString();
 						if (connectionStatus.getValue(connectionStatusStr) == ConnectionAttemptStatusType.Success) {
 							LOG.debug("Connection is established");
-							LLRPControllerManager.setReaderConnected(readerName, true);
+							ALEApplicationContext.getBean(LLRPControllerManager.class).setReaderConnected(readerName, true);
 						}
 					}
 				}
@@ -263,13 +264,13 @@ public class AdaptorMgmt {
 						List<ROSpec> listRoSpec = (List<ROSpec>) getROSpecList.invoke(msg, new Object[0]);	
 						if (listRoSpec == null || listRoSpec.isEmpty()) {
 							if (redefineStatus) {
-								LLRPControllerManager.redefine (readerName);
+								ALEApplicationContext.getBean(LLRPControllerManager.class).redefine (readerName);
 								setRedefineStatus (false);
 							} else {
 								// This is the case where we are in the mode waitForConnection = false.
 								// So we send several GET_ROSPECS messages. We do the ADD_ROSPEC one time and just the first time.
 								if (addFirstTime) {
-									LLRPControllerManager.redefine (readerName);	
+									ALEApplicationContext.getBean(LLRPControllerManager.class).redefine (readerName);	
 									addFirstTime = false;
 								} else {
 									// This is the case where : 

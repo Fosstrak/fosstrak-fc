@@ -194,7 +194,7 @@ public class ALEImpl implements ALE {
 	@Override
 	public final String getVendorVersion() {
 		LOG.debug("getVendorVersion");
-		return aleSettings.getAleVendorVersion();
+		return aleSettings.getVendorVersion();
 	}
 	
 	@Override
