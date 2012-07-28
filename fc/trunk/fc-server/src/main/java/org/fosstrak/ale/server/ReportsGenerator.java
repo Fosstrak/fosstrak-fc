@@ -110,9 +110,19 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ECSpecValidationException if the ec specification is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public ReportsGenerator(String name, ECSpec spec) 
-		throws ECSpecValidationException, 
-		ImplementationException {
+	public ReportsGenerator(String name, ECSpec spec) throws ECSpecValidationException, ImplementationException {
+		this(name, spec, ALEApplicationContext.getBean(ECSpecValidator.class));
+	}
+	/**
+	 * Constructor validates the ec specification and sets some parameters.
+	 * 
+	 * @param name of this reports generator
+	 * @param spec which defines how the reports of this generator should be build
+	 * @param validator the ECSpec validator to use for the validation of the ECSpec.
+	 * @throws ECSpecValidationException if the ec specification is invalid
+	 * @throws ImplementationException if an implementation exception occurs
+	 */
+	public ReportsGenerator(String name, ECSpec spec, ECSpecValidator validator) throws ECSpecValidationException, ImplementationException {
 
 		LOG.debug("Try to create new ReportGenerator '" + name + "'.");
 		
@@ -121,7 +131,7 @@ public class ReportsGenerator implements Runnable {
 		
 		// set spec
 		try {
-			ALEApplicationContext.getBean(ECSpecValidator.class).validateSpec(spec);
+			validator.validateSpec(spec);
 		} catch (ECSpecValidationException e) {
 			LOG.error(e.getClass().getSimpleName() + ": " + e.getMessage(), e);
 			throw e;
@@ -193,13 +203,11 @@ public class ReportsGenerator implements Runnable {
 	 * is already subscribed
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
-	public void subscribe(String notificationURI) 
-		throws DuplicateSubscriptionException, 
-		InvalidURIException {
+	public void subscribe(String notificationURI) throws DuplicateSubscriptionException, InvalidURIException {
 		
 		Subscriber uri = new Subscriber(notificationURI);
-		if (!subscribers.isEmpty()) {
-			throw new DuplicateSubscriptionException();
+		if (subscribers.containsKey(notificationURI)) {
+			throw new DuplicateSubscriptionException(String.format("the URI is already subscribed on this specification %s, %s", name, uri));
 		} else {
 			subscribers.put(notificationURI, uri);
 			LOG.debug("NotificationURI '" + notificationURI + "' subscribed to spec '" + name + "'.");
@@ -217,14 +225,14 @@ public class ReportsGenerator implements Runnable {
 	 * not yet subscribed
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
-	public void unsubscribe(String notificationURI) 
-		throws NoSuchSubscriberException, InvalidURIException {
-		
+	public void unsubscribe(String notificationURI) throws NoSuchSubscriberException, InvalidURIException {
+		// validate the URI:
 		new Subscriber(notificationURI);
+		
 		if (subscribers.containsKey(notificationURI)) {
 			subscribers.remove(notificationURI);
-			LOG.debug("NotificationURI '" + notificationURI 
-					+ "' unsubscribed from spec '" + name + "'.");
+			LOG.debug("NotificationURI '" + notificationURI	+ "' unsubscribed from spec '" + name + "'.");
+			
 			if (subscribers.isEmpty() && !isPolling) {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}

@@ -62,8 +62,12 @@ public class Subscriber {
 	 * @throws InvalidURIException if the notification uri is invalid
 	 */
 	public Subscriber(String notificationURI) throws InvalidURIException {
-		String[] parts = notificationURI.split(":");
-		protocol = parts[0];
+		try {
+			String[] parts = notificationURI.split(":");
+			protocol = parts[0];
+		} catch (Exception ex) {
+			throw new InvalidURIException("illegal notification URI: " + notificationURI, ex);
+		}
 
 		if (HTTP_PREFIX.equals(protocol)) {
 			LOG.debug("using http subscriber output channel: " + notificationURI);

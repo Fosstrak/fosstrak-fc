@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component("ecSpecValidator")
-public final class ECSpecValidator {
+public class ECSpecValidator {
 
 	/**
 	 * private handle onto the logical reader manager.
@@ -60,8 +60,7 @@ public final class ECSpecValidator {
 	/**
 	 *  constructor for class.
 	 */
-	public ECSpecValidator() {
-		
+	public ECSpecValidator() {		
 	}	
 	
 	/**
