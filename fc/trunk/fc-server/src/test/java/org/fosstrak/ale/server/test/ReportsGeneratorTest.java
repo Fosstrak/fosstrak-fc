@@ -82,13 +82,13 @@ public class ReportsGeneratorTest {
 	public static final String ECSPEC_CURRENT_REPORTSPECNULL_NOEMPTYREPORT = 	"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:ECSpec xmlns:ns2=\"urn:epcglobal:ale:xsd:1\"><logicalReaders><logicalReader>LogicalReader1</logicalReader></logicalReaders><boundarySpec><repeatPeriod unit=\"MS\">10000</repeatPeriod><duration unit=\"MS\">9500</duration><stableSetInterval unit=\"MS\">0</stableSetInterval></boundarySpec><reportSpecs><reportSpec><reportSet set=\"CURRENT\"/><output includeRawHex=\"true\" includeRawDecimal=\"true\" includeEPC=\"true\" includeTag=\"true\"/></reportSpec></reportSpecs></ns2:ECSpec>";
 		
 	/**
-	 * TODO:
-	 * @param reportString
-	 * @return
-	 * @throws Exception
+	 * obtain the EC Spec from the given input string.
+	 * @param specString the specification.
+	 * @return the ECSpec.
+	 * @throws Exception error
 	 */
-	public static ECSpec getECReports(String reportString) throws Exception {
-		ByteArrayInputStream bis = new ByteArrayInputStream(reportString.getBytes());	
+	public static ECSpec getECSpec(String specString) throws Exception {
+		ByteArrayInputStream bis = new ByteArrayInputStream(specString.getBytes());	
 		ECSpec ecReports = DeserializerUtil.deserializeECSpec(bis);
 		bis.close();
 		return ecReports;
@@ -277,7 +277,7 @@ public class ReportsGeneratorTest {
 		ECReports ecReportsNotEmpty = ECReportsHelperTest.getECReports(ECReportsHelperTest.ECREPORTS_NULLGROUP_TWOTAGS);
 		ECReports ecReportsEmpty = ECReportsHelperTest.getECReports(ECReportsHelperTest.ECREPORTS_NULLGROUP_NOTAGSINGROUP);
 		
-		ECSpec spec = getECReports(ECSPEC_CURRENT_REPORTSPECNULL_NOEMPTYREPORT);
+		ECSpec spec = getECSpec(ECSPEC_CURRENT_REPORTSPECNULL_NOEMPTYREPORT);
 
 		ECSpecValidator validator = EasyMock.createMock(ECSpecValidator.class);
 		validator.validateSpec(spec);
@@ -320,7 +320,7 @@ public class ReportsGeneratorTest {
 		ECReports ecReportsNotEmpty = ECReportsHelperTest.getECReports(ECReportsHelperTest.ECREPORTS_NULLGROUP_TWOTAGS);
 		ECReports ecReportsEmpty = ECReportsHelperTest.getECReports(ECReportsHelperTest.ECREPORTS_NULLGROUP_NOTAGSINGROUP);
 		
-		ECSpec spec = getECReports(ECSPEC_CURRENT_REPORTSPECNULL_EMPTYREPORT);
+		ECSpec spec = getECSpec(ECSPEC_CURRENT_REPORTSPECNULL_EMPTYREPORT);
 
 		ECSpecValidator validator = EasyMock.createMock(ECSpecValidator.class);
 		validator.validateSpec(spec);
@@ -363,7 +363,7 @@ public class ReportsGeneratorTest {
 	public void testNotifyReportOnlyOnChange() throws Exception {
 		ECReports ecReportsNotEmpty = ECReportsHelperTest.getECReports(ECReportsHelperTest.ECREPORTS_NULLGROUP_TWOTAGS);
 
-		ECSpec spec = getECReports(ECSPEC_CURRENT_REPORTSPECNULL_ONLYONCHANGE);
+		ECSpec spec = getECSpec(ECSPEC_CURRENT_REPORTSPECNULL_ONLYONCHANGE);
 
 		ECSpecValidator validator = EasyMock.createMock(ECSpecValidator.class);
 		validator.validateSpec(spec);
