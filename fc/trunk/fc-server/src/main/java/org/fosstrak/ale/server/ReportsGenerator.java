@@ -21,8 +21,6 @@
 package org.fosstrak.ale.server;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,16 +32,18 @@ import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.exception.InvalidURIException;
 import org.fosstrak.ale.exception.NoSuchSubscriberException;
+import org.fosstrak.ale.server.util.ECReportsHelper;
 import org.fosstrak.ale.server.util.ECSpecValidator;
 import org.fosstrak.ale.util.ECTimeUnit;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
-import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
+import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
-import org.fosstrak.ale.xsd.epcglobal.EPC;
+
+import com.rits.cloning.Cloner;
 
 /**
  * This class generates ec reports.
@@ -92,15 +92,17 @@ public class ReportsGenerator implements Runnable {
 	
 	/** indicates if this report generator is running or not */
 	private boolean isRunning = false;
-	
+
 	/** indicates if somebody is polling this input generator at the moment. */
-	private boolean isPolling = false;
+	private boolean polling = false;
 	
 	/** ec report for the poller */
 	private ECReports pollReport = null;
 	
 	
 	private EventCycle eventCycle = null;
+
+	private ECReportsHelper reportsHelper;
 	
 	/**
 	 * Constructor validates the ec specification and sets some parameters.
@@ -111,7 +113,8 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public ReportsGenerator(String name, ECSpec spec) throws ECSpecValidationException, ImplementationException {
-		this(name, spec, ALEApplicationContext.getBean(ECSpecValidator.class));
+		this(name, spec, ALEApplicationContext.getBean(ECSpecValidator.class), ALEApplicationContext.getBean(ECReportsHelper.class));
+		
 	}
 	/**
 	 * Constructor validates the ec specification and sets some parameters.
@@ -122,12 +125,14 @@ public class ReportsGenerator implements Runnable {
 	 * @throws ECSpecValidationException if the ec specification is invalid
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public ReportsGenerator(String name, ECSpec spec, ECSpecValidator validator) throws ECSpecValidationException, ImplementationException {
+	public ReportsGenerator(String name, ECSpec spec, ECSpecValidator validator, ECReportsHelper reportsHelper) throws ECSpecValidationException, ImplementationException {
 
 		LOG.debug("Try to create new ReportGenerator '" + name + "'.");
 		
 		// set name
 		this.name = name;
+		
+		this.reportsHelper = reportsHelper;
 		
 		// set spec
 		try {
@@ -233,7 +238,7 @@ public class ReportsGenerator implements Runnable {
 			subscribers.remove(notificationURI);
 			LOG.debug("NotificationURI '" + notificationURI	+ "' unsubscribed from spec '" + name + "'.");
 			
-			if (subscribers.isEmpty() && !isPolling) {
+			if (subscribers.isEmpty() && !isPolling()) {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}
 		} else {
@@ -251,117 +256,83 @@ public class ReportsGenerator implements Runnable {
 	}
 	
 	/**
-	 * adds an epc value to the hashset. 
-	 * @param set the set where to add.
-	 * @param epc the epc to get the value from.
-	 * @return true if value could be obtained, false otherwise.
-	 */
-	private boolean addEPC(HashSet<String> set, EPC epc) {
-		if ((null == set) || (null == epc) || (null == epc.getValue())){
-			return false;
-		}
-		set.add(epc.getValue());
-		return true;
-	}
-	
-	/**
 	 * This method notifies all subscribers of this report generator about the 
 	 * specified ec reports.
 	 * @param reports to notify the subscribers about
 	 */
-	public void notifySubscribers(ECReports reports, EventCycle ec) {
+	public void notifySubscribers(ECReports reports, EventCycle ec) {		
 		
-		// according the ALE 1.1 standard:
-		// When the processing of reportIfEmpty and reportOnlyOnChange
-		// results in all ECReport instances being omitted from an 
-		// ECReports for an event cycle, then the delivery of results
-		// to subscribers SHALL be suppressed altogether. [...] poll 
-		// and immediate SHALL always be returned [...] even if that 
-		// ECReports instance contains zero ECReport instances.
+//		according the ALE 1.1 standard:
+//		When the processing of reportIfEmpty and reportOnlyOnChange
+//		results in all ECReport instances being omitted from an 
+//		ECReports for an event cycle, then the delivery of results
+//		to subscribers SHALL be suppressed altogether. [...] poll 
+//		and immediate SHALL always be returned [...] even if that 
+//		ECReports instance contains zero ECReport instances.
+		
+//		An ECReports instance SHALL include an ECReport instance corresponding to each
+//		ECReportSpec in the governing ECSpec, in the same order specified in the ECSpec,
+//		except that an ECReport instance SHALL be omitted under the following circumstances:
+//		- If an ECReportSpec has reportIfEmpty set to false, then the corresponding
+//		  ECReport instance SHALL be omitted from the ECReports for this event cycle if
+//		  the final, filtered set of Tags is empty (i.e., if the final Tag list would be empty, or if
+//		  the final count would be zero).
+//		- If an ECReportSpec has reportOnlyOnChange set to true, then the
+//		  corresponding ECReport instance SHALL be omitted from the ECReports for
+//		  this event cycle if the filtered set of Tags is identical to the filtered prior set of Tags,
+//		  where equality is tested by considering the primaryKeyFields as specified in the
+//		  ECSpec (see Section 8.2), and where the phrase 'the prior set of Tags' is as defined
+//		  in Section 8.2.6. This comparison takes place before the filtered set has been modified
+//		  based on reportSet or output parameters. The comparison also disregards
+//		  whether the previous ECReports was actually sent due to the effect of this
+//		  parameter, or the reportIfEmpty parameter.
+//		When the processing of reportIfEmpty and reportOnlyOnChange results in all
+//		ECReport instances being omitted from an ECReports for an event cycle, then the
+//		delivery of results to subscribers SHALL be suppressed altogether. That is, a result
+//		consisting of an ECReports having zero contained ECReport instances SHALL NOT
+//		be sent to a subscriber. (Because an ECSpec must contain at least one
+//		ECReportSpec, this can only arise as a result of reportIfEmpty or
+//		reportOnlyOnChange processing.) This rule only applies to subscribers (event cycle
+//		requestors that were registered by use of the subscribe method); an ECReports
+//		instance SHALL always be returned to the caller of immediate or poll at the end of
+//		an event cycle, even if that ECReports instance contains zero ECReport instances.
+		
+		
+		Cloner cloner  = new Cloner();
+		// deep clone the original input in order to keep it as the 
+		// next event cycles last cycle reports. 
+		ECReports originalInput = cloner.deepClone(reports);
+		
+		// we deep clone (clone not sufficient) for the pollers
+		// in order to deliver them the correct set of reports.
+		if (isPolling()) {
+			// deep clone for the pollers (poll and immediate)
+			pollReport = cloner.deepClone(reports);
+		}
 
 		// we remove the reports that are equal to the ones in the 
-		// last event cycle. then we send the subscribers and add 
-		// them back for the pollers... .
+		// last event cycle. then we send the subscribers.
 		List<ECReport> equalReps = new LinkedList<ECReport> ();
-		Map<String, ECReportGroup> newGroupByName = new HashMap<String, ECReportGroup> ();
-		Map<String, ECReportGroup> oldGroupByName = new HashMap<String, ECReportGroup> ();
-		boolean isOneReportRequestingEmpty = false;	// count if someone wants empty reports...
-		LOG.debug("reports size: " + reports.getReports().getReport().size());
+		List<ECReport> reportsToNotify = new LinkedList<ECReport> ();
 		try {
 		for (ECReport r : reports.getReports().getReport()) {
-			// if we only want reports that have changed, we need to compare the 
-			// old report with the current...
-			if (ec.getReportSpecByName().get(r.getReportName()).isReportIfEmpty()) {
-				isOneReportRequestingEmpty = true;
-				LOG.debug("requesting empty: " + r.getReportName());
-			}
-			if (ec.getReportSpecByName().get(r.getReportName()).isReportOnlyOnChange()) {
-				
-				ECReport oldR = ec.getLastReports().get(r.getReportName());
-	
-				boolean equality = false;
-				// compare the tags...
-				if (null != oldR) {
-					List<ECReportGroup> oldGroup = oldR.getGroup();
-					List<ECReportGroup> newGroup = r.getGroup();
-					if (oldGroup.size() == newGroup.size()) {
-						// equal amount of groups, so need to compare the groups...
-						for (ECReportGroup g : oldGroup) oldGroupByName.put(g.getGroupName(), g);
-						for (ECReportGroup g : newGroup) newGroupByName.put(g.getGroupName(), g);
-						
-						for (String gName : oldGroupByName.keySet()) {
-							ECReportGroup og = oldGroupByName.get(gName);
-							ECReportGroup ng = newGroupByName.get(gName);
-							
-							// now compare the two groups...
-							if ((null != og.getGroupList()) && (null != ng.getGroupList())) {
-								// need to check
-								
-								boolean useEPC = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeEPC();
-								boolean useTag = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeTag();
-								boolean useHex = ec.getReportSpecByName().get(r.getReportName()).getOutput().isIncludeRawHex();
-								HashSet<String> hs = new HashSet<String>();
-								HashSet<String> hs2 = new HashSet<String>();
-								for (ECReportGroupListMember oMember : og.getGroupList().getMember()) {
-									
-									boolean error = false;
-									// compare according the epc field
-									if (useEPC) error = addEPC(hs, oMember.getEpc());
-									if (!error && useTag) error = addEPC(hs, oMember.getTag());
-									if (!error && useHex) error = addEPC(hs, oMember.getRawHex());
-									if (!error) error = addEPC(hs, oMember.getRawDecimal());
-								}
-								for (ECReportGroupListMember oMember : ng.getGroupList().getMember()) {
-									
-									boolean error = false;
-									// compare according the epc field
-									if (useEPC) error = addEPC(hs2, oMember.getEpc());
-									if (!error && useTag) error = addEPC(hs2, oMember.getTag());
-									if (!error && useHex) error = addEPC(hs2, oMember.getRawHex());
-									if (!error) error = addEPC(hs2, oMember.getRawDecimal());
-								}
-								// if intersection is not empty, the sets are not equal
-								if (hs.containsAll(hs2) && hs2.containsAll(hs)) {
-									// equal
-									equality = true;
-								} else {
-									equality = false;
-									break;
-								}
-								
-							} else if ((null == og.getGroupList()) && (null == ng.getGroupList())) {
-								// the groups are equal
-								equality = true;
-							} else {
-								// not equal.
-								equality = false;
-								break;
-							}
-						}
-					}
-				}
+			final ECReportSpec reportSpec = ec.getReportSpecByName(r.getReportName());
 			
-				if (equality) {
+			boolean tagsInReport = hasTags(r);
+			// case no tags in report but report if empty
+			if (!tagsInReport && reportSpec.isReportIfEmpty()) {
+				LOG.debug("requesting empty for report: " + r.getReportName());
+				reportsToNotify.add(r);
+			} else if (tagsInReport) {
+				reportsToNotify.add(r);
+			}
+			// check for equal reports since last notification.
+			if (reportSpec.isReportOnlyOnChange()) {
+				// report from the previous EventCycle run.
+				ECReport oldR = ec.getLastReports().get(r.getReportName());
+				
+				// compare the new report with the old one.
+				if (reportsHelper.areReportsEqual(reportSpec, r, oldR)) {
 					equalReps.add(r);
 				}
 			}
@@ -370,38 +341,32 @@ public class ReportsGenerator implements Runnable {
 			LOG.error("caught exception while processing reports: ", e);
 		}
 		
+		// check if the intersection of all reports to notify (including empty ones) and the equal ones is empty
+		// -> if so, do not notify at all.
+		reportsToNotify.removeAll(equalReps);
+		
 		// remove the equal reports
 		Reports re = reports.getReports();
 		if (null != re) re.getReport().removeAll(equalReps);
-		LOG.debug("reports size2: " + reports.getReports().getReport().size());
-		// next step is to check, if the total report is empty
-		if (hasReports(re) || (isOneReportRequestingEmpty)) {		
-			// notify subscribers 
-			for (Subscriber listener : subscribers.values()) {
-				try {
-					listener.notify(reports);
-				} catch (Exception e) {
-					LOG.error("Could not notifiy subscriber '" + listener.toString(), e);
-				}
-			}
-		}
-		
-		// add the equal reports back (as pollers need to get those).
-		if (null != re) re.getReport().addAll(equalReps);
-		
+		LOG.debug("reports size: " + reports.getReports().getReport().size());
+
+		// next step is to check, if the total report is empty (even if requestIfEmpty but when all reports are equal, do not deliver) 
+		if (reportsToNotify.size() > 0) {
+			// notify the ECReports
+			notifySubscribersWithFilteredReports(reports);
+		}		
 		// store the new reports as old reports
 		ec.getLastReports().clear();
-		if (null != re) {
-			for (ECReport r : re.getReport()) {
+		if (null != originalInput.getReports()) {
+			for (ECReport r : originalInput.getReports().getReport()) {
 				ec.getLastReports().put(r.getReportName(), r);
 			}
 		}
 		
 		// notify pollers
 		// pollers always receive reports (even when empty).
-		if (isPolling) {
-			pollReport = reports;
-			isPolling = false;
+		if (isPolling()) {
+			polling = false;
 			if (subscribers.isEmpty()) {
 				setState(ReportsGeneratorState.UNREQUESTED);
 			}
@@ -410,14 +375,37 @@ public class ReportsGenerator implements Runnable {
 			}
 		}	
 	}
-
+	
 	/**
-	 * determines if the given report is null or empty.
-	 * @param re the report to test.
-	 * @return true if not null and containing reports. false otherwise.
+	 * check if a given ECReport contains at least one tag in its data structures.
+	 * @param r the report to check.
+	 * @return true if tags contained, false otherwise.
 	 */
-	private boolean hasReports(Reports re) {
-		return ((null != re) && (re.getReport().size() > 0)); 
+	private boolean hasTags(ECReport r) {
+		try {
+			for (ECReportGroup g : r.getGroup()) {
+				if (g.getGroupList().getMember().size() > 0) {
+					return true;
+				}
+			}
+		} catch (Exception ex) {
+			LOG.debug("could not check for tag occurence - report considered not to containing tags", ex);
+		}
+		return false;
+	}
+	/**
+	 * once all the filtering is done eventually notify the subscribers with the reports.
+	 * @param reports the filtered reports.
+	 */
+	protected void notifySubscribersWithFilteredReports(ECReports reports) {
+		// notify subscribers 
+		for (Subscriber listener : subscribers.values()) {
+			try {
+				listener.notify(reports);
+			} catch (Exception e) {
+				LOG.error("Could not notify subscriber '" + listener.toString(), e);
+			}
+		}
 	}
 
 	/**
@@ -428,7 +416,7 @@ public class ReportsGenerator implements Runnable {
 		
 		LOG.debug("Spec '" + name + "' polled.");
 		pollReport = null;
-		isPolling = true;
+		polling = true;
 		if (state == ReportsGeneratorState.UNREQUESTED) {
 			setState(ReportsGeneratorState.REQUESTED);
 		}
@@ -651,6 +639,22 @@ public class ReportsGenerator implements Runnable {
 		}
 		return -1;
 		
+	}
+	
+	/**
+	 * is the reports generator in polling state???
+	 * @return true if polling, false otherwise.
+	 */
+	protected boolean isPolling() {
+		return polling;
+	}
+	
+	/**
+	 * the poll reports - <strong>Attention></strong> not null safe.
+	 * @return the poll reports - <strong>Attention></strong> not null safe.
+	 */
+	protected ECReports getPollReport() {
+		return pollReport;
 	}
 	
 }

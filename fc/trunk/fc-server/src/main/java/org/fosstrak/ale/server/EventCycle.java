@@ -731,6 +731,10 @@ public class EventCycle implements Runnable, Observer {
 		}
 	}
 
+	public ECReportSpec getReportSpecByName(String name) {
+		return reportSpecByName.get(name);
+	}
+
 	public Map<String, ECReportSpec> getReportSpecByName() {
 		return reportSpecByName;
 	}

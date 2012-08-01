@@ -27,6 +27,7 @@ import org.easymock.EasyMock;
 import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.util.ECSpecValidator;
+import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECBoundarySpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECFilterSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECGroupSpec;
@@ -417,5 +418,21 @@ public class ECSpecValidatorTest {
 		String p2 = "fdsfdsfdsfds";
 		// must throw an exception
 		validator.patternDisjoint(p1, p2);
+	}
+	
+	/**
+	 * test with a complex ECSpec.
+	 */
+	@Test
+	public void testComplexSpec() throws Exception {
+		LogicalReaderManager manager = EasyMock.createMock(LogicalReaderManager.class);
+		EasyMock.expect(manager.contains("LogicalReader1")).andReturn(true);
+		EasyMock.replay(manager);
+		
+		ECSpec ecspec = DeserializerUtil.deserializeECSpec(ECSpecValidatorTest.class.getResourceAsStream("/ecspecs/complexSpecAdditionsDeletionsCurrent.xml"));
+		validator.setLogicalReaderManager(manager);
+		validator.validateSpec(ecspec);
+		
+		EasyMock.verify(manager);
 	}
 }
