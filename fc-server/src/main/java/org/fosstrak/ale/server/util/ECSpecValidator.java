@@ -228,6 +228,7 @@ public class ECSpecValidator {
 	public Set<String> checkReportSpecNoDuplicateReportSpecNames(List<ECReportSpec> reportSpecList) throws ECSpecValidationException {
 		Set<String> reportSpecNames = new HashSet<String>();
 		for (ECReportSpec reportSpec : reportSpecList) {
+			LOG.debug("Verify report spec name not specified twice: " + reportSpec.getReportName());
 			if (reportSpecNames.contains(reportSpec.getReportName())) {
 				throw logAndCreateECSpecValidationException("Two ReportSpecs instances have identical names '" + reportSpec.getReportName() + "'.");
 			} else {

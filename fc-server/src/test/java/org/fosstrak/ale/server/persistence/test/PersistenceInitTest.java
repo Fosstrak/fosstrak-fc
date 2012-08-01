@@ -26,6 +26,7 @@ import javax.servlet.ServletException;
 import org.easymock.EasyMock;
 import org.fosstrak.ale.server.persistence.PersistenceInit;
 import org.fosstrak.ale.server.persistence.ReadConfig;
+import org.fosstrak.ale.server.persistence.impl.PersistenceInitImpl;
 import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
 import org.junit.Test;
 
@@ -57,7 +58,7 @@ public class PersistenceInitTest {
 		EasyMock.expect(servletContext.getRealPath("/")).andReturn(realPath);
 		EasyMock.replay(servletContext);
 		
-		PersistenceInit persistenceInit = new PersistenceInit();
+		PersistenceInitImpl persistenceInit = new PersistenceInitImpl();
 		persistenceInit.setPersistenceConfig(pConfig);
 		persistenceInit.setPersistenceReadConfig(readConfig);
 		
@@ -66,5 +67,20 @@ public class PersistenceInitTest {
 		EasyMock.verify(pConfig);
 		EasyMock.verify(readConfig);
 		EasyMock.verify(servletContext);
+	}
+	
+	/**
+	 * verify that the servlets context settings are correctly passed to the persistence API.
+	 * @throws ServletException test failure.
+	 */
+	@Test(expected = ServletException.class)
+	public void testInitErrorCase() throws ServletException {		
+		ServletContext servletContext = EasyMock.createMock(ServletContext.class);
+		EasyMock.expect(servletContext.getRealPath("/")).andThrow(new IllegalStateException("Mock exception"));
+		EasyMock.replay(servletContext);
+		
+		PersistenceInit persistenceInit = new PersistenceInitImpl();
+		
+		persistenceInit.init(servletContext);
 	}
 }

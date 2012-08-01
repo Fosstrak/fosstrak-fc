@@ -146,6 +146,11 @@
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-beans</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>uk.com.robust-it</groupId>
+		<artifactId>cloning</artifactId>
+		<version>1.8.2</version>
+	</dependency>
   </dependencies>
 
   <!-- =========================================================== -->
