@@ -151,7 +151,7 @@ public class HTTPSubscriberOutputChannelTest {
 				} else {
 					newLine = true;
 				}
-			} else if (newLine = true) {
+			} else if (newLine == true) {
 				newLine = false;
 			}
 			header.append(newString);

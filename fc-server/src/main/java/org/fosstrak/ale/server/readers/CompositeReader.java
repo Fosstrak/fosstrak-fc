@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.Tag;
@@ -35,7 +36,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
  * @author swieland
  *
  */
-public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalReader implements Observer  {
+public class CompositeReader extends LogicalReader implements Observer  {
 
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(CompositeReader.class);
@@ -99,7 +100,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 				tag.setReader(getName());
 				tag.addTrace(getName());
 				
-				notifyObservers((Tag) arg);
+				notifyObservers(tag);
 			} else if (arg instanceof List) {
 				LOG.debug("processing multiple tags");
 				
@@ -139,6 +140,15 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 	}
 	
 	/**
+	 * checks if the composite reader contains the given reader.
+	 * @param readerName the name of the reader to check.
+	 * @return true if contained, false otherwise.
+	 */
+	public boolean containsReader(String readerName) {
+		return logicalReaders.containsKey(readerName);
+	}
+	
+	/**
 	 * this method changes the specification of a reader.
 	 * @param aspec an LRSpec containing the changes for the reader
 	 * @throws ImplementationException whenever an internal error occurs
@@ -154,7 +164,7 @@ public class CompositeReader extends org.fosstrak.ale.server.readers.LogicalRead
 	 		// set the new spec
 			setLRSpec(aspec);
 	 		
-	 		if (!readers.equals(logicalReaders.values())) {
+	 		if (!CollectionUtils.isEqualCollection(readers, logicalReaders.keySet())) {
 	 			
 	 			// as there are changes in the readers, we
 	 			// need to stop this compositeReader, update the 
