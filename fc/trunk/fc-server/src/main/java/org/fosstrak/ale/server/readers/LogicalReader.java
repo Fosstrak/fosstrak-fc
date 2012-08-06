@@ -93,6 +93,15 @@ public abstract class LogicalReader extends Observable {
 		this.readerName = name;
 		this.logicalReaderSpec = spec;
 		
+		if (name == null) {
+			log.debug("reader name is null - aborting.");
+			throw new ImplementationException("no reader name specified");
+		}
+		if (spec == null) {
+			log.debug("spec is null - aborting.");
+			throw new ImplementationException("no spec specified");
+		}
+		
 		if (spec.getProperties() == null) {
 			log.debug("no properties specified - aborting.");
 			throw new ImplementationException("no properties specified");

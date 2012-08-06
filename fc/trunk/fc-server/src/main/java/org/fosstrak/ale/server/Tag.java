@@ -2,6 +2,8 @@ package org.fosstrak.ale.server;
 
 import java.math.BigInteger;
 
+import org.fosstrak.ale.util.HexUtil;
+
 /**
  * represents a tag that has been read on one of the readers in the Logical Reader API.
  * @author swieland
@@ -160,7 +162,7 @@ public class Tag {
 	@Override
 	public String toString() {
 		return String.format("[Tag id: %s, ReaderName: %s, OriginName: %s, Trace: %s, Timestamp: %d, Binary: %s, PureID: %s]", 
-				getTagID(), getReader(), getOrigin(), getTrace(), getTimestamp(), getTagAsBinary(), getTagIDAsPureURI());
+				HexUtil.byteArrayToHexString(getTagID()), getReader(), getOrigin(), getTrace(), getTimestamp(), getTagAsBinary(), getTagIDAsPureURI());
 	}
 
 	/**

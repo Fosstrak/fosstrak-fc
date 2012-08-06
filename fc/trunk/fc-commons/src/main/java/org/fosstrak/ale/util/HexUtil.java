@@ -36,7 +36,9 @@ public class HexUtil {
 	 * @return hexadecimal string
 	 */
 	public static String byteArrayToHexString(byte[] byteArray) {
-		
+		if (null == byteArray) {
+			return "";
+		}
 		return new BigInteger(byteArray).toString(16).toUpperCase();
 				
 	}
