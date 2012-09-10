@@ -26,14 +26,14 @@ import org.llrp.ltk.generated.messages.STOP_ROSPEC;
 import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.generated.parameters.ROSpec;
 import org.llrp.ltk.types.UnsignedInteger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * ORANGE: This class manages the ROSPEC.
  * 
  * @author wafa.soubra@orange.com
  */
-@Component("llrpControllerManager")
+@Service("llrpControllerManager")
 public class LLRPControllerManager  {
 
 	/**	logger. */

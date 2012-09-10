@@ -49,7 +49,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
 import org.llrp.ltk.generated.messages.ADD_ROSPEC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -58,7 +58,7 @@ import org.springframework.stereotype.Component;
  * @author benoit.plomion@orange.com
  *
  */
-@Component("readConfigImpl")
+@Repository("readConfigImpl")
 public class ReadConfigImpl implements ReadConfig {
 
 	/**	logger. */

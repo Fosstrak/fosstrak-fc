@@ -39,14 +39,14 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.LogicalReaders;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec.ReportSpecs;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * helper utility validating an ECSpec.
  * @author sbw
  *
  */
-@Component("ecSpecValidator")
+@Service("ecSpecValidator")
 public class ECSpecValidator {
 
 	/**

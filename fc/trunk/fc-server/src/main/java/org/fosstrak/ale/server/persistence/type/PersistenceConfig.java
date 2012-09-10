@@ -3,7 +3,7 @@ package org.fosstrak.ale.server.persistence.type;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * this class manage path to get webapp path
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author swieland
  *
  */
-@Component("persistenceConfig")
+@Service("persistenceConfig")
 public class PersistenceConfig {
 	
 	/**	logger. */

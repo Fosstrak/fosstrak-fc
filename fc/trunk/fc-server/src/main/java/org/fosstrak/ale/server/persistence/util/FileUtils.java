@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * provides facilities for file management in the persistence API.
  * @author swieland
  *
  */
-@Component("persistenceFileUtils")
+@Repository("persistenceFileUtils")
 public class FileUtils {
 
 	public static final String FILE_ENDING_XML = "xml";

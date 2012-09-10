@@ -72,7 +72,7 @@ public class AdaptorMgmt {
 			}
 			setAdaptorMgmtInitialized(true);
 			//llrpRemoteAdaptor = llrpAdaptorMgmt.getAdaptorNames().get(0);
-			llrpRemoteAdaptor = LLRPManager.getInstance().getAdaptor();
+			llrpRemoteAdaptor = ALEApplicationContext.getBean(LLRPManager.class).getAdaptor();
 			// Register the handlers, so the adaptor management will
 			// distribute the LLRP messages automatically and asynchronously. 
 			llrpAdaptorMgmt.registerFullHandler(defineMessageHandler());
