@@ -25,14 +25,14 @@ import org.fosstrak.ale.server.readers.LogicalReaderFactory;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * little helper class allowing us to detach the Logical Reader Manager from static methods.
  * @author swieland
  *
  */
-@Component("readerProvider")
+@Service("readerProvider")
 public class ReaderProvider {
 	
 	@Autowired

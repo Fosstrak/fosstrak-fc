@@ -28,14 +28,14 @@ import org.fosstrak.ale.server.persistence.PersistenceInit;
 import org.fosstrak.ale.server.persistence.ReadConfig;
 import org.fosstrak.ale.server.persistence.type.PersistenceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * standard implementation of the persistence init.
  * 
  * @author benoit.plomion@orange.com
  */
-@Component("persistenceInit")
+@Repository("persistenceInit")
 public class PersistenceInitImpl implements PersistenceInit {
 
 	private static final Logger LOG = Logger.getLogger(PersistenceInitImpl.class.getName());

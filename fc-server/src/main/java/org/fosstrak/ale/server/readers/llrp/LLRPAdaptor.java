@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.exception.ImplementationException;
+import org.fosstrak.ale.server.ALEApplicationContext;
 import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.readers.BaseReader;
 import org.fosstrak.ale.server.util.TagHelper;
@@ -116,7 +117,6 @@ public class LLRPAdaptor extends BaseReader {
 	 */
 	public LLRPAdaptor() {
 		super();
-		manager = LLRPManager.getInstance();
 		
 		try {
 			callback = new Callback(this);
@@ -148,7 +148,7 @@ public class LLRPAdaptor extends BaseReader {
 				
 		try {
 			log.debug("create a new LLRP reader");
-			manager = LLRPManager.getInstance();
+			manager = ALEApplicationContext.getBean(LLRPManager.class);
 			if (manager != null) {
 				
 				// if the reader is not contained in the manager we just create a 

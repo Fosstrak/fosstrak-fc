@@ -31,7 +31,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroup;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportSpec;
 import org.fosstrak.ale.xsd.epcglobal.EPC;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * helper to compare ECReports by content.
@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
  * @author swieland
  *
  */
-@Component("ecReportsHelper")
+@Service("ecReportsHelper")
 public class ECReportsHelper {
 
 	/**

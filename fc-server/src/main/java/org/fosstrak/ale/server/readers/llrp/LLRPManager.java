@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.llrp.adaptor.Adaptor;
@@ -24,6 +24,7 @@ import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.messages.RO_ACCESS_REPORT;
 import org.llrp.ltk.generated.parameters.LLRPStatus;
 import org.llrp.ltk.types.LLRPMessage;
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -35,6 +36,7 @@ import org.llrp.ltk.types.LLRPMessage;
  * @author swieland
  *
  */
+@Service("llrpManager")
 public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	
 	/** the path to the configuration file. */
@@ -43,17 +45,11 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	/** the name of the property of the adapter management configuration file.*/
 	public static final String PROP_MGMT_CFG = "mgmt";
 	
-	/** the singleton of the LLRPManager. */
-	private static LLRPManager instance = null;
-	
 	/** logger. */
 	private static final Logger log = Logger.getLogger(LLRPManager.class);
 	
 	/** the adaptor from the llrp-gui client managing the connections to the llrp-readers. */
 	private static Adaptor adaptor = null;
-	
-	/** if there has been an error during setup we flag this. */
-	private static boolean error = false;
 	
 	public static final String ADAPTOR_NAME_PREFIX = "fc adaptor - ";
 	
@@ -68,20 +64,19 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	 * the link counter is needed as several logical readers from 
 	 * fc can point to the same physical reader in the reader module. 
 	 * */
-	private Map<String, Integer> linkCounter = new HashMap<String, Integer>();
+	private Map<String, Integer> linkCounter = new ConcurrentHashMap<String, Integer>();
 	
 	/**
-	 * private constructor as we need the LLRPManager to act as a singleton.
-	 * @throws ImplementationException whenever the LLRPManager cannot be created.
+	 * public constructor.
 	 */
-	private LLRPManager() throws Exception {
+	public LLRPManager() {
 		try {
 			initialize();
 			log.info("llrp adaptor is bound");	
 
 		} catch (LLRPRuntimeException e) {
 			log.error("there has been an error when creating the reader management");
-			throw new Exception("there has been an error when creating the reader management");
+			throw new IllegalStateException("there has been an error when creating the reader management");
 		}
 	}
 	
@@ -245,32 +240,6 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 			
 			linkCounter.put(readerName, newVal);
 		}
-	}
-
-	/**
-	 * @return true if the manager was not started correctly or crashed.
-	 */
-	public static boolean isErroneous() {
-		return error;
-	}
-		
-	/**
-	 * create the singleton instance of the LLRPManager.
-	 * @return an instance of the singleton LLRPManager.
-	 * @throws ImplementationException 
-	 */
-	public static synchronized LLRPManager getInstance() {
-		if (LLRPManager.instance == null) {
-			try {
-				LLRPManager.instance = new LLRPManager();
-				log.debug("successfully initiated the llrp manager");
-			} catch (Exception e) {
-				log.error("severe error - the llrp adaptor could not be initialized");
-				LLRPManager.error = true;
-				LLRPManager.instance = null;
-			}
-		}
-		return LLRPManager.instance;
 	}
 	
 	

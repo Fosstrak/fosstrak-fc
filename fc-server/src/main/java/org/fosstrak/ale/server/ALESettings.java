@@ -20,7 +20,7 @@
 package org.fosstrak.ale.server;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * settings class with all application specific settings. <br/>
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  * @author swieland
  *
  */
-@Component("aleSettings")
+@Service("aleSettings")
 public class ALESettings {
 	
 	@Value(value = "${ale.standard.version}")
