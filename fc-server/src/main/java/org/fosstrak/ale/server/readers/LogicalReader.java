@@ -89,10 +89,6 @@ public abstract class LogicalReader extends Observable {
 	 * @throws ImplementationException whenever an internal error occurs.
 	 */
 	public void initialize(String name, LRSpec spec) throws ImplementationException {
-
-		this.readerName = name;
-		this.logicalReaderSpec = spec;
-		
 		if (name == null) {
 			log.debug("reader name is null - aborting.");
 			throw new ImplementationException("no reader name specified");
@@ -101,6 +97,9 @@ public abstract class LogicalReader extends Observable {
 			log.debug("spec is null - aborting.");
 			throw new ImplementationException("no spec specified");
 		}
+
+		this.readerName = name;
+		this.logicalReaderSpec = spec;
 		
 		if (spec.getProperties() == null) {
 			log.debug("no properties specified - aborting.");

@@ -58,7 +58,7 @@ import org.fosstrak.reader.rprm.core.msg.notification.TagType;
  * @author benoit.plomion@orange.com
  * @author nkef@ait.edu.gr
  */
-public class EventCycle implements Runnable, Observer {
+public final class EventCycle implements Runnable, Observer {
 
 	/** logger. */
 	private static final Logger LOG = Logger.getLogger(EventCycle.class);
@@ -113,8 +113,11 @@ public class EventCycle implements Runnable, Observer {
 	/** indicates if this event cycle is terminated or not .*/
 	private boolean isTerminated = false;
 	
-	/** lock for thread synchronization between reports generator and this. */
-	private Integer lock = new Integer(1000);
+	/** 
+	 * lock for thread synchronization between reports generator and this.
+	 * swieland 2012-09-29: do not use primitive type as int or Integer as autoboxing can result in new thread object for the lock -> non-threadsafe... 
+	 */
+	private final EventCycleLock lock = new EventCycleLock();
 	
 	/** flag whether the event cycle has passed through or not. */ 
 	private boolean roundOver = false;
@@ -139,6 +142,11 @@ public class EventCycle implements Runnable, Observer {
 	
 	/** handle onto the logical reader manager. */
 	private LogicalReaderManager logicalReaderManager;
+	
+	// TODO: check if we can use this instead of the dummy class.
+	private final class EventCycleLock {
+		
+	}
 	
 	/**
 	 * Constructor sets parameter and starts thread.
@@ -724,10 +732,9 @@ public class EventCycle implements Runnable, Observer {
 	 */
 	public void join() throws InterruptedException {
 		synchronized (lock) {
-			if (roundOver) {
-				return;
+			while (!roundOver) {
+				lock.wait();
 			}
-			lock.wait();
 		}
 	}
 

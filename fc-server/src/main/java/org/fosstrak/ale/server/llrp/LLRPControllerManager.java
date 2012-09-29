@@ -340,26 +340,28 @@ public class LLRPControllerManager  {
 	 * 2) waitConnection = false, if we don't want to wait for ACK of the connection.
 	 */
 	private void getLLRPConfiguration () {
-		if (props == null) {
-			props = new Properties();
-			// try to load the properties file
-			try {
-				FileInputStream fileInputStream = 
-					new FileInputStream(ALEApplicationContext.getBean(PersistenceConfig.class).getRealPathLLRPSpecDir() + LLRP_CONFIG_PROP_FILE);	
-				props.load(fileInputStream);
-				Boolean rifidi = new Boolean(props.getProperty("rifidiEmulator"));
-				Boolean wait = new Boolean (props.getProperty("waitConnection"));
-				LOG.debug("rifidiEmulator " + rifidi);
-				LOG.debug("waitConnection " + wait);
-				if (rifidi || !wait) {
-					toWaitForConnection=false;
-					LOG.debug("toWaitForConnection " + toWaitForConnection);
-				}
-			} catch (FileNotFoundException e) {
-				LOG.error("Config. file " + LLRP_CONFIG_PROP_FILE + " was not found: ", e);
-			} catch (IOException e) {
-				LOG.error("IO Exception when reading the config. file " + LLRP_CONFIG_PROP_FILE, e);
-			}	
+		synchronized (LLRPControllerManager.class) {
+			if (props == null) {
+				props = new Properties();
+				// try to load the properties file
+				try {
+					FileInputStream fileInputStream = 
+						new FileInputStream(ALEApplicationContext.getBean(PersistenceConfig.class).getRealPathLLRPSpecDir() + LLRP_CONFIG_PROP_FILE);	
+					props.load(fileInputStream);
+					Boolean rifidi = new Boolean(props.getProperty("rifidiEmulator"));
+					Boolean wait = new Boolean (props.getProperty("waitConnection"));
+					LOG.debug("rifidiEmulator " + rifidi);
+					LOG.debug("waitConnection " + wait);
+					if (rifidi || !wait) {
+						toWaitForConnection=false;
+						LOG.debug("toWaitForConnection " + toWaitForConnection);
+					}
+				} catch (FileNotFoundException e) {
+					LOG.error("Config. file " + LLRP_CONFIG_PROP_FILE + " was not found: ", e);
+				} catch (IOException e) {
+					LOG.error("IO Exception when reading the config. file " + LLRP_CONFIG_PROP_FILE, e);
+				}	
+			}
 		}
 	}
 

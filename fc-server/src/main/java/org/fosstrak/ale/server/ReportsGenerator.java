@@ -175,13 +175,10 @@ public class ReportsGenerator implements Runnable {
 	 * 
 	 * @param state to set
 	 */
-	public void setState(ReportsGeneratorState state) {
-		
+	public void setState(ReportsGeneratorState state) {		
 		ReportsGeneratorState oldState = this.state;
 		this.state = state;
-		synchronized (this.state) {
-			this.state.notifyAll();
-		}
+		
 		LOG.debug("ReportGenerator '" + name + "' change state from '" + oldState + "' to '" + state + "'");
 		
 		if (state == ReportsGeneratorState.REQUESTED && !isRunning) {
@@ -498,14 +495,14 @@ public class ReportsGenerator implements Runnable {
 				while (isRunning) {
 					
 					// wait until state is REQUESTED
-					while (state != ReportsGeneratorState.REQUESTED) {
-						try {
-							synchronized (state) {
-								state.wait();
+					synchronized (state) {
+						while (state != ReportsGeneratorState.REQUESTED) {
+							try {
+									state.wait();
+							} catch (InterruptedException e) {
+								LOG.debug("caught interrupted exception", e);
+								return;
 							}
-						} catch (InterruptedException e) {
-							LOG.debug("caught interrupted exception", e);
-							return;
 						}
 					}
 					
