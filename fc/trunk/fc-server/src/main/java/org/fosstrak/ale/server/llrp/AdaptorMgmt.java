@@ -219,23 +219,22 @@ public class AdaptorMgmt {
 				}
 			
 				// enable the Redefine Status when the add_rospec is done
-				if (item.getMessageType().equals("ADD_ROSPEC_RESPONSE") && (statusStr != "") &&
-					(statusCode.getValue(statusStr) == StatusCode.M_Success)) {
+				if (item.getMessageType().equals("ADD_ROSPEC_RESPONSE") && (!"".equals(statusStr)) && (statusCode.getValue(statusStr) == StatusCode.M_Success)) {
 						LOG.debug("Redefine is enabled");
 						addFirstTime=false;
 						setRedefineStatus(true);
 					}
 				
 				// added to test sending commands 
-				if (item.getMessageType().equals("ADD_ACCESSSPEC_RESPONSE") && (statusStr != "")) {
+				if (item.getMessageType().equals("ADD_ACCESSSPEC_RESPONSE") && (!"".equals(statusStr))) {
 					LOG.debug("Status of AccesSpec Response = " + statusCode.getValue(statusStr));
 					}		
 				
-				if (item.getMessageType().equals("ENABLE_ACCESSSPEC_RESPONSE") && (statusStr != "")) {
+				if (item.getMessageType().equals("ENABLE_ACCESSSPEC_RESPONSE") && (!"".equals(statusStr))) {
 					LOG.debug("Status of Enable AccesSpec Response = " + statusCode.getValue(statusStr));
 					}		
 				
-				if (item.getMessageType().equals("ERROR_MESSAGE") && (statusStr != "")) {
+				if (item.getMessageType().equals("ERROR_MESSAGE") && (!"".equals(statusStr))) {
 					LOG.debug("Status of Error Message = " + statusCode.getValue(statusStr));
 					}	
 				
