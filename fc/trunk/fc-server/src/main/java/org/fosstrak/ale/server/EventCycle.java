@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -110,7 +111,7 @@ public final class EventCycle implements Runnable, Observer {
 
 	/** flags to know if the event cycle haven t to reject tags in the case than duration and repeatPeriod is same */
 	private boolean rejectTagsBetweenCycle = true;
-	
+
 	/** indicates if this event cycle is terminated or not .*/
 	private boolean isTerminated = false;
 	
@@ -189,7 +190,7 @@ public final class EventCycle implements Runnable, Observer {
 		
 		long repeatPeriod = getRepeatPeriodValue();
 		if (durationValue == repeatPeriod) {
-			rejectTagsBetweenCycle = false;
+			setRejectTagsBetweenCycle(false);
 		}
 		
 		LOG.debug(String.format("durationValue: %s\n",
@@ -288,7 +289,7 @@ public final class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public void addTag(Tag tag) throws ImplementationException, ECSpecValidationException {
+	public void addTag(Tag tag) {
 		
 		if (!isAcceptingTags()) {
 			return;
@@ -296,9 +297,7 @@ public final class EventCycle implements Runnable, Observer {
 		
 		// add event only if EventCycle is still running
 		if (isEventCycleActive()) {
-			if (LOG.isDebugEnabled()) {
-				logTagOnDebugEnabled(tag);
-			}
+			logTagOnDebugEnabled(tag);
 			
 			// add tag to tags
 			addTagAndLogOnNotAdded(tags, tag);
@@ -314,7 +313,7 @@ public final class EventCycle implements Runnable, Observer {
 	 */
 	private void addTagBetweenEventsCycle(Tag tag) {
 		
-		if (rejectTagsBetweenCycle) {
+		if (isRejectTagsBetweenCycle()) {
 			return;
 		}
 		
@@ -361,83 +360,70 @@ public final class EventCycle implements Runnable, Observer {
 	 * @param o an observable object that triggered the update
 	 * @param arg the arguments passed by the observable
 	 */
-	public synchronized void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg) {
 		LOG.debug("EventCycle "+ getName() + ": Update notification received. ");
-		if (!isAcceptingTags()) {
-			LOG.debug("EventCycle "+ getName() + ": Not accepting notification.");
-			
-			if (!rejectTagsBetweenCycle) {
-				if (arg instanceof Tag) {	
-					
-					// process one tag
-					Tag tag = (Tag) arg;					
-					LOG.debug("received tag: " + tag.getTagIDAsPureURI());	
-					
-					addTagBetweenEventsCycle(tag);
-					
-				} else if (arg instanceof List) {	
-					@SuppressWarnings("unchecked")					
-					List<Tag> tagList = (List<Tag>) arg;					
-					LOG.debug("EventCycle "+ getName() + ": Received list of tags :");				
-					
-					for (Tag tag : tagList) {	
-						LOG.debug("received tags: " + tag.getTagIDAsPureURI());
-						
-						addTagBetweenEventsCycle(tag);	
-					}					
-				}
-			}			
-			return;
-		}
-		
-		if (!rejectTagsBetweenCycle && betweenEventsCycleTags.size() > 0) {			
-			for (Tag tag : betweenEventsCycleTags) {
-						
-				try {					
-					LOG.debug("add tags from period between two evencycles: " + tag.getTagIDAsPureURI());					
-					addTag(tag);
-					
-				} catch (ImplementationException ie) {
-					LOG.debug("caught implementation exception: ", ie);
-				} catch (ECSpecValidationException ive) {
-					LOG.debug("caught spec validation exception: ", ive);
-				}				
-			}
-			
-			betweenEventsCycleTags.clear();
-			
-		}
-		
+		List<Tag> tags = new LinkedList<Tag> ();
+		// process the new tag.
 		if (arg instanceof Tag) {
-			
+			LOG.debug("processing one tag");
 			// process one tag
-			Tag tag = (Tag) arg;
-			//tag.prettyPrint(LOG);
-			try {
-				addTag(tag);
-			} catch (ImplementationException ie) {
-				LOG.debug("caught implementation exception: ", ie);
-			} catch (ECSpecValidationException ive) {
-				LOG.debug("caught spec validation exception: ", ive);
-			}
+			tags.add((Tag) arg);
 		} else if (arg instanceof List) {
-			// process multiple tags at once
-			
-			@SuppressWarnings("unchecked")
-			List<Tag> tagList = (List<Tag>) arg;
-			LOG.debug("EventCycle "+ getName() + ": Received list of tags :");
-			for (Tag tag : tagList) {
-				try {
-					addTag(tag);
-				} catch (ImplementationException ie) {
-					LOG.debug("caught implementation exception: ", ie);
-				} catch (ECSpecValidationException ive) {
-					LOG.debug("caught spec validation exception: ", ive);
+			LOG.debug("processing a list of tags");
+			for (Object entry : (List<?>) arg) {
+				if (entry instanceof Tag) {
+					tags.add((Tag) entry);					
 				}
 			}
+		}
+		
+		if (tags.size() > 0) {
+			handleTags(tags);
+		} else {
+			LOG.debug("EventCycle "+ getName() + ": Update notification received - but not with any tags - ignoring. ");			
 		}
 	}
 	
+	private void handleTags(List<Tag> tags) {
+		if (!isAcceptingTags()) {
+			handleTagsWhileNotAccepting(tags);
+		} else {
+			handleTagsWhileAccepting(tags);
+		}		
+	}
+	
+	/**
+	 * deal with new tags.
+	 * @param tags
+	 */
+	private void handleTagsWhileAccepting(List<Tag> tags) {	
+		// process all the tags we did not process between two eventcycles (or while we did not accept any tags).
+		if (!isRejectTagsBetweenCycle()) {			
+			for (Tag tag : betweenEventsCycleTags) {
+				addTag(tag);			
+			}
+			
+			betweenEventsCycleTags.clear();			
+		}
+		LOG.debug("EventCycle "+ getName() + ": Received list of tags :");
+		for (Tag tag : tags) {
+			addTag(tag);
+		}
+	}
+
+	/**
+	 * deal with tags while the event cycle is not accepting tags. (eg. between two event cycles).
+	 * @param arg the update we received.
+	 */
+	private void handleTagsWhileNotAccepting(List<Tag> tags) {
+		if (!isRejectTagsBetweenCycle()) {
+			for (Tag tag : tags) {	
+				LOG.debug("received tag between eventcycles: " + tag.getTagIDAsPureURI());					
+				addTagBetweenEventsCycle(tag);	
+			}
+		}
+	}
+
 	/**
 	 * This method stops the thread.
 	 */
@@ -703,6 +689,14 @@ public final class EventCycle implements Runnable, Observer {
 			}
 		}
 		return copy;
+	}
+	
+	private boolean isRejectTagsBetweenCycle() {
+		return rejectTagsBetweenCycle;
+	}
+
+	private void setRejectTagsBetweenCycle(boolean rejectTagsBetweenCycle) {
+		this.rejectTagsBetweenCycle = rejectTagsBetweenCycle;
 	}
 
 	/** 
