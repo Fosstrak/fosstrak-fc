@@ -128,7 +128,7 @@ public class ReportsGenerator implements Runnable {
 	public ReportsGenerator(String name, ECSpec spec, ECSpecValidator validator, ECReportsHelper reportsHelper) throws ECSpecValidationException, ImplementationException {
 
 		LOG.debug("Try to create new ReportGenerator '" + name + "'.");
-		
+				
 		// set name
 		this.name = name;
 		
@@ -431,7 +431,7 @@ public class ReportsGenerator implements Runnable {
 	/**
 	 * This method starts the main loop of the report generator.
 	 */
-	public void start() {
+	protected void start() {
 		
 		thread = new Thread(this, name);
 		thread.start();

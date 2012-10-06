@@ -187,7 +187,9 @@ public class Report {
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
 	public ECReport getECReport() throws ECSpecValidationException, ImplementationException {
-
+		Set<Tag> currentCycleTags = currentEventCycle.getTags();
+		Set<Tag> lastCycleTags = currentEventCycle.getLastEventCycleTags();
+		
 		//generate new ECReport
 		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
 			
@@ -195,13 +197,13 @@ public class Report {
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
 
 			// add tags from current EventCycle 
-			for (Tag tag : currentEventCycle.getTags()) {
+			for (Tag tag : currentCycleTags) {
 				reportTags.put(tag.getTagIDAsPureURI(), tag);
 			}
 				
 			// remove tags from last EventCycle
-			if (currentEventCycle.getLastEventCycleTags() != null) {
-				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
+			if (lastCycleTags != null) {
+				for (Tag tag : lastCycleTags) {
 					reportTags.remove(tag.getTagIDAsPureURI());
 				}
 			}
@@ -214,7 +216,7 @@ public class Report {
 		} else if (reportType.equalsIgnoreCase(ECReportSetEnum.CURRENT)) {
 
 			// get tags from current EventCycle 
-			for (Tag tag : currentEventCycle.getTags()) {
+			for (Tag tag : currentCycleTags) {
 				addTag(tag);
 			}
 
@@ -225,14 +227,14 @@ public class Report {
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
 				
 			// add tags from last EventCycle
-			if (currentEventCycle.getLastEventCycleTags() != null) {
-				for (Tag tag : currentEventCycle.getLastEventCycleTags()) {
+			if (lastCycleTags != null) {
+				for (Tag tag : lastCycleTags) {
 					reportTags.put(tag.getTagIDAsPureURI(), tag);
 				}
 			}
 				
 			// remove tags from current EventCycle
-			for (Tag tag : currentEventCycle.getTags()) {
+			for (Tag tag : currentCycleTags) {
 				reportTags.remove(tag.getTagIDAsPureURI());
 			}
 				
