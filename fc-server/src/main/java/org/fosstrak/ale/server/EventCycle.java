@@ -21,6 +21,7 @@
 package org.fosstrak.ale.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +48,7 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReports.Reports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECTime;
-import org.fosstrak.reader.rprm.core.msg.notification.TagType;
+
 
 /**
  * This class represents an event cycle. It collects the tags and manages the 
@@ -99,13 +100,13 @@ public final class EventCycle implements Runnable, Observer {
 		new HashMap<String, ECReportSpec> ();
 	
 	/** set of tags for this event cycle. */
-	private  Set<Tag> tags = new HashSet<Tag>();
+	private  Set<Tag> tags = Collections.synchronizedSet(new HashSet<Tag>());
 	
 	/** this set stores the tags from the previous EventCycle run. */
 	private Set<Tag> lastEventCycleTags = null;
 	
 	/** this set stores the tags between two event cycle in the case of rejectTagsBetweenCycle is false */
-	private List<Tag> betweenEventsCycleTags = new ArrayList<Tag>();	
+	private Set<Tag> betweenEventsCycleTags =  Collections.synchronizedSet(new HashSet<Tag>());	
 
 	/** flags to know if the event cycle haven t to reject tags in the case than duration and repeatPeriod is same */
 	private boolean rejectTagsBetweenCycle = true;
@@ -140,12 +141,19 @@ public final class EventCycle implements Runnable, Observer {
 	/** tells how many times this EventCycle has been scheduled. */
 	private int rounds = 0;
 	
-	/** handle onto the logical reader manager. */
-	private LogicalReaderManager logicalReaderManager;
-	
 	// TODO: check if we can use this instead of the dummy class.
 	private final class EventCycleLock {
 		
+	}
+
+	/**
+	 * Constructor sets parameter and starts thread.
+	 * 
+	 * @param generator to which this event cycle belongs to
+	 * @throws ImplementationException if an implementation exception occurs
+	 */
+	public EventCycle(ReportsGenerator generator) throws ImplementationException {
+		this(generator, ALEApplicationContext.getBean(LogicalReaderManager.class));
 	}
 	
 	/**
@@ -154,10 +162,7 @@ public final class EventCycle implements Runnable, Observer {
 	 * @param generator to which this event cycle belongs to
 	 * @throws ImplementationException if an implementation exception occurs
 	 */
-	public EventCycle(ReportsGenerator generator) throws ImplementationException {
-		
-		// get a handle on the logical reader manager.
-		logicalReaderManager = ALEApplicationContext.getBean(LogicalReaderManager.class);
+	public EventCycle(ReportsGenerator generator, LogicalReaderManager logicalReaderManager) throws ImplementationException {	
 		
 		// set name
 		name = generator.getName() + "_" + number++;
@@ -274,15 +279,6 @@ public final class EventCycle implements Runnable, Observer {
 		reports.getReports().getReport().addAll(getReportList());
 		
 		return reports;
-	}	
-
-	/**
-	 * This method return all tags of this event cycle.
-	 * 
-	 * @return set of tags
-	 */
-	public synchronized Set<Tag> getTags() {
-		return tags;		
 	}
 
 	/**
@@ -292,52 +288,20 @@ public final class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public synchronized void addTag(Tag tag) 
-		throws ImplementationException, 
-		ECSpecValidationException {
+	public void addTag(Tag tag) throws ImplementationException, ECSpecValidationException {
 		
 		if (!isAcceptingTags()) {
 			return;
 		}
 		
 		// add event only if EventCycle is still running
-		if (thread.isAlive()) {
-			LOG.debug(
-					"EventCycle '" + name + "' add Tag '" + 
-					tag.getTagIDAsPureURI() + "'.");
+		if (isEventCycleActive()) {
+			if (LOG.isDebugEnabled()) {
+				logTagOnDebugEnabled(tag);
+			}
 			
 			// add tag to tags
-			if (!tags.add(tag)) {
-				LOG.debug("tag already contained, therefor not adding.");
-			}
-		}
-	}
-	
-	/**
-	 * compatibility reasons.
-	 * @param tag to add
-	 * @throws ImplementationException if an implementation exception occures
-	 * @throws ECSpecValidationException if the tag is not valid
-	 */
-	public void addTag(TagType tag) 
-		throws ImplementationException, 
-		ECSpecValidationException {
-		
-		Tag newTag = new Tag();
-		newTag.setTagID(tag.getTagID());
-		newTag.setTagIDAsPureURI(tag.getTagIDAsPureURI());
-		
-		// add event only if EventCycle is still running
-		if (thread.isAlive()) {
-			LOG.debug(
-					"EventCycle '" + name + "' add Tag '" + 
-					newTag.getTagIDAsPureURI() + "'.");
-			
-			// add tag to tags
-			//tags.add(newTag);
-			if (!tags.add(newTag)) {
-				LOG.debug("tag already contained, therefor not adding.");
-			}
+			addTagAndLogOnNotAdded(tags, tag);
 		}
 	}
 
@@ -348,22 +312,47 @@ public final class EventCycle implements Runnable, Observer {
 	 * @throws ImplementationException if an implementation exception occurs
 	 * @throws ECSpecValidationException if the tag is not valid
 	 */
-	public synchronized void addTagBetweenEventsCycle(Tag tag) {
+	private void addTagBetweenEventsCycle(Tag tag) {
 		
 		if (rejectTagsBetweenCycle) {
 			return;
 		}
 		
 		// add event only if EventCycle is still running
-		if (thread.isAlive()) {
-			
-			LOG.debug("Between 2 EventCycle '" + name + "' add Tag '" + tag.getTagIDAsPureURI() + "'.");
+		if (isEventCycleActive()) {
+			logTagOnDebugEnabled(tag);
 			
 			// add tag to tags
-			if (!betweenEventsCycleTags.add(tag)) {
-				LOG.debug("tag already contained, therefore not adding.");
-			}
-			
+			addTagAndLogOnNotAdded(betweenEventsCycleTags, tag);			
+		}
+	}
+	
+	/**
+	 * determine if this event cycle is active (running) or not.
+	 * @return true if the event cycle is active, false if not.
+	 */
+	private boolean isEventCycleActive() {
+		return thread.isAlive();
+	}
+
+	/**
+	 * log a tag to the logger if debug is enabled. the event cycles name and the tag as pure URI is written to the log on one line.
+	 * @param tagToLog the tag to be logged.
+	 */
+	private void logTagOnDebugEnabled(Tag tagToLog) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("EventCycle '" + name + "' add Tag '" + tagToLog.getTagIDAsPureURI() + "'."); 
+		}
+	}
+
+	/**
+	 * little helper method adding a tag to a given set. if the tag is not added (as already contained) log it.
+	 * @param whereToAddTheTag the set where to add the tag to.
+	 * @param theTagToAdd the tag which is meant to be added.
+	 */
+	private void addTagAndLogOnNotAdded(Set<Tag> whereToAddTheTag, Tag theTagToAdd) {
+		if (!whereToAddTheTag.add(theTagToAdd) && LOG.isDebugEnabled()) {
+			LOG.debug("tag already contained, therefore not adding.");
 		}
 	}
 
@@ -459,7 +448,7 @@ public final class EventCycle implements Runnable, Observer {
 			logicalReader.deleteObserver(this);
 		}
 		
-		if (thread.isAlive()) {
+		if (isEventCycleActive()) {
 			thread.interrupt();
 			
 			// stop EventCycle
@@ -553,7 +542,7 @@ public final class EventCycle implements Runnable, Observer {
 				return;
 			}
 			
-			// dont accept tags anymore
+			// don't accept tags anymore
 			setAcceptTags(false);
 			//------------------------ generate the reports
 			
@@ -579,8 +568,8 @@ public final class EventCycle implements Runnable, Observer {
 				if (null != tags) {
 					lastEventCycleTags.addAll(tags);
 				}
-					
-				tags = new HashSet<Tag>();
+				
+				tags = Collections.synchronizedSet(new HashSet<Tag>());
 				
 			} catch (Exception e) {
 				LOG.error("EventCycle "+ getName() + ": Could not create ECReports", e);
@@ -628,17 +617,13 @@ public final class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if a tag of this report is not valid
 	 * @throws ImplementationException if an implementation exception occurs.
 	 */
-	private List<ECReport> getReportList() 
-		throws ECSpecValidationException, 
-		ImplementationException {
-
+	private List<ECReport> getReportList() throws ECSpecValidationException, ImplementationException {
 		ArrayList<ECReport> ecReports = new ArrayList<ECReport>();
 		for (Report report : reports) {
 			ECReport r = report.getECReport();
 			if (null != r) ecReports.add(r);
 		}
-		return ecReports;
-		
+		return ecReports;		
 	}
 	
 	/**
@@ -689,7 +674,35 @@ public final class EventCycle implements Runnable, Observer {
 	 * @return a set of tags from the previous EventCycle run
 	 */
 	public Set<Tag> getLastEventCycleTags() {
-		return lastEventCycleTags;
+		return copyContentToNewDatastructure(lastEventCycleTags);
+	}
+
+	/**
+	 * This method return all tags of this event cycle.
+	 * 
+	 * @return set of tags
+	 */
+	public Set<Tag> getTags() {
+		return copyContentToNewDatastructure(tags);		
+	}
+	
+	/**
+	 * create a copy of the content of the given data structure -> we use synchronized sets -> make sure not to leak them.<br/>
+	 * this method synchronizes the original data structure during to copy process.
+	 * <br/>
+	 * <strong>Notice that the content is NOT cloned, simply referenced!</strong>
+	 * 
+	 * @param contentToCopy the data structure to copy.
+	 * @return a copy of the data structure with the content of the input.
+	 */
+	private Set<Tag> copyContentToNewDatastructure(Set<Tag> contentToCopy) {
+		Set<Tag> copy = new HashSet<Tag> ();
+		synchronized (contentToCopy) {
+			for (Tag tag : contentToCopy) {
+				copy.add(tag);
+			}
+		}
+		return copy;
 	}
 
 	/** 
@@ -707,15 +720,6 @@ public final class EventCycle implements Runnable, Observer {
 	private void setAcceptTags(boolean acceptTags) {
 		this.acceptTags = acceptTags;
 	}
-	/**
-	 * for testing only!
-	 * set some tags as last event cycle tags
-	 * for testing only!
-	 * @param tags the set of the tags from the last event cycle
-	 */
-	void setLastEventCycleTags(Set<Tag> tags){
-		this.lastEventCycleTags = tags;
-	}
 
 	/**
 	 * @return the number of rounds this event cycle has already run through.
@@ -732,10 +736,18 @@ public final class EventCycle implements Runnable, Observer {
 	 */
 	public void join() throws InterruptedException {
 		synchronized (lock) {
-			while (!roundOver) {
+			while (!isRoundOver()) {
 				lock.wait();
 			}
 		}
+	}
+
+	/**
+	 * whether the event cycle round is over.
+	 * @return true if over, false otherwise
+	 */
+	public boolean isRoundOver() {
+		return roundOver;
 	}
 
 	public ECReportSpec getReportSpecByName(String name) {
