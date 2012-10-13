@@ -9,7 +9,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALE;
 import org.fosstrak.ale.server.ReportsGenerator;
-import org.fosstrak.ale.server.ReportsGeneratorState;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class ALEControllerImpl implements ALEController {
 		
 		if (reportsGenerator != null) {
 		
-			if (reportsGenerator.getState() == ReportsGeneratorState.REQUESTED){
+			if (reportsGenerator.isStateRequested()){
 				result = true;
 			}
 			
@@ -70,7 +69,7 @@ public class ALEControllerImpl implements ALEController {
 		
 		for (String reportGeneratorName : reportGeneratorNameList) {
 			
-			if (reportGeneratorList.get(reportGeneratorName).getState() == ReportsGeneratorState.REQUESTED){
+			if (reportGeneratorList.get(reportGeneratorName).isStateRequested()){
 				result.add(reportGeneratorName);
 			}
 			
@@ -94,7 +93,7 @@ public class ALEControllerImpl implements ALEController {
 		ReportsGenerator reportsGenerator = ale.getReportGenerators().get(specName);		
 		
 		if (reportsGenerator != null) {			
-			reportsGenerator.setState(ReportsGeneratorState.REQUESTED);			
+			reportsGenerator.setStateRequested();			
 		}	
 		
 	}
@@ -111,7 +110,7 @@ public class ALEControllerImpl implements ALEController {
 		ReportsGenerator reportsGenerator = ale.getReportGenerators().get(specName);	
 		
 		if (reportsGenerator != null) {			
-			reportsGenerator.setState(ReportsGeneratorState.UNREQUESTED);			
+			reportsGenerator.setStateUnRequested();			
 		}		
 		
 	}
@@ -156,7 +155,7 @@ public class ALEControllerImpl implements ALEController {
 				
 				if (logicalReaderName.equalsIgnoreCase(logicalReaderName_for)) {
 					
-					reportsGenerator.setState(ReportsGeneratorState.UNREQUESTED);
+					reportsGenerator.setStateUnRequested();
 					logicalReaderFind = true;
 					
 				}
@@ -198,7 +197,7 @@ public class ALEControllerImpl implements ALEController {
 					
 					if (logicalReaderName.equalsIgnoreCase(logicalReaderName_for)) {
 						
-						reportsGenerator.setState(ReportsGeneratorState.UNREQUESTED);
+						reportsGenerator.setStateUnRequested();
 						
 					}
 				}

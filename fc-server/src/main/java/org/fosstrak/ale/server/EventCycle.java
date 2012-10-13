@@ -87,8 +87,7 @@ public final class EventCycle implements Runnable, Observer {
 	private final ECSpec spec;
 	
 	/** set of logical readers which deliver tags for this event cycle. */
-	private final Set<LogicalReader> logicalReaders = 
-		new HashSet<LogicalReader>();
+	private final Set<LogicalReader> logicalReaders = new HashSet<LogicalReader>();
 	
 	/** set of reports for this event cycle. */
 	private final Set<Report> reports = new HashSet<Report>();
@@ -97,8 +96,7 @@ public final class EventCycle implements Runnable, Observer {
 	private final Map<String, ECReport> lastReports = new HashMap<String, ECReport> ();
 	
 	/** contains all the ec report specs hashed by their report name. */
-	private final Map<String, ECReportSpec> reportSpecByName = 
-		new HashMap<String, ECReportSpec> ();
+	private final Map<String, ECReportSpec> reportSpecByName = new HashMap<String, ECReportSpec> ();
 	
 	/** set of tags for this event cycle. */
 	private  Set<Tag> tags = Collections.synchronizedSet(new HashSet<Tag>());
@@ -201,15 +199,13 @@ public final class EventCycle implements Runnable, Observer {
 		LOG.debug("adding logicalReaders to EventCycle");
 		// get LogicalReaderStubs
 		if (spec.getLogicalReaders() != null) {
-			List<String> logicalReaderNames = 
-				spec.getLogicalReaders().getLogicalReader();
+			List<String> logicalReaderNames = spec.getLogicalReaders().getLogicalReader();
 			for (String logicalReaderName : logicalReaderNames) {
 				LOG.debug("retrieving logicalReader " + logicalReaderName);
 				LogicalReader logicalReader = logicalReaderManager.getLogicalReader(logicalReaderName);
 				
 				if (logicalReader != null) {
-					LOG.debug("adding logicalReader " + 
-							logicalReader.getName() + " to EventCycle " + name);
+					LOG.debug("adding logicalReader " +	logicalReader.getName() + " to EventCycle " + name);
 					logicalReaders.add(logicalReader);
 				}
 			}
@@ -220,9 +216,7 @@ public final class EventCycle implements Runnable, Observer {
 		for (LogicalReader logicalReader : logicalReaders) {
 			
 			// subscribe this event cycle to the logical readers
-			LOG.debug(
-					"registering EventCycle " + name + " on reader " + 
-					logicalReader.getName());
+			LOG.debug("registering EventCycle " + name + " on reader " + logicalReader.getName());
 			
 			logicalReader.addObserver(this);
 		}
@@ -234,7 +228,6 @@ public final class EventCycle implements Runnable, Observer {
 		thread.start();
 		
 		LOG.debug("New EventCycle  '" + name + "' created.");
-
 	}
 	
 	/**
@@ -244,9 +237,7 @@ public final class EventCycle implements Runnable, Observer {
 	 * @throws ECSpecValidationException if the tags of the report are not valid
 	 * @throws ImplementationException if an implementation exception occurs.
 	 */
-	private ECReports getECReports() 
-		throws ECSpecValidationException, 
-		ImplementationException {
+	private ECReports getECReports() throws ECSpecValidationException, ImplementationException {
 		
 		// create ECReports
 		ECReports reports = new ECReports();
@@ -430,7 +421,6 @@ public final class EventCycle implements Runnable, Observer {
 	public void stop() {
 		// unsubscribe this event cycle from logical readers
 		for (LogicalReader logicalReader : logicalReaders) {
-			//logicalReader.unsubscribeEventCycle(this);
 			logicalReader.deleteObserver(this);
 		}
 		
@@ -630,8 +620,7 @@ public final class EventCycle implements Runnable, Observer {
 				}
 			}
 		}
-		return -1;
-		
+		return -1;		
 	}
 	
 	/**	

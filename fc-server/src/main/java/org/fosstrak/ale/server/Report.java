@@ -191,7 +191,7 @@ public class Report {
 		Set<Tag> lastCycleTags = currentEventCycle.getLastEventCycleTags();
 		
 		//generate new ECReport
-		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
+		if (ECReportSetEnum.ADDITIONS.equalsIgnoreCase(reportType)) {
 			
 			// get additional tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -213,7 +213,7 @@ public class Report {
 			}
 			//writeDebugInformation(reportTags);
 	
-		} else if (reportType.equalsIgnoreCase(ECReportSetEnum.CURRENT)) {
+		} else if (ECReportSetEnum.CURRENT.equalsIgnoreCase(reportType)) {
 
 			// get tags from current EventCycle 
 			for (Tag tag : currentCycleTags) {
@@ -221,7 +221,7 @@ public class Report {
 			}
 
 		//} else if (reportType == ECReportSetEnum.DELETIONS) {
-		} else if (reportType.equalsIgnoreCase(ECReportSetEnum.DELETIONS)) {
+		} else if (ECReportSetEnum.DELETIONS.equalsIgnoreCase(reportType)) {
 			
 			// get removed tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -245,7 +245,10 @@ public class Report {
 			if (LOG.isTraceEnabled()) {
 				writeTraceInformation(reportTags);
 			}
+		} else {
+			LOG.info("unknown reportType: " + reportType);
 		}
+		
 
 		if (reportSpec.isReportIfEmpty() || !isEmpty()) {
 			ECReport temp = report;	

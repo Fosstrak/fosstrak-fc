@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.fosstrak.ale.exception.ECSpecValidationException;
 import org.fosstrak.ale.exception.ImplementationException;
 import org.fosstrak.ale.server.ReportsGenerator;
+import org.fosstrak.ale.server.impl.ReportsGeneratorImpl;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 
 /**
@@ -51,7 +52,8 @@ public class ReportsGeneratorsProvider implements Map<String, ReportsGenerator> 
 	 * @throws ECSpecValidationException specification is not valid.
 	 */
 	public ReportsGenerator createNewReportGenerator(String specName, ECSpec spec) throws ECSpecValidationException, ImplementationException {
-		return new ReportsGenerator(specName, spec);
+		// FIXME: this is far from nice...
+		return new ReportsGeneratorImpl(specName, spec);
 	}
 	
 	@Override

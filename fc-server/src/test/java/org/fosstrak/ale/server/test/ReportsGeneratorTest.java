@@ -35,6 +35,7 @@ import org.fosstrak.ale.exception.NoSuchSubscriberException;
 import org.fosstrak.ale.server.EventCycle;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.ReportsGeneratorState;
+import org.fosstrak.ale.server.impl.ReportsGeneratorImpl;
 import org.fosstrak.ale.server.util.ECReportsHelper;
 import org.fosstrak.ale.server.util.ECSpecValidator;
 import org.fosstrak.ale.server.util.test.ECReportsHelperTest;
@@ -104,7 +105,7 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall().andThrow(new ECSpecValidationException("Mock exception"));
 		EasyMock.replay(validator);
-		new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 	}
 	
 	/**
@@ -117,7 +118,7 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall().andThrow(new ImplementationException("Mock exception"));
 		EasyMock.replay(validator);
-		new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 	}
 	
 	/**
@@ -131,9 +132,9 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall();
 		EasyMock.replay(validator);
-		ReportsGenerator generator = new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		ReportsGenerator generator = new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 		Assert.assertEquals(spec, generator.getSpec());
-		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, generator.getState());
+		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, ((ReportsGeneratorImpl) generator).getState());
 		Assert.assertNotNull(generator.getSubscribers());
 		Assert.assertEquals(0, generator.getSubscribers().size());
 		Assert.assertEquals("theName", generator.getName());
@@ -151,7 +152,7 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall();
 		EasyMock.replay(validator);
-		ReportsGenerator generator = new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		ReportsGenerator generator = new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 		generator.subscribe(null);
 	}
 	
@@ -182,7 +183,7 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall();
 		EasyMock.replay(validator);
-		ReportsGenerator generator = new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		ReportsGenerator generator = new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 		generator.unsubscribe("http://localhost:9999");
 	}
 	
@@ -196,7 +197,7 @@ public class ReportsGeneratorTest {
 		validator.validateSpec(spec);
 		EasyMock.expectLastCall();
 		EasyMock.replay(validator);
-		ReportsGenerator generator = new ReportsGenerator("theName", spec, validator, new ECReportsHelper());
+		ReportsGenerator generator = new ReportsGeneratorImpl("theName", spec, validator, new ECReportsHelper());
 		generator.unsubscribe(null);
 	}
 
@@ -212,10 +213,10 @@ public class ReportsGeneratorTest {
 		final String uri ="http://localhost:9999"; 
 		final String uri2 ="http://localhost:8888"; 
 		
-		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, generator.getState());
+		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, ((ReportsGeneratorImpl) generator).getState());
 		generator.subscribe(uri);
 		Assert.assertEquals(1, generator.getSubscribers().size());
-		Assert.assertEquals(ReportsGeneratorState.REQUESTED, generator.getState());
+		Assert.assertEquals(ReportsGeneratorState.REQUESTED, ((ReportsGeneratorImpl) generator).getState());
 		generator.subscribe(uri2);
 		
 		Assert.assertEquals(2, generator.getSubscribers().size());
@@ -226,10 +227,10 @@ public class ReportsGeneratorTest {
 		
 		generator.unsubscribe(uri);
 		Assert.assertEquals(1, generator.getSubscribers().size());
-		Assert.assertEquals(ReportsGeneratorState.REQUESTED, generator.getState());
+		Assert.assertEquals(ReportsGeneratorState.REQUESTED, ((ReportsGeneratorImpl) generator).getState());
 		generator.unsubscribe(uri2);
 		Assert.assertEquals(0, generator.getSubscribers().size());
-		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, generator.getState());	
+		Assert.assertEquals(ReportsGeneratorState.UNREQUESTED, ((ReportsGeneratorImpl) generator).getState());	
 		
 		EasyMock.verify(validator);
 	}
@@ -423,7 +424,7 @@ public class ReportsGeneratorTest {
 	 * @author swieland
 	 *
 	 */
-	private class NonRunnableReportsGenerator extends ReportsGenerator {
+	private class NonRunnableReportsGenerator extends ReportsGeneratorImpl {
 		
 		public NonRunnableReportsGenerator(String name, ECSpec spec, ECSpecValidator validator)	throws ECSpecValidationException, ImplementationException {
 			super(name, spec, validator, new ECReportsHelper());
@@ -473,7 +474,7 @@ public class ReportsGeneratorTest {
 	 * @author swieland
 	 *
 	 */
-	private class NonRunnablePollableReportsGenerator extends ReportsGenerator {
+	private class NonRunnablePollableReportsGenerator extends ReportsGeneratorImpl {
 		
 		public NonRunnablePollableReportsGenerator(String name, ECSpec spec, ECSpecValidator validator)	throws ECSpecValidationException, ImplementationException {
 			super(name, spec, validator, new ECReportsHelper());
