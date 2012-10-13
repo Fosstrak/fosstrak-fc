@@ -14,7 +14,7 @@
    </appender>
 
 	<category name="org.fosstrak">
-		<priority value="DEBUG" />
+		<priority value="INFO" />
 	</category>
 	
 	<category name="org.fosstrak.hal.impl.sim.BatchSimulator">

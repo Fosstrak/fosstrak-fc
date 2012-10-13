@@ -171,7 +171,7 @@ public class ALEImpl implements ALE {
 	@Override
 	public ECReports immediate(ECSpec spec) throws ECSpecValidationException, ImplementationException {		
 		try {
-			return poll(new ReportsGenerator(getNextReportGeneratorName(), spec));
+			return poll(reportGeneratorsProvider.createNewReportGenerator(getNextReportGeneratorName(), spec));
 		} catch (NoSuchNameException e) {
 			throw new ImplementationException("immediate failed");
 		}
