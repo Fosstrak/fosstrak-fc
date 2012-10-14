@@ -20,10 +20,12 @@
 
 package org.fosstrak.ale.server;
 
+import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.persistence.PersistenceInit;
+import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -125,6 +127,33 @@ public final class ALEApplicationContext implements ApplicationContextAware, Ser
 			LOG.error("illegal application state: application context is null - aborting");
 			throw new IllegalStateException("illegal application state: application context is null - aborting");
 		}
+	}
+	
+	@PreDestroy
+	public void shutdown() {
+		LOG.info("======================================== shutdown hook received. ========================================");
+		try {
+			// stop all the readers
+			LOG.info("shutting down all the readers.");
+			LogicalReaderManager lrm = applicationContext.getBean(LogicalReaderManager.class);
+			if (null != lrm) {
+				for (LogicalReader logicalReader : lrm.getLogicalReaders()) {
+					LOG.info("Stopping reader: " + logicalReader.getName());
+					logicalReader.stop();
+				}
+			}
+			LOG.info("shutting down all reports generators and event cycles.");
+			ALE ale = applicationContext.getBean(ALE.class);
+			if (null != ale) {
+				for (ReportsGenerator generator : ale.getReportGenerators().values()) {
+					LOG.info("Setting reports generator state to unrequested for generator: " + generator.getName());
+					generator.setStateUnRequested();
+				}
+			}
+		} catch (Exception ex) {
+			LOG.error("caught exception in shutdown hook: ", ex);
+		}
+		LOG.info("======================================== shutdown hook over. ========================================");
 	}
 
 }

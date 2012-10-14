@@ -455,8 +455,9 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 	protected void start() {
 		
 		thread = new Thread(this, name);
-		thread.start();
+		thread.setDaemon(true);
 		setRunning(true);
+		thread.start();
 		LOG.debug("Thread of spec '" + name + "' started.");		
 	}
 	
@@ -467,11 +468,8 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 		eventCycle.stop();
 		
 		// stop Thread
-		if (thread.isAlive()) {
-			thread.interrupt();
-		}
-		
 		setRunning(false);
+		thread.interrupt();
 		
 		LOG.debug("Thread of spec '" + name + "' stopped.");
 	}
@@ -536,7 +534,7 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 								// wakeup the reports generator every once in a while
 								state.wait(WAKEUP_PERIOD);
 							} catch (InterruptedException e) {
-								LOG.debug("caught interrupted exception - leaving reports generator", e);
+								LOG.debug("caught interrupted exception - leaving reports generator.");
 								return;
 							}
 						}
@@ -559,10 +557,11 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 							eventCycle.join();
 							
 						} catch (InterruptedException e) {
-							LOG.debug("caught interrupted exception - leaving reports generator", e);
+							LOG.debug("caught interrupted exception - leaving reports generator.");
 							return;
 						}
 					}
+					LOG.debug("Stopping ReportsGenerator " + getName());
 					
 				}
 			} else {
@@ -581,7 +580,7 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 								state.wait();
 							}
 						} catch (InterruptedException e) {
-							LOG.debug("caught interrupted exception - leaving reports generator", e);
+							LOG.debug("caught interrupted exception - leaving reports generator.");
 							return;
 						}
 					}
@@ -597,24 +596,25 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 									eventCycle.wait(WAKEUP_PERIOD);
 								}
 							} catch (InterruptedException e) {
-								LOG.debug("caught interrupted exception - leaving reports generator", e);
+								LOG.debug("caught interrupted exception - leaving reports generator.");
 								return;
 							}
 						}
 					}
 				}
+				LOG.debug("Stopping ReportsGenerator " + getName());
 			}
 		}
 	}
 	
 	@Override
 	public void setStateRequested() {
-		state = ReportsGeneratorState.REQUESTED;
+		setState(ReportsGeneratorState.REQUESTED);
 	}
 	
 	@Override
 	public void setStateUnRequested() {
-		state = ReportsGeneratorState.UNREQUESTED;
+		setState(ReportsGeneratorState.UNREQUESTED);
 	}
 	
 	@Override

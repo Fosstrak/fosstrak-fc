@@ -127,7 +127,7 @@ public class IdentifyThread implements Runnable {
 	 * Starts an instance of IdentifyThread.
 	 */
 	public void start(){
-		this.identification=new Thread(this);
+		this.identification = new Thread(this, "IdentifyThread-" + getAdapter().getName());
 		log.debug("Trying to start Scanning...");
 		this.isRunning=true;
 		this.identification.start();

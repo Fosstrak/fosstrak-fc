@@ -53,6 +53,7 @@ public class TestAdaptor extends BaseReader {
 	
 	private Tag[] tagsAsArray;
 	private int tagSize;
+	private boolean running = false;
 	
 	/**
 	 * loads a list of tags.
@@ -102,7 +103,7 @@ public class TestAdaptor extends BaseReader {
 			String readerName = tb.getName();
 			
 			long i = 0;
-			while (true) {
+			while (isRunning()) {
 				TestAdaptor.log.debug("firing " + tps + " tags");
 				// generate tags 
 				List<Tag> tags = new LinkedList<Tag>();
@@ -122,11 +123,12 @@ public class TestAdaptor extends BaseReader {
 					Thread.sleep(wt);
 				} catch (InterruptedException e) {
 					// we have been interrupted so stop the thread
-					TestAdaptor.log.debug("we got an interrupt, so stop the tag bomb.");
+					TestAdaptor.log.debug("we got an interrupt exception - exiting.");
 					return;
 				}
 				tps += gain;
 			}
+			log.info("Stop the test adapter.");
 		}
 		
 	}
@@ -143,6 +145,10 @@ public class TestAdaptor extends BaseReader {
 		} catch (Exception e) {
 			throw new ImplementationException(e);
 		}
+	}
+
+	private boolean isRunning() {
+		return running;
 	}
 	
 	@Override
@@ -178,15 +184,21 @@ public class TestAdaptor extends BaseReader {
 		if (thread != null) {
 			stop();
 		}
-		thread = new Thread(new TestAdaptorRunnable(this));
+		running = true;
+		thread = new Thread(new TestAdaptorRunnable(this), getName());
+		thread.setDaemon(true);
 		thread.start();
 		setStarted();
 	}
 
 	@Override
 	public void stop() {
-		if (thread != null) {
-			thread.interrupt();
+		log.info("stopping reader.");
+		running = false;
+		thread.interrupt();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
 		}
 		thread = null;
 		setStopped();
