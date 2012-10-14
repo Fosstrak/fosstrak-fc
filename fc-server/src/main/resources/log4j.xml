@@ -13,7 +13,7 @@
 
 		<!-- Layout configuration -->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p %d [%t] %c: %m%n" />
+			<param name="ConversionPattern" value="%-5p %d [%t] %c:%L: %m%n" />
 		</layout>
 	</appender>
 

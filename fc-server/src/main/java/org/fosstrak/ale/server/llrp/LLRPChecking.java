@@ -41,7 +41,8 @@ public class LLRPChecking implements Runnable {
 	 * has always a defined ROSpec. 
 	 */
 	public void start() {		
-		thread = new Thread(this);
+		thread = new Thread(this, "LLRPChecking" + readerName);
+		thread.setDaemon(true);
 		thread.start();
 		isRunning = true;
 		LOG.info("LLRP Thread of " + this.readerName + " is started.");		
@@ -69,7 +70,8 @@ public class LLRPChecking implements Runnable {
         		AdaptorMgmt.sendLLRPMessage(this.readerName, getRoSpecs);
 	    		Thread.sleep(10000);
         	}  catch (InterruptedException e) {
-        		LOG.error("Error when LLRP thread is sleeping ", e);
+        		LOG.error("Error when LLRP thread is sleeping - aborting ", e);
+        		return;
         	}
         }
 	}	

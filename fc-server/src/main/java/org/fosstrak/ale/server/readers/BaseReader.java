@@ -74,7 +74,6 @@ public abstract class BaseReader extends LogicalReader {
 
 	/**
 	 * stops a reader from reading tags.
-	 *
 	 */
 	public abstract void stop();
 

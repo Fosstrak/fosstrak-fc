@@ -227,7 +227,8 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 		rounds = 0;
 		
 		// create and start Thread
-		thread = new Thread(this);
+		thread = new Thread(this, "EventCycle" + name);
+		thread.setDaemon(true);
 		thread.start();
 		
 		LOG.debug("New EventCycle  '" + name + "' created.");
@@ -414,13 +415,10 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 		for (LogicalReader logicalReader : logicalReaders) {
 			logicalReader.deleteObserver(this);
 		}
-		
-		if (isEventCycleActive()) {
-			thread.interrupt();
-			
-			// stop EventCycle
-			LOG.debug("EventCycle '" + name + "' stopped.");
-		}
+
+		running = false;
+		thread.interrupt();
+		LOG.debug("EventCycle '" + name + "' stopped.");
 		
 		isTerminated = true;
 		
@@ -456,7 +454,8 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
-					LOG.debug("caught interrupted exception");
+					LOG.info("eventcycle got interrupted");
+					return;
 				}
 			}
 		}
@@ -499,6 +498,7 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 				
 				// if Thread is stopped with method stop(), 
 				// then return without notify subscribers.
+				LOG.info("eventcycle got interrupted");
 				return;
 			}
 			
@@ -532,6 +532,10 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 				tags = Collections.synchronizedSet(new HashSet<Tag>());
 				
 			} catch (Exception e) {
+				if (e instanceof InterruptedException) {
+					LOG.info("eventcycle got interrupted");
+					return;
+				}
 				LOG.error("EventCycle "+ getName() + ": Could not create ECReports", e);
 			}
 			
@@ -549,7 +553,8 @@ public final class EventCycleImpl implements EventCycle, Runnable {
 				}
 				LOG.debug("eventcycle continues");
 			} catch (InterruptedException e) {
-				LOG.error("eventcycle got interrupted");
+				LOG.info("eventcycle got interrupted");
+				return;
 			}			
 		}
 			
