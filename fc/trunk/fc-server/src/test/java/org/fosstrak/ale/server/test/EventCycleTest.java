@@ -34,6 +34,7 @@ import org.fosstrak.ale.exception.NoSuchSubscriberException;
 import org.fosstrak.ale.server.EventCycle;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.server.impl.EventCycleImpl;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.util.DeserializerUtil;
@@ -138,7 +139,7 @@ public class EventCycleTest {
 		
 		EasyMock.replay(reportsGenerator);
 		
-		final EventCycle cycle = new EventCycle(reportsGenerator, manager);
+		final EventCycle cycle = new EventCycleImpl(reportsGenerator, manager);
 		final Tag t1 = new Tag();
 		t1.setTagAsBinary(TAG1_BINARY);
 		t1.setTagIDAsPureURI(TAG1_PURE_URI);
@@ -153,7 +154,7 @@ public class EventCycleTest {
 		tags.add(t2);
 		tags.add(t3);
 		
-		Assert.assertFalse(cycle.isRoundOver());
+		Assert.assertFalse(((EventCycleImpl) cycle).isRoundOver());
 		
 		Thread sender = new Thread(new Runnable(){
 
@@ -213,7 +214,7 @@ public class EventCycleTest {
 		
 		Assert.assertNotNull(cycle.getLastReports());
 
-		Assert.assertTrue(cycle.isRoundOver());
+		Assert.assertTrue(((EventCycleImpl) cycle).isRoundOver());
 		Assert.assertEquals(1, cycle.getRounds());
 	}
 }

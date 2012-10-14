@@ -191,7 +191,7 @@ public class Report {
 		Set<Tag> lastCycleTags = currentEventCycle.getLastEventCycleTags();
 		
 		//generate new ECReport
-		if (ECReportSetEnum.ADDITIONS.equalsIgnoreCase(reportType)) {
+		if (ECReportSetEnum.isSameECReportSet(ECReportSetEnum.ADDITIONS, reportType)) {
 			
 			// get additional tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -213,15 +213,13 @@ public class Report {
 			}
 			//writeDebugInformation(reportTags);
 	
-		} else if (ECReportSetEnum.CURRENT.equalsIgnoreCase(reportType)) {
+		} else if (ECReportSetEnum.isSameECReportSet(ECReportSetEnum.CURRENT, reportType)) {
 
 			// get tags from current EventCycle 
 			for (Tag tag : currentCycleTags) {
 				addTag(tag);
 			}
-
-		//} else if (reportType == ECReportSetEnum.DELETIONS) {
-		} else if (ECReportSetEnum.DELETIONS.equalsIgnoreCase(reportType)) {
+		} else if (ECReportSetEnum.isSameECReportSet(ECReportSetEnum.DELETIONS, reportType)) {
 			
 			// get removed tags
 			Map<String, Tag> reportTags = new HashMap<String, Tag>();
@@ -334,7 +332,7 @@ public class Report {
 	 */
 	private boolean isMember(String tagURI) throws ECSpecValidationException, ImplementationException {
 				
-		if (reportType.equalsIgnoreCase(ECReportSetEnum.ADDITIONS)) {
+		if (ECReportSetEnum.isSameECReportSet(ECReportSetEnum.ADDITIONS, reportType)) {
 		
 			// if report type is additions the tag is only a member if it wasn't a member of the last event cycle	
 			Set<Tag> tags = currentEventCycle.getLastEventCycleTags();

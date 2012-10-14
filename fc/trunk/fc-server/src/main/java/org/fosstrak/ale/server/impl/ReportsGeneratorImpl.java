@@ -488,6 +488,16 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 	}
 	
 	/**
+	 * create a new EventCycle that can be used by this reports generator.
+	 * @return the newly created event cycle.
+	 * @throws ImplementationException when the event cycle cannot be created.
+	 */
+	protected EventCycle createEventCycle() throws ImplementationException {
+		LOG.debug("creating new event cycle.");
+		return new EventCycleImpl(this);
+	}
+	
+	/**
 	 * This method contains the main loop of the reports generator.
 	 * Here the event cycles will be generated and started.
 	 */
@@ -495,13 +505,14 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 	public void run() {
 		
 		try {
-			eventCycle = new EventCycle(this);
+			eventCycle = createEventCycle();
 		} catch (ImplementationException e) {
 			LOG.error("could not create a new EventCycle - aborting.", e);
 			return;
 		}
 		
 		if (startTriggerValue != null) {
+			LOG.debug("start trigger defined - not invoking the event cycle start..");
 			if (!isRepeatPeriodSet()) {
 				// startTrigger is specified and repeatPeriod is not specified
 				// eventCycle is started when:
@@ -570,6 +581,7 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 								state.wait();
 							}
 						} catch (InterruptedException e) {
+							LOG.debug("caught interrupted exception - leaving reports generator", e);
 							return;
 						}
 					}
@@ -585,6 +597,7 @@ public class ReportsGeneratorImpl implements ReportsGenerator, Runnable {
 									eventCycle.wait(WAKEUP_PERIOD);
 								}
 							} catch (InterruptedException e) {
+								LOG.debug("caught interrupted exception - leaving reports generator", e);
 								return;
 							}
 						}
