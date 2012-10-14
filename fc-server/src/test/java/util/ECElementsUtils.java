@@ -57,7 +57,7 @@ public class ECElementsUtils extends Assert {
 	private static final String STOP_TRIGGER = null;
 	private static final boolean REPORT_ONLY_ON_CHANGE = false;
 	private static final boolean REPORT_IF_EMPTY = true;
-	private static final String SET_SPEC = ECReportSetEnum.CURRENT;
+	private static final String SET_SPEC = ECReportSetEnum.CURRENT.name();
 	private static final List<String> INCLUDE_PATTERNS;
 	private static final List<String> EXCLUDE_PATTERNS;
 	private static final List<String> GROUP_PATTERNS;

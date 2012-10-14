@@ -20,18 +20,43 @@
 
 package org.fosstrak.ale.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+
 /**
  * backwards compatibility to provide ECReportSetEnum values.
  * @author swieland
  *
  */
-public class ECReportSetEnum {
+public enum ECReportSetEnum {
+	
 	/** all the current tags. */
-	public static final String CURRENT = "CURRENT";
+	CURRENT,
 	
 	/** all the new tags. */
-	public static final String ADDITIONS = "ADDITIONS";
+	ADDITIONS,
 	
 	/** all the tags that left the previous cycle. */
-	public static final String DELETIONS = "DELETIONS";
+	DELETIONS;
+	
+	/** logger. */
+	private static final Logger LOG = Logger.getLogger(ECReportSetEnum.class);
+	
+	/**
+	 * compare a given input string to the report set enumerations values. 
+	 * the method is save for illegal input arguments (eg. null or not existing report set type).
+	 * further the method is case insensitive
+	 * @param setEnum the enumeration value to compare to.
+	 * @param name the value to check from the enumeration.
+	 * @return true if same enumeration value, false otherwise.
+	 */
+	public static boolean isSameECReportSet(ECReportSetEnum setEnum, String name) {
+		try {
+			return setEnum.equals(ECReportSetEnum.valueOf(StringUtils.upperCase(name)));
+		} catch (Exception ex) {
+			LOG.error("you provided an illegal report set enum value: " + name, ex);
+		}
+		return false;
+	}
 }

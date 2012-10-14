@@ -27,6 +27,7 @@ import org.easymock.EasyMock;
 import org.fosstrak.ale.server.EventCycle;
 import org.fosstrak.ale.server.ReportsGenerator;
 import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.server.impl.EventCycleImpl;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
 import org.fosstrak.ale.server.readers.test.TestAdaptor;
@@ -88,7 +89,7 @@ public class EventCycleConcurrencyTest {
 		EasyMock.expectLastCall().anyTimes();
 		EasyMock.replay(reportsGenerator);
 		
-		EventCycle cycle = new EventCycle(reportsGenerator, manager);
+		EventCycle cycle = new EventCycleImpl(reportsGenerator, manager);
 		// execute the event cycle scheduler (invoking indirectly the ec processing)
 		Thread launcher = new Thread(createEventCycleRescheduler(cycle));
 		launcher.start();
@@ -152,7 +153,7 @@ public class EventCycleConcurrencyTest {
 					ec.launch();
 					while (true) {
 						Thread.sleep(307L);
-						if (ec.isRoundOver()) {
+						if (((EventCycleImpl) ec).isRoundOver()) {
 							LOG.debug("reschedule EventCycle.");
 							ec.launch();
 						}

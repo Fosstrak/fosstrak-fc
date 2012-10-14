@@ -97,7 +97,7 @@ public class IdentifyThread implements Runnable {
 					try {
 						wait();
 					} catch (Exception e) {
-						log.error(e.getMessage());
+						log.error("caught exception - stopping processing.", e);
 						this.stopIdentify();
 					}
 				}
@@ -118,7 +118,7 @@ public class IdentifyThread implements Runnable {
 					Thread.sleep(this.frequency);
 				}
 			} catch (InterruptedException e){
-				log.debug(e.getMessage());
+				log.debug("caught interrupted exception - ", e);
 			}
 		}
 	}	

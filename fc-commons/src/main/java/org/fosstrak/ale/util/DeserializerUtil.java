@@ -35,14 +35,6 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 import org.apache.log4j.Logger;
-
-import org.jdom.Document;
-import org.jdom.input.SAXBuilder;
-import org.llrp.ltk.generated.LLRPMessageFactory;
-import org.llrp.ltk.generated.messages.ADD_ROSPEC;
-import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
-import org.llrp.ltk.types.LLRPMessage;
-
 import org.fosstrak.ale.wsdl.alelr.epcglobal.AddReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.RemoveReaders;
 import org.fosstrak.ale.wsdl.alelr.epcglobal.SetProperties;
@@ -51,6 +43,12 @@ import org.fosstrak.ale.xsd.ale.epcglobal.ECReports;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECSpec;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRProperty;
 import org.fosstrak.ale.xsd.ale.epcglobal.LRSpec;
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
+import org.llrp.ltk.generated.LLRPMessageFactory;
+import org.llrp.ltk.generated.messages.ADD_ACCESSSPEC;
+import org.llrp.ltk.generated.messages.ADD_ROSPEC;
+import org.llrp.ltk.types.LLRPMessage;
 
 /**
  * This class provides some methods to deserialize ec specifications and reports.
