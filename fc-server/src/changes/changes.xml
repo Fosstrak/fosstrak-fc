@@ -3,11 +3,14 @@
 		<title>Changes fc-server</title>
 	</properties>
 	<body>
-		<release version="1.1.X" date="2012-XX-XX" description="Feature and Bugfix release">
+		<release version="1.2.0" date="2012-10-19" description="Feature and Bugfix release">
 			<action dev="swieland" type="add">Use Spring to configure a context.</action>
 			<action dev="swieland" type="add">Rewrite Logical Reader Manager to provide non-static methods.</action>
 			<action dev="swieland" type="add">Rewrite ALE to provide non-static methods.</action>
 			<action dev="swieland" type="add">Upgrade CXF to latest stable version.</action>
+			<action dev="swieland" type="add">Abstract EventCycle into Interface and Implementation.</action>
+			<action dev="swieland" type="add">Abstract ReportsGenerator into Interface and Implementation.</action>
+			<action dev="swieland" type="add">Major code optimizations regarding coding style and performance.</action>
 		</release>
 		<release version="1.1.0" date="2011-11-21" description="Orange Enhancements">
 			<action dev="plomion" type="add">configuration files's Persistence of the ALE to avoid to configure for each server startup.</action>
