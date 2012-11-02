@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Fosstrak ALE Middleware">
+  <bannerLeft>
+    <name>Fosstrak</name>
+    <src>images/banner_left.gif</src>
+    <href>http://www.fosstrak.org/</href>
+  </bannerLeft>
+  <skin>
+    <groupId>org.fosstrak.mavenskin</groupId>
+    <artifactId>mavenskin-default</artifactId>
+    <version>1.0</version>
+  </skin>
+  <poweredBy>
+    <logo img="images/logos/supportedByAutoid4.png" name="Auto-ID" href="http://www.autoidlabs.org/" />
+  </poweredBy>
+  <publishDate position="none"/>
+
+  <body>
+    <links>
+      <item name="EPCIS Repository" href="../epcis/index.html"/>
+	  <item name="TDT Engine" href="../tdt/index.html"/>
+      <item name="ALE Middleware" href="index.html"/>
+	  <item name="LLRP Commander" href="../llrp/index.html"/>
+    </links>
+
+
+    <!-- =========================================================== -->
+    <!-- Navigation Menu                                             -->
+    <!-- =========================================================== -->
+     
+    <menu name="ALE Middleware" inherit="top">
+      <item name="Overview" href="index.html"/>
+      <item name="Features" href="features.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="License" href="license.html"/>
+      <item name="Mailing Lists" href="mail-lists.html"/>
+      <item name="Issue Tracking" href="issue-tracking.html"/>
+<!--      <item name="Source Repository" href="source-repository.html"/> -->
+      <item name="FAQ" href="faq.html" collapse="true"/>
+      <item name="JavaDoc" href="apidocs/index.html"/>
+    </menu>
+
+    <menu name="Guides &amp;amp; Documentation" inherit="top">
+	<item name="User Guide" href="docs/user-index.html" collapse="false">
+	    <item name="Quick Start" href="docs/user-example.html"/>
+		<item name="Install fc-server" href="docs/user-installation.html"/>
+		<item name="Define Logical Reader" href="docs/user-lrdef.html"/>
+		<item name="Use ALE Clients" href="docs/user-testclients.html"/>
+		<item name="Test Scenarios" href="docs/user-test-scenarios.html"/>
+		<item name="Capturing App" href="../capturingapp/index.html"/>
+	</item>
+	
+	<item name="Developer Guide" href="docs/developer-index.html" collapse="true">
+		<item name="ALE Service Binding" href="docs/developer-ale.html"/>		
+		<item name="ALE LR Service Binding" href="docs/developer-alelr.html"/>
+		<item name="Event Cycle" href="docs/developer-eventcycle.html"/>
+		<item name="Persistence" href="docs/developer-persistence.html"/>
+		<item name="Reports generation" href="docs/developer-reports-generator.html"/>
+		<item name="Reports notification" href="docs/developer-reports-notification.html"/>
+		<item name="ALE Controller" href="docs/developer-alecontroller.html"/>
+		<item name="LLRP Controller" href="docs/developer-llrpcontroller.html"/>
+		<item name="User Memory" href="docs/developer-usermemory.html"/>
+		<item name="Logical Reader concept" href="docs/developer-reader-concept.html"/>
+		<item name="Implement an Adaptor" href="docs/developer-adaptor.html"/>
+		<item name="Serializers and Deserializers" href="docs/developer-serializers.html"/>
+	</item>
+    </menu>
+    
+    <menu name="ALE Middleware Modules" inherit="none">
+      <item name="FC Client" href="fc-client/project-reports.html" collapse="true">
+        <item name="dummy"/>
+      </item>
+      <item name="FC Commons" href="fc-commons/project-reports.html" collapse="true">
+        <item name="dummy"/>
+      </item>
+      <item name="FC Server" href="fc-server/project-reports.html" collapse="true">
+        <item name="dummy"/>
+      </item>
+      <item name="FC Webclient" href="fc-webclient/project-reports.html" collapse="true">
+        <item name="dummy"/>
+      </item>
+    </menu>
+    
+    <breadcrumbs>
+      <item href="../index.html" name="Fosstrak" />
+      <item name="ALE Middleware"/> <!-- href is derived from project.url -->
+    </breadcrumbs>
+  
+  </body>
+     
+</project>
+

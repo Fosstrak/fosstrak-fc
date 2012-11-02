@@ -1,0 +1,34 @@
+<document>
+    <properties>
+        <title>Changes fc-webclient</title>
+    </properties>
+    <body>
+        <release version="0.4.0" date="2008-07-29"
+            description="Project name changed to Fosstrak">
+            <action dev="roduner" type="update">
+                Renamed packages from org.accada to org.fosstrak.
+            </action>
+        </release>
+        <release version="0.3.0" date="2008-03-??"
+            description="Feature release: ALE 1.1">
+            <!-- general changes -->
+            <action dev="swieland" type="add">
+               fc-webclient now supports the full logical reader api.
+            </action>
+            <action dev="swieland" type="update">
+               adapted fc-webclient to the new fc-commons.
+            </action>
+	    <action dev="swieland" type="add">
+               modified documentation according to the schema in epcis.
+            </action>
+	    <action dev="swieland" type="add">
+               integration of Logical Reader API into ALEService. 
+	       adaption of the webclient UI to support the new methods.
+            </action>
+        </release>
+        <release version="0.2.0" date="2007-04-27"
+            description="Initial release">
+            <action type="add">Initial code release.</action>
+        </release>
+    </body>
+</document>

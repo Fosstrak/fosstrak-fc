@@ -1,0 +1,148 @@
+       ------
+                                    Users guide - Test clients
+                                    ------
+                                    ------
+
+
+Users guide - Test clients
+
+* Content
+	
+	[[1]] {{{#Objective}Objective}}
+	
+	[[2]] {{{#Clients}Clients}}
+	
+	[[3]] {{{#ECSpecifications}ECSpecifications}}
+	
+	[[4]] {{{#LRSpec}LRSpec}}
+	
+	[[5]] {{{#Displaying}Displaying reports}}	
+
+* {Objective}
+
+	This guide shall give a short overview to the 
+	clients that allow the connection to the Filtering and 
+	Collection.
+	
+
+* {Clients}
+
+ Fosstrak comes with two different testclients that allow to interactively use a Filtering and
+  Collection Server instance. While the first client is a standalone Java application with a
+  Swing GUI, the second client is a web application that can be accessed with any web browser.
+  
+** Standalone Client
+
+  The <<Filtering and Collection Standalone Client>> is a pure Java application. On our {{{../download.html}download page}}
+  we provide a ZIP file  with all the necessary libraries included.
+
+  The standalone client is configure through the <<<ALEClient.properties>>> file. To get started quickly, it should 
+  be sufficient to adjust the <<<EndPoint>>> option to specify the server to communicate with. All other options
+  can be left unchanged initially. After starting the client with the <<<java -jar fc-client<Version>.jar>>> command,
+  you will see the following screen:
+
+[../images/userGuide/GUIClientBasic.png]
+
+  If the endpoint is not correctly configured an error dialog pops up, informing you that the client couldn't connect
+  to the server:
+
+[../images/userGuide/GUIClientFailureDialog.png]
+
+  The client's user interface has three sections. Commands can be choosen from a dropdown box in the top section.
+  In the middle, parameters for the selected command can be typed in (not all commands need parameters).
+  Commands are sent to the server by clicking the the <<<execute>>> button. 
+  
+[../images/userGuide/GUIClientCommando.png]
+
+  The third section is used to display the server's response.
+
+  []
+
+** Web Client
+
+  The <<Filtering and Collection Web Client>> is based on Java Server Pages (JSP). To set it up, you have to get
+  the Web Client WAR file from our {{{../download.html}download page}} and simply place it into 
+  Tomcat's webapp directory. After restarting Tomcat, the WAR file will be deployed and the Web Client is ready 
+  without any need for configuration (for more information about the deployment process, visit this
+  {{{http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Deploy%20A%20New%20Application%20Remotely}page}}).
+  To access the Web Client, visit the URL <<<http://<hostname>:8080/<WAR-File Name>/services/ALEWebClient.jsp>>>.
+  Again, you will see a user interface that is divided into three frames. In the left frame, all methods are listed,
+  while the top right one accepts the method arguments and the bottom right frame displays server responses.
+
+[../images/userGuide/WebClient.png]
+
+  Before invoking any other methods, you will have to set the endpoint (i.e., the Filtering and Collection Server
+  to communicate with) by choosing the <<<setEndpoint() >>> method in left frame and inserts the URL of your
+  Filtering and Collection Server in the text field (top right frame). After hitting the <<<Invoke >>> button,
+  the endpoint is set. You can use the <<<getVendorVersion() >>> method, to check if communication between the
+  Web Client and the server works.
+
+  []
+
+
+* {ECSpecifications}
+
+	The ECSpecs define how a the Filtering and Collection Server shall generate reports. You can 
+	retrieve current tags, tags that have been added or deleted with respect to the last EventCycle or 
+	combinations of all. 
+	Thatfor you need to provide the Filtering and Collection Server with a valid ECSpec in xml format 
+	using one of the two applications (webclient, rp-client). The ECSpec becomes active as soon as 
+	you subscribe with a notificationURI.
+	
+	The following list provides a few sample ECSpecs. For all three examples you need to have a 
+	LogicalReader named "LogicalReader1". The Filtering and Collection will restart the EventCycle 
+	every 30 seconds (30000ms) and will read tags during 5 seconds (5000ms). Feel free to modify the 
+	parameters to your needs. Attention: The readTimeInterval should be smaller than the duration of 
+	the EventCycle.
+	
+	* {{{../files/ECSpec_current.xml}ECSpec_current.xml}}: Retrieve all the tags that are currently on 
+		the reader.
+	
+	* {{{../files/ECSpec_additions.xml}ECSpec_additions.xml}}: Retrieve all the tags that have been added 
+		to the reader since the last EventCycle.
+	
+	* {{{../files/ECSpec_deletions.xml}ECSpec_deletions.xml}}: Retrieve all the tags that have been deleted 
+		from the reader since the last EventCycle.
+	
+* {LRSpec}
+
+	An LRSpec contains information about a reader. Whenever a new reader is to be created a 
+	corresponding LRSpec has to be created and shipped to the Filtering and Collection Server.
+	
+	The following list provides a few sample LRSpecs.
+	
+	* {{{../files/RPReader.xml}RPReader.xml}}: Create a reader protocoll reader.
+	
+	* {{{../files/HALReader.xml}HALReader.xml}}: Create a HAL reader.
+	
+	* {{{../files/TestAdaptor.xml}TestAdaptor.xml}}: Create a test reader.
+	
+	* {{{../files/CompositeReader1.xml}CompositeReader1.xml}}: Create a composite reader. You 
+		need two readers reader1 and reader2 that are already defined, else the Logical Reader API will complain 
+		about the missing readers.
+		
+	For a more detailed introduction to the LRSpec refer to the Developers guide - ALEServiceBinding.
+		
+	
+* {Displaying} reports
+
+   For testing purposes, the class org.fosstrak.reader.rp.client.EventSinkUI from the Fosstrak Reader Client module
+   can be used to receive and display reports.
+
+   The following steps show how to install and execute the EventSinkUI class:
+
+   * Download the Reader RP Client binaries with the dependencies included from the {{{../download.html}download}} section of the website.
+  
+   * Unzip the downloaded file
+   
+   * Make sure a JRE 1.5 or higher is installed and it is added to the path variable.
+   
+   * Start the class in the jar file with the following command:
+     java -cp reader-rp-client-VERSION.jar org.fosstrak.reader.rp.client.EventSinkUI [port]
+
+   * As the port use the TCP port to which the filtering and collection module is sending the reports.
+     The port is specified when subscribing for a specification in the notification URI.
+     (e.g. tcp://localhost:9999 as the notification URI). 
+
+  []
+

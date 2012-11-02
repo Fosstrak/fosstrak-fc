@@ -1,0 +1,667 @@
+       ------
+                                    How to implement an Adaptor
+                                    ------
+                                    ------
+
+
+How to implement an Adaptor
+
+* Contents
+
+   [[1]] {{{#Objective}Objective}}
+
+   [[2]] {{{#HALAdaptor}HALAdaptor}}
+   
+   [[3]] {{{#RPAdaptor}RPAdaptor}}
+
+   [[4]] {{{#LLRPAdaptor}LLRPAdaptor}}
+   
+   [[5]] {{{#TestAdaptor}TestAdaptor}}
+
+   [[6]] {{{#A}A new Adaptor}}
+
+
+* {Objective}
+
+	This guide is intented for developers who wish to integrate a 
+	tag reader into to the Logical Reader API of the fosstrak ALE. The guide 
+	gives three examples to three existing Adaptors. In the second part 
+	a more detailed explanation about how to implement your own adaptor is 
+	given.
+	
+	There are two different types of Logical Reader Definitions that 
+	should not be confused! 
+	
+	* Dynamic Logical Reader Definitions:
+	
+		Dynamic Logical Reader Definitions are read by the fc-client 
+		and the fc-webclient. If you want to specify a logical reader 
+		at runtime through the Logical Reader API you need to use 
+		a Dynamic Logical Reader. 
+
+	* Static Logical Reader Definitions:
+	
+		Static Logical Reader Definitions are read/written by the Logical 
+		Reader Manager upon ALE deployment. They contain additional 
+		information for the Logical Reader Manager. 
+
+	[]
+	
+
+
+* {HALAdaptor}
+	
+	The HALAdaptor provides an adaptor to the Hardware Abstraction Layer 
+	(HAL).
+	
+** Schematic
+	
+	Currently the HALAdaptor creates a SimulatorController object. This object 
+	in turn then sets up the HAL device as requested by the properties file. 
+
+[../images/readerAPI/HALAdaptor.png]
+
+	For example properties files refer to:
+	 
+	* BatchSimulator.xml for a batch simulator
+	
+	* GraphicSimulator.xml for a graphical simulator
+
+
+
+	[]
+	The HAL devices from the Fosstrak project currently do not provide a 
+	polling mechanism. To retrieve Tags from these devices we therefor need 
+	a mechanism to periodically poll the device. We chose an identifyThread 
+	that polls the HAL device in a regular time interval.
+	
+[../images/readerAPI/HALAdaptorPolling.png]
+	
+	[]
+	
+** Required parameters	
+	
+	You need to provide all the following parameters to the HALAdaptor:
+	
+	* isComposite: is the reader a composite reader (false).
+	
+	* ReaderType: the class name of the implementor 
+		(org.fosstrak.ale.server.readers.hal.HALAdaptor)
+	
+	* PhysicalReaderName: the name of the underlying physical reader.
+	
+	* ReadTimeInterval: how often to read from the reader.
+	
+	* PropertiesFile: the properties file for the HAL reader.
+	
+	[]
+	
+	The xml definitions slightly differ for the dynamic and the static 
+	definition. Two full examples are given to illustrate where the 
+	parameters are defined.
+	
+** Load HAL other than SimulatorController
+
+	If you want to load a HAL implementation not contained in the 
+	simulator framework (eg. impinj or feig implementation) you 
+	need to specify the corresponding implementation in the 
+	configuration file.
+
+	<<ATTENTION>>: Make sure that your implementation of the 
+	HardwareAbstraction interface provides a public 
+	constructor of the form <XYZ(String halName, String configFile)>.
+	
++---+
+Example 1: for the impinj hal from fosstrak
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.impinj.ImpinjTCPIPController</value>
+</property
+
+Example 2: for the feig hal from fosstrak
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.feig.FeigTCPIPController</value>
+</property>
+
+Example 3: for the simulator controller (default)
+// add the following property to the required properties
+<property>
+	<name>ImplementingClass</name>
+	<value>org.fosstrak.hal.impl.sim.SimulatorController</value>
+</property
+
++---+
+
+** Dynamic definition
+
++---+
+Sample Configuration for a HALAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>My first HAL device reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader1</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PropertiesFile</name>
+            <value>/props/SimulatorController.xml</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static definition	
+
+	In addition to the dynamic definition you must provide the reader name!
+	
++---+
+Sample Configuration for a HALAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+		<LRProperty name="Description" 
+			value="HAL reader created during system startup"/>
+		<LRProperty name="AdaptorClass" value="HAL"/>
+		<LRProperty name="PhysicalReaderName" value="MyReader"/>
+		<LRProperty name="ReadTimeInterval" value="1000"/>
+		<LRProperty name="PropertiesFile" 
+			value="/props/SimulatorController.xml"/>
+		<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
+	</LRSpec>
+</LogicalReader>
++---+
+	
+	[]
+
+
+
+
+
+
+
+
+
+
+
+* {RPAdaptor}
+
+	The RPAdaptor provides an adaptor to the reader protokoll (RP). 
+
+** Schematic
+
+	The RPAdaptor provides a default constructor and an initializer method. 
+	Both are called in the construction phase of the LogicalReader. The 
+	RPAdaptor implements all methods that are required by the logical 
+	reader API (basically these are the methods that are specified in 
+	LogicalReader and in BaseReader).
+	
+	Aside the standard methods and fields the RPAdaptor requires some more 
+	functionality to communicate with a rp-proxy. The InputGenerator sets 
+	up the connection between the RPAdaptor and the rp-proxy. There are 
+	two channels that need to be created. The first one (command channel) 
+	is created for the communication from the RPAdaptor to the rp-proxy. 
+	The command channel uses the connection settings provided by 
+	ConnectionPoint. The second channel (notification channel) is used 
+	for the communication from the rp-proxy to the RPAdaptor and provides 
+	a channel for the delivery of tags from the physical reader. The 
+	settings provided by NotificationPoint are used to set up this 
+	channel. As soon as the RPAdaptor is started through the logical 
+	reader API the rp-proxy sends tag events that are then processed by 
+	the InputGenerator and sent through the RPAdaptor to the observers 
+	(CompositeReader or EventCycle).
+	
+	
+[../images/readerAPI/RPAdaptor.png]
+	
+	The reader protocol provides a tag-smoothing by hardware. In the current 
+	implementation of the RPAdaptor we do not use this feature and poll 
+	the adaptor in a regular time intervall through a identifyThread instead. 
+	The main reason why we did without the tag smoothing is mainly an 
+	architectural decision. The reports generation performs this action in 
+	a higher application level again. To allow maximum flexibility 
+	in this high level tag smoothing we wanted to provide as many tags as 
+	possible. 
+	
+[../images/readerAPI/RPAdaptorPolling.png]
+	
+
+** Required parameters
+
+	You need to provide all the following parameters to the RPAdaptor:
+	
+	* isComposite: is the reader a composite reader (false).
+	
+	* ReaderType: the class name of the implementor 
+		(org.fosstrak.ale.server.readers.hal.HALAdaptor)
+	
+	* PhysicalReaderName: the name of the underlying physical reader.
+	
+	* ReadTimeInterval: how often to read from the reader.
+	
+	* PhysicalReaderSource: the sources where to read from (one rp reader 
+		can have several different sources).
+		
+	* NotificationPoint: The notification point where to send notifications.
+	
+	* ConnectionPoint: The controll connection point.
+	
+	[]
+	
+	The xml definitions slightly differ for the dynamic and the static 
+	definition. Two full examples are given to illustrate where the 
+	parameters are defined.
+
+** Dynamic definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.rp.RPAdaptor</value>
+        </property>
+	<property>
+	    <name>Description</name>
+	    <value>This Logical Reader consists of shelf 1 
+	    	and shelf 2,3,4 of the physical 
+		reader named MyReader</value>
+	</property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PhysicalReaderSource</name>
+            <value>Shelf1,Shelf2,Shelf3,Shelf4</value>
+        </property>
+        <property>
+            <name>NotificationPoint</name>
+            <value>http://localhost:9090</value>
+        </property>
+        <property>
+            <name>ConnectionPoint</name>
+            <value>http://localhost:8000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.fosstrak.ale.server.readers.rp.RPAdaptor">
+		<LRProperty name="Description" value="My physical Reader"/>
+		<LRProperty name="ConnectionPoint" 
+			value="http://localhost:8000"/>
+		<LRProperty name="NotificationPoint" 
+			value="http://localhost:9090"/>
+		<LRProperty name="ReadTimeInterval" value="200"/>
+		<LRProperty name="AdaptorClass" value="ReaderProtocol"/>
+		<LRProperty name="PhysicalReaderName" value="MyReader"/>
+		<LRProperty name="PhysicalReaderSource" 
+			value="Shelf1,Shelf2,Shelf3,Shelf4"/>
+	</LRSpec>
+</LogicalReader>
++---+
+
+		
+	[]
+	
+	
+	
+
+
+* {LLRPAdaptor}
+
+	Fosstrak supports the integration of LLRP enabled readers through 
+	the Fosstrak LLRP Commander project. The LLRP Commander enables you 
+	to configure and manage your LLRP readers through a simple and 
+	intuitive eclipse GUI. For a detailed discussion how to use the 
+	Fosstrak LLRP Commander please refer to the respective project 
+	documentation website at Fosstrak.
+
+	For the integration of an LLRP enabled reader into the filtering 
+	and collection framework, Fosstrak implements a simple bridge to 
+	the reader management module of the Fosstrak LLRP Commander. 
+ 
+	The following list shall give an overview to all available parameters 
+	that can be passed to filtering and collection through an LRSpec.
+	
+	* ReaderType: (Mandatory) The reader type is mandatory and HAS to be set 
+	to <org.fosstrak.ale.server.readers.llrp.LLRPAdaptor>
+	
+	* PhysicalReaderName: (Mandatory) Within the LLRP GUI Client component 
+	each LLRP reader has a unique name. This parameter refers to this name. 
+	You can create several logical readers that point to the same 
+	physical reader.
+	
+	* ip: (optional) If you specify an ip within the LRSpec fc checks if 
+	the reader "PhysicalReaderName" is already registered. If not fc tries 
+	to establish a new connection to the specified ip. If the reader 
+	does not exist and no ip is provided an exception is triggered.
+	
+	* port: (optional) if you omit the port parameter the default 
+	port is used to establish the reader connection (5084).
+	
+	* clientInitiated: (optional) if you specify the parameter 
+	ip you have to specify this parameter to either true or false. This 
+	parameter specifies the connection profile to choose for the LLRP 
+	reader connection (please refer to the LLRP GUI Client documentation 
+	for a more detailed explanation). Most profiles will use "true" and 
+	therefore the adaptor default is set to "true".
+	
+	* Description: (optional) parameter with a textual description of the 
+	logical reader.
+	
+	* antennaID: (optional) parameter controlling from which antenna ids the logical reader is accepting tags. By default, the logical reader accepts all the tags. If you specify a comma-separated list of antenna ids, then the logical reader will only deliver those tags to you, that have been read on an antenna specified in the list. <<NOTICE>>: When you omit the parameter <EnableAntennaID> in the <TagReportContentSelector>-Section of your <RO_SPEC>-configuration, the logical reader has no means to determine the antenna id and will simply deliver all the tags to you.
+	
+	
+	
+** Dynamic definition
+
++---+
+Sample Configuration for a LLRPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.llrp.LLRPAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>my llrp reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>ethzReader</value>
+        </property>
+        <property>
+            <name>ip</name>
+            <value>127.0.0.1</value>
+        </property>
+        <property>
+            <name>port</name>
+            <value>5084</value>
+        </property>
+        <property>
+            <name>clientInitiated</name>
+            <value>true</value>
+        </property>
+        <property>
+            <name>antennaID</name>
+            <value>1,2</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static definition
+
++---+
+Sample Configuration for a LLRPAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+		<LRProperty name="Description" value="my llrp reader"/>
+		<LRProperty name="PhysicalReaderName" 
+			value="ethzReader"/>
+		<LRProperty name="ip" 
+			value="127.0.0.1"/>
+		<LRProperty name="port" value="5084"/>
+		<LRProperty name="clientInitiated" value="true"/>
+		<LRProperty name="antennaID" value="1,2"/>
+	</LRSpec>
+</LogicalReader>
++---+
+
+		
+	[]
+	
+
+* {TestAdaptor}
+	
+	For testing purposes the TestAdaptor can be used. The TestAdaptor 
+	simulates a reader that from time to time reads a tag.
+	
+	As the TestAdaptor is not intended to be used as a productive 
+	reader adaptor only the basic configuration parameters will be 
+	explained here.
+	
+	* tps: this value indicates the "tags per shot", meaning how many
+		tags get fired in each iteration
+		
+	* wt: this value indicates the "wait time", meaning how long 
+		to wait between two shots
+		
+	* gain: this value indicates the increase of the tags per shot. 
+		ATTENTION: this rapidly increases the tps!
+		
+** Dynamic Definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.test.TestAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>Test Adaptor to test performance</value>
+        </property>
+        <property>
+            <name>tps</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>gain</name>
+            <value>0</value>
+        </property>
+        <property>
+            <name>wt</name>
+            <value>5000</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static Definition
+
++---+
+Sample Configuration for a RPAdaptor
+
+<LogicalReader name="LogicalReader1">
+	<LRSpec isComposite="false" 
+		readerType="org.fosstrak.ale.server.readers.test.TestAdaptor">
+		<LRProperty name="Description"
+			value="Test Adaptor to test performance"/>
+		<LRProperty name="tps" value="100"/>
+		<LRProperty name="wt" value="3000"/>
+		<LRProperty name="gain" value="0"/>
+	</LRSpec>
+</LogicalReader>
++---+
+	
+	
+
+
+
+* {A} new Adaptor
+
+	When you want to integrate your own reader into the logical 
+	reader API there are only few restrictions and obligations 
+	you need to obey.
+	
+	In a first step you should create a new package for your 
+	reader adaptor.
+	
+	Create a new class with the name of your adaptor and let 
+	this class extend the class BaseReader.
+	
+	You need to overwrite the following methods
+	
+	* start: start the reader (this means only to let the reader 
+		deliver tags).
+	
+	* stop: stop the reader (this means only to stop the reader from 
+		delivering tags).
+	
+	* connectReader: here you should place the connection setup 
+		between the reader and the reader adaptor.
+	
+	* disconnectReader: destroy the connection between the 
+		reader and the adaptor.
+	
+	* identify: you must implement this method, even when you 
+		do have a reader that is capable if auto-polling
+	
+	* update: here you have to place the code for an update 
+		through the logical reader API.
+	
+	* initialize: this method is used to setup your adaptor 
+		(see further below).
+	
+	[]
+	Pay attention to flag the state of your adaptor correctly 
+	through the methods (setConnected, setStarted, ...)
+	
+	Instead of a constructor with arguments we chose the 
+	approach of an default constructor and an initializer method. 
+	To ensure that your adaptor is setup correctly implement 
+	the constructor and the initizalizer method as following:
+	
+	* constructor: do not implement a constructor that needs 
+		arguments. Easiest is just to place the constructor 
+		call for the superclass ("super()") and leave 
+		the rest empty.
+	 
+	* initialize: The initializer-method takes two arguments. 
+		The first (name: String) will be the name of 
+		your reader within the logical reader API. The 
+		second (spec:LRSpec) is a valid LRSpec that contains 
+		the details how to build your reader.
+		
+		pay attention to put the call to the initializer 
+		method of the superclass ("super.initialize(name, spec)"). 
+		After that feel free to express yourself.
+	 
+	
+	[]
+	Now you are ready to use your reader in the logical reader 
+	API.
+	
+	sample code of an empty reader adaptor:
+	 
++---+
+package org.fosstrak.ale.server.readers.myreader;
+
+import org.fosstrak.ale.server.Tag;
+import org.fosstrak.ale.server.readers.BaseReader;
+import org.fosstrak.ale.server.readers.LRSpec;
+import org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationException;
+import org.fosstrak.reader.hal.HardwareException;
+import org.fosstrak.reader.hal.Observation;
+
+public class MyReaderAdaptor extends BaseReader {
+
+	public MyReaderAdaptor() {
+		super();
+	}
+	
+	public void initialize(String name, LRSpec spec) 
+	  throws ImplementationException {
+		super.initialize(name, spec);
+	}
+
+	@Override
+	public void addTag(Tag tag) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void connectReader() throws ImplementationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void disconnectReader() throws ImplementationException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Observation[] identify(String[] readPointNames)
+			throws HardwareException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(LRSpec spec) throws ImplementationException {
+		// TODO Auto-generated method stub
+
+	}
+}
++---+
+	
+	

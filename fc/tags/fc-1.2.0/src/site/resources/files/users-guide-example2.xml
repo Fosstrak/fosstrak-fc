@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My first HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.hal.HALAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>

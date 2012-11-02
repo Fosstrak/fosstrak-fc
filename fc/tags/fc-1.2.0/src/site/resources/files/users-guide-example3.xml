@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+			<LRProperty name="Description" value="LLRP reader"/>
+			<LRProperty name="PhysicalReaderName" value="LogicalReader1"/>
+			<LRProperty name="ip" value="localhost"/>
+			<LRProperty name="port" value="5084"/>
+			<LRProperty name="AdaptorClass" value="LLRPReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor"/>
+			<LRProperty name="clientInitiated" value="true"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader2">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My first HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.hal.HALAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader1">
+		<LRSpec isComposite="true" readerType="org.fosstrak.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="My first composite reader consisting of LogicalReader1 and LogicalReader2"/>
+			<readers>LogicalReader1</readers>
+			<readers>LogicalReader2</readers>
+		</LRSpec>
+	</LogicalReader>	
+</LogicalReaders>

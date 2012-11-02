@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>                                                                                                                             
+<ns2:ECSpec xmlns:ns2="urn:epcglobal:ale:xsd:1">                                                                                                                                    
+    <logicalReaders>                                                                                                                                                                
+        <logicalReader>LogicalReader1</logicalReader>                                                                                                                               
+    </logicalReaders>                                                                                                                                                               
+    <boundarySpec>                                                                                                                                                                  
+        <repeatPeriod unit="MS">103</repeatPeriod>                                                                                                                                
+        <duration unit="MS">3001</duration>                                                                                                                                         
+        <stableSetInterval unit="MS">0</stableSetInterval>
+    </boundarySpec>
+    <reportSpecs>
+        <reportSpec>
+            <reportSet set="CURRENT"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true" includeTag="true"/>
+        </reportSpec>
+        <reportSpec reportIfEmpty="false" reportOnlyOnChange="true" reportName="currentReportOnChangeNotEmpty">
+            <reportSet set="CURRENT"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true" includeTag="true"/>
+        </reportSpec> 
+        <reportSpec reportIfEmpty="true" reportOnlyOnChange="false" reportName="currentReportEmpty">
+            <reportSet set="CURRENT"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true" includeTag="true"/>
+        </reportSpec>    
+        <reportSpec reportIfEmpty="true" reportOnlyOnChange="true" reportName="currentReportEmptyAndOnChange">
+            <reportSet set="CURRENT"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true" includeTag="true"/>
+        </reportSpec>                                                                                                                                                                   
+        <reportSpec reportName="deletions">                                                                                                                                                                
+            <reportSet set="DELETIONS"/>                                                                                                                                            
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true"/>                                                                                               
+        </reportSpec>                                                                                                                                                                  
+        <reportSpec reportName="additions">                                                                                                                                                                
+            <reportSet set="ADDITIONS"/>                                                                                                                                            
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true"/>                                                                                               
+        </reportSpec>
+    </reportSpecs>
+</ns2:ECSpec>

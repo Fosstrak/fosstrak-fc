@@ -1,0 +1,80 @@
+       ------
+                                   Persistence
+                                    ------
+                                    ------
+
+
+Persistence
+
+* Contents
+
+   [[]] {{{#Objective}Objective}}
+
+   [[]] {{{#Implementation}Implementation}}
+   
+   [[]] {{{#Class}Class Diagram}}
+   
+   [[]] {{{#Sequence}Sequence Diagram}}
+
+
+* {Objective}
+
+	Objective of this module is to save configuration of the ALE to avoid to configure for each server startup.
+
+	This document shall provide an overview to the implementation 
+	of a persistence in the Fosstrak ALE.
+
+* {Implementation}
+	
+	Persistence module read/writte/delete configuration files in the path of the webapp. The persistence is initiated at the startup of server by the Persistence Servlet. This serrvlet is also used to know the path of the webapp.
+		
+	* ECSpecs
+	
+		* WEBAPP_PATH/WEB-INF/config/ecspecs/ECSPEC_NAME.xml
+		
+		* 1 XML file for each ECSpec
+		
+	* LRSpecs
+	
+		* WEBAPP_PATH/WEB-INF/config/lrspecs/LRSPEC_NAME.xml
+		
+		* 1 XML file for each LRSpec
+
+	* ROSpecs
+	
+		* WEBAPP_PATH/WEB-INF/config/rospecs/LRSPEC_NAME.llrp
+		
+		* 1 LLRP file for each ROSpec
+		
+	* AccessSpecs
+	
+		* WEBAPP_PATH/WEB-INF/config/accessspecs/LRSPEC_NAME.llrp
+		
+		* 1 LLRP file for each AccessSpec
+
+	* ECSpec Subscribers
+	
+		* WEBAPP_PATH/WEB-INF/config/subscriber/lrspecs/ECSPEC_NAME.properties
+		
+		* 1 properties file for 1 ECSpec than can contain several URI
+
+* {Class} Diagram
+
+[../images/ALE/PersistenceClassDiagram.png]
+
+* {Sequence} Diagram
+
+	The following sequence diagram shall visualize the behaviour 
+	of the persistence when the module is loading configuration.
+
+[../images/ALE/PersistenceSequenceDiagramRead.png]
+
+	The following sequence diagram shall visualize the behaviour 
+	of the persistence when the module is writting configuration.
+
+[../images/ALE/PersistenceSequenceDiagramWritte.png]
+
+	The following sequence diagram shall visualize the behaviour 
+	of the persistence when the module is deleting configuration.
+
+[../images/ALE/PersistenceSequenceDiagramDelete.png]
