@@ -3,7 +3,7 @@
         <title>Changes fc-commons</title>
     </properties>
     <body>
-    	<release version="1.2.0" date="2012-10-19" description="Orange Enhancements">
+    	<release version="1.2.0" date="2012-11-02" description="Feature and Bugfix release">
 			<action dev="swieland" type="add">Business Exceptions for ALE.</action>
 			<action dev="swieland" type="add">Some Tests.</action>
 		</release>

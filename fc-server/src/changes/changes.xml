@@ -3,7 +3,7 @@
 		<title>Changes fc-server</title>
 	</properties>
 	<body>
-		<release version="1.2.0" date="2012-10-19" description="Feature and Bugfix release">
+		<release version="1.2.0" date="2012-11-02" description="Feature and Bugfix release">
 			<action dev="swieland" type="add">Use Spring to configure a context.</action>
 			<action dev="swieland" type="add">Rewrite Logical Reader Manager to provide non-static methods.</action>
 			<action dev="swieland" type="add">Rewrite ALE to provide non-static methods.</action>
