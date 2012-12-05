@@ -3,13 +3,16 @@ package org.fosstrak.ale.server.llrp;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.fosstrak.ale.server.ALEApplicationContext;
 import org.fosstrak.ale.server.readers.llrp.LLRPManager;
 import org.fosstrak.llrp.adaptor.Adaptor;
 import org.fosstrak.llrp.adaptor.AdaptorManagement;
+import org.fosstrak.llrp.adaptor.config.DefaultConfiguration;
 import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 import org.fosstrak.llrp.client.LLRPExceptionHandler;
 import org.fosstrak.llrp.client.LLRPExceptionHandlerTypeMap;
@@ -19,10 +22,10 @@ import org.llrp.ltk.exceptions.InvalidLLRPMessageException;
 import org.llrp.ltk.generated.enumerations.ConnectionAttemptStatusType;
 import org.llrp.ltk.generated.enumerations.StatusCode;
 import org.llrp.ltk.generated.messages.READER_EVENT_NOTIFICATION;
+import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.generated.parameters.ConnectionAttemptEvent;
 import org.llrp.ltk.generated.parameters.LLRPStatus;
 import org.llrp.ltk.generated.parameters.ROSpec;
-import org.llrp.ltk.generated.parameters.AccessSpec;
 import org.llrp.ltk.types.LLRPMessage;
 
 /**
@@ -57,15 +60,16 @@ public class AdaptorMgmt {
 	 */
 	public static void  initializeLLRPContext () {
 		LOG.debug("InitializeLLRPContext ...");
-		String readConfig = null;
-		String writeConfig = null;
-		boolean commitChanges = false;
 		if (!getAdaptorMgmtInitialized()) {
 			llrpAdaptorMgmt = AdaptorManagement.getInstance();
 			if (!llrpAdaptorMgmt.isInitialized()) {
-				//musn't happen when we launch the fc-server in fosstrak
+				//must not happen when we launch the fc-server in fosstrak
 				try {
-					llrpAdaptorMgmt.initialize(readConfig, writeConfig, commitChanges, null, null);
+					final boolean commitChanges = false;
+					Map<String, Object> config = new HashMap<String, Object> ();
+					final String configurationClass = DefaultConfiguration.class.getCanonicalName();
+					llrpAdaptorMgmt.initialize(config, config, configurationClass, commitChanges, null, null);
+					
 				} catch (LLRPRuntimeException e) {
 					LOG.error("Error when trying to initialize LLRP Adaptor Management", e);
 				}
