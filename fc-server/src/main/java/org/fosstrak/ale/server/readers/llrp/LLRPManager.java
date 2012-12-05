@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.fosstrak.llrp.adaptor.Adaptor;
 import org.fosstrak.llrp.adaptor.AdaptorManagement;
+import org.fosstrak.llrp.adaptor.config.DefaultConfiguration;
+import org.fosstrak.llrp.adaptor.config.FileStoreConfiguration;
 import org.fosstrak.llrp.adaptor.exception.LLRPRuntimeException;
 import org.fosstrak.llrp.client.LLRPExceptionHandler;
 import org.fosstrak.llrp.client.LLRPExceptionHandlerTypeMap;
@@ -112,16 +116,33 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 			log.error("no config file - therefore using defaults...");
 		}
 		
-		
+		Map<String, Object> config = new HashMap<String, Object> ();
+		String configurationClass = null;
+		if (mgmtConfigFile != null) {
+			log.debug("using FileStoreConfiguration");
+			config.put(FileStoreConfiguration.KEY_LOADFILEPATH, mgmtConfigFile);
+			config.put(FileStoreConfiguration.KEY_STOREFILEPATH, mgmtConfigFile);
+			configurationClass = FileStoreConfiguration.class.getCanonicalName();
+		} else {
+			log.debug("using DefaultStoreConfiguration");
+			configurationClass = DefaultConfiguration.class.getCanonicalName();
+		}
 		// tell the adaptor management to export the adaptor with RMI (last true).
-		mgmt.initialize(mgmtConfigFile, mgmtConfigFile, false, this, this, true);
+		final boolean commitChanges = false;
+		final boolean exportAdaptor = true;
+		log.debug("invoking initialize on the management.");
+		mgmt.initialize(config, config, configurationClass, commitChanges, this, this, exportAdaptor);
 		
 		// get the first exported adaptor.
-		if (mgmt.getAdaptorNames().size() > 0) {
-			adaptor = mgmt.getAdaptor(mgmt.getAdaptorNames().get(0));
+		List<String> adaptorNames = mgmt.getAdaptorNames();
+		if (!adaptorNames.isEmpty()) {
+			log.debug("obtaining the default adaptor...");
+			adaptor = mgmt.getAdaptor(adaptorNames.get(0));
 		} else {
+			log.error("no adaptor was found - aborting.");
 			throw new LLRPRuntimeException("no adaptor was found!!!");
 		}
+		log.debug("registering repository.");
 		try {
 			// if everything is fine, try to open the repository (if defined).
 			registerRepository(props);
@@ -135,13 +156,25 @@ public class LLRPManager implements LLRPExceptionHandler, MessageHandler {
 	 * handler. if the RO_ACCESS_REPORT is logged, register this repository 
 	 * as well.
 	 * @param props the properties file of the adapter.
+	 * @throws LLRPRuntimeException 
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 * @throws Exception when something goes wrong.
 	 */
-	private void registerRepository(Properties props) throws Exception {
-		if (null == props) throw new Exception("Empty properties.");
+	private void registerRepository(Properties props) throws InstantiationException, IllegalAccessException, ClassNotFoundException, LLRPRuntimeException {
+		if (null == props) {
+			log.error("Empty properties.");
+			throw new IllegalArgumentException("Empty properties.");
+		}
+		
 		repository = RepositoryFactory.create(props);
 		
-		if (null == repository) throw new Exception("Repository is null.");
+		if (null == repository) {
+			log.error("Repository is null.");
+			throw new IllegalArgumentException("Repository is null.");
+		}
+		
 		// create our message handler
 		mgmt.registerFullHandler(new MessageHandler() {
 
