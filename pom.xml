@@ -58,9 +58,9 @@
 
 
   	<scm>
-    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk</connection>
-   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk</developerConnection>
-    		<url>https://fosstrak.googlecode.com/svn/fc/trunk</url>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2</url>
   	</scm>
 
 	<!-- =========================================================== -->

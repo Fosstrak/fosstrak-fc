@@ -43,9 +43,9 @@
 
 
 	<scm>
-    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</connection>
-   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</developerConnection>
-    		<url>https://fosstrak.googlecode.com/svn/fc/trunk/fc-webclient</url>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-webclient</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-webclient</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-webclient</url>
   	</scm>
 
   <!-- =========================================================== -->

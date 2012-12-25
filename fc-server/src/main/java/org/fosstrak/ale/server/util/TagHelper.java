@@ -19,7 +19,6 @@
  */
 package org.fosstrak.ale.server.util;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +45,7 @@ public final class TagHelper {
 	/** instance of the TDT engine used for tag conversion. */
 	private static TDTEngine engine;
 
-	public static final String EXTRA_PARAMS_COMPANYPREFIXLENGTH = "gs1companyprefixlength";
+	public static final String EXTRA_PARAMS_COMPANYPREFIXLENGTH = "companyprefixlength";
 	public static final String EXTRA_PARAMS_FILTER = "filter";
 	public static final String EXTRA_PARAMS_TAGLENGTH = "taglength";
 	
@@ -240,9 +239,7 @@ public final class TagHelper {
 		if (engine == null) {
 			try {
 				LOG.debug("Initialize TDT Engine for tag translation.");
-				URL auxiliary = TagHelper.class.getClassLoader().getResource("tdtschemes/auxiliary/ManagerTranslation.xml");
-				URL schemes = TagHelper.class.getClassLoader().getResource("tdtschemes/schemes/");
-				engine = new TDTEngine(auxiliary, schemes);
+				engine = new TDTEngine();
 			} catch (Exception e) {
 				LOG.error("could not create an instance of the TDT Engine - aborting: ", e);
 				throw new RuntimeException("could not create an instance of the TDT Engine - aborting: ", e);

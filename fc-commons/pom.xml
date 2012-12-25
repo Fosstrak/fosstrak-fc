@@ -43,9 +43,9 @@
 
 
 	<scm>
-    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</connection>
-   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</developerConnection>
-    		<url>https://fosstrak.googlecode.com/svn/fc/trunk/fc-commons</url>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-commons</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-commons</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-commons</url>
   	</scm>
 	<!-- =========================================================== -->
 	<!-- ORANGE: Properties                                          -->

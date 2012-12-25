@@ -43,9 +43,9 @@
 
 
 	<scm>
-    		<connection>https://fosstrak.googlecode.com/svn/fc/trunk/fc-server</connection>
-   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/trunk/fc-server</developerConnection>
-    		<url>https://fosstrak.googlecode.com/svn/fc/trunk/fc-server</url>
+    		<connection>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-server</connection>
+   		<developerConnection>scm:svn:https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-server</developerConnection>
+    		<url>https://fosstrak.googlecode.com/svn/fc/branches/rel_1.2/fc-server</url>
   	</scm>
 
 
@@ -88,12 +88,12 @@
     <dependency>
       <groupId>org.fosstrak.tdt</groupId>
       <artifactId>tdt</artifactId>
-      <version>1.0.0</version>
+      <version>0.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.fosstrak.llrp</groupId>
       <artifactId>llrp-adaptor</artifactId>
-      <version>1.2.0</version>
+      <version>1.1.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -177,33 +177,6 @@
           </execution>
         </executions>
       </plugin>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <version>2.6</version>
-         <executions>
-           <execution>
-             <id>unpack</id>
-             <phase>compile</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                   <groupId>org.fosstrak.tdt</groupId>
-                   <artifactId>tdt</artifactId>
-                   <type>jar</type>
-                   <overWrite>false</overWrite>
-                   <outputDirectory>${project.build.directory}/classes/tdtschemes</outputDirectory>
-                   <includes>**/*.xml,**/*.xsd</includes>
-                   <excludes>**/*test.class</excludes>
-                 </artifactItem>
-               </artifactItems>
-             </configuration>
-           </execution>
-         </executions>
-       </plugin>
     </plugins>
     <resources>
       <resource>
