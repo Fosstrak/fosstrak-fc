@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>My first HAL device reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader3</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PropertiesFile</name>
+            <value>/props/SimulatorController.xml</value>
+        </property>
+    </properties>
+</ns3:LRSpec>

@@ -1,0 +1,230 @@
+       ------
+                                    Application Layer Events Logical Reader Service Binding
+                                    ------
+                                    ------
+
+
+Application Layer Events Logical Reader Service Binding
+
+* Content
+
+	[[]] {{{#Overview}Overview}}
+	
+	[[]] {{{#LogicalReaderManager}LogicalReaderManager}}
+		
+	[[]] {{{#WSDL}WSDL interface}}
+
+	[[]] {{{#ServiceBinding}ServiceBinding}}
+
+	[[]] {{{#Status}Status}}
+	
+
+* {Overview}
+
+	The Fosstrak Filtering and Collection middleware provides an abstraction 
+	from the physical reader devices. The Logical Reader Management is an 
+	interface through which	clients may define logical reader names for 
+	use with the Reading API, which maps to one or more sources/actuators 
+	provided by the implementation. This guide should give you a brief 
+	overview of the Logical Reader Manager which manages the list of 
+	Logical Readers which are part of a current setting.
+	
+	In the second part the Service Binding to the LogicalReaderManager 
+	is explained.
+
+
+* {LogicalReaderManager}
+
+** Organisation
+
+	The Logical Reader Manager has the current list of all Logical Readers
+	which are present in the current setting.
+	The Logical Reader Manager is initialized by placing a .xml file in the
+	/resource folder. There are some default .xml files already in the /resource 
+	folder which you can use to gain experience with this implementation. 
+	When initialized, the setting of a Logical Reader can
+	be changed at any time. Logical Readers can be added and deleted. It is also 
+	possible to store the current setting to a .xml file, so that in case of a 
+	failure, the previous setting can be retained at any time. 
+
+** Implementation
+
+	The whole functionality is in a single class: LogicalReaderManager.java.
+	The most functionality is contained in the methods described below. Most of the
+	other methods are delegated using reflection to the specializations of a Logical
+	Reader. Please refer to the logical-reader-api for more information about the logical 
+	readers functionality.
+
+	* initializeFromFile(String loadFilePath): using the JAXB framework the specified .xml
+	file is parsed and Java Objects are generated. Once generated the Logical Reader Manager
+	has a HashMap of all Logical Readers of the current setting. 
+	
+	* storeToFile(String storeFilePath): using the JAXB framework the specified .xml file
+	is generated from the current HashMap of the LogicalReaderManager. This method allows
+	a ALE user to hold a backup configuration for recovery. Note that the configuration 
+	can be changed significantly during the operation of the ALE since the Logical Reader
+	Manager allows a user to change the HashMap of the Logical Readers using the methods
+	addReaders(String name, java.util.List<String> readers) and
+	removeReaders(String name, java.util.List<String> readers).
+	
+	* undefine(String name): removes the logical reader 
+	
+	* update(String name, LRSpec spec): changes the LRSpec of the given reader
+	
+	* define(String name, org.fosstrak.ale.server.readers.gen.LRSpec spec): creates a logical 
+	reader from the loaded .xml file.
+	
+	* define(String name, LRSpec spec): creates a logical reader after initialisation.
+	
+	* setLogicalReader(LogicalReader reader): adds the logical reader to the list of logical 
+	readers.
+	
+	
+	[]
+	
+	
+	
+
+* {WSDL} interface
+	
+	The interface to the ALE Logical Reader API
+	is modelled in the WebServices Description Language WSDL. 
+	
+	The interface basically describes the methods that are 
+	available on the webservice. Consequently the messages 
+	 that are exchanged (this includes even Exceptions) are 
+	modelled in the wsdl as well.
+
+	This guide will not discuss how a wsdl-file has to be written. For 
+	further information refer to {{{{http://incubator.apache.org/cxf/}Apache cxf}}. 
+	This guide just gives a short explanation how the java stubs can be 
+	created out of the wsdl file and what changes have to be done to the 
+	generated stubs.
+	
+** Advice
+
+	For technical references you can refer to the w3c standard 
+	documentation for wsdl 1.1: 
+	{{{#http://www.w3.org/TR/wsdl} http://www.w3.org/TR/wsdl }}
+	
+	There are many bogus "how to" in the internet. If 
+	you ever encounter a problem with the serialization 
+	of an xml i advice the following procedure:
+	
+		* Write a handcrafted java-class holding all the parameters 
+			that shall be serialized.
+			
+		* Add a specific serializer/deserializer to the SerializerUtils 
+			(see org.fosstrak.ale.util.SerializerUtil).
+		
+		* Call that serializer/deserializer and look at the xml 
+			that is generated.
+	
+** Requirements
+	
+	* A working copy of Apache cxf: 
+		{{{http://incubator.apache.org/cxf/}Apache cxf}}
+	
+	* The EPC base xsd definition: {{{../files/EPCGlobal.xsd}EPCGlobal.xsd}}
+		
+	* The ALELR definitions: {{{../files/EPCglobal-ale-1_1-alelr.xsd}
+		EPCglobal-ale-1_1-alelr.xsd}}
+	
+	* The ALE commons : {{{../files/EPCglobal-ale-1_1-common.xsd}
+		EPCglobal-ale-1_1-common.xsd}}
+	
+	* The ALELR Serviceport wsdl definition: 
+		{{{../files/EPCglobal-ale-1_1-alelr.wsdl}
+		EPCglobal-ale-1_1-alelr.wsdl}}
+	
+	[]
+	
+** Compiling
+	
+	To compile the wsdl file you need 
+	{{{http://incubator.apache.org/cxf/}Apache cxf}}. 
+	
+	We will use the wsdl2java program to translate the wsdl to java classes.
+	
+	Compile the wsdl:
+	
++---+
+wsdl2java -impl -v 
+	-p urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal 
+	-p urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal 
+	-p urn:epcglobal:alelr:wsdl:1=org.fosstrak.ale.wsdl.alelr.epcglobal 
+	EPCglobal-ale-1_1-alelr.wsdl
++---+
+
+	The flags in detail:
+	
+	* "-impl": This tells wsdl2java to generate a stub for the 
+		service binding implementation.
+	
+	* "-p ." : if you omit the namespace mapping all packages get 
+		generated into the java namespace _1.
+		
+	[]
+	
+	To implement the service binding you need to implement the 
+	java class ALELRServicePortTypeImpl.
+	
+	In the Fosstrak Filtering and Collection most parts of the wsdl are 
+	auto-generated and you need not to change anything (see the pom.xml if 
+	you are interested). 
+	
+	The ALELRServicePortTypeImpl is stored in the module fc-server (see the 
+	next chapter of this guide).
+
+
+
+	
+
+* {ServiceBinding}
+
+	The stubs described in the former chapter are used for the 
+	communication between two services. However the binding 
+	from these stubs to the actual implementation of the Logical Reader 
+	API has to be defined explicitly. This task is performed by the 
+	ALELRServicePortTypeImpl.
+	
+	For each method defined in 
+	{{{../files/EPCglobal-ale-1_1-alelr.wsdl}EPCglobal-ale-1_1-alelr.wsdl}} 
+	there exists a 
+	method in the java file ALELRServicePortTypeImpl. Whenever 
+	a client calls a method on its local method stub, the messages 
+	involved get serialized into xml, sent over the communication channel 
+	and then deserialized by the server stub. The stub then calls 
+	the corresponding method on the ALELRServicePortTypeImpl. The 
+	ALELRServicePortTypeImpl reformatts the incomming message 
+	(if necessary) and calls the LogicalReaderManager accordingly.
+	
++---+
+example for getStandardVersion:
+
+public java.lang.String getStandardVersion(EmptyParms parms) 
+	throws ImplementationExceptionResponse    { 
+	
+	if (!isInitialized) { initialize(); }
+	
+	try {
+		return LogicalReaderManager.getStandardVersion();
+	} catch (org.fosstrak.ale.wsdl.ale.epcglobal.ImplementationExceptionResponse e) {
+		e.printStackTrace();
+		throw new ImplementationExceptionResponse(e.getMessage());
+	}
+}
++---+
+
+	You need to implement all the methods that shall be 
+	provided to clients in the ALELRServicePortTypeImpl.
+
+* {Status}
+
+	Currently the ALE supports the functionality of the logical reader API. 
+	For further reading refer to the following documents:
+	 
+	* {{{../features.html} Features}}
+	
+	* {{{../apidocs/index.html}Java doc}}
+

@@ -1,0 +1,303 @@
+       ------
+                                    Application Layer Events Service Binding
+                                    ------
+                                    ------
+
+
+Application Layer Events Service Binding
+
+* Content
+
+	[[]] {{{#Overview}Overview}}
+	
+	[[]] {{{#Persistence}Configuration Persistence}}
+	
+	[[]] {{{#EventCycle}EventCycle modification}}
+	
+	[[]] {{{#Client}Client Subscription}}
+	
+	[[]] {{{#Immediate}Immediate and Polling}}
+	
+	[[]] {{{#WSDL}WSDL interface}}
+
+	[[]] {{{#ServiceBinding}ServiceBinding}}
+	
+	[[]] {{{#ALEController}ALEController}}
+	
+	[[]] {{{#LLRPController}LLRPController}}
+	
+	[[]] {{{#UserMemory}Tag's UserMemory}}
+
+	[[]] {{{#Status}Status}}
+	
+
+* {Overview}
+
+	This document shall give a short overview to the ALE class from the 
+	Fosstrak filtering and collection, to the ALEServicePort and 
+	to the ALEServiceBinding.
+	
+	The ALE is the responsible class for the communication with the 
+	applications of the Layer above. It provides: 
+	
+	* Configuration Persistence (LRSpecs, ROSpecs, AccessSpecs, ECSpecs, Subscribers)
+		 
+	* Interface for the definition and modification of EventCycles
+	
+	* Start and stop one or all ECSpecs
+	
+	* Subscription/unsubscription of report notifications
+	
+	* Interface for the definition and modification of ROSpecs
+	
+	* Administrative methods (eg. VendorVersion).
+	
+	[]
+	
+	The ALEServicePort provides the interface that allows 
+	clients to connect to the ALE. The service port provides:
+	
+	* Serialization and deserialization of ECSpecs and other control 
+		messages.
+	
+	* Binding from the ALE interface to the actual implementation 
+		of the Filtering and Collection.
+		
+	[]
+	
+* Configuration {Persistence}
+	
+	The ALE provides a configuration persistence module than load/modify/delete:
+	
+	* LRSpecs (XML file)
+	
+	* ROSpecs (XML file)
+	
+	* ECSpecs (XML file)
+	
+	* Subscribers (Properties file)
+	
+* {EventCycle} modification
+
+	The ALE provides the following methods to create or modify EventCycles:
+	 
+	* define: Define takes a two parameters, a name for the EventCycle to 
+		be created and an ECSpec for the definition of the EventCycle.
+	
+	* undefine: When you want to destroy an EventCycle you can call this 
+		method with the appropriate name for the EventCycle to be 
+		destroyed.
+	
+	* getECSpecNames: Returns the names of all EventCycles available in 
+		the ALE.
+
+* {Client} Subscription
+	
+	Whenever a client wants to use an ALE service it has to register.
+	
+	* subscribe: A notificationURI will be subscribed to one of the 
+		EventCycles. The EventCycle can be selected through the 
+		parameter specName.
+	
+	* unsubscribe: When a client does no more need the service of an 
+		EventCycle it can unsubscribe the notifcationURI.
+	
+	* getSubscribers: Returns a list of all subscribers for the EventCycle 
+		specified.
+
+* {Immediate} and Polling
+
+	The ALE interface provides 2 mechanisms for "one-off-queries":
+	
+	* immediate: A client provides an anonymous ECSpec that will be executed 
+		once. The resulting ECReports are sent back.
+		
+	* poll: A client can poll an existing ECSpec. The Filtering and Collection 
+		immediately starts this ECSpec and returns the ECReports.
+		
+* {WSDL} interface
+	
+	The interface to the ALE 
+	is modelled in the WebServices Description Language WSDL. 
+	
+	The interface basically describes the methods that are 
+	available on the webservice. Consequently the messages 
+	 that are exchanged (this includes even Exceptions) are 
+	modelled in the wsdl as well.
+
+	This guide will not discuss how a wsdl-file has to be written. For 
+	further information refer to {{{{http://incubator.apache.org/cxf/}Apache cxf}}. 
+	This guide just gives a short explanation how the java stubs can be 
+	created out of the wsdl file and what changes have to be done to the 
+	generated stubs.
+	
+** Advice
+
+	For technical references you can refer to the w3c standard 
+	documentation for wsdl 1.1: 
+	{{{#http://www.w3.org/TR/wsdl} http://www.w3.org/TR/wsdl }}
+	
+	There are many bogus "how to" in the internet. If 
+	you ever encounter a problem with the serialization 
+	of an xml i advice the following procedure:
+	
+		* Write a handcrafted java-class holding all the parameters 
+			that shall be serialized.
+			
+		* Add a specific serializer/deserializer to the SerializerUtils 
+			(see org.fosstrak.ale.util.SerializerUtil).
+		
+		* Call that serializer/deserializer and look at the xml 
+			that is generated.
+	
+** Requirements
+	
+	* A working copy of Apache cxf: 
+		{{{http://incubator.apache.org/cxf/}Apache cxf}}
+	
+	* The EPC base xsd definition: {{{../files/EPCGlobal.xsd}EPCGlobal.xsd}}
+		
+	* The ALE definitions: {{{../files/EPCglobal-ale-1_1-ale.xsd}
+		EPCglobal-ale-1_1-ale.xsd}}
+	
+	* The ALE commons : {{{../files/EPCglobal-ale-1_1-common.xsd}
+		EPCglobal-ale-1_1-common.xsd}}
+	
+	* The ALE Serviceport wsdl definition: 
+		{{{../files/EPCglobal-ale-1_1-ale.wsdl}
+		EPCglobal-ale-1_1-ale.wsdl}}
+	
+	[]
+	
+** Compiling
+	
+	To compile the wsdl file you need 
+	{{{http://incubator.apache.org/cxf/}Apache cxf}}. 
+	
+	We will use the wsdl2java program to translate the wsdl to java classes.
+	
+	Compile the wsdl:
+	
++---+
+wsdl2java -impl -v 
+	-p urn:epcglobal:xsd:1=org.fosstrak.ale.xsd.epcglobal 
+	-p urn:epcglobal:ale:xsd:1=org.fosstrak.ale.xsd.ale.epcglobal 
+	-p urn:epcglobal:ale:wsdl:1=org.fosstrak.ale.wsdl.ale.epcglobal 
+	EPCglobal-ale-1_1-ale.wsdl
++---+
+
+	The flags in detail:
+	
+	* "-impl": This tells wsdl2java to generate a stub for the 
+		service binding implementation.
+	
+	* "-p ." : if you omit the namespace mapping all packages get 
+		generated into the java namespace _1.
+		
+	[]
+	
+	To implement the service binding you need to implement the 
+	java class ALEServicePortTypeImpl.
+	
+	In the Fosstrak Filtering and Collection most parts of the wsdl are 
+	auto-generated and you need not to change anything (see the pom.xml if 
+	you are interested). 
+	
+	The ALEServicePortTypeImpl is stored in the module fc-server (see the 
+	next chapter of this guide).
+
+* {ServiceBinding}
+
+	The stubs described in the former chapter are used for the 
+	communication between two services. However the binding 
+	from these stubs to the actual implementation of the ALE has to be 
+	defined explicitly. This task is performed by the 
+	ALEServicePortTypeImpl.
+	
+	For each method defined in 
+	{{{../files/EPCglobal-ale-1_1-ale.wsdl}EPCglobal-ale-1_1-ale.wsdl}} 
+	there exists a 
+	method in the java file ALEServicePortTypeImpl. Whenever 
+	a client calls a method on its local method stub, the messages 
+	involved get serialized into xml, sent over the communication channel 
+	and then deserialized by the server stub. The stub then calls 
+	the corresponding method on the ALEServicePortTypeImpl. The 
+	ALEServicePortTypeImpl reformatts the incomming message 
+	(if necessary) and calls the ALE accordingly.
+	
++---+
+example for getStandardVersion:
+
+    public java.lang.String getStandardVersion(EmptyParms parms) 
+    	throws ImplementationExceptionResponse    {
+	
+    	if (!isInitialized) { initialize(); }
+        return ALE.getStandardVersion();
+    }
++---+
+
+	You need to implement all the methods that shall be 
+	provided to clients in the ALEServicePortTypeImpl.
+
+	
+*{ALEController}	
+	
+	The ALE Controller provides the following methods to start or stop EventCycles:
+	
+	* ecSpecIsStarted: return the status of an ECSpec (started or stopped)
+	
+	* getAllECSpecNameStarted: return all ECSpec names which is started
+	
+	* startECSpec: start a specified ECSpec
+	
+	* stopECSpec: stop a specified ECSpec
+	
+	* stopAllECSpec: stop all ECSpec
+	
+	* stopAllECSpec4LogicalReader: stop all ECSpec started for a LogicalReader
+	
+	* stopAllECSpec4LogicalReaderByECSpecName: stop all ECSpec started for a LogicalReader searching by ecspec
+	
+	* getLogicalReaderNames
+	
+*{LLRPController}	
+	
+	The LLRP Controller provides the following methods to manage an ROSPEC on a logical reader:
+	 
+	* define: Define takes a two parameters, a name for the logical reader and 
+		the path file containing the description of the ADD_ROSPEC or directly the ADD_ROSPEC.
+			
+	* disable: Disable the ROSPEC defined on the given logical reader name.
+	
+	* disableAll: Disable the ROSPEC on all the logical readers.
+		
+	* enable: Enable the ROSPEC defined on the given logical reader name.
+	
+	* start: Start the ROSPEC defined on the given logical reader name.
+		
+	* stop: Stop the ROSPEC defined on the given logical reader name.
+		
+	* undefine: Undefine the ROSPEC defined on the given logical reader name.
+
+
+* Tag's {UserMemory}
+
+	It is possible to report tag’s user memory contents.
+	
+	* Checks if a user memory exists in the ECspec extensions and adds it to ECreport.
+	
+	* Possibility to capture this information and stored it in the EPCIS.
+	
+	* In the case of an LLRP Adaptor, if a user memory exists, this adaptor will be notified.  
+		Therefore, this memory will be stored like the epc code.   
+
+
+* {Status}
+
+	Currently the ALE supports the functionality of the logical reader API. 
+	For further reading refer to the following documents:
+	 
+	* {{{../features.html} Features}}
+	
+	* {{{../apidocs/index.html}Java doc}}
+

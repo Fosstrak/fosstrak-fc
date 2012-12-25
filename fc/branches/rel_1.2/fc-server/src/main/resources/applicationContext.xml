@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
+      http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<context:annotation-config />
+	<context:property-placeholder location="classpath*:ale.properties"/>
+	<context:component-scan base-package="org.fosstrak.ale" />
+	
+	<jaxws:endpoint id="ALEService"
+	   implementor="org.fosstrak.ale.wsdl.ale.epcglobal.ALEServicePortTypeImpl"
+	   endpointName="e:ALEServicePortType"
+	   serviceName="s:ALEService"
+	   address="/ALEService"
+	   xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+	   xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+
+	<jaxws:endpoint id="ALELRService"
+	    implementor="org.fosstrak.ale.wsdl.alelr.epcglobal.ALELRServicePortTypeImpl"
+	    endpointName="e:ALELRServicePortType"
+	    serviceName="s:ALELRService"
+	    address="/ALELRService"
+	    xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+	    xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+	
+	<jaxws:endpoint id="ALEController"
+	    implementor="org.fosstrak.ale.server.controller.ALEControllerImpl"
+	    endpointName="e:ALEControllerServicePortType"
+	    serviceName="s:ALEControllerService"
+	    address="/ALEControllerService"
+	    xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+	    xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+	    
+	 <jaxws:endpoint id="LLRPController"
+	    implementor="org.fosstrak.ale.server.llrp.LLRPControllerImpl"
+	    endpointName="e:LLRPControllerServicePortType"
+	    serviceName="s:LLRPControllerService"
+	    address="/LLRPControllerService"
+	    xmlns:e="http://service.jaxws.cxf.apache.org/endpoint"
+	    xmlns:s="http://service.jaxws.cxf.apache.org/service"/>
+ </beans>

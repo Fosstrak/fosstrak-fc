@@ -1,0 +1,73 @@
+       ------
+                                    Features
+                                    ------
+                                    ------
+
+
+Features
+
+
+* Fosstrak ALE Middleware Modules
+
+	The Fosstrak ALE Middleware comprises three separate modules:
+
+    * the <<filtering and collection server>>
+   
+    * an interactive <<standalone client>> to access filtering and collection servers
+
+    * an interactive <<web-based client>> to access filtering and collection servers
+		
+	[]
+	
+	All modules implement EPCglobal's ALE 1.1 specification.
+
+	
+** Filtering and Collection Server
+
+	Our implementation offers the features of the filtering and collection 
+	role as	defined by EPCglobal's ALE standard. It currently supports the
+	ALE Logical Reader API that is used to define logical readers through
+	Logical Reader Specifications (LRSpec) and the ALE Reading API that is
+	used to define the filtering and collection behavior using ECSpecs.
+	
+** Standalone Client
+
+    The standalone Java client provides a graphical user interface to define 
+    ECSpecs and LRSpecs on a particular filtering and collection server.
+    It also allows users to subscribe and unsubscribe to reports generated
+    by the filtering and collection server and specify the address where
+    the reports should be sent to. 
+
+** Web-Based Client
+
+	The web-based client is a Java web application (WAR) that provides the
+	same functionality as the standalone client. It allows developers to
+	use their web browser to define ECSpecs, Endpoints as well as LRSpecs
+	and submit them to a filtering and collection server.
+ 
+	
+* Detailed Feature List
+
+	The filtering and collection server does not currently implement 
+	the ALE 1.1 specification in full. The main features of the current 
+	implementation are the Logical Reader API and the EventCycle. For a 
+	detailed overview, please refer to the table below.
+	
+	[]
+
+*-----------+----------+---+
+ Feature | Described in ALE Specification 1.1 | Supported by Fosstrak ALE Middleware
+*-----------+----------+---+
+ ALE reading API | Sect. 8 | yes
+ ALE writing API | Sect. 9 | no
+ ALE LogicalReader API | Sect. 10 | yes
+ Access Control API | Sect. 11 | no
+ ECSpec | Sect. 8.2 | yes
+ ECSpec | Sect. 8.2 | yes
+ ECReports | Sect. 8.3 | yes
+ Event Cycles | Sect. 5.2 | yes
+ LRSpec | Sect. 10.4 | yes
+ LRProperty | Sect. 10.5 | yes
+ Tag Smoothing | Sect. 10.6 | no
+*-----------+----------+---+
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:ECSpec includeSpecInReports="false" xmlns:ns1="urn:epcglobal:ale:xsd:1">
+	<logicalReaders soapenc:arrayType="xsd:string[1]" xsi:type="soapenc:Array" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<logicalReader xsi:type="xsd:string">LogicalReader1</logicalReader>
+	</logicalReaders>
+	<boundarySpec xsi:type="ns1:ECBoundarySpec" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<startTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<repeatPeriod unit="MS" xsi:type="ns1:ECTime">15000</repeatPeriod>
+		<stopTrigger xsi:type="ns1:ECTrigger" xsi:nil="true"/>
+		<duration unit="MS" xsi:type="ns1:ECTime">1000</duration>
+		<stableSetInterval unit="MS" xsi:type="ns1:ECTime">0</stableSetInterval>
+		<extension xsi:type="ns1:ECBoundarySpecExtension" xsi:nil="true"/>
+	</boundarySpec>
+	<reportSpecs soapenc:arrayType="ns1:ECReportSpec[1]" xsi:type="soapenc:Array" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<reportSpec reportIfEmpty="true" reportName="Current" reportOnlyOnChange="false" xsi:type="ns1:ECReportSpec">
+			<reportSet set="CURRENT" xsi:type="ns1:ECReportSetSpec"/>
+			<filterSpec xsi:type="ns1:ECFilterSpec" xsi:nil="true"/>
+			<groupSpec xsi:type="soapenc:Array" xsi:nil="true"/>
+			<output includeCount="true" includeEPC="true" includeRawDecimal="true" includeRawHex="true" includeTag="true" xsi:type="ns1:ECReportOutputSpec">
+				<extension xsi:type="ns1:ECReportOutputSpecExtension" xsi:nil="true"/>
+			</output>
+			<extension xsi:type="ns1:ECReportSpecExtension" xsi:nil="true"/>
+		</reportSpec>
+	</reportSpecs>
+	<extension xsi:type="ns1:ECSpecExtension" xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+</ns1:ECSpec>

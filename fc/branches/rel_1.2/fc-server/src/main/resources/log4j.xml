@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- Logging configuration for Apache Log4j -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Logging to a file. -->
+	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/fc-server.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="MaxFileSize" value="1MB" />
+		<param name="MaxBackupIndex" value="3" />
+
+		<!-- Layout configuration -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %d [%t] %c:%L: %m%n" />
+		</layout>
+	</appender>
+
+	<category name="org.fosstrak">
+		<priority value="INFO" />
+	</category>
+
+	<category name="org.fosstrak.ale">
+		<priority value="DEBUG" />
+	</category>
+	
+	<category name="org.fosstrak.hal.impl.sim.BatchSimulator">
+		<priority value="ERROR" />
+	</category>
+	
+	<category name="org.fosstrak.hal.impl.sim.SimulatorController">
+		<priority value="ERROR" />
+	</category>
+	
+	<category name="org.llrp.ltk">
+		<priority value="ERROR" />
+	</category>
+
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="file" />
+	</root>
+
+</log4j:configuration>

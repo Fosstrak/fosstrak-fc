@@ -1,0 +1,425 @@
+       ------
+                                    User guide - Logical Reader Definitions
+                                    ------
+                                    ------
+
+
+User guide - Logical Reader Definitions
+
+* Content
+	
+	[[1]] {{{#LogicalReaders}LogicalReaders}}
+	
+	[[2]] {{{#Example1}Example1 - A LLRP Protocol LogicalReader}}
+	
+	[[3]] {{{#Example2}Example2 - A HAL Protocol LogicalReader (example Feig Reader)}}
+	
+	[[4]] {{{#Example3}Example3 - A Complete Example with a CompositeReader}}
+	
+
+* Objective
+
+	This guide shall introduce Logical Readers and how 
+	they can be declared to be used in the Filtering and Collection server.
+	
+	There are two different types of Logical Reader Definitions that 
+	should not be confused! 
+	
+	* Dynamic Logical Reader Definitions:
+	
+		Dynamic Logical Reader Definitions are read by the fc-client 
+		and the fc-webclient. If you want to specify a logical reader 
+		at runtime through the Logical Reader API you need to use 
+		a Dynamic Logical Reader. 
+
+	* Static Logical Reader Definitions:
+	
+		Static Logical Reader Definitions are read/written by the Logical 
+		Reader Manager upon Filtering and Collection server deployment. 
+		They contain additional	information for the Logical Reader Manager. 	
+
+* {LogicalReaders}
+
+	LogicalReaders act always either as a connector between software 
+	and hardware or as a connector between software and software. Therefor 
+	you need some parameters that configure your LogicalReader at 
+	your needs. In the following we will give a short introduction 
+	how you can setup the basic structure for a LogicalReader. You will 
+	find some elaborate Examples for real LogicalReaders later on in this 
+	guide (See {{{#Example1}Example1}}, {{{#Example2}Example2}}, 
+	{{{#Example3}Example3}}).
+
+	When you want to define your own LogicalReader through an xml-file 
+	you need to obey some restrictions. Some of them are discussed here. 
+	
+	* The xml has must have a valid encoding and version number
+
+	[]
+	
++---+
+example: <?xml version="1.0" encoding="UTF-8"?>
++---+
+
+
+** Dynamic Definition:
+
+	* The xml must contain exactly one LRSpec defintions.
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+</ns3:LRSpec>	
++---+	
+	
+	* You must define whether the reader is composite or not. 
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+</ns3:LRSpec>	
++---+	
+
+	* The reader must contain at least the LRProperty of the ReaderType.
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+</ns3:LRSpec>
++---+
+
+	* If your reader is a composite reader, you must provide the list 
+		of the "subreaders".
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" 
+	xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>true</isComposite>
+    <readers>
+        <reader>LogicalReader1</reader>
+    </readers>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+		
+
+
+** Static Definition:
+
+	* The xml must contain exactly one LogicalReaders tag.
+	
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+</LogicalReaders>	
++---+
+
+	* Whenever you define a LogicalReader you must specify an 
+		LRSpec and within that LRSpec you must specify 
+		if this reader is composite or not.
+
+	[]
+	
++---+
+example:
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" 
+		   readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>	
++---+
+	
+		Make sure, that you use the name of a LogicalReader 
+		only once. The logical reader API does not allow 
+		duplicates of LogicalReaders.
+
+	[]
+	
+	To check your xml-file for correctness you can use 
+	our xsd schema ({{{../files/LogicalReaders.xsd}LogicalReaders.xsd}}).
+
+
+	
+	
+	
+
+* {Example1} - An LLRP LogicalReader
+
+	In LLRP the reader needs special arameters for the connection between the physical reader and the LogicalReader. For a detailed introduction of these parameters refer to the developers-guide - section  {{{developer-adaptor.html}"Implement an Adaptor"}}.
+	
+	The Example shows the definition of one LLRP LogicalReader.
+		
+** Dynamic Definition:	
+
+	You can download the xml 
+	{{{../files/LLRPReader.xml}LLRPReader.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.llrp.LLRPAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>LLRP reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>LogicalReader1</value>
+        </property>
+        <property>
+            <name>ip</name>
+            <value>localhost</value>
+        </property>
+        <property>
+            <name>port</name>
+            <value>5084</value>
+        </property>
+        <property>
+            <name>clientInitiated</name>
+            <value>true</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static Definition:
+	
+	You can download the xml 
+	{{{../files/users-guide-example1.xml}users-guide-example1.xml}}.
+
++---+
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+			<LRProperty name="Description" value="LLRP reader"/>
+			<LRProperty name="PhysicalReaderName" value="LogicalReader1"/>
+			<LRProperty name="ip" value="localhost"/>
+			<LRProperty name="port" value="5084"/>
+			<LRProperty name="AdaptorClass" value="LLRPReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor"/>
+			<LRProperty name="clientInitiated" value="true"/>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>
++---+
+
+
+	In both static and dynamic configuration you can add an optional parameter antennaID: Parameter controlling from which antenna ids the logical reader is accepting tags. By default, the logical reader accepts all the tags. If you specify a comma-separated list of antenna ids, then the logical reader will only deliver those tags to you, that have been read on an antenna specified in the list. <<NOTICE>>: When you omit the parameter <EnableAntennaID> in the <TagReportContentSelector>-Section of your <RO_SPEC>-configuration, the logical reader has no means to determine the antenna id and will simply deliver all the tags to you.
+	
+** Dynamic Definition:	
+
++---+	
+        <property>
+            <name>antennaID</name>
+            <value>1,2</value>
+        </property>
++---+
+
+** Static Definition:
+
++---+	
+        <LRProperty name="antennaID" value="1,2"/>
++---+
+
+
+* {Example2} - A HAL Protocol LogicalReader (example Feig Reader)
+
+	In the Hardware Abstraction Layer (HAL) the reader needs special 
+	parameters for the bootstrapping of the HAL. For a 
+	detailed introduction of these parameters refer to the 
+	developers-guide - section {{{developer-adaptor.html}
+	"Implement an Adaptor"}}.
+	
+	The Example shows the definition of one HAL LogicalReader.
+	
+** Dynamic Definition:
+
+	You can download the xml {{{../files/HALReader.xml}
+	HALReader.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>false</isComposite>
+    <readers/>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.hal.HALAdaptor</value>
+        </property>
+        <property>
+            <name>Description</name>
+            <value>My first HAL device reader</value>
+        </property>
+        <property>
+            <name>PhysicalReaderName</name>
+            <value>MyReader1</value>
+        </property>
+        <property>
+            <name>ReadTimeInterval</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>PropertiesFile</name>
+            <value>/props/SimulatorController.xml</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+
+** Static Definition:
+	
+	You can download the xml {{{../files/users-guide-example2.xml}
+	users-guide-example2.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" 
+		   readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" 
+				value="My first HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="ReadPoints" value="Shelf1,Shelf2"/>
+			<LRProperty name="PropertiesFile" 
+				value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+</LogicalReaders>
++---+
+
+
+
+
+
+
+* {Example3} - A Complete Example with a CompositeReader
+
+	The following Example introduces the capability of the 
+	logical reader API to combine several readers into one 
+	CompositeReader. This CompositeReader then again can be used 
+	as a LogicalReader. This even enables that CompositeReaders 
+	can be used again in other CompositeReaders.
+	
+	This Example shows one HAL reader and one RP reader that then will be 
+	part of one CompositeReader.
+	
+** Dynamic Defintion:
+
+	Make sure that you defined the two readers "LogicalReader1" and 
+	"LogicalReader2" in advance. Otherwise the creation of the composite 
+	reader will fail!
+	
+	You can download the xml {{{../files/CompositeReader1.xml}
+	CompositeReader1.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:LRSpec xmlns:ns2="urn:epcglobal:ale:wsdl:1" xmlns:ns3="urn:epcglobal:ale:xsd:1">
+    <isComposite>true</isComposite>
+    <readers>
+        <reader>LogicalReader1</reader>
+        <reader>LogicalReader2</reader>
+    </readers>
+    <properties>
+        <property>
+            <name>ReaderType</name>
+            <value>org.fosstrak.ale.server.readers.CompositeReader</value>
+        </property>
+    </properties>
+</ns3:LRSpec>
++---+
+	
+** Static Definition:
+	
+	You can download the xml {{{../files/users-guide-example3.xml}
+	users-guide-example3.xml}}.
+	
++---+
+<?xml version="1.0" encoding="UTF-8"?>
+<LogicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/resources/LogicalReaders.xsd">
+	<LogicalReader name="LogicalReader1">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor">
+			<LRProperty name="Description" value="LLRP reader"/>
+			<LRProperty name="PhysicalReaderName" value="LogicalReader1"/>
+			<LRProperty name="ip" value="localhost"/>
+			<LRProperty name="port" value="5084"/>
+			<LRProperty name="AdaptorClass" value="LLRPReader"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.llrp.LLRPAdaptor"/>
+			<LRProperty name="clientInitiated" value="true"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="LogicalReader2">
+		<LRSpec isComposite="false" readerType="org.fosstrak.ale.server.readers.hal.HALAdaptor">
+			<LRProperty name="Description" value="My first HAL device reader"/>
+			<LRProperty name="AdaptorClass" value="HAL"/>
+			<LRProperty name="ImplClass" value="org.fosstrak.ale.server.readers.hal.HALAdaptor"/>
+			<LRProperty name="PhysicalReaderName" value="MyReader"/>
+			<LRProperty name="ReadTimeInterval" value="1000"/>
+			<LRProperty name="PropertiesFile" value="/props/SimulatorController.xml"/>
+		</LRSpec>
+	</LogicalReader>
+	<LogicalReader name="CompositeReader1">
+		<LRSpec isComposite="true" readerType="org.fosstrak.ale.server.readers.CompositeReader">
+			<LRProperty name="Description" value="My first composite reader consisting of LogicalReader1 and LogicalReader2"/>
+			<readers>LogicalReader1</readers>
+			<readers>LogicalReader2</readers>
+		</LRSpec>
+	</LogicalReader>	
+</LogicalReaders>
++---+
+
+

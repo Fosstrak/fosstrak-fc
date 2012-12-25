@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ECSpec xmlns:ns2="urn:epcglobal:ale:xsd:1">
+    <logicalReaders>
+	<logicalReader>LogicalReader1</logicalReader>
+	<logicalReader>LogicalReader2</logicalReader>
+	<logicalReader>LogicalReader3</logicalReader>
+	<logicalReader>LogicalReader4</logicalReader>
+	<logicalReader>LogicalReader5</logicalReader>
+	<logicalReader>LogicalReader6</logicalReader>
+	<logicalReader>LogicalReader7</logicalReader>
+	<logicalReader>LogicalReader8</logicalReader>
+    </logicalReaders>
+    <boundarySpec>
+        <repeatPeriod unit="MS">2000</repeatPeriod>
+        <duration unit="MS">1500</duration>
+        <stableSetInterval unit="MS">0</stableSetInterval>
+    </boundarySpec>
+    <reportSpecs>
+        <reportSpec reportIfEmpty="true" reportName="Deletions" reportOnlyOnChange="false" >
+            <reportSet set="DELETIONS"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true"/>
+        </reportSpec>
+	<reportSpec reportIfEmpty="true" reportName="Additions" reportOnlyOnChange="false" >
+            <reportSet set="ADDITIONS"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true"/>
+        </reportSpec>
+    </reportSpecs>
+</ns2:ECSpec>

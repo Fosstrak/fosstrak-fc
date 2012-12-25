@@ -1,0 +1,151 @@
+  ------
+                                    User Memory
+                                    ------
+                                    ------
+
+User Memory
+
+* Contents
+
+   [[]] {{{#Objective}Objective}}
+   
+   [[]] {{{#Report}User Memory in Report}}
+   
+   [[]] {{{#Capture}Capture the User Memory}}
+    
+   [[]] {{{#LLRPAdaptor}User Memory with LLRPAdaptor}}
+   
+   [[]] {{{#Properties}Properties for LLRPAdaptor}}
+   
+   [[]] {{{#Implementation}Implementation details}}
+
+
+* {Objective}
+
+    Filtering & Collection can now manage the User Memory of a Tag. It reports tag’s user memory contents.
+    It checks if a User Memory exists in ECspec extensions and adds it to ECreport, or in LLRPAdaptor in notify method.
+   
+
+* User Memory in {Report}
+
+	If the ECSpec contains the UserMemory extension, then the content of the Tag's User Memory will be added in the generated report.
+	
+	Below an example of an ECSpec and a generated report :
+	
+[../images/userMemory/UserMemory_ECSpec.png]
+	
+
+* {Capture} the User Memory
+
+	The Capture Application has been updated to handle reports containing Tag's User Memory. 
+	This is done by retrieving the User Memory from the ECReport and then add it to the Extension of the ObjectEvent.
+	
++---+
+1)It should be noted that the Extension is defined at the ObjectEvent level. 
+So, each ObjectEvent will have a unique tag in its epcList. 
+The UserMemory stored in the Extension belongs to this unique tag.
+ 
+2)The ObjectEventType must evolve to have a list of User Memory corresponding to a list of tags.
++---+	
+
+	The property <<epcisUniqueTagInObjectEvent>> defined in <ressources/LLRPAdaptorConfig.properties> 
+	must be set to true to store the User Memory in the EPCIS (table event_objectevent_extensions).
+    In this case, the epcList of the ObjectEvent contains a unique tag and the User Memory belongs to this tag.
+	
+	Below an example of an ObjectEvent with Tag's User Memory : 
+		
+[../images/userMemory/UserMemory_EPCIS.png]
+
+
+* User Memory with {LLRPAdaptor}
+
+	If using an LLRPAdaptor with a User Memory in the tag, the adaptor will be notified.
+	
+	Therefore :
+	
+		* in case of reading the User Memory, the content will be extracted from the RO_ACCESS_REPORT and stored like the epc code.
+		
+		* in case of writing in the User Memory, a message will be logged if the write operation succeed.  
+
+	You can configure the following properties used in the notification of the LLRPAdaptor. 
+	
+	 
+* {Properties} for LLRPAdaptor
+
+	We define 5 properties for the configuration of the LLRPAdaptor under <ressources/LLRPAdaptorConfig.properties> : 
+      
+	*<<UserMemoryC1G2ReadOpSpecId>> : specify the id of <<llrp:OpSpecID>> in the <<C1G2Read>>.
+	
+	C1G2Read enables to read the User Memory of the real tag. 
+	As a result, the content of the User Memory (MB=3) is contained in the RO_ACCESS_REPORT 
+		and then stored it in the tag of the Filtering & Collection.
+
+	Below an example of C1G2Read to read the Tag's User Memory :
+	
++---+
+<llrp:ADD_ACCESSSPEC ...>
+<llrp:AccessSpec>
+...
+...
+<llrp:C1G2Read>
+<llrp:OpSpecID>1</llrp:OpSpecID>
+<llrp:AccessPassword>0</llrp:AccessPassword>
+<llrp:MB>3</llrp:MB>
+<llrp:WordPointer>0</llrp:WordPointer>
+<llrp:WordCount>0</llrp:WordCount>
+</llrp:C1G2Read>
+...
+...
+</llrp:AccessSpec>
+</llrp:ADD_ACCESSSPEC>
++---+
+	
+	*<<UserMemoryC1G2WriteOpSpecId>> : specify the id of <<llrp:OpSpecID>> in the <<C1G2Write>>.
+	
+	 C1G2Write enables to write in the User Memory (MB=3) of a real tag.
+	 The success or not of the write operation is contained in the RO_ACCESS_REPORT and can be logged. 
+	 
+	 Below an example of C1G2Write to write in the Tag's User Memory : 
+	 
++---+
+<llrp:ADD_ACCESSSPEC ...>
+<llrp:AccessSpec>
+...
+...
+<llrp:C1G2Write>
+<llrp:OpSpecID>2</llrp:OpSpecID>
+<llrp:AccessPassword>0</llrp:AccessPassword>
+<llrp:MB>3</llrp:MB>
+<llrp:WordPointer>0</llrp:WordPointer>
+<llrp:WriteData>0011 000A 2000 0419 0730 046D 0100</llrp:WriteData>
+</llrp:C1G2Write>
+...
+...
+</llrp:AccessSpec>
+</llrp:ADD_ACCESSSPEC>
++---+
+
+	*<<tagLength>> : specify the length of the tag used in the LLRPAdaptor.
+
+	*<<tagFilter>> : specify the filter of the tag used in the LLRPAdaptor.
+
+	*<<tagCompanyPrefixLength>> : specify the company prefix length of the tag used in the LLRPAdaptor.
+
+	
+* {Implementation} details
+
+	Below, the modified classes :
+
+   * fc-server 
+   
+   		*<org.fosstrak.ale.server.Tag.java> : add a “userMemory” attribute and the get/set methods. 
+   
+		*<org.fosstrak.ale.server.Report.java> : take account of userMemory in ECSpec to add it to ECReport.
+		
+		*<org.fosstrak.ale.server.LLRPAdaptor.java> : take into account the defined properties (length, filter and company prefix). Manage the userMemory in the RO_ACCESS_REPORT.
+  
+  
+  * fc/src/site/resources/files
+  
+  		*<CaptureApp.java> : add methods to handle ECReports containing “userMemory” and store this “userMemory” in the EPCIS. The property epcisUniqueTagInObjectEvent if true allows to add the userMemory in the ObjectEvent.
+  

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- List of EPCclass1Gen2 tag chip properties -->
+<!-- Code, Identifier and ID as hexadecimal encoded number, e.g. '0xAB' -->
+<!-- Size in bytes as number, e.g. '2' -->
+<!-- Read and Write as boolean, e.g. 'true' and 'false' -->
+<properties>
+
+   <!-- Impinj Monza -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>Impinj</manufacturer>
+      <modelName>Monza</modelName>
+      <modelID>0x040</modelID>
+      <modelID>0x050</modelID>
+      <modelID>0x070</modelID>
+      <modelID>0x071</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>4</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>0</userSize>
+      <userRead>false</userRead>
+      <userWrite>false</userWrite>
+   </tag>
+
+   <!-- Impinj Monaco -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>Impinj</manufacturer>
+      <modelName>Monaco</modelName>
+      <modelID>0x060</modelID>
+      <modelID>0x061</modelID>
+      <modelID>0x062</modelID>
+      <modelID>0x063</modelID>
+      <modelID>0x064</modelID>
+      <modelID>0x065</modelID>
+      <modelID>0x066</modelID>
+      <modelID>0x067</modelID>
+      <modelID>0x068</modelID>
+      <modelID>0x069</modelID>
+      <modelID>0x080</modelID>
+      <modelID>0x081</modelID>
+      <modelID>0x082</modelID>
+      <modelID>0x083</modelID>
+      <modelID>0x084</modelID>
+      <modelID>0x085</modelID>
+      <modelID>0x086</modelID>
+      <modelID>0x087</modelID>
+      <modelID>0x088</modelID>
+      <modelID>0x089</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>4</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>8</userSize>
+      <userRead>true</userRead>
+      <userWrite>true</userWrite>
+   </tag>
+
+   <!-- STMicroelectronics XRAG2 -->
+   <!-- NOTE: Dynamic configuration, either 32B EPC memory or 16B EPC and user -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>STMicroelectronics</manufacturer>
+      <modelName>XRAG2</modelName>
+      <modelID>0x240</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>32</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>8</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>16</userSize>
+      <userRead>true</userRead>
+      <userWrite>true</userWrite>
+   </tag>
+
+   <!-- TexasInstruments Gen2 -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>TexasInstruments</manufacturer>
+      <modelName>Gen2</modelName>
+      <modelID>0x000</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>4</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>0</userSize>
+      <userRead>false</userRead>
+      <userWrite>false</userWrite>
+   </tag>
+
+   <!-- NXP UCODE_EPC_G2 -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>NXP</manufacturer>
+      <modelName>UCODE_EPC_G2</modelName>
+      <modelID>0x001</modelID>
+      <modelID>0x002</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>8</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>28</userSize>
+      <userRead>true</userRead>
+      <userWrite>true</userWrite>
+   </tag>
+
+   <!-- NXP UCODE_G2XM -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>NXP</manufacturer>
+      <modelName>UCODE_G2XM</modelName>
+      <modelID>0x003</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>32</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>8</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>64</userSize>
+      <userRead>true</userRead>
+      <userWrite>true</userWrite>
+   </tag>
+
+   <!-- NXP UCODE_G2XL -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>NXP</manufacturer>
+      <modelName>UCODE_G2XL</modelName>
+      <modelID>0x004</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>32</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>8</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>0</userSize>
+      <userRead>false</userRead>
+      <userWrite>false</userWrite>
+   </tag>
+
+   <!-- Alien H2 -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>Alien</manufacturer>
+      <modelName>H2</modelName>
+      <modelID>0x411</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>4</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>0</userSize>
+      <userRead>false</userRead>
+      <userWrite>false</userWrite>
+   </tag>
+
+   <!-- Fosstrak Simulator -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>Fosstrak</manufacturer>
+      <modelName>Simulator</modelName>
+      <modelID>0x000</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>32</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>true</epcWrite>
+      <tidSize>8</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>32</userSize>
+      <userRead>true</userRead>
+      <userWrite>true</userWrite>
+   </tag>
+
+   <!-- Unknown -->
+   <tag>
+      <type>EPCclass1Gen2</type>
+      <manufacturer>Unknown</manufacturer>
+      <modelName>Unknown</modelName>
+      <modelID>0x000</modelID>
+      <reservedSize>8</reservedSize>
+      <reservedRead>false</reservedRead>
+      <reservedWrite>false</reservedWrite>
+      <epcSize>16</epcSize>
+      <epcRead>true</epcRead>
+      <epcWrite>false</epcWrite>
+      <tidSize>4</tidSize>
+      <tidRead>true</tidRead>
+      <tidWrite>false</tidWrite>
+      <userSize>0</userSize>
+      <userRead>false</userRead>
+      <userWrite>false</userWrite>
+   </tag>
+
+
+   <!-- Tag Types -->
+   <type>
+      <name>EPCclass1Gen2</name>
+      <code>0x84</code>
+   </type>
+
+
+   <!-- Manufacturers -->
+   <manufacturer>
+      <name>Impinj</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x001</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>STMicroelectronics</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x007</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>TexasInstruments</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x002</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>NXP</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x006</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>Alien</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x003</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>Fosstrak</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0xFFF</maskDesignerIdentifier>
+   </manufacturer>
+
+   <manufacturer>
+      <name>Unknown</name>
+      <classIdentifier>0xE2</classIdentifier>
+      <maskDesignerIdentifier>0x000</maskDesignerIdentifier>
+   </manufacturer>
+
+</properties>

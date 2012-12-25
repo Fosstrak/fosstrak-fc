@@ -1,0 +1,26 @@
+<!-- Fosstrak Filtering and Collection Properties -->
+<?xml version="1.0" encoding="UTF-8"?>
+<logicalReaders xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="LogicalReaders.xsd">
+	<logicalReader name="LogicalReader1">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf1</source>
+				<source>Shelf2</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+	<logicalReader name="LogicalReader2">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf3</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+	<logicalReader name="LogicalReader3">
+		<physicalReader name="MyReader">
+			<include>
+				<source>Shelf4</source>
+			</include>
+		</physicalReader>
+	</logicalReader>
+</logicalReaders>

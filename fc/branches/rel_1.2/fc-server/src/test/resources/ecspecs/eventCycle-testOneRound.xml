@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>                                                                                                                             
+<ns2:ECSpec xmlns:ns2="urn:epcglobal:ale:xsd:1">                                                                                                                                    
+    <logicalReaders>                                                                                                                                                                
+        <logicalReader>LogicalReader1</logicalReader>                                                                                                                               
+    </logicalReaders>                                                                                                                                                               
+    <boundarySpec>                                                                                                                                
+        <duration unit="MS">1000</duration>                                                                                                                                         
+        <stableSetInterval unit="MS">0</stableSetInterval>
+    </boundarySpec>
+    <reportSpecs>
+        <reportSpec>
+            <reportSet set="CURRENT"/>
+            <output includeRawHex="true" includeRawDecimal="true" includeEPC="true" includeTag="true"/>
+        </reportSpec>
+    </reportSpecs>
+</ns2:ECSpec>
