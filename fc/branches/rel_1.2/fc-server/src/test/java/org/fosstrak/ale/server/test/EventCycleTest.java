@@ -19,6 +19,7 @@
  */
 package org.fosstrak.ale.server.test;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
+import org.epcglobalinc.tdt.LevelTypeList;
 import org.fosstrak.ale.exception.DuplicateSubscriptionException;
 import org.fosstrak.ale.exception.InvalidURIException;
 import org.fosstrak.ale.exception.NoSuchSubscriberException;
@@ -37,6 +39,7 @@ import org.fosstrak.ale.server.Tag;
 import org.fosstrak.ale.server.impl.EventCycleImpl;
 import org.fosstrak.ale.server.readers.LogicalReader;
 import org.fosstrak.ale.server.readers.LogicalReaderManager;
+import org.fosstrak.ale.server.util.TagHelper;
 import org.fosstrak.ale.util.DeserializerUtil;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReport;
 import org.fosstrak.ale.xsd.ale.epcglobal.ECReportGroupListMember;
@@ -59,9 +62,9 @@ import org.junit.Test;
  */
 public class EventCycleTest {
 
-	
-	private final String TAG1_BINARY = "001100000110100011100101110101100011000011001101000011110010100100011011111001011110100011011100";
-	private final String TAG1_PURE_URI = "urn:epc:tag:sgtin-96:3.3856019661.060.176561711324";	
+								        
+	private final String TAG1_BINARY = "001100000111010000000010010000100010000000011101100010000100000000000000000011111110011000110010";
+	private final String TAG1_PURE_URI = "urn:epc:tag:sgtin-96:3.0037000.030241.1041970";	
 	
 	private final String TAG2_BINARY = "001100000010001110010110110100010010101001000111010100001001010010100000100000001010110100111011";
 	private final String TAG2_PURE_URI = "urn:epc:tag:sgtin-96:1.986572296660.2.88592133435";
@@ -69,9 +72,13 @@ public class EventCycleTest {
 	private final String TAG3_BINARY = "001100000011100110110100111011000100110010011100001110000111001000001011010101011110101100111111";
 	private final String TAG3_PURE_URI = "urn:epc:tag:sgtin-96:1.447409.3305697.214938544959";
 	
+//	@Ignore
 	@Test
-	public void testPrintHex() throws Exception {		
-		TDTEngine tdt = new TDTEngine();
+	public void testPrintHex() throws Exception {
+		URL auxiliary = TagHelper.class.getClassLoader().getResource("tdtschemes/auxiliary/ManagerTranslation.xml");
+		URL schemes = TagHelper.class.getClassLoader().getResource("tdtschemes/schemes/");		
+		//TDTEngine tdt = new TDTEngine(new URL("file:/tmp/tdt/auxiliary/ManagerTranslation.xml"), new URL("file:///tmp/tdt/schemes/"));
+		TDTEngine tdt = new TDTEngine(auxiliary, schemes);
 		Map<String, String> extraparms = new HashMap<String, String> ();
 		extraparms.put("taglength", "96");
 		extraparms.put("filter", "3");
@@ -81,6 +88,11 @@ public class EventCycleTest {
 		System.out.println(tdt.bin2hex(TAG1_BINARY));
 		System.out.println(tdt.bin2hex(TAG2_BINARY));
 		System.out.println(tdt.bin2hex(TAG3_BINARY));
+
+		String converted = tdt.convert("001100000111010000000010010000100010000000011101100010000100000000000000000011111110011000110010", LevelTypeList.BINARY, "96", extraparms, LevelTypeList.TAG_ENCODING);
+		System.out.println(converted);
+		System.out.println(TAG1_PURE_URI);
+		Assert.assertEquals(TAG1_PURE_URI, converted);
 	}
 	
 	
@@ -143,12 +155,21 @@ public class EventCycleTest {
 		final Tag t1 = new Tag();
 		t1.setTagAsBinary(TAG1_BINARY);
 		t1.setTagIDAsPureURI(TAG1_PURE_URI);
+		t1.setTagLength("96");
+		t1.setCompanyPrefixLength("7");
+		t1.setFilter("3");
 		final Tag t2 = new Tag();
 		t2.setTagAsBinary(TAG2_BINARY);
 		t2.setTagIDAsPureURI(TAG2_PURE_URI);
+		t2.setTagLength("96");
+		t2.setCompanyPrefixLength("7");
+		t2.setFilter("3");
 		final Tag t3 = new Tag();
 		t3.setTagAsBinary(TAG3_BINARY);
 		t3.setTagIDAsPureURI(TAG3_PURE_URI);
+		t3.setTagLength("96");
+		t3.setCompanyPrefixLength("7");
+		t3.setFilter("3");		
 		
 		final List<Tag> tags = new LinkedList<Tag> ();
 		tags.add(t2);
