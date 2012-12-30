@@ -93,7 +93,7 @@
     <dependency>
       <groupId>org.fosstrak.llrp</groupId>
       <artifactId>llrp-adaptor</artifactId>
-      <version>1.2.1</version>
+	  <version>${fosstrak.llrp.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

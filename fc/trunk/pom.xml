@@ -18,6 +18,7 @@
 	<properties>
 		<lib-cxf-version>2.6.1</lib-cxf-version>
 		<lib-spring-version>3.0.7.RELEASE</lib-spring-version>
+		<fosstrak.llrp.version>1.2.1</fosstrak.llrp.version>
 	</properties>
 
 	<!-- =========================================================== -->
